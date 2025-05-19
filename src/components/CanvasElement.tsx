@@ -128,55 +128,139 @@ export function CanvasElement({ element, isSelected }: CanvasElementProps) {
     switch (element.type) {
       case 'header':
         const headerProperties = element.properties || {};
+        const variant = headerProperties.variant || 'default';
+        
+        // Determine styles based on variant
+        let containerStyles = "w-full h-full flex items-center";
+        let contentLayout = "";
+        
+        switch(variant) {
+          case 'centered-navigation-purple':
+            containerStyles += " bg-[#9b87f5] p-4 flex-col justify-center text-white";
+            contentLayout = "flex flex-col items-center";
+            break;
+          case 'double-logo-purple':
+            containerStyles += " bg-[#9b87f5] p-4 text-white";
+            contentLayout = "flex items-center justify-between w-full";
+            break;
+          case 'with-description':
+            containerStyles += " p-4 flex-col";
+            contentLayout = "flex flex-col";
+            break;
+          case 'with-metrics':
+            containerStyles += " p-4";
+            contentLayout = "flex items-center justify-between w-full";
+            break;
+          case 'navigation-top':
+            containerStyles += " p-4";
+            contentLayout = "flex items-center justify-between w-full";
+            break;
+          default: 
+            containerStyles += " p-4";
+            contentLayout = "flex items-center";
+        }
+        
         return (
           <div 
-            className="w-full h-full p-4 flex items-center"
+            className={containerStyles}
             style={{
               backgroundColor: headerProperties.backgroundColor || '#ffffff',
               color: headerProperties.textColor || 'black',
-              justifyContent: headerProperties.variant === 'centered' ? 'center' : 'flex-start',
             }}
           >
-            {headerProperties.showLogo && headerProperties.logoUrl && (
-              <img 
-                src={headerProperties.logoUrl} 
-                alt="Logo" 
-                className="h-full max-h-12 mr-3 object-contain"
-              />
-            )}
-            {headerProperties.showLogo && !headerProperties.logoUrl && (
-              <div className="h-full max-h-12 aspect-square bg-gray-200 mr-3 flex items-center justify-center text-gray-400">
-                Logo
-              </div>
-            )}
-            <div className={
-              headerProperties.variant === 'with-description' || headerProperties.variant === 'with-metrics'
-                ? 'flex-1'
-                : ''
-              }>
-              {headerProperties.title && (
-                <div className="font-bold text-lg">{headerProperties.title}</div>
-              )}
-              {headerProperties.variant === 'with-description' && headerProperties.description && (
-                <div className="text-sm mt-1 text-gray-600">{headerProperties.description}</div>
-              )}
-            </div>
-            {headerProperties.variant === 'with-metrics' && (
-              <div className="flex space-x-6">
-                <div className="flex flex-col items-center">
-                  <div className="text-xs text-gray-500">Metric 1</div>
-                  <div className="font-bold">123</div>
+            {variant === 'double-logo-purple' ? (
+              <>
+                {headerProperties.showLogo && (
+                  <div className="h-full max-h-12 aspect-square bg-gray-200 flex items-center justify-center text-gray-800">
+                    {headerProperties.logoUrl ? (
+                      <img src={headerProperties.logoUrl} alt="Logo" className="h-full max-h-12 object-contain" />
+                    ) : (
+                      'Logo'
+                    )}
+                  </div>
+                )}
+                
+                {headerProperties.title && (
+                  <div className="font-bold text-lg text-center">{headerProperties.title}</div>
+                )}
+                
+                <div className="h-full max-h-12 aspect-square bg-gray-200 flex items-center justify-center text-gray-800">
+                  {headerProperties.logoUrl ? (
+                    <img src={headerProperties.logoUrl} alt="Logo" className="h-full max-h-12 object-contain" />
+                  ) : (
+                    'Logo'
+                  )}
                 </div>
-                <div className="flex flex-col items-center">
-                  <div className="text-xs text-gray-500">Metric 2</div>
-                  <div className="font-bold">456</div>
+              </>
+            ) : variant === 'centered-navigation-purple' ? (
+              <div className="flex flex-col items-center">
+                {headerProperties.title && (
+                  <div className="font-bold text-lg mb-2">{headerProperties.title}</div>
+                )}
+                
+                <div className="flex justify-center space-x-6">
+                  <div className="text-sm">Navigation 1</div>
+                  <div className="text-sm">Navigation 2</div>
+                  <div className="text-sm">Navigation 3</div>
                 </div>
               </div>
-            )}
-            {headerProperties.showNavigation && (
-              <div className="ml-auto flex space-x-3">
-                <button className="px-3 py-1 bg-gray-200 rounded text-sm hover:bg-gray-300 transition-colors">Link 1</button>
-                <button className="px-3 py-1 bg-gray-200 rounded text-sm hover:bg-gray-300 transition-colors">Link 2</button>
+            ) : (
+              <div className={contentLayout}>
+                <div className="flex items-center">
+                  {headerProperties.showLogo && (
+                    <div className="mr-3">
+                      {headerProperties.logoUrl ? (
+                        <img 
+                          src={headerProperties.logoUrl} 
+                          alt="Logo" 
+                          className="h-full max-h-12 object-contain"
+                        />
+                      ) : (
+                        <div className="h-10 w-10 bg-gray-200 flex items-center justify-center text-gray-400">
+                          Logo
+                        </div>
+                      )}
+                    </div>
+                  )}
+                  
+                  <div className="flex-1">
+                    {headerProperties.title && (
+                      <div className="font-bold text-lg">{headerProperties.title}</div>
+                    )}
+                    
+                    {variant === 'with-description' && headerProperties.description && (
+                      <div className="text-sm mt-1 text-gray-600">{headerProperties.description}</div>
+                    )}
+                  </div>
+                </div>
+                
+                {variant === 'with-metrics' && (
+                  <div className="flex space-x-6">
+                    <div className="flex flex-col items-center">
+                      <div className="text-xs text-gray-500">Metric 1</div>
+                      <div className="font-bold">123</div>
+                    </div>
+                    <div className="flex flex-col items-center">
+                      <div className="text-xs text-gray-500">Metric 2</div>
+                      <div className="font-bold">456</div>
+                    </div>
+                  </div>
+                )}
+                
+                {variant === 'navigation-top' && (
+                  <div className="flex space-x-4 text-sm text-blue-500">
+                    <div>Navigation 1</div>
+                    <div>Navigation 2</div>
+                    <div>Navigation 3</div>
+                  </div>
+                )}
+                
+                {headerProperties.showNavigation && variant !== 'navigation-top' && (
+                  <div className="ml-auto flex space-x-3">
+                    <button className="px-3 py-1 bg-gray-200 rounded text-sm hover:bg-gray-300 transition-colors">Link 1</button>
+                    <button className="px-3 py-1 bg-gray-200 rounded text-sm hover:bg-gray-300 transition-colors">Link 2</button>
+                  </div>
+                )}
               </div>
             )}
           </div>
