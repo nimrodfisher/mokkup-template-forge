@@ -1,7 +1,15 @@
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useDrag } from "react-dnd";
 import { Element, useWireframe } from "@/hooks/useWireframe";
+import { 
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 
 interface CanvasElementProps {
   element: Element;
@@ -9,8 +17,9 @@ interface CanvasElementProps {
 }
 
 export function CanvasElement({ element, isSelected }: CanvasElementProps) {
-  const { updateElement, selectElement } = useWireframe();
+  const { updateElement, selectElement, updateElementProperties } = useWireframe();
   const resizeHandleRef = useRef<HTMLDivElement>(null);
+  const [showStyleDialog, setShowStyleDialog] = useState(false);
   
   const [{ isDragging }, drag] = useDrag(() => ({
     type: 'CANVAS_ELEMENT',
@@ -50,7 +59,22 @@ export function CanvasElement({ element, isSelected }: CanvasElementProps) {
   
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    selectElement(element.id);
+    
+    // If it's a header and clicking for the first time, show style selection dialog
+    if (element.type === 'header' && !isSelected) {
+      selectElement(element.id);
+    } else {
+      selectElement(element.id);
+    }
+  };
+  
+  const handleDoubleClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    
+    // Open style dialog on double-click for headers
+    if (element.type === 'header') {
+      setShowStyleDialog(true);
+    }
   };
   
   const handleMouseDown = (e: React.MouseEvent) => {
@@ -76,6 +100,11 @@ export function CanvasElement({ element, isSelected }: CanvasElementProps) {
     document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseup', handleMouseUp);
   };
+
+  const handleStyleSelection = (variant: 'default' | 'centered' | 'with-description' | 'with-metrics') => {
+    updateElementProperties(element.id, { variant });
+    setShowStyleDialog(false);
+  };
   
   // Prevent showing element while dragging
   if (isDragging) {
@@ -83,29 +112,110 @@ export function CanvasElement({ element, isSelected }: CanvasElementProps) {
   }
   
   return (
-    <div
-      ref={drag}
-      className={`absolute border ${isSelected ? 'border-blue-500 shadow-sm' : 'border-gray-300'}`}
-      style={{
-        left: element.position.x,
-        top: element.position.y,
-        width: element.size.width,
-        height: element.size.height,
-        cursor: 'move',
-      }}
-      onClick={handleClick}
-      onMouseDown={handleMouseDown}
-    >
-      <ElementContent element={element} />
+    <>
+      <div
+        ref={drag}
+        className={`absolute border ${isSelected ? 'border-blue-500 shadow-sm' : 'border-gray-300'}`}
+        style={{
+          left: element.position.x,
+          top: element.position.y,
+          width: element.size.width,
+          height: element.size.height,
+          cursor: 'move',
+        }}
+        onClick={handleClick}
+        onDoubleClick={handleDoubleClick}
+        onMouseDown={handleMouseDown}
+      >
+        <ElementContent element={element} />
+        
+        {isSelected && (
+          <div
+            ref={resizeHandleRef}
+            className="absolute w-3 h-3 right-0 bottom-0 cursor-nwse-resize bg-blue-500"
+            onMouseDown={handleResizeStart}
+          />
+        )}
+      </div>
       
-      {isSelected && (
-        <div
-          ref={resizeHandleRef}
-          className="absolute w-3 h-3 right-0 bottom-0 cursor-nwse-resize bg-blue-500"
-          onMouseDown={handleResizeStart}
-        />
-      )}
-    </div>
+      {/* Header Style Dialog */}
+      <Dialog open={showStyleDialog} onOpenChange={setShowStyleDialog}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Choose header style</DialogTitle>
+          </DialogHeader>
+          
+          <div className="space-y-4 my-4">
+            <div className="space-y-3">
+              {['default', 'centered', 'with-description', 'with-metrics'].map(variant => (
+                <div 
+                  key={variant}
+                  onClick={() => handleStyleSelection(variant as any)}
+                  className={`p-3 border rounded-md cursor-pointer transition-all hover:border-blue-400 ${
+                    element.properties?.variant === variant ? 'border-blue-500 bg-blue-50' : 'border-gray-200'
+                  }`}
+                >
+                  <div className="flex items-center">
+                    {variant === 'default' && (
+                      <div className="flex items-center space-x-2">
+                        <div className="w-6 h-6 bg-gray-200" />
+                        <div className="h-4 bg-gray-300 w-32" />
+                      </div>
+                    )}
+                    {variant === 'centered' && (
+                      <div className="w-full flex justify-center">
+                        <div className="h-4 bg-gray-300 w-32" />
+                      </div>
+                    )}
+                    {variant === 'with-description' && (
+                      <div className="space-y-2 w-full">
+                        <div className="flex items-center space-x-2">
+                          <div className="w-6 h-6 bg-gray-200" />
+                          <div className="h-4 bg-gray-300 w-32" />
+                        </div>
+                        <div className="h-2 bg-gray-200 w-full" />
+                        <div className="h-2 bg-gray-200 w-3/4" />
+                      </div>
+                    )}
+                    {variant === 'with-metrics' && (
+                      <div className="flex justify-between w-full">
+                        <div className="flex items-center space-x-2">
+                          <div className="w-6 h-6 bg-gray-200" />
+                          <div className="h-4 bg-gray-300 w-24" />
+                        </div>
+                        <div className="flex space-x-3">
+                          <div className="flex flex-col items-center">
+                            <div className="text-xs">Metric 1</div>
+                            <div className="text-xs font-bold">123</div>
+                          </div>
+                          <div className="flex flex-col items-center">
+                            <div className="text-xs">Metric 2</div>
+                            <div className="text-xs font-bold">456</div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex justify-end mt-2">
+                    {element.properties?.variant === variant && (
+                      <div className="w-4 h-4 rounded-full bg-blue-500 flex items-center justify-center">
+                        <div className="w-2 h-2 rounded-full bg-white" />
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowStyleDialog(false)}>
+              Cancel
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
 

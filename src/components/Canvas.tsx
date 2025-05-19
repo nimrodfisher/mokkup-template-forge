@@ -3,6 +3,7 @@ import { useRef } from "react";
 import { useDrop } from "react-dnd";
 import { useWireframe, ElementType } from "@/hooks/useWireframe";
 import { CanvasElement } from "./CanvasElement";
+import { toast } from "sonner";
 
 export function Canvas() {
   const canvasRef = useRef<HTMLDivElement>(null);
@@ -30,6 +31,9 @@ export function Canvas() {
               y: clientOffset.y - canvasRect.top,
             }
           );
+          if (item.type === 'header') {
+            toast.info("Double-click header to choose a style");
+          }
         }
       }
     },

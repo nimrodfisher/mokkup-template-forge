@@ -9,14 +9,16 @@ import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { ScreenTabs } from "@/components/ScreenTabs";
 import { PropertiesPanel } from "@/components/PropertiesPanel";
+import { toast } from "sonner";
 
 const Editor = () => {
   const { templateId } = useParams();
-  const { loadTemplate, showProperties } = useWireframe();
+  const { loadTemplate, showProperties, selectedElementId } = useWireframe();
   
   useEffect(() => {
     if (templateId) {
       loadTemplate(templateId);
+      toast.success("Template loaded successfully!");
     }
   }, [templateId, loadTemplate]);
   
@@ -30,7 +32,7 @@ const Editor = () => {
             <ScreenTabs />
             <div className="flex-1 flex overflow-hidden">
               <Canvas />
-              {showProperties && <PropertiesPanel />}
+              {showProperties && selectedElementId && <PropertiesPanel />}
             </div>
           </div>
         </div>

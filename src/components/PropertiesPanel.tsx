@@ -5,7 +5,7 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { X, Settings } from "lucide-react";
+import { X, Settings, ChevronDown } from "lucide-react";
 
 export function PropertiesPanel() {
   const { elements, selectedElementId, showProperties, toggleProperties, updateElementProperties } = useWireframe();
@@ -137,22 +137,30 @@ export function PropertiesPanel() {
           </div>
         </div>
         
-        <div className="flex items-center space-x-2 mt-4">
-          <Label className="text-sm">Header Variants</Label>
-          <div className="flex-grow flex justify-end">
+        <div className="flex flex-col space-y-2 mt-4 border-t pt-4">
+          <Label className="text-sm font-semibold">Header Style</Label>
+          <div className="mt-2">
             <Popover>
               <PopoverTrigger asChild>
-                <Button variant="outline" size="sm">Choose style</Button>
+                <Button variant="outline" size="sm" className="w-full justify-between">
+                  {properties.variant === 'default' && 'Default'}
+                  {properties.variant === 'centered' && 'Centered'}
+                  {properties.variant === 'with-description' && 'With Description'}
+                  {properties.variant === 'with-metrics' && 'With Metrics'}
+                  <ChevronDown className="h-4 w-4 opacity-50" />
+                </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-80">
-                <div className="space-y-4">
+              <PopoverContent className="w-80 p-0">
+                <div className="p-4 space-y-4">
                   <h4 className="font-medium">Available styles</h4>
                   <div className="space-y-2">
                     {['default', 'centered', 'with-description', 'with-metrics'].map(variant => (
                       <div 
                         key={variant}
                         onClick={() => updateElementProperties(element.id, { variant: variant as any })}
-                        className={`p-3 border rounded-md cursor-pointer ${properties.variant === variant ? 'border-blue-500' : 'border-gray-200'}`}
+                        className={`p-3 border rounded-md cursor-pointer transition-all hover:border-blue-400 ${
+                          properties.variant === variant ? 'border-blue-500 bg-blue-50' : 'border-gray-200'
+                        }`}
                       >
                         <div className="flex items-center">
                           {variant === 'default' && (
@@ -205,11 +213,11 @@ export function PropertiesPanel() {
                       </div>
                     ))}
                   </div>
-                  <Button className="w-full" variant="default">Apply style</Button>
                 </div>
               </PopoverContent>
             </Popover>
           </div>
+          <p className="text-xs text-gray-500 mt-1">Double-click on the header to change styles</p>
         </div>
       </div>
     );
