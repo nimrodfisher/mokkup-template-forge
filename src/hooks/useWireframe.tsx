@@ -1,10 +1,11 @@
+
 import { create } from 'zustand';
 import { v4 as uuidv4 } from 'uuid';
 import { persist } from 'zustand/middleware';
 
 export type ElementType = 
-  'header' | 'button' | 'filter' | 'kpi' | 'column-chart' | 'bar-chart' | 
-  'line-chart' | 'area-chart' | 'combo-chart' | 'pie-chart' | 'donut-chart' | 
+  'header' | 'button' | 'filter' | 'kpi' | 'column-chart' | 'bar-chart' | 'line-chart' | 
+  'area-chart' | 'combo-chart' | 'pie-chart' | 'donut-chart' | 
   'simple-table' | 'hierarchy-table' | 'geomap' | 'treemap' | 'heatmap' |
   'funnel-chart' | 'image' | 'textbox' | 'histogram' | 'gauge' | 'scatter-plot' |
   'bubble-chart' | 'waterfall' | 'shapes' | 'sankey' | 'quadrant-chart' | 'delete';
@@ -24,6 +25,9 @@ export type ButtonSize =
 export type HeaderVariant =
   'default' | 'with-metrics' | 'with-description' | 'centered-navigation-purple' | 
   'navigation-top' | 'double-logo-purple';
+
+export type ShapeVariant =
+  'triangle' | 'rectangle' | 'circle' | 'oval';
 
 export interface Element {
   id: string;
@@ -79,6 +83,10 @@ export interface Element {
     borderColor?: string;
     hasShadow?: boolean;
     shadowSize?: 'sm' | 'md' | 'lg' | 'xl';
+    // Shape properties
+    shapeVariant?: ShapeVariant;
+    shapeColor?: string;
+    showTitle?: boolean;
   };
 }
 
@@ -394,6 +402,8 @@ function getDefaultSizeForType(type: ElementType): { width: number; height: numb
       return { width: 200, height: 120 };
     case 'image':
       return { width: 250, height: 200 };
+    case 'shapes':
+      return { width: 150, height: 150 };
     case 'column-chart':
     case 'bar-chart':
     case 'line-chart':
@@ -421,8 +431,6 @@ function getDefaultSizeForType(type: ElementType): { width: number; height: numb
       return { width: 250, height: 120 };
     case 'delete':
       return { width: 40, height: 40 };
-    case 'shapes':
-      return { width: 100, height: 100 };
     default:
       return { width: 150, height: 80 };
   }
@@ -495,6 +503,18 @@ function getDefaultPropertiesForType(type: ElementType): Element['properties'] {
         borderColor: '#e5e7eb',
         hasShadow: false,
         shadowSize: 'md',
+      };
+    case 'shapes':
+      return {
+        backgroundColor: 'transparent',
+        textColor: 'black',
+        title: 'Title goes here',
+        showTitle: true,
+        shapeVariant: 'triangle',
+        shapeColor: '#9b87f5',
+        textAlignment: 'center',
+        hasBorder: false,
+        borderColor: '#e5e7eb',
       };
     case 'delete':
       return {

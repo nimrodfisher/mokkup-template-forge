@@ -13,12 +13,14 @@ import { toast } from "sonner";
 import { Toaster } from "sonner";
 import { HeaderStyleDialog } from "@/components/HeaderStyleDialog";
 import { ImageStyleDialog } from "@/components/ImageStyleDialog";
+import { ShapeStyleDialog } from "@/components/ShapeStyleDialog";
 
 const Editor = () => {
   const { templateId } = useParams();
   const { loadTemplate, showProperties, selectedElementId, elements } = useWireframe();
   const [showHeaderStyleDialog, setShowHeaderStyleDialog] = useState(false);
   const [showImageStyleDialog, setShowImageStyleDialog] = useState(false);
+  const [showShapeStyleDialog, setShowShapeStyleDialog] = useState(false);
   
   useEffect(() => {
     if (templateId) {
@@ -38,6 +40,8 @@ const Editor = () => {
       setShowHeaderStyleDialog(true);
     } else if (selectedElement?.type === 'image') {
       setShowImageStyleDialog(true);
+    } else if (selectedElement?.type === 'shapes') {
+      setShowShapeStyleDialog(true);
     }
   };
   
@@ -72,6 +76,15 @@ const Editor = () => {
             elementId={selectedElementId} 
             open={showImageStyleDialog}
             onClose={() => setShowImageStyleDialog(false)}
+          />
+        )}
+        
+        {/* Shape Style Dialog */}
+        {selectedElementId && selectedElement?.type === 'shapes' && (
+          <ShapeStyleDialog 
+            elementId={selectedElementId} 
+            isOpen={showShapeStyleDialog}
+            onClose={() => setShowShapeStyleDialog(false)}
           />
         )}
       </div>
