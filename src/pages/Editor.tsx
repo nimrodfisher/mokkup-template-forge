@@ -15,6 +15,7 @@ import { HeaderStyleDialog } from "@/components/HeaderStyleDialog";
 import { ImageStyleDialog } from "@/components/ImageStyleDialog";
 import { ShapeStyleDialog } from "@/components/ShapeStyleDialog";
 import { FilterStyleDialog } from "@/components/FilterStyleDialog";
+import { SaveTemplateDialog } from "@/components/SaveTemplateDialog";
 
 const Editor = () => {
   const { templateId } = useParams();
@@ -23,6 +24,7 @@ const Editor = () => {
   const [showImageStyleDialog, setShowImageStyleDialog] = useState(false);
   const [showShapeStyleDialog, setShowShapeStyleDialog] = useState(false);
   const [showFilterStyleDialog, setShowFilterStyleDialog] = useState(false);
+  const [showSaveDialog, setShowSaveDialog] = useState(false);
   
   useEffect(() => {
     if (templateId) {
@@ -48,11 +50,16 @@ const Editor = () => {
       setShowFilterStyleDialog(true);
     }
   };
+
+  // Function to handle save action
+  const handleSaveAction = () => {
+    setShowSaveDialog(true);
+  };
   
   return (
     <DndProvider backend={HTML5Backend}>
       <div className="flex flex-col h-screen bg-white">
-        <Navbar />
+        <Navbar onSave={handleSaveAction} />
         <div className="flex-1 flex overflow-hidden">
           <Sidebar />
           <div className="flex-1 flex flex-col overflow-hidden">
@@ -100,6 +107,12 @@ const Editor = () => {
             onClose={() => setShowFilterStyleDialog(false)}
           />
         )}
+
+        {/* Save Template Dialog */}
+        <SaveTemplateDialog 
+          open={showSaveDialog}
+          onOpenChange={setShowSaveDialog}
+        />
       </div>
     </DndProvider>
   );

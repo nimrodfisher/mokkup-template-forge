@@ -14,6 +14,14 @@ import { format } from "date-fns";
 import { toast } from "sonner";
 import { ArrowRight } from "lucide-react";
 
+const placeholderImages = [
+  "https://images.unsplash.com/photo-1649972904349-6e44c42644a7?auto=format&fit=crop&w=500&q=60",
+  "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?auto=format&fit=crop&w=500&q=60",
+  "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=500&q=60",
+  "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=500&q=60",
+  "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?auto=format&fit=crop&w=500&q=60"
+];
+
 const TemplateGallery = () => {
   const { templates, deleteTemplate } = useWireframe();
   const navigate = useNavigate();
@@ -27,6 +35,14 @@ const TemplateGallery = () => {
   const getElementCount = (template) => {
     // Count all elements across all screens
     return template.screens?.reduce((count, screen) => count + (screen.elements?.length || 0), 0) || 0;
+  };
+  
+  // Function to get a deterministic image for a template based on its ID
+  const getTemplateImage = (templateId: string) => {
+    // Use the template ID to pick a placeholder image deterministically
+    const charSum = templateId.split('').reduce((sum, char) => sum + char.charCodeAt(0), 0);
+    const imageIndex = charSum % placeholderImages.length;
+    return placeholderImages[imageIndex];
   };
   
   return (
@@ -75,12 +91,28 @@ const TemplateGallery = () => {
                   <CardTitle>{template.name}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="aspect-video bg-gray-100 rounded-md border flex items-center justify-center">
+                  <div className="aspect-video bg-white rounded-md border overflow-hidden">
                     {getElementCount(template) === 0 ? (
-                      <span className="text-gray-400 text-sm">Empty template</span>
+                      <div className="w-full h-full">
+                        <img 
+                          src={getTemplateImage(template.id)}
+                          alt={`Preview for ${template.name}`}
+                          className="w-full h-full object-cover"
+                        />
+                        <div className="absolute inset-0 bg-black/5 flex items-center justify-center">
+                          <span className="text-sm font-medium text-gray-700 bg-white/70 px-2 py-1 rounded">
+                            Empty template
+                          </span>
+                        </div>
+                      </div>
                     ) : (
-                      <div className="relative w-full h-full p-2">
-                        <div className="text-xs text-gray-500">
+                      <div className="relative w-full h-full">
+                        <img 
+                          src={getTemplateImage(template.id)}
+                          alt={`Preview for ${template.name}`}
+                          className="w-full h-full object-cover"
+                        />
+                        <div className="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded-full">
                           {getElementCount(template)} element{getElementCount(template) === 1 ? '' : 's'}
                         </div>
                       </div>
