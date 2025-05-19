@@ -27,7 +27,7 @@ export type HeaderVariant =
 
 export type ShapeVariant =
   'triangle' | 'rectangle' | 'circle' | 'oval' | 
-  'basic-bar' | 'stacked-bar' | 'grouped-bar';
+  'bar-chart' | 'stacked-bar' | 'stacked-100-bar' | 'multi-series-bar';
 
 export interface Element {
   id: string;
@@ -403,7 +403,7 @@ function getDefaultSizeForType(type: ElementType): { width: number; height: numb
     case 'image':
       return { width: 250, height: 200 };
     case 'shapes':
-      return { width: 300, height: 200 };
+      return { width: 150, height: 150 };
     case 'column-chart':
     case 'bar-chart':
     case 'line-chart':
@@ -508,10 +508,10 @@ function getDefaultPropertiesForType(type: ElementType): Element['properties'] {
       return {
         backgroundColor: 'transparent',
         textColor: 'black',
-        title: 'Chart Title',
+        title: 'Title goes here',
         showTitle: true,
-        shapeVariant: 'basic-bar',
-        shapeColor: '#4f46e5',
+        shapeVariant: 'triangle',
+        shapeColor: '#9b87f5',
         textAlignment: 'center',
         hasBorder: false,
         borderColor: '#e5e7eb',
