@@ -12,11 +12,13 @@ import { PropertiesPanel } from "@/components/PropertiesPanel";
 import { toast } from "sonner";
 import { Toaster } from "sonner";
 import { HeaderStyleDialog } from "@/components/HeaderStyleDialog";
+import { ImageStyleDialog } from "@/components/ImageStyleDialog";
 
 const Editor = () => {
   const { templateId } = useParams();
   const { loadTemplate, showProperties, selectedElementId, elements } = useWireframe();
   const [showHeaderStyleDialog, setShowHeaderStyleDialog] = useState(false);
+  const [showImageStyleDialog, setShowImageStyleDialog] = useState(false);
   
   useEffect(() => {
     if (templateId) {
@@ -30,10 +32,12 @@ const Editor = () => {
     ? elements.find(element => element.id === selectedElementId) 
     : null;
   
-  // Show header style dialog based on the element type
+  // Show style dialog based on the element type
   const handleOpenStyleDialog = () => {
     if (selectedElement?.type === 'header') {
       setShowHeaderStyleDialog(true);
+    } else if (selectedElement?.type === 'image') {
+      setShowImageStyleDialog(true);
     }
   };
   
@@ -59,6 +63,15 @@ const Editor = () => {
             elementId={selectedElementId} 
             isOpen={showHeaderStyleDialog}
             onClose={() => setShowHeaderStyleDialog(false)}
+          />
+        )}
+        
+        {/* Image Style Dialog */}
+        {selectedElementId && selectedElement?.type === 'image' && (
+          <ImageStyleDialog 
+            elementId={selectedElementId} 
+            open={showImageStyleDialog}
+            onClose={() => setShowImageStyleDialog(false)}
           />
         )}
       </div>

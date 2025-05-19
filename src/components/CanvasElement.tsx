@@ -7,6 +7,7 @@ import { KpiDisplay } from "./KpiDisplay";
 import { ButtonStyleDialog } from "./ButtonStyleDialog";
 import { TextboxStyleDialog } from "./TextboxStyleDialog";
 import { toast } from "sonner";
+import { ImageStyleDialog } from "./ImageStyleDialog";
 
 interface CanvasElementProps {
   element: Element;
@@ -18,6 +19,7 @@ export function CanvasElement({ element, isSelected }: CanvasElementProps) {
   const [showKpiStyleDialog, setShowKpiStyleDialog] = useState(false);
   const [showButtonStyleDialog, setShowButtonStyleDialog] = useState(false);
   const [showTextboxStyleDialog, setShowTextboxStyleDialog] = useState(false);
+  const [showImageStyleDialog, setShowImageStyleDialog] = useState(false);
   const { updateElement, selectElement, removeElement } = useWireframe();
   const [isDragging, setIsDragging] = useState(false);
   const [isResizing, setIsResizing] = useState(false);
@@ -37,6 +39,8 @@ export function CanvasElement({ element, isSelected }: CanvasElementProps) {
       setShowButtonStyleDialog(true);
     } else if (element.type === 'textbox') {
       setShowTextboxStyleDialog(true);
+    } else if (element.type === 'image') {
+      setShowImageStyleDialog(true);
     }
   };
   
@@ -242,6 +246,56 @@ export function CanvasElement({ element, isSelected }: CanvasElementProps) {
           </div>
         );
       }
+      case 'image': {
+        const imageProps = element.properties || {};
+        
+        // Define shadow classes based on properties
+        const shadowClasses = imageProps.hasShadow 
+          ? {
+              sm: 'shadow-sm',
+              md: 'shadow-md', 
+              lg: 'shadow-lg',
+              xl: 'shadow-xl',
+            }[imageProps.shadowSize || 'md'] || 'shadow-md'
+          : '';
+          
+        // Define border radius classes
+        const radiusClasses = {
+          none: 'rounded-none',
+          sm: 'rounded-sm',
+          md: 'rounded-md',
+          lg: 'rounded-lg',
+          full: 'rounded-full',
+        }[imageProps.borderRadius || 'md'] || 'rounded-md';
+        
+        // Define object-fit style
+        const objectFitClass = {
+          contain: 'object-contain',
+          cover: 'object-cover',
+          fill: 'object-fill',
+          none: 'object-none',
+          'scale-down': 'object-scale-down',
+        }[imageProps.imageFit || 'contain'] || 'object-contain';
+        
+        return (
+          <div className="w-full h-full flex items-center justify-center p-2">
+            {imageProps.imageUrl ? (
+              <img 
+                src={imageProps.imageUrl}
+                alt={imageProps.imageAlt || 'Image'}
+                className={`w-full h-full ${objectFitClass} ${radiusClasses} ${shadowClasses} ${
+                  imageProps.hasBorder ? 'border' : ''
+                }`}
+                style={imageProps.hasBorder ? { borderColor: imageProps.borderColor } : {}}
+              />
+            ) : (
+              <div className="w-full h-full border-2 border-dashed border-gray-300 rounded flex items-center justify-center text-gray-400">
+                Image Placeholder
+              </div>
+            )}
+          </div>
+        );
+      }
       case 'filter':
         return <FilterDisplay element={element} />;
       case 'kpi':
@@ -336,6 +390,14 @@ export function CanvasElement({ element, isSelected }: CanvasElementProps) {
           elementId={element.id}
           open={showTextboxStyleDialog}
           onClose={() => setShowTextboxStyleDialog(false)}
+        />
+      )}
+      
+      {showImageStyleDialog && (
+        <ImageStyleDialog
+          elementId={element.id}
+          open={showImageStyleDialog}
+          onClose={() => setShowImageStyleDialog(false)}
         />
       )}
     </>

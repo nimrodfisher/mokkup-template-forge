@@ -1,4 +1,3 @@
-
 import { create } from 'zustand';
 import { v4 as uuidv4 } from 'uuid';
 import { persist } from 'zustand/middleware';
@@ -71,6 +70,15 @@ export interface Element {
     textAlignment?: 'left' | 'center' | 'right';
     fontSize?: 'sm' | 'md' | 'lg' | 'xl';
     fontWeight?: 'normal' | 'medium' | 'bold';
+    // Image properties
+    imageUrl?: string;
+    imageAlt?: string;
+    imageFit?: 'contain' | 'cover' | 'fill' | 'none' | 'scale-down';
+    borderRadius?: 'none' | 'sm' | 'md' | 'lg' | 'full';
+    hasBorder?: boolean;
+    borderColor?: string;
+    hasShadow?: boolean;
+    shadowSize?: 'sm' | 'md' | 'lg' | 'xl';
   };
 }
 
@@ -109,6 +117,7 @@ interface WireframeState {
   toggleProperties: () => void;
   updateElementProperties: (id: string, properties: Partial<Element['properties']>) => void;
   updateLogoImage: (id: string, logoUrl: string) => void;
+  updateImage: (id: string, imageUrl: string) => void;
   
   // Screen actions
   addScreen: () => void;
@@ -198,6 +207,20 @@ export const useWireframe = create<WireframeState>()(
               properties: {
                 ...el.properties,
                 logoUrl
+              } 
+            } : el
+          ),
+        }));
+      },
+      
+      updateImage: (id, imageUrl) => {
+        set(state => ({
+          elements: state.elements.map(el => 
+            el.id === id ? { 
+              ...el, 
+              properties: {
+                ...el.properties,
+                imageUrl
               } 
             } : el
           ),
@@ -369,6 +392,8 @@ function getDefaultSizeForType(type: ElementType): { width: number; height: numb
       return { width: 200, height: 40 };
     case 'kpi':
       return { width: 200, height: 120 };
+    case 'image':
+      return { width: 250, height: 200 };
     case 'column-chart':
     case 'bar-chart':
     case 'line-chart':
@@ -392,8 +417,6 @@ function getDefaultSizeForType(type: ElementType): { width: number; height: numb
     case 'treemap':
     case 'heatmap':
       return { width: 300, height: 300 };
-    case 'image':
-      return { width: 200, height: 150 };
     case 'textbox':
       return { width: 250, height: 120 };
     case 'delete':
@@ -460,6 +483,18 @@ function getDefaultPropertiesForType(type: ElementType): Element['properties'] {
         textAlignment: 'left',
         fontSize: 'md',
         fontWeight: 'normal',
+      };
+    case 'image':
+      return {
+        backgroundColor: 'transparent',
+        imageUrl: '',
+        imageAlt: 'Image description',
+        imageFit: 'contain',
+        borderRadius: 'md',
+        hasBorder: false,
+        borderColor: '#e5e7eb',
+        hasShadow: false,
+        shadowSize: 'md',
       };
     case 'delete':
       return {
