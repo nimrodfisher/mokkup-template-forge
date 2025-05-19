@@ -12,13 +12,11 @@ import { PropertiesPanel } from "@/components/PropertiesPanel";
 import { toast } from "sonner";
 import { Toaster } from "sonner";
 import { HeaderStyleDialog } from "@/components/HeaderStyleDialog";
-import { TextboxStyleDialog } from "@/components/TextboxStyleDialog";
 
 const Editor = () => {
   const { templateId } = useParams();
   const { loadTemplate, showProperties, selectedElementId, elements } = useWireframe();
   const [showHeaderStyleDialog, setShowHeaderStyleDialog] = useState(false);
-  const [showTextboxStyleDialog, setShowTextboxStyleDialog] = useState(false);
   
   useEffect(() => {
     if (templateId) {
@@ -32,12 +30,10 @@ const Editor = () => {
     ? elements.find(element => element.id === selectedElementId) 
     : null;
   
-  // Show style dialog based on the element type
+  // Show header style dialog based on the element type
   const handleOpenStyleDialog = () => {
     if (selectedElement?.type === 'header') {
       setShowHeaderStyleDialog(true);
-    } else if (selectedElement?.type === 'textbox') {
-      setShowTextboxStyleDialog(true);
     }
   };
   
@@ -63,15 +59,6 @@ const Editor = () => {
             elementId={selectedElementId} 
             isOpen={showHeaderStyleDialog}
             onClose={() => setShowHeaderStyleDialog(false)}
-          />
-        )}
-
-        {/* Textbox Style Dialog */}
-        {selectedElementId && selectedElement?.type === 'textbox' && (
-          <TextboxStyleDialog 
-            elementId={selectedElementId} 
-            open={showTextboxStyleDialog}
-            onClose={() => setShowTextboxStyleDialog(false)}
           />
         )}
       </div>
