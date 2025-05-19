@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -10,10 +11,10 @@ interface SidebarProps {
 
 export function Sidebar({ className }: SidebarProps) {
   const [activeTab, setActiveTab] = useState<'elements' | 'layers'>('elements');
-  const [categoryFilter, setCategoryFilter] = useState<'all' | 'charts' | 'tables' | 'basic'>('all');
+  const [categoryFilter, setCategoryFilter] = useState<'all' | 'charts' | 'tables' | 'basic' | 'tools'>('all');
   const { elements, selectedElementId, selectElement, removeElement } = useWireframe();
   
-  const components: { type: ElementType; label: string; category: 'basic' | 'charts' | 'tables' | 'other' }[] = [
+  const components: { type: ElementType; label: string; category: 'basic' | 'charts' | 'tables' | 'other' | 'tools' }[] = [
     // Basic elements
     { type: 'header', label: 'Header', category: 'basic' },
     { type: 'filter', label: 'Filter', category: 'basic' },
@@ -48,6 +49,9 @@ export function Sidebar({ className }: SidebarProps) {
     { type: 'geomap', label: 'Geomap', category: 'other' },
     { type: 'treemap', label: 'Treemap', category: 'other' },
     { type: 'heatmap', label: 'Heatmap', category: 'other' },
+    
+    // Tools
+    { type: 'delete', label: 'Delete Tool', category: 'tools' },
   ];
   
   // Filter components based on category
@@ -134,6 +138,17 @@ export function Sidebar({ className }: SidebarProps) {
                 onClick={() => setCategoryFilter('tables')}
               >
                 Tables
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                className={cn(
+                  "text-xs h-8",
+                  categoryFilter === 'tools' ? "bg-blue-50 border-blue-200 hover:bg-blue-100" : ""
+                )}
+                onClick={() => setCategoryFilter('tools')}
+              >
+                Tools
               </Button>
             </div>
             

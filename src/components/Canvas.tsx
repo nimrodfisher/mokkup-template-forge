@@ -4,10 +4,11 @@ import { useDrop } from "react-dnd";
 import { useWireframe, ElementType } from "@/hooks/useWireframe";
 import { CanvasElement } from "./CanvasElement";
 import { toast } from "sonner";
+import { Trash2 } from "lucide-react";
 
 export function Canvas() {
   const canvasRef = useRef<HTMLDivElement>(null);
-  const { elements, addElement, selectedElementId, selectElement, screens } = useWireframe();
+  const { elements, addElement, selectedElementId, selectElement, screens, removeElement } = useWireframe();
   
   // Get the active screen
   const activeScreen = screens.find(screen => screen.isActive);
@@ -24,6 +25,19 @@ export function Canvas() {
       if (canvasRect && activeScreen) {
         const clientOffset = monitor.getClientOffset();
         if (clientOffset) {
+          // Handle delete tool
+          if (item.type === 'delete') {
+            if (selectedElementId) {
+              removeElement(selectedElementId);
+              toast.success("Element deleted");
+              return;
+            } else {
+              toast.error("No element selected to delete");
+              return;
+            }
+          }
+          
+          // Handle normal element addition
           addElement(
             item.type,
             {
@@ -31,6 +45,7 @@ export function Canvas() {
               y: clientOffset.y - canvasRect.top,
             }
           );
+          
           if (item.type === 'header') {
             toast.info("Double-click header to choose a style");
           } else if (item.type === 'filter') {

@@ -10,6 +10,7 @@ import { useParams } from "react-router-dom";
 import { ScreenTabs } from "@/components/ScreenTabs";
 import { PropertiesPanel } from "@/components/PropertiesPanel";
 import { toast } from "sonner";
+import { Toaster } from "sonner";
 
 const Editor = () => {
   const { templateId } = useParams();
@@ -36,6 +37,7 @@ const Editor = () => {
             </div>
           </div>
         </div>
+        <Toaster position="top-right" richColors />
       </div>
     </DndProvider>
   );

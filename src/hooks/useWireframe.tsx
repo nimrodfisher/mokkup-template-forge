@@ -7,13 +7,19 @@ export type ElementType =
   'line-chart' | 'area-chart' | 'combo-chart' | 'pie-chart' | 'donut-chart' | 
   'simple-table' | 'hierarchy-table' | 'geomap' | 'treemap' | 'heatmap' |
   'funnel-chart' | 'image' | 'textbox' | 'histogram' | 'gauge' | 'scatter-plot' |
-  'bubble-chart' | 'waterfall' | 'shapes' | 'sankey' | 'quadrant-chart';
+  'bubble-chart' | 'waterfall' | 'shapes' | 'sankey' | 'quadrant-chart' | 'delete';
 
 export type FilterVariant = 
   'dropdown' | 'checkbox' | 'radio' | 'date' | 'daterange' | 'slider' | 'search';
 
 export type KpiVariant =
   'basic' | 'area' | 'indicator' | 'comparison';
+
+export type ButtonVariant =
+  'default' | 'primary' | 'secondary' | 'outline' | 'ghost';
+
+export type ButtonSize =
+  'sm' | 'md' | 'lg';
 
 export interface Element {
   id: string;
@@ -47,6 +53,18 @@ export interface Element {
     showPreviousValue?: boolean;
     showChangePercentage?: boolean;
     indicatorColor?: string;
+    // Button properties
+    buttonText?: string;
+    buttonVariant?: ButtonVariant;
+    buttonSize?: ButtonSize;
+    buttonIcon?: boolean;
+    // Textbox properties
+    textboxContent?: string;
+    textboxTitle?: string;
+    showTextboxTitle?: boolean;
+    textAlignment?: 'left' | 'center' | 'right';
+    fontSize?: 'sm' | 'md' | 'lg' | 'xl';
+    fontWeight?: 'normal' | 'medium' | 'bold';
   };
 }
 
@@ -340,7 +358,7 @@ function getDefaultSizeForType(type: ElementType): { width: number; height: numb
     case 'header':
       return { width: 600, height: 60 };
     case 'button':
-      return { width: 100, height: 40 };
+      return { width: 120, height: 40 };
     case 'filter':
       return { width: 200, height: 40 };
     case 'kpi':
@@ -371,7 +389,9 @@ function getDefaultSizeForType(type: ElementType): { width: number; height: numb
     case 'image':
       return { width: 200, height: 150 };
     case 'textbox':
-      return { width: 250, height: 100 };
+      return { width: 250, height: 120 };
+    case 'delete':
+      return { width: 40, height: 40 };
     case 'shapes':
       return { width: 100, height: 100 };
     default:
@@ -414,6 +434,31 @@ function getDefaultPropertiesForType(type: ElementType): Element['properties'] {
         showPreviousValue: true,
         showChangePercentage: true,
         indicatorColor: '#8B5CF6',
+      };
+    case 'button':
+      return {
+        backgroundColor: '#3B82F6',
+        textColor: 'white',
+        buttonText: 'Button',
+        buttonVariant: 'default',
+        buttonSize: 'md',
+        buttonIcon: false,
+      };
+    case 'textbox':
+      return {
+        backgroundColor: 'transparent',
+        textColor: 'black',
+        textboxTitle: 'Title goes here',
+        textboxContent: 'Edit text in left pane...',
+        showTextboxTitle: true,
+        textAlignment: 'left',
+        fontSize: 'md',
+        fontWeight: 'normal',
+      };
+    case 'delete':
+      return {
+        backgroundColor: '#EF4444',
+        textColor: 'white',
       };
     default:
       return {};

@@ -4,6 +4,8 @@ import { FilterDisplay } from "./FilterDisplay";
 import { FilterStyleDialog } from "./FilterStyleDialog";
 import { KpiStyleDialog } from "./KpiStyleDialog";
 import { KpiDisplay } from "./KpiDisplay";
+import { ButtonStyleDialog } from "./ButtonStyleDialog";
+import { TextboxStyleDialog } from "./TextboxStyleDialog";
 import { toast } from "sonner";
 
 interface CanvasElementProps {
@@ -14,6 +16,8 @@ interface CanvasElementProps {
 export function CanvasElement({ element, isSelected }: CanvasElementProps) {
   const [showFilterStyleDialog, setShowFilterStyleDialog] = useState(false);
   const [showKpiStyleDialog, setShowKpiStyleDialog] = useState(false);
+  const [showButtonStyleDialog, setShowButtonStyleDialog] = useState(false);
+  const [showTextboxStyleDialog, setShowTextboxStyleDialog] = useState(false);
   const { updateElement, selectElement, removeElement } = useWireframe();
   const [isDragging, setIsDragging] = useState(false);
   const [isResizing, setIsResizing] = useState(false);
@@ -29,6 +33,10 @@ export function CanvasElement({ element, isSelected }: CanvasElementProps) {
       setShowFilterStyleDialog(true);
     } else if (element.type === 'kpi') {
       setShowKpiStyleDialog(true);
+    } else if (element.type === 'button') {
+      setShowButtonStyleDialog(true);
+    } else if (element.type === 'textbox') {
+      setShowTextboxStyleDialog(true);
     }
   };
   
@@ -164,18 +172,102 @@ export function CanvasElement({ element, isSelected }: CanvasElementProps) {
             )}
           </div>
         );
-      case 'button':
+      case 'button': {
+        const buttonProps = element.properties || {};
+        const sizeClasses = {
+          sm: "px-3 py-1 text-xs",
+          md: "px-4 py-2 text-sm",
+          lg: "px-6 py-3 text-base",
+        };
+        
+        const variantClasses = {
+          default: "bg-blue-500 text-white hover:bg-blue-600",
+          primary: "bg-purple-600 text-white hover:bg-purple-700",
+          secondary: "bg-gray-500 text-white hover:bg-gray-600",
+          outline: "bg-transparent border border-gray-300 text-gray-700 hover:bg-gray-100",
+          ghost: "bg-transparent hover:bg-gray-100 text-gray-700",
+        };
+        
+        const size = (buttonProps.buttonSize as keyof typeof sizeClasses) || 'md';
+        const variant = (buttonProps.buttonVariant as keyof typeof variantClasses) || 'default';
+        
         return (
           <div className="w-full h-full flex items-center justify-center">
-            <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
-              Button
+            <button 
+              className={`rounded transition-colors ${sizeClasses[size]} ${variantClasses[variant]} flex items-center justify-center`}
+            >
+              {buttonProps.buttonIcon && (
+                <svg className="mr-1 w-4 h-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M5 12h14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                  <path d="M12 5l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              )}
+              {buttonProps.buttonText || 'Button'}
             </button>
           </div>
         );
+      }
+      case 'textbox': {
+        const textboxProps = element.properties || {};
+        const textAlignment = textboxProps.textAlignment || 'left';
+        const fontSize = textboxProps.fontSize || 'md';
+        const fontWeight = textboxProps.fontWeight || 'normal';
+        
+        const fontSizeClasses = {
+          sm: 'text-sm',
+          md: 'text-base',
+          lg: 'text-lg',
+          xl: 'text-xl',
+        };
+        
+        const fontWeightClasses = {
+          normal: 'font-normal',
+          medium: 'font-medium',
+          bold: 'font-bold',
+        };
+        
+        return (
+          <div 
+            className="w-full h-full p-4 overflow-auto"
+            style={{ textAlign: textAlignment as any }}
+          >
+            {textboxProps.showTextboxTitle !== false && textboxProps.textboxTitle && (
+              <h3 className={`mb-2 ${fontSizeClasses[fontSize as keyof typeof fontSizeClasses]} ${fontWeightClasses[fontWeight as keyof typeof fontWeightClasses]}`}>
+                {textboxProps.textboxTitle}
+              </h3>
+            )}
+            <div className={`${fontSizeClasses[fontSize as keyof typeof fontSizeClasses]} ${fontWeightClasses[fontWeight as keyof typeof fontWeightClasses]}`}>
+              {textboxProps.textboxContent || 'Edit text in left pane...'}
+            </div>
+          </div>
+        );
+      }
       case 'filter':
         return <FilterDisplay element={element} />;
       case 'kpi':
         return <KpiDisplay element={element} />;
+      case 'delete':
+        return (
+          <div className="w-full h-full flex items-center justify-center bg-red-500 text-white p-2 rounded">
+            <svg 
+              xmlns="http://www.w3.org/2000/svg" 
+              width="24" 
+              height="24" 
+              viewBox="0 0 24 24" 
+              fill="none" 
+              stroke="currentColor" 
+              strokeWidth="2" 
+              strokeLinecap="round" 
+              strokeLinejoin="round"
+            >
+              <path d="M3 6h18"></path>
+              <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+              <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+              <line x1="10" y1="11" x2="10" y2="17"></line>
+              <line x1="14" y1="11" x2="14" y2="17"></line>
+            </svg>
+          </div>
+        );
       default:
         return (
           <div className="w-full h-full flex items-center justify-center p-2">
@@ -228,6 +320,22 @@ export function CanvasElement({ element, isSelected }: CanvasElementProps) {
           elementId={element.id}
           open={showKpiStyleDialog}
           onClose={() => setShowKpiStyleDialog(false)}
+        />
+      )}
+      
+      {showButtonStyleDialog && (
+        <ButtonStyleDialog
+          elementId={element.id}
+          open={showButtonStyleDialog}
+          onClose={() => setShowButtonStyleDialog(false)}
+        />
+      )}
+      
+      {showTextboxStyleDialog && (
+        <TextboxStyleDialog
+          elementId={element.id}
+          open={showTextboxStyleDialog}
+          onClose={() => setShowTextboxStyleDialog(false)}
         />
       )}
     </>
