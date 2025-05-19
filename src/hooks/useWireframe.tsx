@@ -1,4 +1,3 @@
-
 import { create } from 'zustand';
 import { v4 as uuidv4 } from 'uuid';
 import { persist } from 'zustand/middleware';
@@ -12,6 +11,9 @@ export type ElementType =
 
 export type FilterVariant = 
   'dropdown' | 'checkbox' | 'radio' | 'date' | 'daterange' | 'slider' | 'search';
+
+export type KpiVariant =
+  'basic' | 'area' | 'indicator' | 'comparison';
 
 export interface Element {
   id: string;
@@ -34,6 +36,17 @@ export interface Element {
     filterVariant?: FilterVariant;
     filterValues?: string[];
     filterAlignment?: 'left' | 'center' | 'right';
+    // KPI properties
+    kpiVariant?: KpiVariant;
+    kpiTitle?: string;
+    kpiValue?: string;
+    kpiPreviousValue?: string;
+    kpiChangePercentage?: string;
+    kpiAlignment?: 'left' | 'center' | 'right';
+    showKpiTitle?: boolean;
+    showPreviousValue?: boolean;
+    showChangePercentage?: boolean;
+    indicatorColor?: string;
   };
 }
 
@@ -331,7 +344,7 @@ function getDefaultSizeForType(type: ElementType): { width: number; height: numb
     case 'filter':
       return { width: 200, height: 40 };
     case 'kpi':
-      return { width: 200, height: 100 };
+      return { width: 200, height: 120 };
     case 'column-chart':
     case 'bar-chart':
     case 'line-chart':
@@ -386,6 +399,21 @@ function getDefaultPropertiesForType(type: ElementType): Element['properties'] {
         filterVariant: 'dropdown',
         filterValues: ['All', 'Value 1', 'Value 2'],
         filterAlignment: 'left',
+      };
+    case 'kpi':
+      return {
+        backgroundColor: '#ffffff',
+        textColor: 'black',
+        kpiVariant: 'basic',
+        kpiTitle: 'Metric Title',
+        kpiValue: '25.2K',
+        kpiPreviousValue: '11.6K',
+        kpiChangePercentage: '+10%',
+        kpiAlignment: 'left',
+        showKpiTitle: true,
+        showPreviousValue: true,
+        showChangePercentage: true,
+        indicatorColor: '#8B5CF6',
       };
     default:
       return {};

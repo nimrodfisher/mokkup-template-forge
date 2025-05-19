@@ -1,8 +1,9 @@
-
 import { useState } from "react";
 import { useWireframe, Element } from "@/hooks/useWireframe";
 import { FilterDisplay } from "./FilterDisplay";
 import { FilterStyleDialog } from "./FilterStyleDialog";
+import { KpiStyleDialog } from "./KpiStyleDialog";
+import { KpiDisplay } from "./KpiDisplay";
 import { toast } from "sonner";
 
 interface CanvasElementProps {
@@ -12,6 +13,7 @@ interface CanvasElementProps {
 
 export function CanvasElement({ element, isSelected }: CanvasElementProps) {
   const [showFilterStyleDialog, setShowFilterStyleDialog] = useState(false);
+  const [showKpiStyleDialog, setShowKpiStyleDialog] = useState(false);
   const { updateElement, selectElement, removeElement } = useWireframe();
   const [isDragging, setIsDragging] = useState(false);
   const [isResizing, setIsResizing] = useState(false);
@@ -25,6 +27,8 @@ export function CanvasElement({ element, isSelected }: CanvasElementProps) {
     e.stopPropagation();
     if (element.type === 'filter') {
       setShowFilterStyleDialog(true);
+    } else if (element.type === 'kpi') {
+      setShowKpiStyleDialog(true);
     }
   };
   
@@ -170,6 +174,8 @@ export function CanvasElement({ element, isSelected }: CanvasElementProps) {
         );
       case 'filter':
         return <FilterDisplay element={element} />;
+      case 'kpi':
+        return <KpiDisplay element={element} />;
       default:
         return (
           <div className="w-full h-full flex items-center justify-center p-2">
@@ -214,6 +220,14 @@ export function CanvasElement({ element, isSelected }: CanvasElementProps) {
           elementId={element.id} 
           open={showFilterStyleDialog} 
           onClose={() => setShowFilterStyleDialog(false)}
+        />
+      )}
+      
+      {showKpiStyleDialog && (
+        <KpiStyleDialog
+          elementId={element.id}
+          open={showKpiStyleDialog}
+          onClose={() => setShowKpiStyleDialog(false)}
         />
       )}
     </>

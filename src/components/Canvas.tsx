@@ -35,6 +35,8 @@ export function Canvas() {
             toast.info("Double-click header to choose a style");
           } else if (item.type === 'filter') {
             toast.info("Double-click filter to choose a filter style");
+          } else if (item.type === 'kpi') {
+            toast.info("Double-click KPI to choose a KPI style");
           }
         }
       } else if (!activeScreen) {
