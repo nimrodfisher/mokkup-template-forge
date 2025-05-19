@@ -6,7 +6,15 @@ import { CanvasElement } from "./CanvasElement";
 
 export function Canvas() {
   const canvasRef = useRef<HTMLDivElement>(null);
-  const { elements, addElement, selectedElementId, selectElement } = useWireframe();
+  const { elements, addElement, selectedElementId, selectElement, screens } = useWireframe();
+  
+  // Get the active screen
+  const activeScreen = screens.find(screen => screen.isActive);
+  
+  // Filter elements to only show those from the active screen
+  const activeElements = elements.filter(element => 
+    element.screenId === activeScreen?.id
+  );
   
   const [, drop] = useDrop(() => ({
     accept: 'COMPONENT',
@@ -41,7 +49,7 @@ export function Canvas() {
       className="flex-1 overflow-auto bg-gray-100 h-full relative"
       onClick={() => selectElement(null)}
     >
-      {elements.length === 0 && (
+      {activeElements.length === 0 && (
         <div className="absolute inset-0 flex flex-col items-center justify-center text-gray-500">
           <div className="w-24 h-24 mb-4">
             <svg viewBox="0 0 24 24" fill="none" className="text-gray-300" xmlns="http://www.w3.org/2000/svg">
@@ -56,7 +64,7 @@ export function Canvas() {
         </div>
       )}
       
-      {elements.map((element) => (
+      {activeElements.map((element) => (
         <CanvasElement
           key={element.id}
           element={element}

@@ -78,7 +78,79 @@ function ComponentIcon({ type }: { type: ElementType }) {
           <rect x="6" y="16" width="5" height="3" rx="1" stroke="currentColor" strokeWidth="1.5" />
         </svg>
       );
+    case 'line-chart':
+      return (
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3 18h18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+          <path d="M3 12L8 9 13 15 21 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      );
+    case 'area-chart':
+      return (
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3 18h18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+          <path d="M3 12L8 9 13 15 21 6V18H3V12Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      );
+    case 'pie-chart':
+      return (
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.5" />
+          <path d="M12 3V12H21" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      );
+    case 'donut-chart':
+      return (
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.5" />
+          <circle cx="12" cy="12" r="4" stroke="currentColor" strokeWidth="1.5" />
+          <path d="M12 3V8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+          <path d="M21 12H16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+        </svg>
+      );
+    case 'simple-table':
+      return (
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="3" y="5" width="18" height="14" rx="1" stroke="currentColor" strokeWidth="1.5" />
+          <path d="M3 9H21" stroke="currentColor" strokeWidth="1.5" />
+          <path d="M3 13H21" stroke="currentColor" strokeWidth="1.5" />
+          <path d="M3 17H21" stroke="currentColor" strokeWidth="1.5" />
+          <path d="M9 5V19" stroke="currentColor" strokeWidth="1.5" />
+          <path d="M15 5V19" stroke="currentColor" strokeWidth="1.5" />
+        </svg>
+      );
+    case 'hierarchy-table':
+      return (
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="3" y="4" width="18" height="16" rx="1" stroke="currentColor" strokeWidth="1.5" />
+          <path d="M3 8H21" stroke="currentColor" strokeWidth="1.5" />
+          <path d="M8 4V20" stroke="currentColor" strokeWidth="1.5" />
+          <path d="M8 12H21" stroke="currentColor" strokeWidth="1.5" />
+          <path d="M8 16H21" stroke="currentColor" strokeWidth="1.5" />
+        </svg>
+      );
+    case 'textbox':
+      return (
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="3" y="6" width="18" height="12" rx="1" stroke="currentColor" strokeWidth="1.5" />
+          <path d="M7 10H17" stroke="currentColor" strokeWidth="1.5" />
+          <path d="M7 14H14" stroke="currentColor" strokeWidth="1.5" />
+        </svg>
+      );
+    case 'image':
+      return (
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor" strokeWidth="1.5" />
+          <circle cx="8.5" cy="8.5" r="1.5" fill="currentColor" />
+          <path d="M6 16l3-3 2 2 5-5 3 3" stroke="currentColor" strokeWidth="1.5" />
+        </svg>
+      );
+    // Add additional icons for the other component types
     default:
-      return null;
+      return (
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor" strokeWidth="1.5" />
+        </svg>
+      );
   }
 }

@@ -7,6 +7,7 @@ import { Navbar } from "@/components/Navbar";
 import { useWireframe } from "@/hooks/useWireframe";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { ScreenTabs } from "@/components/ScreenTabs";
 
 const Editor = () => {
   const { templateId } = useParams();
@@ -24,7 +25,10 @@ const Editor = () => {
         <Navbar />
         <div className="flex-1 flex overflow-hidden">
           <Sidebar />
-          <Canvas />
+          <div className="flex-1 flex flex-col overflow-hidden">
+            <ScreenTabs />
+            <Canvas />
+          </div>
         </div>
       </div>
     </DndProvider>
