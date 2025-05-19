@@ -14,6 +14,7 @@ import { Toaster } from "sonner";
 import { HeaderStyleDialog } from "@/components/HeaderStyleDialog";
 import { ImageStyleDialog } from "@/components/ImageStyleDialog";
 import { ShapeStyleDialog } from "@/components/ShapeStyleDialog";
+import { FilterStyleDialog } from "@/components/FilterStyleDialog";
 
 const Editor = () => {
   const { templateId } = useParams();
@@ -21,6 +22,7 @@ const Editor = () => {
   const [showHeaderStyleDialog, setShowHeaderStyleDialog] = useState(false);
   const [showImageStyleDialog, setShowImageStyleDialog] = useState(false);
   const [showShapeStyleDialog, setShowShapeStyleDialog] = useState(false);
+  const [showFilterStyleDialog, setShowFilterStyleDialog] = useState(false);
   
   useEffect(() => {
     if (templateId) {
@@ -42,6 +44,8 @@ const Editor = () => {
       setShowImageStyleDialog(true);
     } else if (selectedElement?.type === 'shapes') {
       setShowShapeStyleDialog(true);
+    } else if (selectedElement?.type === 'filter') {
+      setShowFilterStyleDialog(true);
     }
   };
   
@@ -85,6 +89,15 @@ const Editor = () => {
             elementId={selectedElementId} 
             isOpen={showShapeStyleDialog}
             onClose={() => setShowShapeStyleDialog(false)}
+          />
+        )}
+        
+        {/* Filter Style Dialog */}
+        {selectedElementId && selectedElement?.type === 'filter' && (
+          <FilterStyleDialog 
+            elementId={selectedElementId} 
+            open={showFilterStyleDialog}
+            onClose={() => setShowFilterStyleDialog(false)}
           />
         )}
       </div>
