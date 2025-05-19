@@ -6,6 +6,8 @@ import { KpiStyleDialog } from "./KpiStyleDialog";
 import { KpiDisplay } from "./KpiDisplay";
 import { ButtonStyleDialog } from "./ButtonStyleDialog";
 import { TextboxStyleDialog } from "./TextboxStyleDialog";
+import { ShapeStyleDialog } from "./ShapeStyleDialog";
+import { ShapeDisplay } from "./ShapeDisplay";
 import { toast } from "sonner";
 import { ImageStyleDialog } from "./ImageStyleDialog";
 
@@ -20,6 +22,7 @@ export function CanvasElement({ element, isSelected }: CanvasElementProps) {
   const [showButtonStyleDialog, setShowButtonStyleDialog] = useState(false);
   const [showTextboxStyleDialog, setShowTextboxStyleDialog] = useState(false);
   const [showImageStyleDialog, setShowImageStyleDialog] = useState(false);
+  const [showShapeStyleDialog, setShowShapeStyleDialog] = useState(false);
   const { updateElement, selectElement, removeElement } = useWireframe();
   const [isDragging, setIsDragging] = useState(false);
   const [isResizing, setIsResizing] = useState(false);
@@ -41,6 +44,8 @@ export function CanvasElement({ element, isSelected }: CanvasElementProps) {
       setShowTextboxStyleDialog(true);
     } else if (element.type === 'image') {
       setShowImageStyleDialog(true);
+    } else if (element.type === 'shapes') {
+      setShowShapeStyleDialog(true);
     }
   };
   
@@ -300,6 +305,8 @@ export function CanvasElement({ element, isSelected }: CanvasElementProps) {
         return <FilterDisplay element={element} />;
       case 'kpi':
         return <KpiDisplay element={element} />;
+      case 'shapes':
+        return <ShapeDisplay element={element} />;
       case 'delete':
         return (
           <div className="w-full h-full flex items-center justify-center bg-red-500 text-white p-2 rounded">
@@ -398,6 +405,14 @@ export function CanvasElement({ element, isSelected }: CanvasElementProps) {
           elementId={element.id}
           open={showImageStyleDialog}
           onClose={() => setShowImageStyleDialog(false)}
+        />
+      )}
+      
+      {showShapeStyleDialog && (
+        <ShapeStyleDialog
+          elementId={element.id}
+          isOpen={showShapeStyleDialog}
+          onClose={() => setShowShapeStyleDialog(false)}
         />
       )}
     </>

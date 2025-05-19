@@ -8,7 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { useWireframe } from "@/hooks/useWireframe";
+import { useWireframe, ShapeVariant } from "@/hooks/useWireframe";
 import { X } from "lucide-react";
 import { useState } from "react";
 
@@ -20,7 +20,7 @@ interface ShapeStyleDialogProps {
 
 export function ShapeStyleDialog({ elementId, isOpen, onClose }: ShapeStyleDialogProps) {
   const { elements, updateElementProperties } = useWireframe();
-  const [selectedStyle, setSelectedStyle] = useState<string | null>(null);
+  const [selectedStyle, setSelectedStyle] = useState<ShapeVariant | null>(null);
   
   const element = elements.find(el => el.id === elementId);
   if (!element) return null;
@@ -29,7 +29,7 @@ export function ShapeStyleDialog({ elementId, isOpen, onClose }: ShapeStyleDialo
   
   // If no style is selected, use the current variant
   if (!selectedStyle && currentVariant) {
-    setSelectedStyle(currentVariant);
+    setSelectedStyle(currentVariant as ShapeVariant);
   }
   
   const handleApplyStyle = () => {
