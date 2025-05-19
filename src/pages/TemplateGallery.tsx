@@ -13,14 +13,7 @@ import {
 import { format } from "date-fns";
 import { toast } from "sonner";
 import { ArrowRight } from "lucide-react";
-
-const placeholderImages = [
-  "https://images.unsplash.com/photo-1649972904349-6e44c42644a7?auto=format&fit=crop&w=500&q=60",
-  "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?auto=format&fit=crop&w=500&q=60",
-  "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=500&q=60",
-  "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=500&q=60",
-  "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?auto=format&fit=crop&w=500&q=60"
-];
+import { CanvasElement } from "@/components/CanvasElement";
 
 const TemplateGallery = () => {
   const { templates, deleteTemplate } = useWireframe();
@@ -32,17 +25,16 @@ const TemplateGallery = () => {
     toast.success("Template deleted successfully!");
   };
   
-  const getElementCount = (template) => {
-    // Count all elements across all screens
-    return template.screens?.reduce((count, screen) => count + (screen.elements?.length || 0), 0) || 0;
-  };
-  
-  // Function to get a deterministic image for a template based on its ID
-  const getTemplateImage = (templateId: string) => {
-    // Use the template ID to pick a placeholder image deterministically
-    const charSum = templateId.split('').reduce((sum, char) => sum + char.charCodeAt(0), 0);
-    const imageIndex = charSum % placeholderImages.length;
-    return placeholderImages[imageIndex];
+  // Function to get elements for a specific template
+  const getTemplateElements = (template) => {
+    if (!template.elements || !template.screens) return [];
+    
+    // Get the first screen's ID
+    const firstScreenId = template.screens[0]?.id;
+    if (!firstScreenId) return [];
+    
+    // Return elements for the first screen
+    return template.elements.filter(element => element.screenId === firstScreenId);
   };
   
   return (
@@ -79,71 +71,66 @@ const TemplateGallery = () => {
           </div>
         ) : (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {templates.map((template) => (
-              <Card 
-                key={template.id}
-                className={`hover:shadow-md transition-shadow ${
-                  selectedId === template.id ? 'ring-2 ring-blue-500' : ''
-                }`}
-                onClick={() => setSelectedId(template.id)}
-              >
-                <CardHeader className="pb-2">
-                  <CardTitle>{template.name}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="aspect-video bg-white rounded-md border overflow-hidden">
-                    {getElementCount(template) === 0 ? (
-                      <div className="w-full h-full">
-                        <img 
-                          src={getTemplateImage(template.id)}
-                          alt={`Preview for ${template.name}`}
-                          className="w-full h-full object-cover"
-                        />
-                        <div className="absolute inset-0 bg-black/5 flex items-center justify-center">
-                          <span className="text-sm font-medium text-gray-700 bg-white/70 px-2 py-1 rounded">
-                            Empty template
-                          </span>
+            {templates.map((template) => {
+              const templateElements = getTemplateElements(template);
+              return (
+                <Card 
+                  key={template.id}
+                  className={`hover:shadow-md transition-shadow ${
+                    selectedId === template.id ? 'ring-2 ring-blue-500' : ''
+                  }`}
+                  onClick={() => setSelectedId(template.id)}
+                >
+                  <CardHeader className="pb-2">
+                    <CardTitle>{template.name}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="aspect-video bg-white rounded-md border overflow-hidden">
+                      {templateElements.length === 0 ? (
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <span className="text-sm font-medium text-gray-500">Empty template</span>
                         </div>
-                      </div>
-                    ) : (
-                      <div className="relative w-full h-full">
-                        <img 
-                          src={getTemplateImage(template.id)}
-                          alt={`Preview for ${template.name}`}
-                          className="w-full h-full object-cover"
-                        />
-                        <div className="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded-full">
-                          {getElementCount(template)} element{getElementCount(template) === 1 ? '' : 's'}
+                      ) : (
+                        <div className="relative w-full h-full" style={{ transform: "scale(0.33)", transformOrigin: "top left", width: "300%", height: "300%" }}>
+                          {templateElements.map(element => (
+                            <CanvasElement
+                              key={element.id}
+                              element={element}
+                              isSelected={false}
+                              onClick={() => {}}
+                              onDelete={() => {}}
+                            />
+                          ))}
                         </div>
-                      </div>
-                    )}
-                  </div>
-                </CardContent>
-                <CardFooter className="flex justify-between">
-                  <div className="text-xs text-gray-500">
-                    Updated {format(new Date(template.updatedAt), 'MMM d, yyyy')}
-                  </div>
-                  <div className="flex gap-2">
-                    <Button 
-                      variant="ghost" 
-                      size="sm"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleDelete(template.id);
-                      }}
-                    >
-                      Delete
-                    </Button>
-                    <Button 
-                      size="sm"
-                      onClick={() => navigate(`/editor/${template.id}`)}
-                    >
-                      Edit
-                    </Button>
-                  </div>
-                </CardFooter>
-              </Card>
-            ))}
+                      )}
+                    </div>
+                  </CardContent>
+                  <CardFooter className="flex justify-between">
+                    <div className="text-xs text-gray-500">
+                      Updated {format(new Date(template.updatedAt), 'MMM d, yyyy')}
+                    </div>
+                    <div className="flex gap-2">
+                      <Button 
+                        variant="ghost" 
+                        size="sm"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDelete(template.id);
+                        }}
+                      >
+                        Delete
+                      </Button>
+                      <Button 
+                        size="sm"
+                        onClick={() => navigate(`/editor/${template.id}`)}
+                      >
+                        Edit
+                      </Button>
+                    </div>
+                  </CardFooter>
+                </Card>
+              );
+            })}
           </div>
         )}
       </main>

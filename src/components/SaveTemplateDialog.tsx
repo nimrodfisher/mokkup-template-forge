@@ -1,11 +1,12 @@
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { useWireframe } from "@/hooks/useWireframe";
 import { toast } from "sonner";
+import { CanvasElement } from "@/components/CanvasElement";
 
 interface SaveTemplateDialogProps {
   open: boolean;
@@ -14,24 +15,14 @@ interface SaveTemplateDialogProps {
 
 export function SaveTemplateDialog({ open, onOpenChange }: SaveTemplateDialogProps) {
   const [name, setName] = useState("");
-  const { saveTemplate, templates, activeTemplateId, elements } = useWireframe();
+  const { saveTemplate, templates, activeTemplateId, elements, screens } = useWireframe();
+  const previewRef = useRef<HTMLDivElement>(null);
   
-  // Placeholder images for template preview
-  const placeholderImages = [
-    "https://images.unsplash.com/photo-1649972904349-6e44c42644a7?auto=format&fit=crop&w=500&q=60",
-    "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?auto=format&fit=crop&w=500&q=60",
-    "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=500&q=60",
-    "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=500&q=60",
-    "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?auto=format&fit=crop&w=500&q=60"
-  ];
+  // Get the active screen
+  const activeScreen = screens.find(screen => screen.isActive) || screens[0];
   
-  // Function to get a random image for the template
-  const getRandomImage = () => {
-    const randomIndex = Math.floor(Math.random() * placeholderImages.length);
-    return placeholderImages[randomIndex];
-  };
-  
-  const [previewImage, setPreviewImage] = useState(getRandomImage());
+  // Get elements for the active screen
+  const activeScreenElements = elements.filter(element => element.screenId === activeScreen?.id);
   
   useEffect(() => {
     if (open && activeTemplateId) {
@@ -39,9 +30,6 @@ export function SaveTemplateDialog({ open, onOpenChange }: SaveTemplateDialogPro
       if (currentTemplate) {
         setName(currentTemplate.name);
       }
-    } else if (open) {
-      // Generate new preview image when dialog opens
-      setPreviewImage(getRandomImage());
     }
   }, [open, activeTemplateId, templates]);
   
@@ -55,9 +43,6 @@ export function SaveTemplateDialog({ open, onOpenChange }: SaveTemplateDialogPro
     toast.success("Template saved successfully!");
     onOpenChange(false);
   };
-  
-  // Calculate element count
-  const elementCount = elements.length;
   
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -83,27 +68,26 @@ export function SaveTemplateDialog({ open, onOpenChange }: SaveTemplateDialogPro
           <div className="mt-2">
             <Label className="mb-2 block">Preview</Label>
             <div className="aspect-video bg-white rounded-md border overflow-hidden">
-              <div className="relative w-full h-full">
-                <img 
-                  src={previewImage}
-                  alt="Template preview"
-                  className="w-full h-full object-cover"
-                />
-                {elementCount > 0 ? (
-                  <div className="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded-full">
-                    {elementCount} element{elementCount === 1 ? '' : 's'}
-                  </div>
+              <div ref={previewRef} className="relative w-full h-full border border-gray-200 overflow-hidden" style={{ transform: "scale(0.4)", transformOrigin: "top left", width: "250%", height: "250%" }}>
+                {activeScreenElements.length > 0 ? (
+                  activeScreenElements.map(element => (
+                    <CanvasElement
+                      key={element.id}
+                      element={element}
+                      isSelected={false}
+                      onClick={() => {}}
+                      onDelete={() => {}}
+                    />
+                  ))
                 ) : (
-                  <div className="absolute inset-0 bg-black/5 flex items-center justify-center">
-                    <span className="text-sm font-medium text-gray-700 bg-white/70 px-2 py-1 rounded">
-                      Empty template
-                    </span>
+                  <div className="absolute inset-0 flex items-center justify-center bg-gray-50">
+                    <span className="text-sm font-medium text-gray-500">Empty template</span>
                   </div>
                 )}
               </div>
             </div>
             <p className="text-xs text-muted-foreground mt-2">
-              This preview will be shown in the template gallery
+              {activeScreenElements.length} element{activeScreenElements.length === 1 ? '' : 's'} in preview
             </p>
           </div>
         </div>

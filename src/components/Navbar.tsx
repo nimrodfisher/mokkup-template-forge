@@ -4,11 +4,22 @@ import { Button } from "@/components/ui/button";
 import { useWireframe } from "@/hooks/useWireframe";
 import { useState } from "react";
 import { SaveTemplateDialog } from "./SaveTemplateDialog";
-import { ArrowRight } from "lucide-react";
 
-export function Navbar() {
+interface NavbarProps {
+  onSave?: () => void;
+}
+
+export function Navbar({ onSave }: NavbarProps) {
   const [saveDialogOpen, setSaveDialogOpen] = useState(false);
   const { activeTemplateId, createNewTemplate } = useWireframe();
+  
+  const handleSave = () => {
+    if (onSave) {
+      onSave();
+    } else {
+      setSaveDialogOpen(true);
+    }
+  };
   
   return (
     <div className="h-14 border-b flex items-center justify-between px-4 bg-white">
@@ -21,7 +32,7 @@ export function Navbar() {
       <div className="flex items-center gap-2">
         <Button 
           variant="outline" 
-          onClick={() => setSaveDialogOpen(true)}
+          onClick={handleSave}
         >
           Save
         </Button>
