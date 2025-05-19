@@ -27,7 +27,8 @@ export type HeaderVariant =
   'navigation-top' | 'double-logo-purple';
 
 export type ShapeVariant =
-  'triangle' | 'rectangle' | 'circle' | 'oval';
+  'triangle' | 'rectangle' | 'circle' | 'oval' | 
+  'bar-chart-basic' | 'bar-chart-stacked' | 'bar-chart-grouped';
 
 export interface Element {
   id: string;
@@ -403,7 +404,7 @@ function getDefaultSizeForType(type: ElementType): { width: number; height: numb
     case 'image':
       return { width: 250, height: 200 };
     case 'shapes':
-      return { width: 150, height: 150 };
+      return { width: 200, height: 200 };
     case 'column-chart':
     case 'bar-chart':
     case 'line-chart':
@@ -510,7 +511,7 @@ function getDefaultPropertiesForType(type: ElementType): Element['properties'] {
         textColor: 'black',
         title: 'Title goes here',
         showTitle: true,
-        shapeVariant: 'triangle',
+        shapeVariant: 'bar-chart-basic',
         shapeColor: '#9b87f5',
         textAlignment: 'center',
         hasBorder: false,
