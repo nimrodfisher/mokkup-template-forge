@@ -14,14 +14,14 @@ export function Canvas() {
   
   // Filter elements to only show those from the active screen
   const activeElements = elements.filter(element => 
-    element.screenId === activeScreen?.id
+    activeScreen && element.screenId === activeScreen.id
   );
   
-  const [, drop] = useDrop(() => ({
+  const [{ isOver }, drop] = useDrop(() => ({
     accept: 'COMPONENT',
     drop: (item: { type: ElementType }, monitor) => {
       const canvasRect = canvasRef.current?.getBoundingClientRect();
-      if (canvasRect) {
+      if (canvasRect && activeScreen) {
         const clientOffset = monitor.getClientOffset();
         if (clientOffset) {
           addElement(
@@ -35,6 +35,8 @@ export function Canvas() {
             toast.info("Double-click header to choose a style");
           }
         }
+      } else if (!activeScreen) {
+        toast.error("No active screen available");
       }
     },
     collect: (monitor) => ({
@@ -50,10 +52,10 @@ export function Canvas() {
           canvasRef.current = node as HTMLDivElement;
         }
       }}
-      className="flex-1 overflow-auto bg-gray-100 h-full relative"
+      className={`flex-1 overflow-auto bg-gray-100 h-full relative ${isOver ? 'bg-gray-200' : ''}`}
       onClick={() => selectElement(null)}
     >
-      {activeElements.length === 0 && (
+      {(!activeElements || activeElements.length === 0) && (
         <div className="absolute inset-0 flex flex-col items-center justify-center text-gray-500">
           <div className="w-24 h-24 mb-4">
             <svg viewBox="0 0 24 24" fill="none" className="text-gray-300" xmlns="http://www.w3.org/2000/svg">
@@ -68,7 +70,7 @@ export function Canvas() {
         </div>
       )}
       
-      {activeElements.map((element) => (
+      {activeElements && activeElements.map((element) => (
         <CanvasElement
           key={element.id}
           element={element}

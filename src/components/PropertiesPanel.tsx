@@ -6,15 +6,56 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { X, Settings, ChevronDown } from "lucide-react";
+import { useState, useRef } from "react";
+import { Textarea } from "@/components/ui/textarea";
+import { toast } from "sonner";
 
 export function PropertiesPanel() {
-  const { elements, selectedElementId, showProperties, toggleProperties, updateElementProperties } = useWireframe();
+  const { elements, selectedElementId, showProperties, toggleProperties, updateElementProperties, updateLogoImage } = useWireframe();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [backgroundColor, setBackgroundColor] = useState('#ffffff');
+  const [textColor, setTextColor] = useState('#000000');
   
   const selectedElement = elements.find(el => el.id === selectedElementId);
   
   if (!selectedElement || !showProperties) {
     return null;
   }
+  
+  // Update colors when the component mounts or when the selected element changes
+  if (selectedElement.properties?.backgroundColor && backgroundColor !== selectedElement.properties.backgroundColor) {
+    setBackgroundColor(selectedElement.properties.backgroundColor);
+  }
+  
+  if (selectedElement.properties?.textColor && textColor !== selectedElement.properties.textColor) {
+    setTextColor(selectedElement.properties.textColor);
+  }
+  
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    
+    // Check if the file is an image
+    if (!file.type.startsWith('image/')) {
+      toast.error('Please select an image file');
+      return;
+    }
+    
+    // Convert to base64
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      if (event.target?.result && selectedElementId) {
+        const base64String = event.target.result.toString();
+        updateLogoImage(selectedElementId, base64String);
+        toast.success('Logo updated successfully!');
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+  
+  const triggerFileInput = () => {
+    fileInputRef.current?.click();
+  };
   
   // Header properties panel
   const renderHeaderProperties = (element: Element) => {
@@ -77,9 +118,48 @@ export function PropertiesPanel() {
             </div>
             
             {properties.showLogo && (
-              <Button className="w-full" variant="outline">
-                Add Image
-              </Button>
+              <>
+                <Button className="w-full" variant="outline" onClick={triggerFileInput}>
+                  {properties.logoUrl ? 'Change Image' : 'Add Image'}
+                </Button>
+                <input 
+                  type="file" 
+                  ref={fileInputRef} 
+                  onChange={handleFileChange}
+                  className="hidden" 
+                  accept="image/*" 
+                />
+                {properties.logoUrl && (
+                  <div className="mt-2 p-2 border rounded-md">
+                    <img 
+                      src={properties.logoUrl} 
+                      alt="Logo Preview" 
+                      className="h-12 w-auto object-contain mx-auto"
+                    />
+                    <Button 
+                      className="w-full mt-2" 
+                      variant="destructive" 
+                      size="sm"
+                      onClick={() => updateLogoImage(element.id, '')}
+                    >
+                      Remove
+                    </Button>
+                  </div>
+                )}
+              </>
+            )}
+            
+            {properties.variant === 'with-description' && (
+              <div className="space-y-2">
+                <Label htmlFor="description-text">Description</Label>
+                <Textarea 
+                  id="description-text" 
+                  value={properties.description || ''} 
+                  onChange={(e) => updateElementProperties(element.id, { description: e.target.value })}
+                  placeholder="Enter description"
+                  className="h-20"
+                />
+              </div>
             )}
           </div>
         </div>
@@ -94,8 +174,51 @@ export function PropertiesPanel() {
             </h4>
             
             <div className="flex justify-between items-center">
-              <Label htmlFor="bg-toggle">Background Color</Label>
-              <Switch id="bg-toggle" />
+              <Label htmlFor="bg-color">Background Color</Label>
+              <div className="flex items-center">
+                <input 
+                  type="color" 
+                  id="bg-color" 
+                  value={backgroundColor} 
+                  onChange={(e) => {
+                    setBackgroundColor(e.target.value);
+                    updateElementProperties(element.id, { backgroundColor: e.target.value });
+                  }}
+                  className="w-8 h-8 cursor-pointer p-0 border-none mr-2"
+                />
+                <Input 
+                  value={backgroundColor} 
+                  onChange={(e) => {
+                    setBackgroundColor(e.target.value);
+                    updateElementProperties(element.id, { backgroundColor: e.target.value });
+                  }}
+                  className="w-24"
+                />
+              </div>
+            </div>
+            
+            <div className="flex justify-between items-center">
+              <Label htmlFor="text-color">Text Color</Label>
+              <div className="flex items-center">
+                <input 
+                  type="color" 
+                  id="text-color" 
+                  value={textColor} 
+                  onChange={(e) => {
+                    setTextColor(e.target.value);
+                    updateElementProperties(element.id, { textColor: e.target.value });
+                  }}
+                  className="w-8 h-8 cursor-pointer p-0 border-none mr-2"
+                />
+                <Input 
+                  value={textColor} 
+                  onChange={(e) => {
+                    setTextColor(e.target.value);
+                    updateElementProperties(element.id, { textColor: e.target.value });
+                  }}
+                  className="w-24"
+                />
+              </div>
             </div>
             
             <div className="flex justify-between items-center">
@@ -107,32 +230,6 @@ export function PropertiesPanel() {
                   updateElementProperties(element.id, { showNavigation: checked })
                 } 
               />
-            </div>
-          </div>
-        </div>
-        
-        <div className="border-t pt-4">
-          <div className="space-y-3">
-            <h4 className="text-sm font-semibold flex justify-between items-center">
-              Add Ons
-              <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
-                <Settings className="h-3 w-3" />
-              </Button>
-            </h4>
-            
-            <div className="flex justify-between items-center">
-              <Label htmlFor="secondary-logo-toggle">Secondary Logo</Label>
-              <Switch id="secondary-logo-toggle" />
-            </div>
-            
-            <div className="flex justify-between items-center">
-              <Label htmlFor="text-toggle">Text</Label>
-              <Switch id="text-toggle" />
-            </div>
-            
-            <div className="flex justify-between items-center">
-              <Label htmlFor="highlighted-text-toggle">Highlighted Text</Label>
-              <Switch id="highlighted-text-toggle" />
             </div>
           </div>
         </div>

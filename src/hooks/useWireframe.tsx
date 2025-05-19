@@ -25,13 +25,13 @@ export interface Element {
     showNavigation?: boolean;
     variant?: 'default' | 'centered' | 'with-description' | 'with-metrics';
     description?: string;
+    logoUrl?: string;
   };
 }
 
 export interface Screen {
   id: string;
   name: string;
-  elements: Element[];
   isActive: boolean;
 }
 
@@ -39,6 +39,7 @@ export interface Template {
   id: string;
   name: string;
   screens: Screen[];
+  elements: Element[];
   createdAt: number;
   updatedAt: number;
 }
@@ -62,6 +63,7 @@ interface WireframeState {
   deleteTemplate: (id: string) => void;
   toggleProperties: () => void;
   updateElementProperties: (id: string, properties: Partial<Element['properties']>) => void;
+  updateLogoImage: (id: string, logoUrl: string) => void;
   
   // Screen actions
   addScreen: () => void;
@@ -76,7 +78,6 @@ export const useWireframe = create<WireframeState>()(
       screens: [{
         id: uuidv4(),
         name: 'Screen1',
-        elements: [],
         isActive: true
       }],
       elements: [],
@@ -144,6 +145,20 @@ export const useWireframe = create<WireframeState>()(
         }));
       },
       
+      updateLogoImage: (id, logoUrl) => {
+        set(state => ({
+          elements: state.elements.map(el => 
+            el.id === id ? { 
+              ...el, 
+              properties: {
+                ...el.properties,
+                logoUrl
+              } 
+            } : el
+          ),
+        }));
+      },
+      
       saveTemplate: (name) => {
         const { elements, activeTemplateId, templates, screens } = get();
         const now = Date.now();
@@ -153,7 +168,7 @@ export const useWireframe = create<WireframeState>()(
           set({
             templates: templates.map(t => 
               t.id === activeTemplateId 
-                ? { ...t, name, screens, updatedAt: now }
+                ? { ...t, name, screens, elements, updatedAt: now }
                 : t
             ),
           });
@@ -163,6 +178,7 @@ export const useWireframe = create<WireframeState>()(
             id: uuidv4(),
             name,
             screens,
+            elements,
             createdAt: now,
             updatedAt: now,
           };
@@ -179,7 +195,7 @@ export const useWireframe = create<WireframeState>()(
         if (template) {
           set({
             screens: template.screens,
-            elements: template.screens.flatMap(screen => screen.elements),
+            elements: template.elements,
             activeTemplateId: id,
             selectedElementId: null,
           });
@@ -190,7 +206,6 @@ export const useWireframe = create<WireframeState>()(
         const initialScreen = {
           id: uuidv4(),
           name: 'Screen1',
-          elements: [],
           isActive: true
         };
         
@@ -208,7 +223,6 @@ export const useWireframe = create<WireframeState>()(
           screens: state.activeTemplateId === id ? [{
             id: uuidv4(),
             name: 'Screen1',
-            elements: [],
             isActive: true
           }] : state.screens,
           elements: state.activeTemplateId === id ? [] : state.elements,
@@ -225,7 +239,6 @@ export const useWireframe = create<WireframeState>()(
         const newScreen: Screen = {
           id: newScreenId,
           name: `Screen${screenNumber}`,
-          elements: [],
           isActive: false
         };
         
@@ -249,16 +262,6 @@ export const useWireframe = create<WireframeState>()(
           selectedElementId: null,
           showProperties: false
         }));
-        
-        // Filter elements to only show those for the active screen
-        const activeScreenId = id;
-        const activeScreenElements = get().elements.filter(
-          element => element.screenId === activeScreenId
-        );
-        
-        set({
-          elements: activeScreenElements
-        });
       },
       
       renameScreen: (id, name) => {
@@ -359,12 +362,13 @@ function getDefaultPropertiesForType(type: ElementType): Element['properties'] {
   switch (type) {
     case 'header':
       return {
-        backgroundColor: 'white',
+        backgroundColor: '#ffffff',
         textColor: 'black',
         title: 'DASHBOARD TITLE',
         showLogo: true,
         showNavigation: false,
-        variant: 'default'
+        variant: 'default',
+        description: 'Dashboard description goes here',
       };
     default:
       return {};

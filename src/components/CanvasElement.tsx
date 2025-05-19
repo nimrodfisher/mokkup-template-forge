@@ -1,4 +1,3 @@
-
 import { useRef, useState } from "react";
 import { useDrag } from "react-dnd";
 import { Element, useWireframe } from "@/hooks/useWireframe";
@@ -59,13 +58,7 @@ export function CanvasElement({ element, isSelected }: CanvasElementProps) {
   
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    
-    // If it's a header and clicking for the first time, show style selection dialog
-    if (element.type === 'header' && !isSelected) {
-      selectElement(element.id);
-    } else {
-      selectElement(element.id);
-    }
+    selectElement(element.id);
   };
   
   const handleDoubleClick = (e: React.MouseEvent) => {
@@ -225,18 +218,39 @@ function ElementContent({ element }: { element: Element }) {
   switch (type) {
     case 'header':
       const {
-        backgroundColor = 'white',
+        backgroundColor = '#ffffff',
+        textColor = 'black',
         title = 'DASHBOARD TITLE',
         showLogo = true,
         showNavigation = false,
-        variant = 'default'
+        variant = 'default',
+        description = 'Dashboard description goes here',
+        logoUrl = ''
       } = properties;
+      
+      // Custom logo render function
+      const renderLogo = () => {
+        if (!showLogo) return null;
+        
+        if (logoUrl) {
+          return (
+            <div className="h-8 w-8 bg-transparent flex items-center justify-center overflow-hidden">
+              <img src={logoUrl} alt="Logo" className="h-full w-full object-contain" />
+            </div>
+          );
+        }
+        
+        return <div className="h-8 w-8 bg-gray-200 rounded flex items-center justify-center text-xs">Logo</div>;
+      };
       
       if (variant === 'default') {
         return (
-          <div className={`bg-${backgroundColor} p-2 flex items-center h-full justify-between`}>
+          <div 
+            className="p-2 flex items-center h-full justify-between"
+            style={{ backgroundColor, color: textColor }}
+          >
             <div className="flex items-center">
-              {showLogo && <div className="h-8 w-8 bg-gray-200 rounded flex items-center justify-center text-xs">Logo</div>}
+              {renderLogo()}
               {title && <div className="ml-2 font-bold">{title}</div>}
             </div>
             
@@ -251,9 +265,12 @@ function ElementContent({ element }: { element: Element }) {
         );
       } else if (variant === 'centered') {
         return (
-          <div className={`bg-${backgroundColor} p-2 flex flex-col items-center justify-center h-full`}>
-            {showLogo && <div className="h-8 w-8 bg-gray-200 rounded mb-1 flex items-center justify-center text-xs">Logo</div>}
-            {title && <div className="font-bold">{title}</div>}
+          <div 
+            className="p-2 flex flex-col items-center justify-center h-full"
+            style={{ backgroundColor, color: textColor }}
+          >
+            {renderLogo()}
+            {title && <div className="font-bold mt-1">{title}</div>}
             
             {showNavigation && (
               <div className="flex space-x-3 mt-1">
@@ -266,12 +283,15 @@ function ElementContent({ element }: { element: Element }) {
         );
       } else if (variant === 'with-description') {
         return (
-          <div className={`bg-${backgroundColor} p-2 h-full`}>
+          <div 
+            className="p-2 h-full"
+            style={{ backgroundColor, color: textColor }}
+          >
             <div className="flex items-center mb-1">
-              {showLogo && <div className="h-8 w-8 bg-gray-200 rounded flex items-center justify-center text-xs">Logo</div>}
+              {renderLogo()}
               {title && <div className="ml-2 font-bold">{title}</div>}
             </div>
-            <div className="text-xs text-gray-500">Some dummy description text</div>
+            <div className="text-xs text-gray-500">{description}</div>
             
             {showNavigation && (
               <div className="flex space-x-3 mt-1">
@@ -284,9 +304,12 @@ function ElementContent({ element }: { element: Element }) {
         );
       } else if (variant === 'with-metrics') {
         return (
-          <div className={`bg-${backgroundColor} p-2 flex items-center justify-between h-full`}>
+          <div 
+            className="p-2 flex items-center justify-between h-full"
+            style={{ backgroundColor, color: textColor }}
+          >
             <div className="flex items-center">
-              {showLogo && <div className="h-8 w-8 bg-gray-200 rounded flex items-center justify-center text-xs">Logo</div>}
+              {renderLogo()}
               {title && <div className="ml-2 font-bold">{title}</div>}
             </div>
             
