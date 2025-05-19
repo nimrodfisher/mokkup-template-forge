@@ -55,8 +55,8 @@ export function ShapeStyleDialog({ elementId, isOpen, onClose }: ShapeStyleDialo
         </DialogHeader>
         
         <div className="py-4">
-          <div className="text-sm font-medium mb-3">Basic Shapes</div>
-          <div className="grid grid-cols-2 gap-4 mb-6">
+          <div className="text-sm font-medium mb-3">Available styles</div>
+          <div className="grid grid-cols-2 gap-4">
             {/* Triangle shape */}
             <div 
               className={`relative border rounded-lg p-4 cursor-pointer hover:border-blue-400 transition-all ${
@@ -133,126 +133,6 @@ export function ShapeStyleDialog({ elementId, isOpen, onClose }: ShapeStyleDialo
               </div>
               <div className="absolute top-2 right-2">
                 {selectedStyle === 'circle' && (
-                  <div className="w-4 h-4 rounded-full bg-blue-500 flex items-center justify-center">
-                    <div className="w-2 h-2 rounded-full bg-white" />
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-          
-          <div className="text-sm font-medium mb-3">Bar Chart Templates</div>
-          <div className="grid grid-cols-1 gap-4">
-            {/* Basic Bar Chart */}
-            <div 
-              className={`relative border rounded-lg p-4 cursor-pointer hover:border-blue-400 transition-all ${
-                selectedStyle === 'bar-chart-basic' ? 'border-blue-500 bg-blue-50' : 'border-gray-200'
-              }`}
-              onClick={() => setSelectedStyle('bar-chart-basic')}
-            >
-              <div className="text-center mb-2">Title goes here</div>
-              <div className="flex justify-center p-2">
-                <div className="w-full h-32 flex items-end space-x-2">
-                  <div className="h-3/5 w-12 bg-blue-600"></div>
-                  <div className="h-4/5 w-12 bg-blue-600"></div>
-                  <div className="h-2/5 w-12 bg-blue-600"></div>
-                  <div className="h-full w-12 bg-blue-600"></div>
-                  <div className="h-3/4 w-12 bg-blue-600"></div>
-                  <div className="h-1/2 w-12 bg-blue-600"></div>
-                </div>
-              </div>
-              <div className="absolute top-2 right-2">
-                {selectedStyle === 'bar-chart-basic' && (
-                  <div className="w-4 h-4 rounded-full bg-blue-500 flex items-center justify-center">
-                    <div className="w-2 h-2 rounded-full bg-white" />
-                  </div>
-                )}
-              </div>
-            </div>
-            
-            {/* Stacked Bar Chart */}
-            <div 
-              className={`relative border rounded-lg p-4 cursor-pointer hover:border-blue-400 transition-all ${
-                selectedStyle === 'bar-chart-stacked' ? 'border-blue-500 bg-blue-50' : 'border-gray-200'
-              }`}
-              onClick={() => setSelectedStyle('bar-chart-stacked')}
-            >
-              <div className="text-center mb-2">Title goes here</div>
-              <div className="flex justify-center p-2">
-                <div className="w-full h-32 flex items-end space-x-2">
-                  <div className="w-12 flex flex-col">
-                    <div className="h-1/3 w-full bg-blue-400"></div>
-                    <div className="h-1/3 w-full bg-blue-600"></div>
-                  </div>
-                  <div className="w-12 flex flex-col">
-                    <div className="h-2/5 w-full bg-blue-400"></div>
-                    <div className="h-2/5 w-full bg-blue-600"></div>
-                  </div>
-                  <div className="w-12 flex flex-col">
-                    <div className="h-1/5 w-full bg-blue-400"></div>
-                    <div className="h-1/5 w-full bg-blue-600"></div>
-                  </div>
-                  <div className="w-12 flex flex-col">
-                    <div className="h-2/4 w-full bg-blue-400"></div>
-                    <div className="h-1/3 w-full bg-blue-600"></div>
-                  </div>
-                  <div className="w-12 flex flex-col">
-                    <div className="h-1/3 w-full bg-blue-400"></div>
-                    <div className="h-1/4 w-full bg-blue-600"></div>
-                  </div>
-                  <div className="w-12 flex flex-col">
-                    <div className="h-1/4 w-full bg-blue-400"></div>
-                    <div className="h-1/4 w-full bg-blue-600"></div>
-                  </div>
-                </div>
-              </div>
-              <div className="absolute top-2 right-2">
-                {selectedStyle === 'bar-chart-stacked' && (
-                  <div className="w-4 h-4 rounded-full bg-blue-500 flex items-center justify-center">
-                    <div className="w-2 h-2 rounded-full bg-white" />
-                  </div>
-                )}
-              </div>
-            </div>
-            
-            {/* Grouped Bar Chart */}
-            <div 
-              className={`relative border rounded-lg p-4 cursor-pointer hover:border-blue-400 transition-all ${
-                selectedStyle === 'bar-chart-grouped' ? 'border-blue-500 bg-blue-50' : 'border-gray-200'
-              }`}
-              onClick={() => setSelectedStyle('bar-chart-grouped')}
-            >
-              <div className="text-center mb-2">Title goes here</div>
-              <div className="flex justify-center p-2">
-                <div className="w-full h-32 flex items-end">
-                  <div className="flex-1 flex items-end justify-center space-x-1">
-                    <div className="h-3/5 w-4 bg-blue-600"></div>
-                    <div className="h-2/5 w-4 bg-blue-400"></div>
-                  </div>
-                  <div className="flex-1 flex items-end justify-center space-x-1">
-                    <div className="h-4/5 w-4 bg-blue-600"></div>
-                    <div className="h-3/5 w-4 bg-blue-400"></div>
-                  </div>
-                  <div className="flex-1 flex items-end justify-center space-x-1">
-                    <div className="h-2/5 w-4 bg-blue-600"></div>
-                    <div className="h-1/5 w-4 bg-blue-400"></div>
-                  </div>
-                  <div className="flex-1 flex items-end justify-center space-x-1">
-                    <div className="h-full w-4 bg-blue-600"></div>
-                    <div className="h-3/4 w-4 bg-blue-400"></div>
-                  </div>
-                  <div className="flex-1 flex items-end justify-center space-x-1">
-                    <div className="h-3/4 w-4 bg-blue-600"></div>
-                    <div className="h-1/2 w-4 bg-blue-400"></div>
-                  </div>
-                  <div className="flex-1 flex items-end justify-center space-x-1">
-                    <div className="h-1/2 w-4 bg-blue-600"></div>
-                    <div className="h-3/5 w-4 bg-blue-400"></div>
-                  </div>
-                </div>
-              </div>
-              <div className="absolute top-2 right-2">
-                {selectedStyle === 'bar-chart-grouped' && (
                   <div className="w-4 h-4 rounded-full bg-blue-500 flex items-center justify-center">
                     <div className="w-2 h-2 rounded-full bg-white" />
                   </div>
