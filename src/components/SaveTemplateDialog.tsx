@@ -75,8 +75,6 @@ export function SaveTemplateDialog({ open, onOpenChange }: SaveTemplateDialogPro
                       key={element.id}
                       element={element}
                       isSelected={false}
-                      onClick={() => {}}
-                      onDelete={() => {}}
                     />
                   ))
                 ) : (

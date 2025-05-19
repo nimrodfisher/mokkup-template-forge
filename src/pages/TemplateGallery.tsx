@@ -97,8 +97,6 @@ const TemplateGallery = () => {
                               key={element.id}
                               element={element}
                               isSelected={false}
-                              onClick={() => {}}
-                              onDelete={() => {}}
                             />
                           ))}
                         </div>
