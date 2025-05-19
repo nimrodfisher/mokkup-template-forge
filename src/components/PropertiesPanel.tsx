@@ -1,4 +1,3 @@
-
 import { Element, useWireframe } from "@/hooks/useWireframe";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
@@ -336,18 +335,20 @@ export function PropertiesPanel({ onOpenStyleDialog }: { onOpenStyleDialog?: () 
               </div>
             )}
             
-            <div className="flex justify-between items-center">
-              <Label htmlFor="logo-toggle">Primary Logo</Label>
-              <Switch 
-                id="logo-toggle" 
-                checked={properties.showLogo === true} 
-                onCheckedChange={(checked) => 
-                  updateElementProperties(element.id, { showLogo: checked })
-                } 
-              />
-            </div>
+            {properties.variant !== 'minimal' && (
+              <div className="flex justify-between items-center">
+                <Label htmlFor="logo-toggle">Primary Logo</Label>
+                <Switch 
+                  id="logo-toggle" 
+                  checked={properties.showLogo === true} 
+                  onCheckedChange={(checked) => 
+                    updateElementProperties(element.id, { showLogo: checked })
+                  } 
+                />
+              </div>
+            )}
             
-            {properties.showLogo && (
+            {properties.showLogo && properties.variant !== 'minimal' && (
               <>
                 <Button className="w-full" variant="outline" onClick={triggerFileInput}>
                   {properties.logoUrl ? 'Change Image' : 'Add Image'}
@@ -403,29 +404,31 @@ export function PropertiesPanel({ onOpenStyleDialog }: { onOpenStyleDialog?: () 
               </Button>
             </h4>
             
-            <div className="flex justify-between items-center">
-              <Label htmlFor="bg-color">Background Color</Label>
-              <div className="flex items-center">
-                <input 
-                  type="color" 
-                  id="bg-color" 
-                  value={backgroundColor} 
-                  onChange={(e) => {
-                    setBackgroundColor(e.target.value);
-                    updateElementProperties(element.id, { backgroundColor: e.target.value });
-                  }}
-                  className="w-8 h-8 cursor-pointer p-0 border-none mr-2"
-                />
-                <Input 
-                  value={backgroundColor} 
-                  onChange={(e) => {
-                    setBackgroundColor(e.target.value);
-                    updateElementProperties(element.id, { backgroundColor: e.target.value });
-                  }}
-                  className="w-24"
-                />
+            {properties.variant !== 'gradient' && properties.variant !== 'colorful-banner' && (
+              <div className="flex justify-between items-center">
+                <Label htmlFor="bg-color">Background Color</Label>
+                <div className="flex items-center">
+                  <input 
+                    type="color" 
+                    id="bg-color" 
+                    value={backgroundColor} 
+                    onChange={(e) => {
+                      setBackgroundColor(e.target.value);
+                      updateElementProperties(element.id, { backgroundColor: e.target.value });
+                    }}
+                    className="w-8 h-8 cursor-pointer p-0 border-none mr-2"
+                  />
+                  <Input 
+                    value={backgroundColor} 
+                    onChange={(e) => {
+                      setBackgroundColor(e.target.value);
+                      updateElementProperties(element.id, { backgroundColor: e.target.value });
+                    }}
+                    className="w-24"
+                  />
+                </div>
               </div>
-            </div>
+            )}
             
             <div className="flex justify-between items-center">
               <Label htmlFor="text-color">Text Color</Label>
@@ -451,98 +454,43 @@ export function PropertiesPanel({ onOpenStyleDialog }: { onOpenStyleDialog?: () 
               </div>
             </div>
             
-            <div className="flex justify-between items-center">
-              <Label htmlFor="nav-toggle">Navigation Buttons</Label>
-              <Switch 
-                id="nav-toggle" 
-                checked={properties.showNavigation === true} 
-                onCheckedChange={(checked) => 
-                  updateElementProperties(element.id, { showNavigation: checked })
-                } 
-              />
-            </div>
+            {!['centered-navigation-purple', 'navigation-top', 'dark-navigation', 'minimal'].includes(properties.variant || '') && (
+              <div className="flex justify-between items-center">
+                <Label htmlFor="nav-toggle">Navigation Buttons</Label>
+                <Switch 
+                  id="nav-toggle" 
+                  checked={properties.showNavigation === true} 
+                  onCheckedChange={(checked) => 
+                    updateElementProperties(element.id, { showNavigation: checked })
+                  } 
+                />
+              </div>
+            )}
           </div>
         </div>
         
         <div className="flex flex-col space-y-2 mt-4 border-t pt-4">
           <Label className="text-sm font-semibold">Header Style</Label>
           <div className="mt-2">
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button variant="outline" size="sm" className="w-full justify-between">
-                  {properties.variant === 'default' && 'Default'}
-                  {properties.variant === 'centered' && 'Centered'}
-                  {properties.variant === 'with-description' && 'With Description'}
-                  {properties.variant === 'with-metrics' && 'With Metrics'}
-                  <ChevronDown className="h-4 w-4 opacity-50" />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-80 p-0">
-                <div className="p-4 space-y-4">
-                  <h4 className="font-medium">Available styles</h4>
-                  <div className="space-y-2">
-                    {['default', 'centered', 'with-description', 'with-metrics'].map(variant => (
-                      <div 
-                        key={variant}
-                        onClick={() => updateElementProperties(element.id, { variant: variant as any })}
-                        className={`p-3 border rounded-md cursor-pointer transition-all hover:border-blue-400 ${
-                          properties.variant === variant ? 'border-blue-500 bg-blue-50' : 'border-gray-200'
-                        }`}
-                      >
-                        <div className="flex items-center">
-                          {variant === 'default' && (
-                            <div className="flex items-center space-x-2">
-                              <div className="w-6 h-6 bg-gray-200" />
-                              <div className="h-4 bg-gray-300 w-32" />
-                            </div>
-                          )}
-                          {variant === 'centered' && (
-                            <div className="w-full flex justify-center">
-                              <div className="h-4 bg-gray-300 w-32" />
-                            </div>
-                          )}
-                          {variant === 'with-description' && (
-                            <div className="space-y-2 w-full">
-                              <div className="flex items-center space-x-2">
-                                <div className="w-6 h-6 bg-gray-200" />
-                                <div className="h-4 bg-gray-300 w-32" />
-                              </div>
-                              <div className="h-2 bg-gray-200 w-full" />
-                              <div className="h-2 bg-gray-200 w-3/4" />
-                            </div>
-                          )}
-                          {variant === 'with-metrics' && (
-                            <div className="flex justify-between w-full">
-                              <div className="flex items-center space-x-2">
-                                <div className="w-6 h-6 bg-gray-200" />
-                                <div className="h-4 bg-gray-300 w-24" />
-                              </div>
-                              <div className="flex space-x-3">
-                                <div className="flex flex-col items-center">
-                                  <div className="text-xs">Metric 1</div>
-                                  <div className="text-xs font-bold">123</div>
-                                </div>
-                                <div className="flex flex-col items-center">
-                                  <div className="text-xs">Metric 2</div>
-                                  <div className="text-xs font-bold">456</div>
-                                </div>
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                        <div className="flex justify-end mt-2">
-                          {properties.variant === variant && (
-                            <div className="w-4 h-4 rounded-full bg-blue-500 flex items-center justify-center">
-                              <div className="w-2 h-2 rounded-full bg-white" />
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </PopoverContent>
-            </Popover>
+            <Button
+              variant="outline"
+              size="sm"
+              className="w-full justify-between"
+              onClick={onOpenStyleDialog}
+            >
+              {properties.variant === 'default' && 'Default'}
+              {properties.variant === 'with-description' && 'With Description'}
+              {properties.variant === 'with-metrics' && 'With Metrics'}
+              {properties.variant === 'centered-navigation-purple' && 'Centered Navigation (Purple)'}
+              {properties.variant === 'navigation-top' && 'Top Navigation'}
+              {properties.variant === 'double-logo-purple' && 'Double Logo (Purple)'}
+              {properties.variant === 'dark-navigation' && 'Dark Navigation'}
+              {properties.variant === 'gradient' && 'Gradient'}
+              {properties.variant === 'minimal' && 'Minimal'}
+              {properties.variant === 'colorful-banner' && 'Colorful Banner'}
+              {!properties.variant && 'Choose Header Style'}
+              <ChevronDown className="h-4 w-4 opacity-50" />
+            </Button>
           </div>
           <p className="text-xs text-gray-500 mt-1">Double-click on the header to change styles</p>
         </div>

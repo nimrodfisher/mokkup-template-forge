@@ -10,6 +10,7 @@ import { ShapeStyleDialog } from "./ShapeStyleDialog";
 import { ShapeDisplay } from "./ShapeDisplay";
 import { toast } from "sonner";
 import { ImageStyleDialog } from "./ImageStyleDialog";
+import { HeaderStyleDialog } from "./HeaderStyleDialog";
 
 interface CanvasElementProps {
   element: Element;
@@ -23,6 +24,7 @@ export function CanvasElement({ element, isSelected }: CanvasElementProps) {
   const [showTextboxStyleDialog, setShowTextboxStyleDialog] = useState(false);
   const [showImageStyleDialog, setShowImageStyleDialog] = useState(false);
   const [showShapeStyleDialog, setShowShapeStyleDialog] = useState(false);
+  const [showHeaderStyleDialog, setShowHeaderStyleDialog] = useState(false);
   const { updateElement, selectElement, removeElement } = useWireframe();
   const [isDragging, setIsDragging] = useState(false);
   const [isResizing, setIsResizing] = useState(false);
@@ -46,6 +48,8 @@ export function CanvasElement({ element, isSelected }: CanvasElementProps) {
       setShowImageStyleDialog(true);
     } else if (element.type === 'shapes') {
       setShowShapeStyleDialog(true);
+    } else if (element.type === 'header') {
+      setShowHeaderStyleDialog(true);
     }
   };
   
@@ -155,6 +159,22 @@ export function CanvasElement({ element, isSelected }: CanvasElementProps) {
             containerStyles += " p-4";
             contentLayout = "flex items-center justify-between w-full";
             break;
+          case 'dark-navigation':
+            containerStyles += " bg-[#1A1F2C] p-4 text-white";
+            contentLayout = "flex items-center justify-between w-full";
+            break;
+          case 'gradient':
+            containerStyles += " bg-gradient-to-r from-[#8B5CF6] to-[#D946EF] p-4 text-white";
+            contentLayout = "flex items-center";
+            break;
+          case 'minimal':
+            containerStyles += " bg-[#F6F6F7] p-4";
+            contentLayout = "flex items-center justify-center";
+            break;
+          case 'colorful-banner':
+            containerStyles += " bg-white p-0 flex-col";
+            contentLayout = "flex items-center justify-between w-full";
+            break;
           default: 
             containerStyles += " p-4";
             contentLayout = "flex items-center";
@@ -164,10 +184,14 @@ export function CanvasElement({ element, isSelected }: CanvasElementProps) {
           <div 
             className={containerStyles}
             style={{
-              backgroundColor: headerProperties.backgroundColor || '#ffffff',
-              color: headerProperties.textColor || 'black',
+              backgroundColor: variant !== 'gradient' && variant !== 'colorful-banner' ? headerProperties.backgroundColor || undefined : undefined,
+              color: headerProperties.textColor || undefined,
             }}
           >
+            {variant === 'colorful-banner' && (
+              <div className="h-3 w-full bg-gradient-to-r from-[#F97316] via-[#8B5CF6] to-[#0EA5E9]"></div>
+            )}
+            
             {variant === 'double-logo-purple' ? (
               <>
                 {headerProperties.showLogo && (
@@ -204,6 +228,39 @@ export function CanvasElement({ element, isSelected }: CanvasElementProps) {
                   <div className="text-sm">Navigation 3</div>
                 </div>
               </div>
+            ) : variant === 'minimal' ? (
+              <div className="font-bold text-center">{headerProperties.title || 'DASHBOARD TITLE'}</div>
+            ) : variant === 'colorful-banner' ? (
+              <div className="p-4 w-full">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center">
+                    {headerProperties.showLogo && (
+                      <div className="mr-3">
+                        {headerProperties.logoUrl ? (
+                          <img 
+                            src={headerProperties.logoUrl} 
+                            alt="Logo" 
+                            className="h-10 w-10 object-contain"
+                          />
+                        ) : (
+                          <div className="h-10 w-10 bg-gray-200 flex items-center justify-center text-gray-400">
+                            Logo
+                          </div>
+                        )}
+                      </div>
+                    )}
+                    
+                    <div className="font-bold">{headerProperties.title || 'DASHBOARD TITLE'}</div>
+                  </div>
+                  
+                  {headerProperties.showNavigation && (
+                    <div className="flex space-x-4 text-sm">
+                      <button className="hover:underline">Link 1</button>
+                      <button className="hover:underline">Link 2</button>
+                    </div>
+                  )}
+                </div>
+              </div>
             ) : (
               <div className={contentLayout}>
                 <div className="flex items-center">
@@ -216,7 +273,7 @@ export function CanvasElement({ element, isSelected }: CanvasElementProps) {
                           className="h-full max-h-12 object-contain"
                         />
                       ) : (
-                        <div className="h-10 w-10 bg-gray-200 flex items-center justify-center text-gray-400">
+                        <div className={`h-10 w-10 ${variant === 'dark-navigation' ? 'bg-gray-600 text-white' : 'bg-gray-200 text-gray-400'} flex items-center justify-center`}>
                           Logo
                         </div>
                       )}
@@ -247,15 +304,15 @@ export function CanvasElement({ element, isSelected }: CanvasElementProps) {
                   </div>
                 )}
                 
-                {variant === 'navigation-top' && (
-                  <div className="flex space-x-4 text-sm text-blue-500">
+                {(variant === 'navigation-top' || variant === 'dark-navigation') && (
+                  <div className={`flex space-x-4 text-sm ${variant === 'dark-navigation' ? 'text-gray-300' : 'text-blue-500'}`}>
                     <div>Navigation 1</div>
                     <div>Navigation 2</div>
                     <div>Navigation 3</div>
                   </div>
                 )}
                 
-                {headerProperties.showNavigation && variant !== 'navigation-top' && (
+                {headerProperties.showNavigation && variant !== 'navigation-top' && variant !== 'dark-navigation' && (
                   <div className="ml-auto flex space-x-3">
                     <button className="px-3 py-1 bg-gray-200 rounded text-sm hover:bg-gray-300 transition-colors">Link 1</button>
                     <button className="px-3 py-1 bg-gray-200 rounded text-sm hover:bg-gray-300 transition-colors">Link 2</button>
@@ -291,7 +348,7 @@ export function CanvasElement({ element, isSelected }: CanvasElementProps) {
             >
               {buttonProps.buttonIcon && (
                 <svg className="mr-1 w-4 h-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M5 12h14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                  <path d="M5 12h18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
                   <path d="M12 5l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               )}
@@ -497,6 +554,14 @@ export function CanvasElement({ element, isSelected }: CanvasElementProps) {
           elementId={element.id}
           isOpen={showShapeStyleDialog}
           onClose={() => setShowShapeStyleDialog(false)}
+        />
+      )}
+      
+      {showHeaderStyleDialog && (
+        <HeaderStyleDialog 
+          elementId={element.id} 
+          isOpen={showHeaderStyleDialog}
+          onClose={() => setShowHeaderStyleDialog(false)}
         />
       )}
     </>

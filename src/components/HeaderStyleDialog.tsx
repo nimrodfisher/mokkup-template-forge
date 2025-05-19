@@ -164,6 +164,69 @@ export function HeaderStyleDialog({ elementId, isOpen, onClose }: HeaderStyleDia
                 </div>
               </Label>
             </div>
+            
+            {/* NEW: Dark navigation style */}
+            <div className="flex items-center space-x-2 border rounded-md p-2">
+              <RadioGroupItem value="dark-navigation" id="dark-navigation" />
+              <Label htmlFor="dark-navigation" className="flex-1 cursor-pointer">
+                <div className="bg-[#1A1F2C] rounded-md p-4 mt-1 text-white">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center">
+                      <div className="w-16 h-6 bg-gray-600 text-[8px] flex items-center justify-center rounded text-white">Upload Logo</div>
+                      <div className="font-bold ml-4 text-xs">DASHBOARD TITLE</div>
+                    </div>
+                    <div className="flex space-x-4 text-[8px] text-gray-300">
+                      <div>Navigation 1</div>
+                      <div>Navigation 2</div>
+                      <div>Navigation 3</div>
+                    </div>
+                  </div>
+                </div>
+              </Label>
+            </div>
+            
+            {/* NEW: Gradient style */}
+            <div className="flex items-center space-x-2 border rounded-md p-2">
+              <RadioGroupItem value="gradient" id="gradient" />
+              <Label htmlFor="gradient" className="flex-1 cursor-pointer">
+                <div className="bg-gradient-to-r from-[#8B5CF6] to-[#D946EF] rounded-md p-4 mt-1 text-white">
+                  <div className="flex items-center">
+                    <div className="w-16 h-6 bg-white/20 backdrop-blur-sm text-[8px] flex items-center justify-center rounded">Upload Logo</div>
+                    <div className="font-bold ml-4 text-xs">DASHBOARD TITLE</div>
+                  </div>
+                </div>
+              </Label>
+            </div>
+            
+            {/* NEW: Minimal style */}
+            <div className="flex items-center space-x-2 border rounded-md p-2">
+              <RadioGroupItem value="minimal" id="minimal" />
+              <Label htmlFor="minimal" className="flex-1 cursor-pointer">
+                <div className="bg-[#F6F6F7] rounded-md p-4 mt-1">
+                  <div className="flex items-center justify-center">
+                    <div className="font-bold text-xs text-gray-800">DASHBOARD TITLE</div>
+                  </div>
+                </div>
+              </Label>
+            </div>
+            
+            {/* NEW: Colorful banner style */}
+            <div className="flex items-center space-x-2 border rounded-md p-2">
+              <RadioGroupItem value="colorful-banner" id="colorful-banner" />
+              <Label htmlFor="colorful-banner" className="flex-1 cursor-pointer">
+                <div className="relative bg-white rounded-md overflow-hidden">
+                  <div className="h-3 bg-gradient-to-r from-[#F97316] via-[#8B5CF6] to-[#0EA5E9]"></div>
+                  <div className="p-4 mt-1">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center">
+                        <div className="w-16 h-6 bg-gray-200 text-[8px] flex items-center justify-center rounded">Upload Logo</div>
+                        <div className="font-bold ml-4 text-xs">DASHBOARD TITLE</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </Label>
+            </div>
           </RadioGroup>
         </div>
         
