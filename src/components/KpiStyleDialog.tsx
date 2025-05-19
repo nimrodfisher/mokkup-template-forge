@@ -2,7 +2,7 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogClose } from "@/components/ui/dialog";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useWireframe } from "@/hooks/useWireframe";
+import { useWireframe, KpiVariant } from "@/hooks/useWireframe";
 import { toast } from "sonner";
 
 interface KpiStyleDialogProps {
@@ -19,7 +19,7 @@ export function KpiStyleDialog({ elementId, open, onClose }: KpiStyleDialogProps
   
   const kpiVariant = element.properties?.kpiVariant || 'basic';
   
-  const handleSelectVariant = (variant: string) => {
+  const handleSelectVariant = (variant: KpiVariant) => {
     updateElementProperties(elementId, { 
       kpiVariant: variant,
       kpiTitle: 'Title goes here',
@@ -171,7 +171,7 @@ export function KpiStyleDialog({ elementId, open, onClose }: KpiStyleDialogProps
             className="w-full" 
             onClick={() => {
               const currentVariant = element.properties?.kpiVariant || 'basic';
-              handleSelectVariant(currentVariant);
+              handleSelectVariant(currentVariant as KpiVariant);
             }}
           >
             Apply style
