@@ -10,6 +10,9 @@ export type ElementType =
   'funnel-chart' | 'image' | 'textbox' | 'histogram' | 'gauge' | 'scatter-plot' |
   'bubble-chart' | 'waterfall' | 'shapes' | 'sankey' | 'quadrant-chart';
 
+export type FilterVariant = 
+  'dropdown' | 'checkbox' | 'radio' | 'date' | 'daterange' | 'slider' | 'search';
+
 export interface Element {
   id: string;
   type: ElementType;
@@ -26,6 +29,11 @@ export interface Element {
     variant?: 'default' | 'centered' | 'with-description' | 'with-metrics';
     description?: string;
     logoUrl?: string;
+    // Filter properties
+    filterTitle?: string;
+    filterVariant?: FilterVariant;
+    filterValues?: string[];
+    filterAlignment?: 'left' | 'center' | 'right';
   };
 }
 
@@ -369,6 +377,15 @@ function getDefaultPropertiesForType(type: ElementType): Element['properties'] {
         showNavigation: false,
         variant: 'default',
         description: 'Dashboard description goes here',
+      };
+    case 'filter':
+      return {
+        backgroundColor: '#ffffff',
+        textColor: 'black',
+        filterTitle: 'Filter Title',
+        filterVariant: 'dropdown',
+        filterValues: ['All', 'Value 1', 'Value 2'],
+        filterAlignment: 'left',
       };
     default:
       return {};

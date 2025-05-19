@@ -33,6 +33,8 @@ export function Canvas() {
           );
           if (item.type === 'header') {
             toast.info("Double-click header to choose a style");
+          } else if (item.type === 'filter') {
+            toast.info("Double-click filter to choose a filter style");
           }
         }
       } else if (!activeScreen) {
