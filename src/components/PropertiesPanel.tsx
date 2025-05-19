@@ -1,3 +1,4 @@
+
 import { useWireframe } from "@/hooks/useWireframe";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
@@ -13,6 +14,19 @@ import { Switch } from "./ui/switch";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Image } from "lucide-react";
+import { 
+  ButtonVariant, 
+  FilterVariant, 
+  KpiVariant, 
+  ButtonSize, 
+  FilterAlignment, 
+  KpiAlignment, 
+  HeaderVariant,
+  TextAlignment,
+  FontSize,
+  FontWeight,
+  ImageFit
+} from "@/types/wireframe-types";
 
 export function PropertiesPanel() {
   const { selectedElementId, elements, updateElementProperties, removeElement } = useWireframe();
@@ -58,7 +72,7 @@ export function PropertiesPanel() {
     const [title, setTitle] = useState(headerProps.title || 'DASHBOARD TITLE');
     const [showLogo, setShowLogo] = useState(headerProps.showLogo !== false);
     const [showNavigation, setShowNavigation] = useState(headerProps.showNavigation !== false);
-    const [variant, setVariant] = useState(headerProps.variant || 'default');
+    const [variant, setVariant] = useState<HeaderVariant>(headerProps.variant as HeaderVariant || 'default');
     const [description, setDescription] = useState(headerProps.description || 'Dashboard description goes here');
     
     const handleSave = () => {
@@ -132,7 +146,10 @@ export function PropertiesPanel() {
           
           <div className="space-y-2">
             <Label htmlFor="variant">Variant</Label>
-            <Select value={variant} onValueChange={setVariant}>
+            <Select 
+              value={variant} 
+              onValueChange={(value: HeaderVariant) => setVariant(value)}
+            >
               <SelectTrigger>
                 <SelectValue placeholder="Select variant" />
               </SelectTrigger>
@@ -166,9 +183,9 @@ export function PropertiesPanel() {
   const renderFilterProperties = () => {
     const filterProps = element.properties || {};
     const [filterTitle, setFilterTitle] = useState(filterProps.filterTitle || 'Filter Title');
-    const [filterVariant, setFilterVariant] = useState(filterProps.filterVariant || 'dropdown');
+    const [filterVariant, setFilterVariant] = useState<FilterVariant>(filterProps.filterVariant as FilterVariant || 'dropdown');
     const [filterValues, setFilterValues] = useState(filterProps.filterValues || ['All', 'Value 1', 'Value 2']);
-    const [filterAlignment, setFilterAlignment] = useState(filterProps.filterAlignment || 'left');
+    const [filterAlignment, setFilterAlignment] = useState<FilterAlignment>(filterProps.filterAlignment as FilterAlignment || 'left');
     
     const handleSave = () => {
       updateElementProperties(element.id, {
@@ -200,7 +217,10 @@ export function PropertiesPanel() {
           
           <div className="space-y-2">
             <Label htmlFor="filterVariant">Filter Variant</Label>
-            <Select value={filterVariant} onValueChange={setFilterVariant}>
+            <Select 
+              value={filterVariant} 
+              onValueChange={(value: FilterVariant) => setFilterVariant(value)}
+            >
               <SelectTrigger>
                 <SelectValue placeholder="Select variant" />
               </SelectTrigger>
@@ -228,7 +248,10 @@ export function PropertiesPanel() {
           
           <div className="space-y-2">
             <Label htmlFor="filterAlignment">Filter Alignment</Label>
-            <Select value={filterAlignment} onValueChange={setFilterAlignment}>
+            <Select 
+              value={filterAlignment} 
+              onValueChange={(value: FilterAlignment) => setFilterAlignment(value)}
+            >
               <SelectTrigger>
                 <SelectValue placeholder="Select alignment" />
               </SelectTrigger>
@@ -250,12 +273,12 @@ export function PropertiesPanel() {
   
   const renderKpiProperties = () => {
     const kpiProps = element.properties || {};
-    const [kpiVariant, setKpiVariant] = useState(kpiProps.kpiVariant || 'basic');
+    const [kpiVariant, setKpiVariant] = useState<KpiVariant>(kpiProps.kpiVariant as KpiVariant || 'basic');
     const [kpiTitle, setKpiTitle] = useState(kpiProps.kpiTitle || 'Metric Title');
     const [kpiValue, setKpiValue] = useState(kpiProps.kpiValue || '25.2K');
     const [kpiPreviousValue, setKpiPreviousValue] = useState(kpiProps.kpiPreviousValue || '11.6K');
     const [kpiChangePercentage, setKpiChangePercentage] = useState(kpiProps.kpiChangePercentage || '+10%');
-    const [kpiAlignment, setKpiAlignment] = useState(kpiProps.kpiAlignment || 'left');
+    const [kpiAlignment, setKpiAlignment] = useState<KpiAlignment>(kpiProps.kpiAlignment as KpiAlignment || 'left');
     const [showKpiTitle, setShowKpiTitle] = useState(kpiProps.showKpiTitle !== false);
     const [showPreviousValue, setShowPreviousValue] = useState(kpiProps.showPreviousValue !== false);
     const [showChangePercentage, setShowChangePercentage] = useState(kpiProps.showChangePercentage !== false);
@@ -287,7 +310,10 @@ export function PropertiesPanel() {
         <div className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="kpiVariant">KPI Variant</Label>
-            <Select value={kpiVariant} onValueChange={setKpiVariant}>
+            <Select 
+              value={kpiVariant} 
+              onValueChange={(value: KpiVariant) => setKpiVariant(value)}
+            >
               <SelectTrigger>
                 <SelectValue placeholder="Select variant" />
               </SelectTrigger>
@@ -342,7 +368,10 @@ export function PropertiesPanel() {
           
           <div className="space-y-2">
             <Label htmlFor="kpiAlignment">KPI Alignment</Label>
-            <Select value={kpiAlignment} onValueChange={setKpiAlignment}>
+            <Select 
+              value={kpiAlignment} 
+              onValueChange={(value: KpiAlignment) => setKpiAlignment(value)}
+            >
               <SelectTrigger>
                 <SelectValue placeholder="Select alignment" />
               </SelectTrigger>
@@ -402,8 +431,8 @@ export function PropertiesPanel() {
   const renderButtonProperties = () => {
     const buttonProps = element.properties || {};
     const [buttonText, setButtonText] = useState(buttonProps.buttonText || 'Button');
-    const [buttonVariant, setButtonVariant] = useState(buttonProps.buttonVariant || 'default');
-    const [buttonSize, setButtonSize] = useState(buttonProps.buttonSize || 'md');
+    const [buttonVariant, setButtonVariant] = useState<ButtonVariant>(buttonProps.buttonVariant as ButtonVariant || 'default');
+    const [buttonSize, setButtonSize] = useState<ButtonSize>(buttonProps.buttonSize as ButtonSize || 'md');
     const [buttonIcon, setButtonIcon] = useState(buttonProps.buttonIcon || false);
     
     const handleSave = () => {
@@ -436,7 +465,10 @@ export function PropertiesPanel() {
           
           <div className="space-y-2">
             <Label htmlFor="buttonVariant">Button Variant</Label>
-            <Select value={buttonVariant} onValueChange={setButtonVariant}>
+            <Select 
+              value={buttonVariant} 
+              onValueChange={(value: ButtonVariant) => setButtonVariant(value)}
+            >
               <SelectTrigger>
                 <SelectValue placeholder="Select variant" />
               </SelectTrigger>
@@ -452,7 +484,10 @@ export function PropertiesPanel() {
           
           <div className="space-y-2">
             <Label htmlFor="buttonSize">Button Size</Label>
-            <Select value={buttonSize} onValueChange={setButtonSize}>
+            <Select 
+              value={buttonSize} 
+              onValueChange={(value: ButtonSize) => setButtonSize(value)}
+            >
               <SelectTrigger>
                 <SelectValue placeholder="Select size" />
               </SelectTrigger>
@@ -486,9 +521,9 @@ export function PropertiesPanel() {
     const [textboxContent, setTextboxContent] = useState(textboxProps.textboxContent || 'Edit text in left pane...');
     const [textboxTitle, setTextboxTitle] = useState(textboxProps.textboxTitle || 'Title goes here');
     const [showTextboxTitle, setShowTextboxTitle] = useState(textboxProps.showTextboxTitle !== false);
-    const [textAlignment, setTextAlignment] = useState(textboxProps.textAlignment || 'left');
-    const [fontSize, setFontSize] = useState(textboxProps.fontSize || 'md');
-    const [fontWeight, setFontWeight] = useState(textboxProps.fontWeight || 'normal');
+    const [textAlignment, setTextAlignment] = useState<TextAlignment>(textboxProps.textAlignment as TextAlignment || 'left');
+    const [fontSize, setFontSize] = useState<FontSize>(textboxProps.fontSize as FontSize || 'md');
+    const [fontWeight, setFontWeight] = useState<FontWeight>(textboxProps.fontWeight as FontWeight || 'normal');
     
     const handleSave = () => {
       updateElementProperties(element.id, {
@@ -541,7 +576,10 @@ export function PropertiesPanel() {
           
           <div className="space-y-2">
             <Label htmlFor="textAlignment">Text Alignment</Label>
-            <Select value={textAlignment} onValueChange={setTextAlignment}>
+            <Select 
+              value={textAlignment} 
+              onValueChange={(value: TextAlignment) => setTextAlignment(value)}
+            >
               <SelectTrigger>
                 <SelectValue placeholder="Select alignment" />
               </SelectTrigger>
@@ -555,7 +593,10 @@ export function PropertiesPanel() {
           
           <div className="space-y-2">
             <Label htmlFor="fontSize">Font Size</Label>
-            <Select value={fontSize} onValueChange={setFontSize}>
+            <Select 
+              value={fontSize} 
+              onValueChange={(value: FontSize) => setFontSize(value)}
+            >
               <SelectTrigger>
                 <SelectValue placeholder="Select font size" />
               </SelectTrigger>
@@ -570,7 +611,10 @@ export function PropertiesPanel() {
           
           <div className="space-y-2">
             <Label htmlFor="fontWeight">Font Weight</Label>
-            <Select value={fontWeight} onValueChange={setFontWeight}>
+            <Select 
+              value={fontWeight} 
+              onValueChange={(value: FontWeight) => setFontWeight(value)}
+            >
               <SelectTrigger>
                 <SelectValue placeholder="Select font weight" />
               </SelectTrigger>
@@ -594,7 +638,7 @@ export function PropertiesPanel() {
     const imageProps = element.properties || {};
     const [imageUrl, setImageUrl] = useState(imageProps.imageUrl || '');
     const [altText, setAltText] = useState(imageProps.altText || 'Image');
-    const [imageFit, setImageFit] = useState(imageProps.imageFit || 'contain');
+    const [imageFit, setImageFit] = useState<ImageFit>(imageProps.imageFit as ImageFit || 'contain');
     const [borderRadius, setBorderRadius] = useState(imageProps.borderRadius || '0');
     
     const handleSave = () => {
@@ -639,7 +683,10 @@ export function PropertiesPanel() {
           
           <div className="space-y-2">
             <Label htmlFor="imageFit">Image Fit</Label>
-            <Select value={imageFit} onValueChange={setImageFit}>
+            <Select 
+              value={imageFit} 
+              onValueChange={(value: ImageFit) => setImageFit(value)}
+            >
               <SelectTrigger>
                 <SelectValue placeholder="Select fit type" />
               </SelectTrigger>
@@ -653,7 +700,10 @@ export function PropertiesPanel() {
           
           <div className="space-y-2">
             <Label htmlFor="borderRadius">Border Radius</Label>
-            <Select value={borderRadius} onValueChange={setBorderRadius}>
+            <Select 
+              value={borderRadius} 
+              onValueChange={(value: string) => setBorderRadius(value)}
+            >
               <SelectTrigger>
                 <SelectValue placeholder="Select border radius" />
               </SelectTrigger>
