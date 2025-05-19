@@ -17,6 +17,15 @@ export interface Element {
   size: { width: number; height: number };
   content?: string;
   screenId: string;
+  properties?: {
+    backgroundColor?: string;
+    textColor?: string;
+    title?: string;
+    showLogo?: boolean;
+    showNavigation?: boolean;
+    variant?: 'default' | 'centered' | 'with-description' | 'with-metrics';
+    description?: string;
+  };
 }
 
 export interface Screen {
@@ -40,6 +49,7 @@ interface WireframeState {
   selectedElementId: string | null;
   templates: Template[];
   activeTemplateId: string | null;
+  showProperties: boolean;
   
   // Actions
   addElement: (type: ElementType, position: { x: number; y: number }) => void;
@@ -50,6 +60,8 @@ interface WireframeState {
   loadTemplate: (id: string) => void;
   createNewTemplate: () => void;
   deleteTemplate: (id: string) => void;
+  toggleProperties: () => void;
+  updateElementProperties: (id: string, properties: Partial<Element['properties']>) => void;
   
   // Screen actions
   addScreen: () => void;
@@ -71,6 +83,7 @@ export const useWireframe = create<WireframeState>()(
       selectedElementId: null,
       templates: [],
       activeTemplateId: null,
+      showProperties: false,
       
       addElement: (type, position) => {
         const newElement: Element = {
@@ -79,11 +92,13 @@ export const useWireframe = create<WireframeState>()(
           position,
           size: getDefaultSizeForType(type),
           screenId: get().screens.find(screen => screen.isActive)?.id || get().screens[0].id,
+          properties: getDefaultPropertiesForType(type)
         };
         
         set(state => ({
           elements: [...state.elements, newElement],
           selectedElementId: newElement.id,
+          showProperties: true
         }));
       },
       
@@ -103,7 +118,30 @@ export const useWireframe = create<WireframeState>()(
       },
       
       selectElement: (id) => {
-        set({ selectedElementId: id });
+        set({ 
+          selectedElementId: id,
+          showProperties: id !== null 
+        });
+      },
+      
+      toggleProperties: () => {
+        set(state => ({
+          showProperties: !state.showProperties
+        }));
+      },
+      
+      updateElementProperties: (id, properties) => {
+        set(state => ({
+          elements: state.elements.map(el => 
+            el.id === id ? { 
+              ...el, 
+              properties: {
+                ...el.properties,
+                ...properties
+              } 
+            } : el
+          ),
+        }));
       },
       
       saveTemplate: (name) => {
@@ -208,7 +246,8 @@ export const useWireframe = create<WireframeState>()(
             ...screen,
             isActive: screen.id === id
           })),
-          selectedElementId: null
+          selectedElementId: null,
+          showProperties: false
         }));
         
         // Filter elements to only show those for the active screen
@@ -313,5 +352,21 @@ function getDefaultSizeForType(type: ElementType): { width: number; height: numb
       return { width: 100, height: 100 };
     default:
       return { width: 150, height: 80 };
+  }
+}
+
+function getDefaultPropertiesForType(type: ElementType): Element['properties'] {
+  switch (type) {
+    case 'header':
+      return {
+        backgroundColor: 'white',
+        textColor: 'black',
+        title: 'DASHBOARD TITLE',
+        showLogo: true,
+        showNavigation: false,
+        variant: 'default'
+      };
+    default:
+      return {};
   }
 }

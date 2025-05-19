@@ -96,7 +96,7 @@ export function CanvasElement({ element, isSelected }: CanvasElementProps) {
       onClick={handleClick}
       onMouseDown={handleMouseDown}
     >
-      <ElementContent type={element.type} />
+      <ElementContent element={element} />
       
       {isSelected && (
         <div
@@ -109,9 +109,90 @@ export function CanvasElement({ element, isSelected }: CanvasElementProps) {
   );
 }
 
-function ElementContent({ type }: { type: Element['type'] }) {
+function ElementContent({ element }: { element: Element }) {
+  const { type, properties = {} } = element;
+  
   switch (type) {
     case 'header':
+      const {
+        backgroundColor = 'white',
+        title = 'DASHBOARD TITLE',
+        showLogo = true,
+        showNavigation = false,
+        variant = 'default'
+      } = properties;
+      
+      if (variant === 'default') {
+        return (
+          <div className={`bg-${backgroundColor} p-2 flex items-center h-full justify-between`}>
+            <div className="flex items-center">
+              {showLogo && <div className="h-8 w-8 bg-gray-200 rounded flex items-center justify-center text-xs">Logo</div>}
+              {title && <div className="ml-2 font-bold">{title}</div>}
+            </div>
+            
+            {showNavigation && (
+              <div className="flex space-x-3">
+                <div className="text-xs px-2">Navigation 1</div>
+                <div className="text-xs px-2">Navigation 2</div>
+                <div className="text-xs px-2">Navigation 3</div>
+              </div>
+            )}
+          </div>
+        );
+      } else if (variant === 'centered') {
+        return (
+          <div className={`bg-${backgroundColor} p-2 flex flex-col items-center justify-center h-full`}>
+            {showLogo && <div className="h-8 w-8 bg-gray-200 rounded mb-1 flex items-center justify-center text-xs">Logo</div>}
+            {title && <div className="font-bold">{title}</div>}
+            
+            {showNavigation && (
+              <div className="flex space-x-3 mt-1">
+                <div className="text-xs px-2">Navigation 1</div>
+                <div className="text-xs px-2">Navigation 2</div>
+                <div className="text-xs px-2">Navigation 3</div>
+              </div>
+            )}
+          </div>
+        );
+      } else if (variant === 'with-description') {
+        return (
+          <div className={`bg-${backgroundColor} p-2 h-full`}>
+            <div className="flex items-center mb-1">
+              {showLogo && <div className="h-8 w-8 bg-gray-200 rounded flex items-center justify-center text-xs">Logo</div>}
+              {title && <div className="ml-2 font-bold">{title}</div>}
+            </div>
+            <div className="text-xs text-gray-500">Some dummy description text</div>
+            
+            {showNavigation && (
+              <div className="flex space-x-3 mt-1">
+                <div className="text-xs px-2">Navigation 1</div>
+                <div className="text-xs px-2">Navigation 2</div>
+                <div className="text-xs px-2">Navigation 3</div>
+              </div>
+            )}
+          </div>
+        );
+      } else if (variant === 'with-metrics') {
+        return (
+          <div className={`bg-${backgroundColor} p-2 flex items-center justify-between h-full`}>
+            <div className="flex items-center">
+              {showLogo && <div className="h-8 w-8 bg-gray-200 rounded flex items-center justify-center text-xs">Logo</div>}
+              {title && <div className="ml-2 font-bold">{title}</div>}
+            </div>
+            
+            <div className="flex space-x-4">
+              <div className="text-center">
+                <div className="text-xs">Title 1</div>
+                <div className="text-xs font-bold">Metric 1</div>
+              </div>
+              <div className="text-center">
+                <div className="text-xs">Title 2</div>
+                <div className="text-xs font-bold">Metric 2</div>
+              </div>
+            </div>
+          </div>
+        );
+      }
       return (
         <div className="bg-white p-2 flex items-center h-full">
           <div className="h-4 w-16 bg-gray-200 rounded mr-2" />
@@ -120,6 +201,7 @@ function ElementContent({ type }: { type: Element['type'] }) {
           <div className="h-4 w-8 bg-gray-200 rounded" />
         </div>
       );
+      
     case 'button':
       return (
         <div className="h-full w-full flex items-center justify-center bg-blue-500 text-white text-xs rounded">

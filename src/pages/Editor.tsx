@@ -8,10 +8,11 @@ import { useWireframe } from "@/hooks/useWireframe";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { ScreenTabs } from "@/components/ScreenTabs";
+import { PropertiesPanel } from "@/components/PropertiesPanel";
 
 const Editor = () => {
   const { templateId } = useParams();
-  const { loadTemplate } = useWireframe();
+  const { loadTemplate, showProperties } = useWireframe();
   
   useEffect(() => {
     if (templateId) {
@@ -27,7 +28,10 @@ const Editor = () => {
           <Sidebar />
           <div className="flex-1 flex flex-col overflow-hidden">
             <ScreenTabs />
-            <Canvas />
+            <div className="flex-1 flex overflow-hidden">
+              <Canvas />
+              {showProperties && <PropertiesPanel />}
+            </div>
           </div>
         </div>
       </div>
