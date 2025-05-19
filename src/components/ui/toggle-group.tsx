@@ -60,5 +60,5 @@ ToggleGroupItem.displayName = ToggleGroupPrimitive.Item.displayName
 
 // Fix: Remove the conflicting export
 export { ToggleGroup, ToggleGroupItem }
-// Export the type without re-declaring it
-export type { React.ComponentPropsWithoutRef<typeof ToggleGroupPrimitive.Item> as ToggleGroupItemProps }
+// Fix: Export the type properly
+export type ToggleGroupItemProps = React.ComponentPropsWithoutRef<typeof ToggleGroupPrimitive.Item>
