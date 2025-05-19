@@ -1,6 +1,20 @@
 
 import { useWireframe, Element, FilterVariant } from "@/hooks/useWireframe";
 import { Check, ChevronDown, Search, Sliders } from "lucide-react";
+import { 
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue 
+} from "@/components/ui/select";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 interface FilterDisplayProps {
   element: Element;
@@ -28,10 +42,16 @@ export function FilterDisplay({ element }: FilterDisplayProps) {
         return (
           <div className="w-full">
             {title && <div className={`text-sm font-medium mb-1 ${getTextAlignClass()}`}>{title}</div>}
-            <div className="border rounded bg-white p-1 px-2 text-sm flex justify-between items-center">
-              <span>{values[0] || 'All'}</span>
-              <ChevronDown className="h-4 w-4 ml-1 text-gray-500" />
-            </div>
+            <Select defaultValue={values[0] || 'All'}>
+              <SelectTrigger className="w-full h-8 text-sm">
+                <SelectValue placeholder={values[0] || 'All'} />
+              </SelectTrigger>
+              <SelectContent>
+                {values.map((value, index) => (
+                  <SelectItem key={index} value={value}>{value}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         );
         
@@ -73,9 +93,18 @@ export function FilterDisplay({ element }: FilterDisplayProps) {
         return (
           <div className="w-full">
             {title && <div className={`text-sm font-medium mb-1 ${getTextAlignClass()}`}>{title || 'Date'}</div>}
-            <div className="border rounded bg-white p-1 px-2 text-sm">
-              23/05/23
-            </div>
+            <Popover>
+              <PopoverTrigger asChild>
+                <button className="w-full border rounded bg-white p-1 px-2 text-sm text-left">
+                  23/05/23
+                </button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <div className="p-4">
+                  <div className="text-sm">Date picker would go here</div>
+                </div>
+              </PopoverContent>
+            </Popover>
           </div>
         );
         
@@ -85,15 +114,33 @@ export function FilterDisplay({ element }: FilterDisplayProps) {
             <div className="flex space-x-2">
               <div className="flex-1">
                 <div className={`text-sm font-medium mb-1 ${getTextAlignClass()}`}>Start Date</div>
-                <div className="border rounded bg-white p-1 px-2 text-sm">
-                  23/05/23
-                </div>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <button className="w-full border rounded bg-white p-1 px-2 text-sm text-left">
+                      23/05/23
+                    </button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <div className="p-4">
+                      <div className="text-sm">Date picker would go here</div>
+                    </div>
+                  </PopoverContent>
+                </Popover>
               </div>
               <div className="flex-1">
                 <div className={`text-sm font-medium mb-1 ${getTextAlignClass()}`}>End Date</div>
-                <div className="border rounded bg-white p-1 px-2 text-sm">
-                  16/07/23
-                </div>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <button className="w-full border rounded bg-white p-1 px-2 text-sm text-left">
+                      16/07/23
+                    </button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <div className="p-4">
+                      <div className="text-sm">Date picker would go here</div>
+                    </div>
+                  </PopoverContent>
+                </Popover>
               </div>
             </div>
           </div>
@@ -121,7 +168,7 @@ export function FilterDisplay({ element }: FilterDisplayProps) {
             {title && <div className={`text-sm font-medium mb-1 ${getTextAlignClass()}`}>{title || 'Search'}</div>}
             <div className="border rounded bg-white p-1 pl-2 flex items-center">
               <Search className="h-3 w-3 text-gray-400 mr-2" />
-              <span className="text-sm text-gray-400">Search...</span>
+              <input type="text" className="text-sm outline-none flex-1" placeholder="Search..." />
             </div>
           </div>
         );
