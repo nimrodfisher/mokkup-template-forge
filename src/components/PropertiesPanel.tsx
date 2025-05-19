@@ -1,3 +1,4 @@
+
 import { Element, useWireframe } from "@/hooks/useWireframe";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
@@ -11,8 +12,8 @@ import { toast } from "sonner";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
-export function PropertiesPanel() {
-  const { elements, selectedElementId, showProperties, toggleProperties, updateElementProperties, updateLogoImage } = useWireframe();
+export function PropertiesPanel({ onOpenStyleDialog }: { onOpenStyleDialog?: () => void }) {
+  const { elements, selectedElementId, showProperties, toggleProperties, updateElementProperties, updateElement, updateLogoImage } = useWireframe();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [backgroundColor, setBackgroundColor] = useState('#ffffff');
   const [textColor, setTextColor] = useState('#000000');
@@ -835,6 +836,15 @@ export function PropertiesPanel() {
               </Button>
             </div>
             <p className="text-gray-500 mt-2">Edit {selectedElement.type} properties</p>
+            {onOpenStyleDialog && selectedElement.type === 'header' && (
+              <Button 
+                className="w-full mt-4" 
+                variant="outline"
+                onClick={onOpenStyleDialog}
+              >
+                Open Style Editor
+              </Button>
+            )}
           </div>
         );
     }
