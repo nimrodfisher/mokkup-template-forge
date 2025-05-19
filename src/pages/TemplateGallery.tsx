@@ -24,6 +24,11 @@ const TemplateGallery = () => {
     toast.success("Template deleted successfully!");
   };
   
+  const getElementCount = (template) => {
+    // Count all elements across all screens
+    return template.screens?.reduce((count, screen) => count + (screen.elements?.length || 0), 0) || 0;
+  };
+  
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
       <header className="bg-white border-b">
@@ -71,12 +76,12 @@ const TemplateGallery = () => {
                 </CardHeader>
                 <CardContent>
                   <div className="aspect-video bg-gray-100 rounded-md border flex items-center justify-center">
-                    {template.elements.length === 0 ? (
+                    {getElementCount(template) === 0 ? (
                       <span className="text-gray-400 text-sm">Empty template</span>
                     ) : (
                       <div className="relative w-full h-full p-2">
                         <div className="text-xs text-gray-500">
-                          {template.elements.length} element{template.elements.length === 1 ? '' : 's'}
+                          {getElementCount(template)} element{getElementCount(template) === 1 ? '' : 's'}
                         </div>
                       </div>
                     )}
