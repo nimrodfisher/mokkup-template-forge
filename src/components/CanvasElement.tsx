@@ -5,7 +5,7 @@ import { FilterStyleDialog } from "./FilterStyleDialog";
 import { KpiStyleDialog } from "./KpiStyleDialog";
 import { KpiDisplay } from "./KpiDisplay";
 import { ButtonStyleDialog } from "./ButtonStyleDialog";
-import { TextboxStyleDialog } from "./TextboxStyleDialog";
+import { ImageStyleDialog } from "./ImageStyleDialog";
 import { toast } from "sonner";
 
 interface CanvasElementProps {
@@ -17,6 +17,7 @@ export function CanvasElement({ element, isSelected }: CanvasElementProps) {
   const [showFilterStyleDialog, setShowFilterStyleDialog] = useState(false);
   const [showKpiStyleDialog, setShowKpiStyleDialog] = useState(false);
   const [showButtonStyleDialog, setShowButtonStyleDialog] = useState(false);
+  const [showImageStyleDialog, setShowImageStyleDialog] = useState(false);
   const { updateElement, selectElement, removeElement } = useWireframe();
   const [isDragging, setIsDragging] = useState(false);
   const [isResizing, setIsResizing] = useState(false);
@@ -34,6 +35,8 @@ export function CanvasElement({ element, isSelected }: CanvasElementProps) {
       setShowKpiStyleDialog(true);
     } else if (element.type === 'button') {
       setShowButtonStyleDialog(true);
+    } else if (element.type === 'image') {
+      setShowImageStyleDialog(true);
     }
   };
   
@@ -239,6 +242,39 @@ export function CanvasElement({ element, isSelected }: CanvasElementProps) {
           </div>
         );
       }
+      case 'image': {
+        const imageProps = element.properties || {};
+        return (
+          <div className="w-full h-full flex items-center justify-center p-2 overflow-hidden">
+            {imageProps.imageUrl ? (
+              <img 
+                src={imageProps.imageUrl} 
+                alt={imageProps.altText || "Image"} 
+                className="max-w-full max-h-full object-contain"
+              />
+            ) : (
+              <div className="w-full h-full flex flex-col items-center justify-center bg-gray-100 text-gray-500">
+                <svg 
+                  xmlns="http://www.w3.org/2000/svg" 
+                  width="48" 
+                  height="48" 
+                  viewBox="0 0 24 24" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  strokeWidth="2" 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round"
+                >
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                  <circle cx="8.5" cy="8.5" r="1.5" />
+                  <polyline points="21 15 16 10 5 21" />
+                </svg>
+                <div className="mt-2 text-sm">Double-click to add image</div>
+              </div>
+            )}
+          </div>
+        );
+      }
       case 'filter':
         return <FilterDisplay element={element} />;
       case 'kpi':
@@ -325,6 +361,14 @@ export function CanvasElement({ element, isSelected }: CanvasElementProps) {
           elementId={element.id}
           open={showButtonStyleDialog}
           onClose={() => setShowButtonStyleDialog(false)}
+        />
+      )}
+      
+      {showImageStyleDialog && (
+        <ImageStyleDialog
+          elementId={element.id}
+          open={showImageStyleDialog}
+          onClose={() => setShowImageStyleDialog(false)}
         />
       )}
     </>

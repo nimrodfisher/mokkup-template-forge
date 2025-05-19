@@ -65,6 +65,11 @@ export interface Element {
     textAlignment?: 'left' | 'center' | 'right';
     fontSize?: 'sm' | 'md' | 'lg' | 'xl';
     fontWeight?: 'normal' | 'medium' | 'bold';
+    // Image properties
+    imageUrl?: string;
+    altText?: string;
+    imageFit?: 'contain' | 'cover' | 'fill';
+    borderRadius?: string;
   };
 }
 
@@ -387,7 +392,7 @@ function getDefaultSizeForType(type: ElementType): { width: number; height: numb
     case 'heatmap':
       return { width: 300, height: 300 };
     case 'image':
-      return { width: 200, height: 150 };
+      return { width: 250, height: 200 };
     case 'textbox':
       return { width: 250, height: 120 };
     case 'delete':
@@ -459,6 +464,14 @@ function getDefaultPropertiesForType(type: ElementType): Element['properties'] {
       return {
         backgroundColor: '#EF4444',
         textColor: 'white',
+      };
+    case 'image':
+      return {
+        backgroundColor: '#ffffff',
+        imageUrl: '',
+        altText: 'Image',
+        imageFit: 'contain',
+        borderRadius: '0',
       };
     default:
       return {};
