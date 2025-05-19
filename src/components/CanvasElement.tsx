@@ -17,7 +17,6 @@ export function CanvasElement({ element, isSelected }: CanvasElementProps) {
   const [showFilterStyleDialog, setShowFilterStyleDialog] = useState(false);
   const [showKpiStyleDialog, setShowKpiStyleDialog] = useState(false);
   const [showButtonStyleDialog, setShowButtonStyleDialog] = useState(false);
-  const [showTextboxStyleDialog, setShowTextboxStyleDialog] = useState(false);
   const { updateElement, selectElement, removeElement } = useWireframe();
   const [isDragging, setIsDragging] = useState(false);
   const [isResizing, setIsResizing] = useState(false);
@@ -35,8 +34,6 @@ export function CanvasElement({ element, isSelected }: CanvasElementProps) {
       setShowKpiStyleDialog(true);
     } else if (element.type === 'button') {
       setShowButtonStyleDialog(true);
-    } else if (element.type === 'textbox') {
-      setShowTextboxStyleDialog(true);
     }
   };
   
@@ -328,14 +325,6 @@ export function CanvasElement({ element, isSelected }: CanvasElementProps) {
           elementId={element.id}
           open={showButtonStyleDialog}
           onClose={() => setShowButtonStyleDialog(false)}
-        />
-      )}
-      
-      {showTextboxStyleDialog && (
-        <TextboxStyleDialog
-          elementId={element.id}
-          open={showTextboxStyleDialog}
-          onClose={() => setShowTextboxStyleDialog(false)}
         />
       )}
     </>

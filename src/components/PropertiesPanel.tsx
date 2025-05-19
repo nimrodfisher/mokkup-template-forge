@@ -812,6 +812,223 @@ export function PropertiesPanel() {
     );
   };
   
+  // Textbox properties panel
+  const renderTextboxProperties = (element: Element) => {
+    const properties = element.properties || {};
+    const title = properties.textboxTitle || 'Title goes here';
+    const content = properties.textboxContent || 'Edit text in left pane...';
+    const showTitle = properties.showTextboxTitle !== false;
+    const textAlignment = (properties.textAlignment as 'left' | 'center' | 'right') || 'left';
+    const fontSize = (properties.fontSize as 'sm' | 'md' | 'lg' | 'xl') || 'md';
+    const fontWeight = (properties.fontWeight as 'normal' | 'medium' | 'bold') || 'normal';
+    
+    return (
+      <div className="space-y-4">
+        <div className="flex justify-between items-center">
+          <h3 className="text-base font-medium">Edit Text Box</h3>
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="h-6 w-6 p-0" 
+            onClick={() => toggleProperties()}
+          >
+            <X className="h-4 w-4" />
+          </Button>
+        </div>
+        
+        <div className="border-t pt-4">
+          <div className="space-y-3">
+            <h4 className="text-sm font-semibold flex justify-between items-center">
+              Content
+              <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
+                <Settings className="h-3 w-3" />
+              </Button>
+            </h4>
+            
+            <div className="space-y-2">
+              <div className="flex items-center space-x-2">
+                <Switch
+                  id="show-title"
+                  checked={showTitle}
+                  onCheckedChange={(checked) => 
+                    updateElementProperties(element.id, { showTextboxTitle: checked })
+                  }
+                />
+                <Label htmlFor="show-title">Show Title</Label>
+              </div>
+              
+              {showTitle && (
+                <div>
+                  <Label htmlFor="textbox-title">Title</Label>
+                  <Input
+                    id="textbox-title"
+                    value={title}
+                    onChange={(e) => updateElementProperties(element.id, { textboxTitle: e.target.value })}
+                    className="mt-1"
+                  />
+                </div>
+              )}
+            </div>
+
+            <div>
+              <Label htmlFor="textbox-content">Content</Label>
+              <Textarea
+                id="textbox-content"
+                value={content}
+                onChange={(e) => updateElementProperties(element.id, { textboxContent: e.target.value })}
+                className="mt-1"
+                rows={5}
+              />
+            </div>
+          </div>
+        </div>
+        
+        <div className="border-t pt-4">
+          <div className="space-y-3">
+            <h4 className="text-sm font-semibold flex justify-between items-center">
+              Style
+              <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
+                <Settings className="h-3 w-3" />
+              </Button>
+            </h4>
+            
+            <div>
+              <Label className="block mb-1">Text Alignment</Label>
+              <ToggleGroup type="single" value={textAlignment} 
+                onValueChange={(value: any) => {
+                  if (value) updateElementProperties(element.id, { textAlignment: value });
+                }}
+                className="justify-start border rounded-md p-1"
+              >
+                <ToggleGroupItem value="left" aria-label="Align left">
+                  <AlignLeft className="h-4 w-4" />
+                </ToggleGroupItem>
+                <ToggleGroupItem value="center" aria-label="Align center">
+                  <AlignCenter className="h-4 w-4" />
+                </ToggleGroupItem>
+                <ToggleGroupItem value="right" aria-label="Align right">
+                  <AlignRight className="h-4 w-4" />
+                </ToggleGroupItem>
+              </ToggleGroup>
+            </div>
+            
+            <div>
+              <Label>Font Size</Label>
+              <RadioGroup 
+                value={fontSize}
+                onValueChange={(value: any) => updateElementProperties(element.id, { fontSize: value })}
+                className="flex flex-wrap gap-2 mt-2"
+              >
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="sm" id="size-sm" />
+                  <Label htmlFor="size-sm">Small</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="md" id="size-md" />
+                  <Label htmlFor="size-md">Medium</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="lg" id="size-lg" />
+                  <Label htmlFor="size-lg">Large</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="xl" id="size-xl" />
+                  <Label htmlFor="size-xl">XL</Label>
+                </div>
+              </RadioGroup>
+            </div>
+            
+            <div>
+              <Label>Font Weight</Label>
+              <RadioGroup 
+                value={fontWeight}
+                onValueChange={(value: any) => updateElementProperties(element.id, { fontWeight: value })}
+                className="flex flex-wrap gap-2 mt-2"
+              >
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="normal" id="weight-normal" />
+                  <Label htmlFor="weight-normal">Normal</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="medium" id="weight-medium" />
+                  <Label htmlFor="weight-medium">Medium</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="bold" id="weight-bold" />
+                  <Label htmlFor="weight-bold">Bold</Label>
+                </div>
+              </RadioGroup>
+            </div>
+            
+            <div className="flex justify-between items-center">
+              <Label htmlFor="bg-color">Background Color</Label>
+              <div className="flex items-center">
+                <input 
+                  type="color" 
+                  id="bg-color" 
+                  value={backgroundColor} 
+                  onChange={(e) => {
+                    setBackgroundColor(e.target.value);
+                    updateElementProperties(element.id, { backgroundColor: e.target.value });
+                  }}
+                  className="w-8 h-8 cursor-pointer p-0 border-none mr-2"
+                />
+                <Input 
+                  value={backgroundColor} 
+                  onChange={(e) => {
+                    setBackgroundColor(e.target.value);
+                    updateElementProperties(element.id, { backgroundColor: e.target.value });
+                  }}
+                  className="w-24"
+                />
+              </div>
+            </div>
+            
+            <div className="flex justify-between items-center">
+              <Label htmlFor="text-color">Text Color</Label>
+              <div className="flex items-center">
+                <input 
+                  type="color" 
+                  id="text-color" 
+                  value={textColor} 
+                  onChange={(e) => {
+                    setTextColor(e.target.value);
+                    updateElementProperties(element.id, { textColor: e.target.value });
+                  }}
+                  className="w-8 h-8 cursor-pointer p-0 border-none mr-2"
+                />
+                <Input 
+                  value={textColor} 
+                  onChange={(e) => {
+                    setTextColor(e.target.value);
+                    updateElementProperties(element.id, { textColor: e.target.value });
+                  }}
+                  className="w-24"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div className="mt-4">
+          <div className="border p-4 rounded-md bg-gray-50">
+            <Label>Preview</Label>
+            <div className="mt-2" style={{ textAlign: textAlignment }}>
+              {showTitle && (
+                <h3 className={`mb-2 ${fontSize === 'sm' ? 'text-sm' : fontSize === 'lg' ? 'text-lg' : fontSize === 'xl' ? 'text-xl' : 'text-base'} ${fontWeight === 'normal' ? 'font-normal' : fontWeight === 'medium' ? 'font-medium' : 'font-bold'}`}>
+                  {title}
+                </h3>
+              )}
+              <div className={`${fontSize === 'sm' ? 'text-sm' : fontSize === 'lg' ? 'text-lg' : fontSize === 'xl' ? 'text-xl' : 'text-base'} ${fontWeight === 'normal' ? 'font-normal' : fontWeight === 'medium' ? 'font-medium' : 'font-bold'}`}>
+                {content}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+  
   const renderCustomizationOptions = () => {
     switch (selectedElement.type) {
       case 'header':
@@ -820,6 +1037,8 @@ export function PropertiesPanel() {
         return renderFilterProperties(selectedElement);
       case 'kpi':
         return renderKpiProperties(selectedElement);
+      case 'textbox':
+        return renderTextboxProperties(selectedElement);
       default:
         return (
           <div className="p-4">
