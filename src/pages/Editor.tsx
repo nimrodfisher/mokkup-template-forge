@@ -5,16 +5,18 @@ import { Sidebar } from "@/components/Sidebar";
 import { Canvas } from "@/components/Canvas";
 import { Navbar } from "@/components/Navbar";
 import { useWireframe } from "@/hooks/useWireframe";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { ScreenTabs } from "@/components/ScreenTabs";
 import { PropertiesPanel } from "@/components/PropertiesPanel";
 import { toast } from "sonner";
 import { Toaster } from "sonner";
+import { HeaderStyleDialog } from "@/components/HeaderStyleDialog";
 
 const Editor = () => {
   const { templateId } = useParams();
-  const { loadTemplate, showProperties, selectedElementId } = useWireframe();
+  const { loadTemplate, showProperties, selectedElementId, elements } = useWireframe();
+  const [showHeaderStyleDialog, setShowHeaderStyleDialog] = useState(false);
   
   useEffect(() => {
     if (templateId) {
@@ -22,6 +24,18 @@ const Editor = () => {
       toast.success("Template loaded successfully!");
     }
   }, [templateId, loadTemplate]);
+  
+  // Get the selected element
+  const selectedElement = selectedElementId 
+    ? elements.find(element => element.id === selectedElementId) 
+    : null;
+  
+  // Show header style dialog based on the element type
+  const handleOpenStyleDialog = () => {
+    if (selectedElement?.type === 'header') {
+      setShowHeaderStyleDialog(true);
+    }
+  };
   
   return (
     <DndProvider backend={HTML5Backend}>
@@ -33,11 +47,20 @@ const Editor = () => {
             <ScreenTabs />
             <div className="flex-1 flex overflow-hidden">
               <Canvas />
-              {showProperties && selectedElementId && <PropertiesPanel />}
+              {showProperties && selectedElementId && <PropertiesPanel onOpenStyleDialog={handleOpenStyleDialog} />}
             </div>
           </div>
         </div>
         <Toaster position="top-right" richColors />
+        
+        {/* Header Style Dialog */}
+        {selectedElementId && selectedElement?.type === 'header' && (
+          <HeaderStyleDialog 
+            elementId={selectedElementId} 
+            isOpen={showHeaderStyleDialog}
+            onClose={() => setShowHeaderStyleDialog(false)}
+          />
+        )}
       </div>
     </DndProvider>
   );

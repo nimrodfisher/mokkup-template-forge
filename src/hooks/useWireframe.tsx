@@ -1,3 +1,4 @@
+
 import { create } from 'zustand';
 import { v4 as uuidv4 } from 'uuid';
 import { persist } from 'zustand/middleware';
@@ -21,6 +22,10 @@ export type ButtonVariant =
 export type ButtonSize =
   'sm' | 'md' | 'lg';
 
+export type HeaderVariant =
+  'default' | 'with-metrics' | 'with-description' | 'centered-navigation-purple' | 
+  'navigation-top' | 'double-logo-purple';
+
 export interface Element {
   id: string;
   type: ElementType;
@@ -34,9 +39,10 @@ export interface Element {
     title?: string;
     showLogo?: boolean;
     showNavigation?: boolean;
-    variant?: 'default' | 'centered' | 'with-description' | 'with-metrics';
+    variant?: HeaderVariant | string;
     description?: string;
     logoUrl?: string;
+    secondaryLogoUrl?: string;
     // Filter properties
     filterTitle?: string;
     filterVariant?: FilterVariant;
