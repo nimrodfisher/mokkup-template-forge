@@ -1,3 +1,4 @@
+
 import { create } from 'zustand';
 import { v4 as uuidv4 } from 'uuid';
 import { persist } from 'zustand/middleware';
@@ -26,8 +27,7 @@ export type HeaderVariant =
   'navigation-top' | 'double-logo-purple';
 
 export type ShapeVariant =
-  'triangle' | 'rectangle' | 'circle' | 'oval' | 
-  'bar-chart' | 'stacked-bar' | 'stacked-100-bar' | 'multi-series-bar';
+  'triangle' | 'rectangle' | 'circle' | 'oval';
 
 export interface Element {
   id: string;
