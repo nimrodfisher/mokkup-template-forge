@@ -1,4 +1,3 @@
-
 import { create } from 'zustand';
 import { v4 as uuidv4 } from 'uuid';
 import { persist } from 'zustand/middleware';
@@ -27,7 +26,8 @@ export type HeaderVariant =
   'navigation-top' | 'double-logo-purple';
 
 export type ShapeVariant =
-  'triangle' | 'rectangle' | 'circle' | 'oval';
+  'triangle' | 'rectangle' | 'circle' | 'oval' | 
+  'basic-bar' | 'stacked-bar' | 'grouped-bar';
 
 export interface Element {
   id: string;
@@ -403,7 +403,7 @@ function getDefaultSizeForType(type: ElementType): { width: number; height: numb
     case 'image':
       return { width: 250, height: 200 };
     case 'shapes':
-      return { width: 150, height: 150 };
+      return { width: 300, height: 200 };
     case 'column-chart':
     case 'bar-chart':
     case 'line-chart':
@@ -508,10 +508,10 @@ function getDefaultPropertiesForType(type: ElementType): Element['properties'] {
       return {
         backgroundColor: 'transparent',
         textColor: 'black',
-        title: 'Title goes here',
+        title: 'Chart Title',
         showTitle: true,
-        shapeVariant: 'triangle',
-        shapeColor: '#9b87f5',
+        shapeVariant: 'basic-bar',
+        shapeColor: '#4f46e5',
         textAlignment: 'center',
         hasBorder: false,
         borderColor: '#e5e7eb',

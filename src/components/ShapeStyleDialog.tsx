@@ -57,6 +57,11 @@ export function ShapeStyleDialog({ elementId, isOpen, onClose }: ShapeStyleDialo
         <div className="py-4">
           <div className="text-sm font-medium mb-3">Available styles</div>
           <div className="grid grid-cols-2 gap-4">
+            {/* Basic Shapes Section */}
+            <div className="col-span-2 mt-2 mb-1">
+              <h3 className="text-sm font-medium text-gray-700">Basic Shapes</h3>
+            </div>
+            
             {/* Triangle shape */}
             <div 
               className={`relative border rounded-lg p-4 cursor-pointer hover:border-blue-400 transition-all ${
@@ -133,6 +138,129 @@ export function ShapeStyleDialog({ elementId, isOpen, onClose }: ShapeStyleDialo
               </div>
               <div className="absolute top-2 right-2">
                 {selectedStyle === 'circle' && (
+                  <div className="w-4 h-4 rounded-full bg-blue-500 flex items-center justify-center">
+                    <div className="w-2 h-2 rounded-full bg-white" />
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Bar Chart Section */}
+            <div className="col-span-2 mt-4 mb-1">
+              <h3 className="text-sm font-medium text-gray-700">Bar Charts</h3>
+            </div>
+            
+            {/* Basic Bar Chart */}
+            <div 
+              className={`relative border rounded-lg p-4 cursor-pointer hover:border-blue-400 transition-all ${
+                selectedStyle === 'basic-bar' ? 'border-blue-500 bg-blue-50' : 'border-gray-200'
+              }`}
+              onClick={() => setSelectedStyle('basic-bar')}
+            >
+              <div className="text-center mb-2">Chart Title</div>
+              <div className="flex justify-center">
+                <div className="w-full">
+                  <div className="flex items-end h-20 gap-1">
+                    <div className="bg-indigo-600 w-8 h-10"></div>
+                    <div className="bg-indigo-600 w-8 h-16"></div>
+                    <div className="bg-indigo-600 w-8 h-8"></div>
+                    <div className="bg-indigo-600 w-8 h-14"></div>
+                    <div className="bg-indigo-600 w-8 h-12"></div>
+                    <div className="bg-indigo-600 w-8 h-18"></div>
+                  </div>
+                  <div className="h-[1px] bg-gray-300 w-full mt-1"></div>
+                </div>
+              </div>
+              <div className="absolute top-2 right-2">
+                {selectedStyle === 'basic-bar' && (
+                  <div className="w-4 h-4 rounded-full bg-blue-500 flex items-center justify-center">
+                    <div className="w-2 h-2 rounded-full bg-white" />
+                  </div>
+                )}
+              </div>
+            </div>
+            
+            {/* Stacked Bar Chart */}
+            <div 
+              className={`relative border rounded-lg p-4 cursor-pointer hover:border-blue-400 transition-all ${
+                selectedStyle === 'stacked-bar' ? 'border-blue-500 bg-blue-50' : 'border-gray-200'
+              }`}
+              onClick={() => setSelectedStyle('stacked-bar')}
+            >
+              <div className="text-center mb-2">Chart Title</div>
+              <div className="flex justify-center">
+                <div className="w-full">
+                  <div className="flex items-end h-20 gap-1">
+                    <div className="w-8 flex flex-col">
+                      <div className="bg-indigo-600 h-6"></div>
+                      <div className="bg-indigo-400 h-4"></div>
+                    </div>
+                    <div className="w-8 flex flex-col">
+                      <div className="bg-indigo-600 h-8"></div>
+                      <div className="bg-indigo-400 h-6"></div>
+                    </div>
+                    <div className="w-8 flex flex-col">
+                      <div className="bg-indigo-600 h-4"></div>
+                      <div className="bg-indigo-400 h-4"></div>
+                    </div>
+                    <div className="w-8 flex flex-col">
+                      <div className="bg-indigo-600 h-7"></div>
+                      <div className="bg-indigo-400 h-5"></div>
+                    </div>
+                    <div className="w-8 flex flex-col">
+                      <div className="bg-indigo-600 h-6"></div>
+                      <div className="bg-indigo-400 h-6"></div>
+                    </div>
+                    <div className="w-8 flex flex-col">
+                      <div className="bg-indigo-600 h-10"></div>
+                      <div className="bg-indigo-400 h-7"></div>
+                    </div>
+                  </div>
+                  <div className="h-[1px] bg-gray-300 w-full mt-1"></div>
+                </div>
+              </div>
+              <div className="absolute top-2 right-2">
+                {selectedStyle === 'stacked-bar' && (
+                  <div className="w-4 h-4 rounded-full bg-blue-500 flex items-center justify-center">
+                    <div className="w-2 h-2 rounded-full bg-white" />
+                  </div>
+                )}
+              </div>
+            </div>
+            
+            {/* Grouped Bar Chart */}
+            <div 
+              className={`relative border rounded-lg p-4 cursor-pointer hover:border-blue-400 transition-all ${
+                selectedStyle === 'grouped-bar' ? 'border-blue-500 bg-blue-50' : 'border-gray-200'
+              }`}
+              onClick={() => setSelectedStyle('grouped-bar')}
+            >
+              <div className="text-center mb-2">Chart Title</div>
+              <div className="flex justify-center">
+                <div className="w-full">
+                  <div className="flex items-end h-20 gap-3">
+                    <div className="flex gap-1">
+                      <div className="bg-indigo-600 w-4 h-10"></div>
+                      <div className="bg-indigo-400 w-4 h-6"></div>
+                    </div>
+                    <div className="flex gap-1">
+                      <div className="bg-indigo-600 w-4 h-16"></div>
+                      <div className="bg-indigo-400 w-4 h-12"></div>
+                    </div>
+                    <div className="flex gap-1">
+                      <div className="bg-indigo-600 w-4 h-8"></div>
+                      <div className="bg-indigo-400 w-4 h-10"></div>
+                    </div>
+                    <div className="flex gap-1">
+                      <div className="bg-indigo-600 w-4 h-14"></div>
+                      <div className="bg-indigo-400 w-4 h-8"></div>
+                    </div>
+                  </div>
+                  <div className="h-[1px] bg-gray-300 w-full mt-1"></div>
+                </div>
+              </div>
+              <div className="absolute top-2 right-2">
+                {selectedStyle === 'grouped-bar' && (
                   <div className="w-4 h-4 rounded-full bg-blue-500 flex items-center justify-center">
                     <div className="w-2 h-2 rounded-full bg-white" />
                   </div>
