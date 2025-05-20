@@ -10,7 +10,8 @@ import { ShapeStyleDialog } from "./ShapeStyleDialog";
 import { ShapeDisplay } from "./ShapeDisplay";
 import { toast } from "sonner";
 import { ImageStyleDialog } from "./ImageStyleDialog";
-import { HeaderStyleDialog } from "./HeaderStyleDialog";
+import { HeaderStyleDialog } from "./header-style/HeaderStyleDialog";
+import { ChartStyleDialog } from "./ChartStyleDialog";
 
 interface CanvasElementProps {
   element: Element;
@@ -25,6 +26,7 @@ export function CanvasElement({ element, isSelected }: CanvasElementProps) {
   const [showImageStyleDialog, setShowImageStyleDialog] = useState(false);
   const [showShapeStyleDialog, setShowShapeStyleDialog] = useState(false);
   const [showHeaderStyleDialog, setShowHeaderStyleDialog] = useState(false);
+  const [showChartStyleDialog, setShowChartStyleDialog] = useState(false);
   const { updateElement, selectElement, removeElement } = useWireframe();
   const [isDragging, setIsDragging] = useState(false);
   const [isResizing, setIsResizing] = useState(false);
@@ -50,6 +52,8 @@ export function CanvasElement({ element, isSelected }: CanvasElementProps) {
       setShowShapeStyleDialog(true);
     } else if (element.type === 'header') {
       setShowHeaderStyleDialog(true);
+    } else if (element.type === 'bar-chart' || element.type === 'column-chart') {
+      setShowChartStyleDialog(true);
     }
   };
   
@@ -470,6 +474,189 @@ export function CanvasElement({ element, isSelected }: CanvasElementProps) {
             </svg>
           </div>
         );
+      case 'bar-chart':
+      case 'column-chart': {
+        const chartProps = element.properties || {};
+        const chartVariant = chartProps.chartVariant || 'bar';
+        const barColor = chartProps.barColor || '#4F46E5';
+        const secondaryBarColor = chartProps.secondaryBarColor || '#818CF8';
+        const tertiaryBarColor = chartProps.tertiaryBarColor || '#C7D2FE';
+        const chartTitle = chartProps.chartTitle || 'Title goes here';
+        const showLegend = chartProps.showLegend !== false;
+        
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+        const values = [40, 60, 20, 70, 50, 35];
+        const values2 = [30, 40, 35, 45, 30, 25];
+        const values3 = [25, 30, 40, 30, 35, 40];
+        
+        // Helper to render the chart based on variant
+        const renderChart = () => {
+          switch (chartVariant) {
+            case 'dropdown-bar':
+              return (
+                <div className="flex flex-col">
+                  <div className="flex items-center justify-end mb-2">
+                    <div className="text-xs border px-2 py-1 rounded flex items-center text-gray-700">
+                      Title 1
+                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="ml-1"><path d="m6 9 6 6 6-6"/></svg>
+                    </div>
+                  </div>
+                  {months.map((month, index) => (
+                    <div key={month} className="flex items-center space-x-2 mb-1">
+                      <div className="text-xs text-gray-500 w-12">{month} 22</div>
+                      <div 
+                        className="bg-indigo-600 h-4 rounded transition-all" 
+                        style={{ 
+                          width: `${values[index]}%`,
+                          backgroundColor: barColor
+                        }}
+                      ></div>
+                    </div>
+                  ))}
+                </div>
+              );
+            
+            case 'kpi-bar':
+              return (
+                <div className="flex flex-col">
+                  <div className="flex items-center mb-2">
+                    <div className="flex items-center text-xs text-blue-700 mr-3">
+                      <span className="mr-1" style={{ color: barColor }}>●</span> Metric 1
+                    </div>
+                    <div className="text-xs text-gray-700">1234 | 12% <span className="text-green-600">▲</span></div>
+                  </div>
+                  {months.map((month, index) => (
+                    <div key={month} className="flex items-center space-x-2 mb-1">
+                      <div className="text-xs text-gray-500 w-12">{month} 22</div>
+                      <div 
+                        className="bg-indigo-600 h-4 rounded transition-all" 
+                        style={{ 
+                          width: `${values[index]}%`,
+                          backgroundColor: barColor
+                        }}
+                      ></div>
+                    </div>
+                  ))}
+                </div>
+              );
+            
+            case 'multi-bar':
+              return (
+                <div className="flex flex-col">
+                  {showLegend && (
+                    <div className="flex items-center mb-2">
+                      <div className="flex items-center text-xs mr-3">
+                        <span className="mr-1" style={{ color: barColor }}>●</span> Dataset 1
+                      </div>
+                      <div className="flex items-center text-xs mr-3">
+                        <span className="mr-1" style={{ color: secondaryBarColor }}>●</span> Dataset 2
+                      </div>
+                    </div>
+                  )}
+                  {months.map((month, index) => (
+                    <div key={month} className="flex items-center space-x-2 mb-1">
+                      <div className="text-xs text-gray-500 w-12">{month} 22</div>
+                      <div className="flex">
+                        <div 
+                          className="h-4 transition-all" 
+                          style={{ 
+                            width: `${values[index]}%`,
+                            backgroundColor: barColor,
+                            borderTopLeftRadius: '0.25rem',
+                            borderBottomLeftRadius: '0.25rem'
+                          }}
+                        ></div>
+                        <div 
+                          className="h-4 transition-all" 
+                          style={{ 
+                            width: `${values2[index]}%`,
+                            backgroundColor: secondaryBarColor,
+                            borderTopRightRadius: '0.25rem',
+                            borderBottomRightRadius: '0.25rem'
+                          }}
+                        ></div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              );
+            
+            case 'stacked-bar':
+              return (
+                <div className="flex flex-col">
+                  {showLegend && (
+                    <div className="flex items-center mb-2">
+                      <div className="flex items-center text-xs mr-3">
+                        <span className="mr-1" style={{ color: barColor }}>●</span> Dataset 1
+                      </div>
+                      <div className="flex items-center text-xs mr-3">
+                        <span className="mr-1" style={{ color: secondaryBarColor }}>●</span> Dataset 2
+                      </div>
+                      <div className="flex items-center text-xs mr-3">
+                        <span className="mr-1" style={{ color: tertiaryBarColor }}>●</span> Dataset 3
+                      </div>
+                    </div>
+                  )}
+                  {months.map((month, index) => (
+                    <div key={month} className="flex items-center space-x-2 mb-1">
+                      <div className="text-xs text-gray-500 w-12">{month} 22</div>
+                      <div className="flex">
+                        <div 
+                          className="h-4 transition-all" 
+                          style={{ 
+                            width: `${values[index]/3}%`,
+                            backgroundColor: barColor,
+                          }}
+                        ></div>
+                        <div 
+                          className="h-4 transition-all" 
+                          style={{ 
+                            width: `${values2[index]/3}%`,
+                            backgroundColor: secondaryBarColor,
+                          }}
+                        ></div>
+                        <div 
+                          className="h-4 transition-all" 
+                          style={{ 
+                            width: `${values3[index]/3}%`,
+                            backgroundColor: tertiaryBarColor,
+                            borderTopRightRadius: '0.25rem',
+                            borderBottomRightRadius: '0.25rem'
+                          }}
+                        ></div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              );
+            
+            default: // regular bar
+              return (
+                <div className="flex flex-col">
+                  {months.map((month, index) => (
+                    <div key={month} className="flex items-center space-x-2 mb-1">
+                      <div className="text-xs text-gray-500 w-12">{month} 22</div>
+                      <div 
+                        className="bg-indigo-600 h-4 rounded transition-all" 
+                        style={{ 
+                          width: `${values[index]}%`,
+                          backgroundColor: barColor
+                        }}
+                      ></div>
+                    </div>
+                  ))}
+                </div>
+              );
+          }
+        };
+        
+        return (
+          <div className="w-full h-full p-3 overflow-auto">
+            <div className="text-sm font-medium mb-2">{chartTitle}</div>
+            {renderChart()}
+          </div>
+        );
+      }
       default:
         return (
           <div className="w-full h-full flex items-center justify-center p-2">
@@ -562,6 +749,14 @@ export function CanvasElement({ element, isSelected }: CanvasElementProps) {
           elementId={element.id} 
           isOpen={showHeaderStyleDialog}
           onClose={() => setShowHeaderStyleDialog(false)}
+        />
+      )}
+      
+      {showChartStyleDialog && (
+        <ChartStyleDialog
+          elementId={element.id}
+          open={showChartStyleDialog}
+          onClose={() => setShowChartStyleDialog(false)}
         />
       )}
     </>

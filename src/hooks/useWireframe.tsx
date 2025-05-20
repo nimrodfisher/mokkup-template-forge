@@ -1,4 +1,3 @@
-
 import { create } from 'zustand';
 import { v4 as uuidv4 } from 'uuid';
 import { persist } from 'zustand/middleware';
@@ -515,6 +514,20 @@ function getDefaultPropertiesForType(type: ElementType): Element['properties'] {
         textAlignment: 'center',
         hasBorder: false,
         borderColor: '#e5e7eb',
+      };
+    case 'bar-chart':
+    case 'column-chart':
+      return {
+        backgroundColor: 'transparent',
+        chartTitle: 'Title goes here',
+        chartVariant: 'bar',
+        barColor: '#4F46E5',
+        secondaryBarColor: '#818CF8',
+        tertiaryBarColor: '#C7D2FE',
+        showLegend: true,
+        showGridLines: true,
+        showLabels: true,
+        chartHeight: 200,
       };
     case 'delete':
       return {

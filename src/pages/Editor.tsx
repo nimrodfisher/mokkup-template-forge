@@ -11,11 +11,12 @@ import { ScreenTabs } from "@/components/ScreenTabs";
 import { PropertiesPanel } from "@/components/PropertiesPanel";
 import { toast } from "sonner";
 import { Toaster } from "sonner";
-import { HeaderStyleDialog } from "@/components/HeaderStyleDialog";
+import { HeaderStyleDialog } from "@/components/header-style/HeaderStyleDialog";
 import { ImageStyleDialog } from "@/components/ImageStyleDialog";
 import { ShapeStyleDialog } from "@/components/ShapeStyleDialog";
 import { FilterStyleDialog } from "@/components/FilterStyleDialog";
 import { SaveTemplateDialog } from "@/components/SaveTemplateDialog";
+import { ChartStyleDialog } from "@/components/ChartStyleDialog";
 
 const Editor = () => {
   const { templateId } = useParams();
@@ -24,6 +25,7 @@ const Editor = () => {
   const [showImageStyleDialog, setShowImageStyleDialog] = useState(false);
   const [showShapeStyleDialog, setShowShapeStyleDialog] = useState(false);
   const [showFilterStyleDialog, setShowFilterStyleDialog] = useState(false);
+  const [showChartStyleDialog, setShowChartStyleDialog] = useState(false);
   const [showSaveDialog, setShowSaveDialog] = useState(false);
   
   useEffect(() => {
@@ -48,6 +50,8 @@ const Editor = () => {
       setShowShapeStyleDialog(true);
     } else if (selectedElement?.type === 'filter') {
       setShowFilterStyleDialog(true);
+    } else if (selectedElement?.type === 'bar-chart' || selectedElement?.type === 'column-chart') {
+      setShowChartStyleDialog(true);
     }
   };
 
@@ -105,6 +109,15 @@ const Editor = () => {
             elementId={selectedElementId} 
             open={showFilterStyleDialog}
             onClose={() => setShowFilterStyleDialog(false)}
+          />
+        )}
+        
+        {/* Chart Style Dialog */}
+        {selectedElementId && (selectedElement?.type === 'bar-chart' || selectedElement?.type === 'column-chart') && (
+          <ChartStyleDialog 
+            elementId={selectedElementId} 
+            open={showChartStyleDialog}
+            onClose={() => setShowChartStyleDialog(false)}
           />
         )}
 
