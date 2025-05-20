@@ -36,6 +36,11 @@ export const ChartStyleDialog = ({ elementId, open, onClose }: ChartStyleDialogP
     onClose();
   };
   
+  const handleVariantChange = (value: string) => {
+    // Convert the string value to ChartVariant type
+    setChartVariant(value as ChartVariant);
+  };
+  
   return (
     <Dialog open={open} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="sm:max-w-[700px] max-h-[90vh] overflow-auto">
@@ -54,7 +59,7 @@ export const ChartStyleDialog = ({ elementId, open, onClose }: ChartStyleDialogP
             
             <RadioGroup 
               value={chartVariant} 
-              onValueChange={setChartVariant}
+              onValueChange={handleVariantChange}
               className="grid grid-cols-1 gap-4"
             >
               <div className="space-y-2">
@@ -363,3 +368,4 @@ export const ChartStyleDialog = ({ elementId, open, onClose }: ChartStyleDialogP
     </Dialog>
   );
 };
+
