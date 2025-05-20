@@ -458,7 +458,7 @@ export function HeaderStyleDialog({ elementId, isOpen, onClose }: HeaderStyleDia
                   <Label htmlFor="alignment" className="block mb-1">Content Alignment</Label>
                   <Select
                     value={alignment}
-                    onValueChange={(value) => setAlignment(value)}
+                    onValueChange={(value: "left" | "center" | "right") => setAlignment(value)}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Select alignment" />
@@ -475,7 +475,7 @@ export function HeaderStyleDialog({ elementId, isOpen, onClose }: HeaderStyleDia
                   <Label htmlFor="borderRadius" className="block mb-1">Border Radius</Label>
                   <Select
                     value={borderRadius}
-                    onValueChange={(value) => setBorderRadius(value)}
+                    onValueChange={(value: "none" | "sm" | "md" | "lg" | "full") => setBorderRadius(value)}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Select radius" />
