@@ -10,7 +10,7 @@ import { ShapeStyleDialog } from "./ShapeStyleDialog";
 import { ShapeDisplay } from "./ShapeDisplay";
 import { toast } from "sonner";
 import { ImageStyleDialog } from "./ImageStyleDialog";
-import { HeaderStyleDialog } from "./HeaderStyleDialog";
+import { HeaderStyleDialog } from "./header-style/HeaderStyleDialog";
 
 interface CanvasElementProps {
   element: Element;
