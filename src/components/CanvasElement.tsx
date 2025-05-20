@@ -10,7 +10,7 @@ import { ShapeStyleDialog } from "./ShapeStyleDialog";
 import { ShapeDisplay } from "./ShapeDisplay";
 import { toast } from "sonner";
 import { ImageStyleDialog } from "./ImageStyleDialog";
-import { HeaderStyleDialog } from "./header-style/HeaderStyleDialog";
+import { HeaderStyleDialog } from "./HeaderStyleDialog";
 
 interface CanvasElementProps {
   element: Element;
@@ -133,42 +133,9 @@ export function CanvasElement({ element, isSelected }: CanvasElementProps) {
       case 'header':
         const headerProperties = element.properties || {};
         const variant = headerProperties.variant || 'default';
-        const borderRadius = headerProperties.borderRadius || 'none';
-        const fontFamily = headerProperties.fontFamily || 'system-ui';
-        const alignment = headerProperties.alignment || 'left';
-        const borderWidth = headerProperties.borderWidth || '0';
-        
-        // Generate border radius class based on property
-        let borderRadiusClass = '';
-        switch(borderRadius) {
-          case 'sm': borderRadiusClass = 'rounded-sm'; break;
-          case 'md': borderRadiusClass = 'rounded-md'; break;
-          case 'lg': borderRadiusClass = 'rounded-lg'; break;
-          case 'full': borderRadiusClass = 'rounded-full'; break;
-          default: borderRadiusClass = 'rounded-none';
-        }
-        
-        // Generate shadow style if enabled
-        const shadowStyle = headerProperties.hasShadow 
-          ? { boxShadow: `0 4px 6px ${headerProperties.shadowColor || 'rgba(0, 0, 0, 0.1)'}` }
-          : {};
-        
-        // Generate text alignment class
-        const textAlignClass = {
-          left: 'text-left',
-          center: 'text-center',
-          right: 'text-right'
-        }[alignment] || 'text-left';
-        
-        // Border style
-        const borderStyle = borderWidth !== '0'
-          ? { 
-              border: `${borderWidth} solid ${headerProperties.borderColor || '#e5e7eb'}`
-            }
-          : {};
         
         // Determine styles based on variant
-        let containerStyles = `w-full h-full flex items-center ${textAlignClass} ${borderRadiusClass}`;
+        let containerStyles = "w-full h-full flex items-center";
         let contentLayout = "";
         
         switch(variant) {
@@ -208,14 +175,6 @@ export function CanvasElement({ element, isSelected }: CanvasElementProps) {
             containerStyles += " bg-white p-0 flex-col";
             contentLayout = "flex items-center justify-between w-full";
             break;
-          case 'glass-effect':
-            containerStyles += " bg-gradient-to-r from-blue-500 to-purple-500 p-1";
-            contentLayout = "bg-white/20 backdrop-blur-sm p-3 flex items-center justify-between w-full border border-white/30";
-            break;
-          case 'search-header':
-            containerStyles += " bg-white p-4 border";
-            contentLayout = "flex items-center justify-between w-full";
-            break;
           default: 
             containerStyles += " p-4";
             contentLayout = "flex items-center";
@@ -225,28 +184,15 @@ export function CanvasElement({ element, isSelected }: CanvasElementProps) {
           <div 
             className={containerStyles}
             style={{
-              fontFamily,
-              backgroundColor: variant !== 'gradient' && variant !== 'glass-effect' && variant !== 'colorful-banner' 
-                ? headerProperties.backgroundColor || undefined 
-                : undefined,
+              backgroundColor: variant !== 'gradient' && variant !== 'colorful-banner' ? headerProperties.backgroundColor || undefined : undefined,
               color: headerProperties.textColor || undefined,
-              ...shadowStyle,
-              ...borderStyle,
             }}
           >
             {variant === 'colorful-banner' && (
               <div className="h-3 w-full bg-gradient-to-r from-[#F97316] via-[#8B5CF6] to-[#0EA5E9]"></div>
             )}
             
-            {variant === 'glass-effect' ? (
-              <div className={contentLayout}>
-                <div className="font-bold">{headerProperties.title || 'DASHBOARD TITLE'}</div>
-                <div className="flex space-x-4 text-sm">
-                  <div>Menu 1</div>
-                  <div>Menu 2</div>
-                </div>
-              </div>
-            ) : variant === 'double-logo-purple' ? (
+            {variant === 'double-logo-purple' ? (
               <>
                 {headerProperties.showLogo && (
                   <div className="h-full max-h-12 aspect-square bg-gray-200 flex items-center justify-center text-gray-800">
@@ -284,30 +230,6 @@ export function CanvasElement({ element, isSelected }: CanvasElementProps) {
               </div>
             ) : variant === 'minimal' ? (
               <div className="font-bold text-center">{headerProperties.title || 'DASHBOARD TITLE'}</div>
-            ) : variant === 'search-header' ? (
-              <div className="flex items-center justify-between w-full">
-                <div className="flex items-center">
-                  {headerProperties.showLogo && (
-                    <div className="mr-3">
-                      {headerProperties.logoUrl ? (
-                        <img 
-                          src={headerProperties.logoUrl} 
-                          alt="Logo" 
-                          className="h-10 w-10 object-contain"
-                        />
-                      ) : (
-                        <div className="h-10 w-10 bg-gray-200 flex items-center justify-center text-gray-400">
-                          Logo
-                        </div>
-                      )}
-                    </div>
-                  )}
-                  <div className="font-bold">{headerProperties.title || 'DASHBOARD TITLE'}</div>
-                </div>
-                <div className="bg-gray-100 rounded-full flex items-center px-3 py-1 text-sm text-gray-500">
-                  <span className="mr-2">🔍</span> Search...
-                </div>
-              </div>
             ) : variant === 'colorful-banner' ? (
               <div className="p-4 w-full">
                 <div className="flex items-center justify-between">

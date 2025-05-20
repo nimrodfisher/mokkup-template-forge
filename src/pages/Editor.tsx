@@ -11,7 +11,7 @@ import { ScreenTabs } from "@/components/ScreenTabs";
 import { PropertiesPanel } from "@/components/PropertiesPanel";
 import { toast } from "sonner";
 import { Toaster } from "sonner";
-import { HeaderStyleDialog } from "@/components/header-style/HeaderStyleDialog";
+import { HeaderStyleDialog } from "@/components/HeaderStyleDialog";
 import { ImageStyleDialog } from "@/components/ImageStyleDialog";
 import { ShapeStyleDialog } from "@/components/ShapeStyleDialog";
 import { FilterStyleDialog } from "@/components/FilterStyleDialog";
