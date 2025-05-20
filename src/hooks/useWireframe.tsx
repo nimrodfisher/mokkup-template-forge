@@ -1,4 +1,3 @@
-
 import { create } from 'zustand';
 import { v4 as uuidv4 } from 'uuid';
 import { persist } from 'zustand/middleware';
@@ -24,7 +23,8 @@ export type ButtonSize =
 
 export type HeaderVariant =
   'default' | 'with-metrics' | 'with-description' | 'centered-navigation-purple' | 
-  'navigation-top' | 'double-logo-purple';
+  'navigation-top' | 'double-logo-purple' | 'dark-navigation' | 'gradient' | 
+  'minimal' | 'colorful-banner' | 'glass-effect' | 'search-header';
 
 export type ShapeVariant =
   'triangle' | 'rectangle' | 'circle' | 'oval';
@@ -46,6 +46,14 @@ export interface Element {
     description?: string;
     logoUrl?: string;
     secondaryLogoUrl?: string;
+    // New header properties
+    alignment?: 'left' | 'center' | 'right';
+    borderRadius?: 'none' | 'sm' | 'md' | 'lg' | 'full';
+    hasShadow?: boolean;
+    shadowColor?: string;
+    borderWidth?: string;
+    borderColor?: string;
+    fontFamily?: string;
     // Filter properties
     filterTitle?: string;
     filterVariant?: FilterVariant;
@@ -78,7 +86,7 @@ export interface Element {
     imageUrl?: string;
     imageAlt?: string;
     imageFit?: 'contain' | 'cover' | 'fill' | 'none' | 'scale-down';
-    borderRadius?: 'none' | 'sm' | 'md' | 'lg' | 'full';
+    // These are already defined above, but keeping them for specific component types
     hasBorder?: boolean;
     borderColor?: string;
     hasShadow?: boolean;
@@ -447,6 +455,13 @@ function getDefaultPropertiesForType(type: ElementType): Element['properties'] {
         showNavigation: false,
         variant: 'default',
         description: 'Dashboard description goes here',
+        alignment: 'left',
+        borderRadius: 'none',
+        hasShadow: false,
+        shadowColor: 'rgba(0, 0, 0, 0.1)',
+        borderWidth: '0',
+        borderColor: '#e5e7eb',
+        fontFamily: 'system-ui'
       };
     case 'filter':
       return {
