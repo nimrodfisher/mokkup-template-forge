@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { useWireframe } from "@/hooks/useWireframe";
+import { useWireframe, ChartVariant } from "@/hooks/useWireframe";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
@@ -22,7 +22,9 @@ export const ChartStyleDialog = ({ elementId, open, onClose }: ChartStyleDialogP
   if (!element) return null;
   
   const chartProperties = element.properties || {};
-  const [chartVariant, setChartVariant] = useState<string>(chartProperties.chartVariant || 'bar');
+  const [chartVariant, setChartVariant] = useState<ChartVariant>(
+    (chartProperties.chartVariant as ChartVariant) || 'bar'
+  );
   const [activeTab, setActiveTab] = useState("styles");
   
   const applyStyle = () => {
