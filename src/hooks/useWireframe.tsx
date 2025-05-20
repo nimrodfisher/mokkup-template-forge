@@ -1,3 +1,4 @@
+
 import { create } from 'zustand';
 import { v4 as uuidv4 } from 'uuid';
 import { persist } from 'zustand/middleware';
@@ -27,6 +28,9 @@ export type HeaderVariant =
 
 export type ShapeVariant =
   'triangle' | 'rectangle' | 'circle' | 'oval';
+
+export type ChartVariant =
+  'bar' | 'dropdown-bar' | 'kpi-bar' | 'multi-bar' | 'stacked-bar';
 
 export interface Element {
   id: string;
@@ -86,6 +90,16 @@ export interface Element {
     shapeVariant?: ShapeVariant;
     shapeColor?: string;
     showTitle?: boolean;
+    // Chart properties
+    chartVariant?: ChartVariant;
+    chartTitle?: string;
+    chartHeight?: number;
+    barColor?: string;
+    secondaryBarColor?: string;
+    tertiaryBarColor?: string;
+    showLegend?: boolean;
+    showGridLines?: boolean;
+    showLabels?: boolean;
   };
 }
 
