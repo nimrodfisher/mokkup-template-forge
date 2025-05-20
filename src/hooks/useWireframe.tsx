@@ -46,7 +46,7 @@ export interface Element {
     description?: string;
     logoUrl?: string;
     secondaryLogoUrl?: string;
-    // New header properties
+    // Header properties
     alignment?: 'left' | 'center' | 'right';
     borderRadius?: 'none' | 'sm' | 'md' | 'lg' | 'full';
     hasShadow?: boolean;
@@ -86,15 +86,13 @@ export interface Element {
     imageUrl?: string;
     imageAlt?: string;
     imageFit?: 'contain' | 'cover' | 'fill' | 'none' | 'scale-down';
-    // These are already defined above, but keeping them for specific component types
-    hasBorder?: boolean;
-    borderColor?: string;
-    hasShadow?: boolean;
-    shadowSize?: 'sm' | 'md' | 'lg' | 'xl';
     // Shape properties
     shapeVariant?: ShapeVariant;
     shapeColor?: string;
     showTitle?: boolean;
+    // Common styling properties
+    hasBorder?: boolean;
+    shadowSize?: 'sm' | 'md' | 'lg' | 'xl';
   };
 }
 

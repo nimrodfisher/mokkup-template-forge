@@ -31,8 +31,12 @@ export function HeaderStyleDialog({ elementId, isOpen, onClose }: HeaderStyleDia
   const [description, setDescription] = useState<string>(element?.properties?.description || 'Dashboard description goes here');
   const [backgroundColor, setBackgroundColor] = useState<string>(element?.properties?.backgroundColor || '#ffffff');
   const [textColor, setTextColor] = useState<string>(element?.properties?.textColor || '#000000');
-  const [alignment, setAlignment] = useState<string>(element?.properties?.alignment || 'left');
-  const [borderRadius, setBorderRadius] = useState<string>(element?.properties?.borderRadius || 'none');
+  const [alignment, setAlignment] = useState<"left" | "center" | "right">(
+    (element?.properties?.alignment as "left" | "center" | "right") || "left"
+  );
+  const [borderRadius, setBorderRadius] = useState<"none" | "sm" | "md" | "lg" | "full">(
+    (element?.properties?.borderRadius as "none" | "sm" | "md" | "lg" | "full") || "none"
+  );
   const [hasShadow, setHasShadow] = useState<boolean>(element?.properties?.hasShadow || false);
   const [shadowColor, setShadowColor] = useState<string>(element?.properties?.shadowColor || 'rgba(0, 0, 0, 0.1)');
   const [borderWidth, setBorderWidth] = useState<string>(element?.properties?.borderWidth || '0');
