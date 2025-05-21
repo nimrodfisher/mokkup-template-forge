@@ -17,6 +17,7 @@ import { ShapeStyleDialog } from "@/components/ShapeStyleDialog";
 import { FilterStyleDialog } from "@/components/FilterStyleDialog";
 import { SaveTemplateDialog } from "@/components/SaveTemplateDialog";
 import { ChartStyleDialog } from "@/components/ChartStyleDialog";
+import { AreaChartStyleDialog } from "@/components/AreaChartStyleDialog";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
 const Editor = () => {
@@ -27,6 +28,7 @@ const Editor = () => {
   const [showShapeStyleDialog, setShowShapeStyleDialog] = useState(false);
   const [showFilterStyleDialog, setShowFilterStyleDialog] = useState(false);
   const [showChartStyleDialog, setShowChartStyleDialog] = useState(false);
+  const [showAreaChartStyleDialog, setShowAreaChartStyleDialog] = useState(false);
   const [showSaveDialog, setShowSaveDialog] = useState(false);
   
   useEffect(() => {
@@ -54,6 +56,8 @@ const Editor = () => {
       setShowFilterStyleDialog(true);
     } else if (selectedElement?.type === 'bar-chart' || selectedElement?.type === 'column-chart') {
       setShowChartStyleDialog(true);
+    } else if (selectedElement?.type === 'area-chart') {
+      setShowAreaChartStyleDialog(true);
     }
   };
 
@@ -132,6 +136,15 @@ const Editor = () => {
               elementId={selectedElementId} 
               open={showChartStyleDialog}
               onClose={() => setShowChartStyleDialog(false)}
+            />
+          )}
+
+          {/* Area Chart Style Dialog */}
+          {selectedElementId && selectedElement?.type === 'area-chart' && (
+            <AreaChartStyleDialog 
+              elementId={selectedElementId} 
+              open={showAreaChartStyleDialog}
+              onClose={() => setShowAreaChartStyleDialog(false)}
             />
           )}
 

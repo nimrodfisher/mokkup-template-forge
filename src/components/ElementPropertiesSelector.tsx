@@ -1,6 +1,7 @@
 
 import { useWireframe, Element } from "@/hooks/useWireframe";
 import { HeaderProperties } from "./header-properties/HeaderProperties";
+import { AreaChartProperties } from "./area-chart-properties/AreaChartProperties";
 
 interface ElementPropertiesSelectorProps {
   updateElementProperties: (id: string, properties: Partial<Element['properties']>) => void;
@@ -22,6 +23,13 @@ export function ElementPropertiesSelector({ updateElementProperties }: ElementPr
       return (
         <HeaderProperties 
           element={selectedElement} 
+          updateElementProperties={updateElementProperties}
+        />
+      );
+    case 'area-chart':
+      return (
+        <AreaChartProperties
+          element={selectedElement}
           updateElementProperties={updateElementProperties}
         />
       );
