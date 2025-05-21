@@ -42,12 +42,14 @@ export function HeaderProperties({ element, updateElementProperties }: HeaderPro
   const handleNavigationToggle = (checked: boolean) => {
     setShowNavigation(checked);
     updateElementProperties(element.id, { showNavigation: checked });
+    console.log("Navigation toggle:", checked);
   };
 
   // Update metric toggle
   const handleMetricToggle = (checked: boolean) => {
     setShowMetrics(checked);
     updateElementProperties(element.id, { showMetrics: checked });
+    console.log("Metrics toggle:", checked);
   };
 
   // Update navigation item
@@ -56,6 +58,7 @@ export function HeaderProperties({ element, updateElementProperties }: HeaderPro
     newItems[index] = value;
     setNavigationItems(newItems);
     updateElementProperties(element.id, { navigationItems: newItems });
+    console.log("Navigation items updated:", newItems);
   };
 
   // Update metric
@@ -64,6 +67,7 @@ export function HeaderProperties({ element, updateElementProperties }: HeaderPro
     newMetrics[index][field] = value;
     setMetrics(newMetrics);
     updateElementProperties(element.id, { metrics: newMetrics });
+    console.log("Metrics updated:", newMetrics);
   };
 
   return (

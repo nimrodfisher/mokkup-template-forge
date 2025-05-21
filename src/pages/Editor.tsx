@@ -62,8 +62,8 @@ const Editor = () => {
   };
   
   return (
-    <DndProvider backend={HTML5Backend}>
-      <TooltipProvider>
+    <TooltipProvider>
+      <DndProvider backend={HTML5Backend}>
         <div className="flex flex-col h-screen bg-white">
           <Navbar onSave={handleSaveAction} />
           <div className="flex-1 flex overflow-hidden">
@@ -134,8 +134,8 @@ const Editor = () => {
             onOpenChange={setShowSaveDialog}
           />
         </div>
-      </TooltipProvider>
-    </DndProvider>
+      </DndProvider>
+    </TooltipProvider>
   );
 };
 
