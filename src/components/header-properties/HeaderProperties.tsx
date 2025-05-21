@@ -37,7 +37,7 @@ export function HeaderProperties({ element, updateElementProperties }: HeaderPro
     setNavigationItems(element.properties?.navigationItems || ["Navigation 1", "Navigation 2", "Navigation 3"]);
     setShowMetrics(element.properties?.showMetrics || false);
     setMetrics(element.properties?.metrics || [{ title: "Metric 1", value: "123" }, { title: "Metric 2", value: "456" }]);
-  }, [element.id, element.properties?.showNavigation, element.properties?.showMetrics]);
+  }, [element]);
 
   // Update navigation toggle
   const handleNavigationToggle = (checked: boolean) => {
