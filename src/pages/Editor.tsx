@@ -17,6 +17,8 @@ import { ShapeStyleDialog } from "@/components/ShapeStyleDialog";
 import { FilterStyleDialog } from "@/components/FilterStyleDialog";
 import { SaveTemplateDialog } from "@/components/SaveTemplateDialog";
 import { ChartStyleDialog } from "@/components/ChartStyleDialog";
+import { TextboxStyleDialog } from "@/components/TextboxStyleDialog";
+import { KpiStyleDialog } from "@/components/KpiStyleDialog";
 
 const Editor = () => {
   const { templateId } = useParams();
@@ -26,6 +28,8 @@ const Editor = () => {
   const [showShapeStyleDialog, setShowShapeStyleDialog] = useState(false);
   const [showFilterStyleDialog, setShowFilterStyleDialog] = useState(false);
   const [showChartStyleDialog, setShowChartStyleDialog] = useState(false);
+  const [showTextboxStyleDialog, setShowTextboxStyleDialog] = useState(false);
+  const [showKpiStyleDialog, setShowKpiStyleDialog] = useState(false);
   const [showSaveDialog, setShowSaveDialog] = useState(false);
   
   useEffect(() => {
@@ -52,12 +56,22 @@ const Editor = () => {
       setShowFilterStyleDialog(true);
     } else if (selectedElement?.type === 'bar-chart' || selectedElement?.type === 'column-chart') {
       setShowChartStyleDialog(true);
+    } else if (selectedElement?.type === 'textbox') {
+      setShowTextboxStyleDialog(true);
+    } else if (selectedElement?.type === 'kpi') {
+      setShowKpiStyleDialog(true);
     }
   };
 
   // Function to handle save action
   const handleSaveAction = () => {
     setShowSaveDialog(true);
+  };
+  
+  // Function to handle property updates
+  const handleUpdateElementProperties = (id: string, properties: any) => {
+    console.log("Updating properties:", id, properties);
+    updateElementProperties(id, properties);
   };
   
   return (
@@ -73,7 +87,7 @@ const Editor = () => {
               {showProperties && selectedElementId && 
                 <PropertiesPanel 
                   onOpenStyleDialog={handleOpenStyleDialog} 
-                  updateElementProperties={updateElementProperties}
+                  updateElementProperties={handleUpdateElementProperties}
                 />
               }
             </div>
@@ -123,6 +137,24 @@ const Editor = () => {
             elementId={selectedElementId} 
             open={showChartStyleDialog}
             onClose={() => setShowChartStyleDialog(false)}
+          />
+        )}
+        
+        {/* Textbox Style Dialog */}
+        {selectedElementId && selectedElement?.type === 'textbox' && (
+          <TextboxStyleDialog 
+            elementId={selectedElementId} 
+            open={showTextboxStyleDialog}
+            onClose={() => setShowTextboxStyleDialog(false)}
+          />
+        )}
+        
+        {/* KPI Style Dialog */}
+        {selectedElementId && selectedElement?.type === 'kpi' && (
+          <KpiStyleDialog 
+            elementId={selectedElementId} 
+            open={showKpiStyleDialog}
+            onClose={() => setShowKpiStyleDialog(false)}
           />
         )}
 

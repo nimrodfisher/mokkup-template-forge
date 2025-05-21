@@ -16,8 +16,10 @@ interface HeaderPropertiesProps {
 export function HeaderProperties({ element, updateElementProperties }: HeaderPropertiesProps) {
   const [showNavOptions, setShowNavOptions] = useState(false);
   const [showMetricOptions, setShowMetricOptions] = useState(false);
+  const [showTitleOptions, setShowTitleOptions] = useState(false);
 
   // Local state for properties
+  const [title, setTitle] = useState<string>(element.properties?.title || 'DASHBOARD TITLE');
   const [showNavigation, setShowNavigation] = useState<boolean>(element.properties?.showNavigation || false);
   const [navigationItems, setNavigationItems] = useState<string[]>(
     element.properties?.navigationItems || ["Navigation 1", "Navigation 2", "Navigation 3"]
@@ -32,11 +34,18 @@ export function HeaderProperties({ element, updateElementProperties }: HeaderPro
 
   // Update local state when element changes
   useEffect(() => {
+    setTitle(element.properties?.title || 'DASHBOARD TITLE');
     setShowNavigation(element.properties?.showNavigation || false);
     setNavigationItems(element.properties?.navigationItems || ["Navigation 1", "Navigation 2", "Navigation 3"]);
     setShowMetrics(element.properties?.showMetrics || false);
     setMetrics(element.properties?.metrics || [{ title: "Metric 1", value: "123" }, { title: "Metric 2", value: "456" }]);
   }, [element]);
+
+  // Update title
+  const handleTitleChange = (value: string) => {
+    setTitle(value);
+    updateElementProperties(element.id, { title: value });
+  };
 
   // Update navigation toggle
   const handleNavigationToggle = (checked: boolean) => {
@@ -68,6 +77,39 @@ export function HeaderProperties({ element, updateElementProperties }: HeaderPro
 
   return (
     <div className="space-y-5">
+      {/* Title Section */}
+      <div className="space-y-2">
+        <div className="flex items-center justify-between">
+          <div className="font-medium text-sm">Title</div>
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={() => setShowTitleOptions(!showTitleOptions)}
+            className="h-7 w-7 p-0"
+          >
+            {showTitleOptions ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+          </Button>
+        </div>
+        
+        {(showTitleOptions || true) && (
+          <div className="space-y-2 pt-2">
+            <div>
+              <Label htmlFor="header-title" className="text-xs text-gray-500 mb-1 block">
+                Dashboard Title
+              </Label>
+              <Input
+                id="header-title"
+                value={title}
+                onChange={(e) => handleTitleChange(e.target.value)}
+                className="text-sm h-8"
+              />
+            </div>
+          </div>
+        )}
+      </div>
+
+      <Separator />
+      
       {/* Navigation Section */}
       <div className="space-y-2">
         <div className="flex items-center justify-between">

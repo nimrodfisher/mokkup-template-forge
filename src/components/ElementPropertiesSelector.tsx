@@ -25,7 +25,37 @@ export function ElementPropertiesSelector({ updateElementProperties }: ElementPr
           updateElementProperties={updateElementProperties}
         />
       );
-    // Add cases for other element types as needed
+    case 'textbox':
+      return (
+        <div className="p-4 text-sm text-gray-500">
+          Select the Style button to edit textbox properties
+        </div>
+      );
+    case 'kpi':
+      return (
+        <div className="p-4 text-sm text-gray-500">
+          Select the Style button to edit KPI properties
+        </div>
+      );
+    case 'image':
+      return (
+        <div className="p-4 text-sm text-gray-500">
+          Select the Style button to edit image properties
+        </div>
+      );
+    case 'shapes':
+      return (
+        <div className="p-4 text-sm text-gray-500">
+          Select the Style button to edit shape properties
+        </div>
+      );
+    case 'bar-chart':
+    case 'column-chart':
+      return (
+        <div className="p-4 text-sm text-gray-500">
+          Select the Style button to edit chart properties
+        </div>
+      );
     default:
       return (
         <div className="p-4 text-sm text-gray-500">
