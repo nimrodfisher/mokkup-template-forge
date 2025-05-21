@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Element } from "@/hooks/useWireframe";
+import { Element, ChartVariant } from "@/hooks/useWireframe";
 import {
   Area,
   AreaChart as RechartsAreaChart,
@@ -31,7 +31,7 @@ export const AreaChartDisplay: React.FC<AreaChartDisplayProps> = ({ element }) =
   const properties = element.properties || {};
   const {
     chartTitle = "Title goes here",
-    chartVariant = "basic-area",
+    chartVariant = "basic-area" as ChartVariant,
     barColor = "#9b87f5",
     secondaryBarColor = "#D6BCFA",
     showLegend = true,

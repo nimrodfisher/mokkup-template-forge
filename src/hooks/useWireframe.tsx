@@ -30,7 +30,8 @@ export type ShapeVariant =
   'triangle' | 'rectangle' | 'circle' | 'oval';
 
 export type ChartVariant =
-  'bar' | 'dropdown-bar' | 'kpi-bar' | 'multi-bar' | 'stacked-bar';
+  'bar' | 'dropdown-bar' | 'kpi-bar' | 'multi-bar' | 'stacked-bar' |
+  'basic-area' | 'kpi-area' | 'multi-area' | 'stacked-area';
 
 export interface Element {
   id: string;
