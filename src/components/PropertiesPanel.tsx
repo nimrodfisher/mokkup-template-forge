@@ -12,8 +12,13 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-export function PropertiesPanel({ onOpenStyleDialog }: { onOpenStyleDialog?: () => void }) {
-  const { elements, selectedElementId, showProperties, toggleProperties, updateElementProperties, updateElement, updateLogoImage, updateImage } = useWireframe();
+interface PropertiesPanelProps {
+  onOpenStyleDialog?: () => void;
+  updateElementProperties: (id: string, properties: Partial<Element['properties']>) => void;
+}
+
+export function PropertiesPanel({ onOpenStyleDialog, updateElementProperties }: PropertiesPanelProps) {
+  const { elements, selectedElementId, showProperties, toggleProperties, updateElement, updateLogoImage, updateImage } = useWireframe();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const imageFileInputRef = useRef<HTMLInputElement>(null);
   const [backgroundColor, setBackgroundColor] = useState('#ffffff');
