@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Element } from "@/hooks/useWireframe";
+import { Element } from "@/types/wireframe";
 import { AreaChartDisplay } from "../AreaChartDisplay";
 
 interface AreaChartElementProps {

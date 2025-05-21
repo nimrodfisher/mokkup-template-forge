@@ -157,6 +157,7 @@ export function getDefaultPropertiesForType(type: ElementType): any {
         showLegend: true,
         showGridLines: true,
         showLabels: true,
+        chartHeight: 200,
       };
     case 'delete':
       return {

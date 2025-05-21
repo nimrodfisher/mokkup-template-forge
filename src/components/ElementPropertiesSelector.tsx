@@ -1,5 +1,6 @@
 
-import { useWireframe, Element } from "@/hooks/useWireframe";
+import { useWireframe } from "@/hooks/useWireframe";
+import { Element } from "@/types/wireframe";
 import { HeaderProperties } from "./header-properties/HeaderProperties";
 import { AreaChartProperties } from "./area-chart-properties/AreaChartProperties";
 

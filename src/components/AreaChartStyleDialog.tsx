@@ -2,7 +2,8 @@
 import { useState } from "react";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { useWireframe, ChartVariant } from "@/hooks/useWireframe";
+import { useWireframe } from "@/hooks/useWireframe";
+import { ChartVariant } from "@/types/wireframe";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";

@@ -1,7 +1,8 @@
 
 import { useRef } from "react";
 import { useDrop } from "react-dnd";
-import { useWireframe, ElementType } from "@/hooks/useWireframe";
+import { useWireframe } from "@/hooks/useWireframe";
+import { ElementType } from "@/types/wireframe";
 import { CanvasElement } from "./CanvasElement";
 import { toast } from "sonner";
 import { Trash2 } from "lucide-react";

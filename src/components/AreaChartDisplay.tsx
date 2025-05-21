@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Element, ChartVariant } from "@/hooks/useWireframe";
+import { Element, ChartVariant } from "@/types/wireframe";
 import {
   Area,
   AreaChart as RechartsAreaChart,
@@ -39,6 +39,9 @@ export const AreaChartDisplay: React.FC<AreaChartDisplayProps> = ({ element }) =
     showLabels = true,
   } = properties;
 
+  // Ensure chartVariant is treated as a ChartVariant type
+  const variant = chartVariant as ChartVariant;
+  
   // Determine what data to display based on chart variant
   const chartData = sampleData;
   
@@ -47,7 +50,7 @@ export const AreaChartDisplay: React.FC<AreaChartDisplayProps> = ({ element }) =
       <div className="p-2">
         <div className="text-sm font-medium">{chartTitle}</div>
         
-        {chartVariant === "kpi-area" && (
+        {variant === "kpi-area" && (
           <div className="flex items-center mb-2">
             <div className="flex items-center text-xs mr-3" style={{ color: barColor }}>
               <span className="mr-1">●</span> Metric 1
@@ -58,7 +61,7 @@ export const AreaChartDisplay: React.FC<AreaChartDisplayProps> = ({ element }) =
           </div>
         )}
 
-        {chartVariant === "multi-area" && (
+        {variant === "multi-area" && (
           <div className="flex items-center mb-2">
             <div className="flex items-center text-xs mr-3" style={{ color: barColor }}>
               <span className="mr-1">●</span> Dataset 1
@@ -105,7 +108,7 @@ export const AreaChartDisplay: React.FC<AreaChartDisplayProps> = ({ element }) =
               {showLabels && <Tooltip content={<ChartTooltipContent />} />}
               {showLegend && <Legend />}
 
-              {chartVariant === "stacked-area" ? (
+              {variant === "stacked-area" ? (
                 <>
                   <Area
                     type="monotone"
@@ -131,7 +134,7 @@ export const AreaChartDisplay: React.FC<AreaChartDisplayProps> = ({ element }) =
                     fill={barColor}
                     fillOpacity={0.6}
                   />
-                  {chartVariant === "multi-area" && (
+                  {variant === "multi-area" && (
                     <Area
                       type="monotone"
                       dataKey="dataset2"
