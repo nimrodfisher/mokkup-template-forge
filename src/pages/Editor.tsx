@@ -62,6 +62,12 @@ const Editor = () => {
     setShowSaveDialog(true);
   };
   
+  // Function to handle updates from HeaderStyleDialog
+  const handleHeaderStyleUpdate = (elementId: string, properties: any) => {
+    console.log("Editor: Handling header style update", elementId, properties);
+    updateElementProperties(elementId, properties);
+  };
+  
   return (
     <TooltipProvider>
       <DndProvider backend={HTML5Backend}>

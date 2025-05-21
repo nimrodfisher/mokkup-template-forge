@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useWireframe } from "@/hooks/useWireframe";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
@@ -39,8 +38,8 @@ export function HeaderStyleDialog({ elementId, isOpen, onClose }: HeaderStyleDia
 
   // Update state when element changes or dialog opens
   useEffect(() => {
-    if (element) {
-      console.log("HeaderStyleDialog: Element updated", element.properties);
+    if (element && isOpen) {
+      console.log("HeaderStyleDialog: Element updated and dialog opened", element.properties);
       setSelectedVariant(element.properties?.variant || 'default');
       setShowNavigation(element.properties?.showNavigation || false);
       setNavigationItems(element.properties?.navigationItems || ["Navigation 1", "Navigation 2", "Navigation 3"]);
@@ -420,4 +419,3 @@ export function HeaderStyleDialog({ elementId, isOpen, onClose }: HeaderStyleDia
     </Dialog>
   );
 }
-
