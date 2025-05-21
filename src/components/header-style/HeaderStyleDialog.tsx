@@ -10,7 +10,6 @@ import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
-import { ColorPicker } from "@/components/ui/color-picker";
 
 interface HeaderStyleDialogProps {
   elementId: string;
