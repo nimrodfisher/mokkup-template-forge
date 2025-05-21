@@ -37,37 +37,43 @@ export function HeaderStyleDialog({ elementId, isOpen, onClose }: HeaderStyleDia
     ]
   );
 
-  // Update state when element changes
+  // Update state when element changes or dialog opens
   useEffect(() => {
     if (element) {
+      console.log("HeaderStyleDialog: Element updated", element.properties);
       setSelectedVariant(element.properties?.variant || 'default');
       setShowNavigation(element.properties?.showNavigation || false);
       setNavigationItems(element.properties?.navigationItems || ["Navigation 1", "Navigation 2", "Navigation 3"]);
       setShowMetrics(element.properties?.showMetrics || false);
       setMetrics(element.properties?.metrics || [{ title: "Metric 1", value: "123" }, { title: "Metric 2", value: "456" }]);
     }
-  }, [element]);
+  }, [element, isOpen]);
 
   const handleNavigationItemChange = (index: number, value: string) => {
     const newItems = [...navigationItems];
     newItems[index] = value;
     setNavigationItems(newItems);
+    console.log("Navigation item changed:", index, value, newItems);
   };
 
   const handleMetricChange = (index: number, field: 'title' | 'value', value: string) => {
     const newMetrics = [...metrics];
     newMetrics[index][field] = value;
     setMetrics(newMetrics);
+    console.log("Metric changed:", index, field, value, newMetrics);
   };
   
   const handleApplyStyle = () => {
-    updateElementProperties(elementId, { 
+    const updates = {
       variant: selectedVariant,
       showNavigation,
       navigationItems,
       showMetrics,
       metrics
-    });
+    };
+    
+    console.log("Applying header style updates:", updates);
+    updateElementProperties(elementId, updates);
     toast.success("Header style applied successfully");
     onClose();
   };
@@ -414,3 +420,4 @@ export function HeaderStyleDialog({ elementId, isOpen, onClose }: HeaderStyleDia
     </Dialog>
   );
 }
+

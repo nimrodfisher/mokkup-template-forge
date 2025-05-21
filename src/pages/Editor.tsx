@@ -44,6 +44,7 @@ const Editor = () => {
   // Show style dialog based on the element type
   const handleOpenStyleDialog = () => {
     if (selectedElement?.type === 'header') {
+      console.log("Opening header style dialog");
       setShowHeaderStyleDialog(true);
     } else if (selectedElement?.type === 'image') {
       setShowImageStyleDialog(true);

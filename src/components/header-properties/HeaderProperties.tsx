@@ -32,6 +32,7 @@ export function HeaderProperties({ element, updateElementProperties }: HeaderPro
 
   // Update local state when element changes
   useEffect(() => {
+    console.log("HeaderProperties: Element updated", element.properties);
     setShowNavigation(element.properties?.showNavigation || false);
     setNavigationItems(element.properties?.navigationItems || ["Navigation 1", "Navigation 2", "Navigation 3"]);
     setShowMetrics(element.properties?.showMetrics || false);
