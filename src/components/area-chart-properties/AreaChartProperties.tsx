@@ -28,6 +28,7 @@ export const AreaChartProperties: React.FC<AreaChartPropertiesProps> = ({
     showLegend = true,
     showGridLines = true,
     showLabels = true,
+    chartHeight = 200,
   } = properties;
 
   const handlePropertyChange = (key: string, value: any) => {
@@ -66,6 +67,16 @@ export const AreaChartProperties: React.FC<AreaChartPropertiesProps> = ({
             id="chartTitle"
             value={chartTitle}
             onChange={(e) => handlePropertyChange("chartTitle", e.target.value)}
+          />
+        </div>
+
+        <div className="grid gap-2">
+          <Label htmlFor="chartHeight">Chart Height</Label>
+          <Input
+            id="chartHeight"
+            type="number"
+            value={chartHeight}
+            onChange={(e) => handlePropertyChange("chartHeight", parseInt(e.target.value) || 200)}
           />
         </div>
         

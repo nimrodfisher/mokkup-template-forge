@@ -24,7 +24,7 @@ export function Navbar({ onSave }: NavbarProps) {
   return (
     <div className="h-14 border-b flex items-center justify-between px-4 bg-white">
       <div className="flex items-center gap-4">
-        <Link to="/" className="font-bold text-lg text-blue-600">WireBuilder</Link>
+        <Link to="/" className="font-bold text-lg text-blue-600">Alignify</Link>
         <div className="h-6 w-px bg-gray-300" />
         <Link to="/templates" className="text-sm text-gray-600 hover:text-gray-900">Templates</Link>
       </div>

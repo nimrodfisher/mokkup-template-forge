@@ -8,7 +8,7 @@ const Index = () => {
     <div className="min-h-screen bg-white">
       <header className="bg-white border-b">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="font-bold text-xl text-blue-600">WireBuilder</div>
+          <div className="font-bold text-xl text-blue-600">Alignify</div>
           <div className="flex items-center gap-4">
             <Link to="/templates" className="text-gray-600 hover:text-gray-900">Templates</Link>
             <Link to="/editor">
@@ -18,8 +18,8 @@ const Index = () => {
         </div>
       </header>
 
+      {/* Hero Section */}
       <main>
-        {/* Hero Section */}
         <section className="py-20 px-4">
           <div className="container mx-auto max-w-5xl text-center">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
@@ -92,7 +92,7 @@ const Index = () => {
 
       <footer className="bg-gray-100 py-8">
         <div className="container mx-auto px-4 text-center text-gray-600">
-          <p>&copy; 2025 WireBuilder. All rights reserved.</p>
+          <p>&copy; 2025 Alignify. All rights reserved.</p>
         </div>
       </footer>
     </div>

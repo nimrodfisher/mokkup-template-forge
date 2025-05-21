@@ -37,6 +37,7 @@ export const AreaChartDisplay: React.FC<AreaChartDisplayProps> = ({ element }) =
     showLegend = true,
     showGridLines = true,
     showLabels = true,
+    chartHeight = 200,
   } = properties;
 
   // Ensure chartVariant is treated as a ChartVariant type
@@ -73,7 +74,7 @@ export const AreaChartDisplay: React.FC<AreaChartDisplayProps> = ({ element }) =
         )}
       </div>
 
-      <div className="flex-1 w-full min-h-[100px]">
+      <div className="flex-1 w-full min-h-[100px]" style={{ height: chartHeight ? `${chartHeight}px` : '200px' }}>
         <ChartContainer
           config={{
             dataset1: {
