@@ -1,4 +1,3 @@
-
 import { create } from 'zustand';
 import { v4 as uuidv4 } from 'uuid';
 import { persist } from 'zustand/middleware';
@@ -24,7 +23,8 @@ export type ButtonSize =
 
 export type HeaderVariant =
   'default' | 'with-metrics' | 'with-description' | 'centered-navigation-purple' | 
-  'navigation-top' | 'double-logo-purple';
+  'navigation-top' | 'double-logo-purple' | 'dark-navigation' | 'gradient' | 
+  'minimal' | 'colorful-banner' | 'title-metrics';
 
 export type ShapeVariant =
   'triangle' | 'rectangle' | 'circle' | 'oval';
@@ -45,10 +45,13 @@ export interface Element {
     title?: string;
     showLogo?: boolean;
     showNavigation?: boolean;
+    navigationItems?: string[];
     variant?: HeaderVariant | string;
     description?: string;
     logoUrl?: string;
     secondaryLogoUrl?: string;
+    showMetrics?: boolean;
+    metrics?: Array<{title: string, value: string}>;
     // Filter properties
     filterTitle?: string;
     filterVariant?: FilterVariant;
@@ -458,8 +461,14 @@ function getDefaultPropertiesForType(type: ElementType): Element['properties'] {
         title: 'DASHBOARD TITLE',
         showLogo: true,
         showNavigation: false,
+        navigationItems: ["Navigation 1", "Navigation 2", "Navigation 3"],
         variant: 'default',
         description: 'Dashboard description goes here',
+        showMetrics: false,
+        metrics: [
+          { title: "Metric 1", value: "123" },
+          { title: "Metric 2", value: "456" }
+        ]
       };
     case 'filter':
       return {

@@ -1,4 +1,3 @@
-
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { Sidebar } from "@/components/Sidebar";
@@ -11,7 +10,7 @@ import { ScreenTabs } from "@/components/ScreenTabs";
 import { PropertiesPanel } from "@/components/PropertiesPanel";
 import { toast } from "sonner";
 import { Toaster } from "sonner";
-import { HeaderStyleDialog } from "@/components/header-style/HeaderStyleDialog";
+import { HeaderStyleDialog } from "@/components/HeaderStyleDialog";
 import { ImageStyleDialog } from "@/components/ImageStyleDialog";
 import { ShapeStyleDialog } from "@/components/ShapeStyleDialog";
 import { FilterStyleDialog } from "@/components/FilterStyleDialog";
