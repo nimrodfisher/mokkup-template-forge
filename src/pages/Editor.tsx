@@ -1,3 +1,4 @@
+
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { Sidebar } from "@/components/Sidebar";
@@ -10,7 +11,7 @@ import { ScreenTabs } from "@/components/ScreenTabs";
 import { PropertiesPanel } from "@/components/PropertiesPanel";
 import { toast } from "sonner";
 import { Toaster } from "sonner";
-import { HeaderStyleDialog } from "@/components/HeaderStyleDialog";
+import { HeaderStyleDialog } from "@/components/header-style/HeaderStyleDialog";
 import { ImageStyleDialog } from "@/components/ImageStyleDialog";
 import { ShapeStyleDialog } from "@/components/ShapeStyleDialog";
 import { FilterStyleDialog } from "@/components/FilterStyleDialog";
@@ -19,7 +20,7 @@ import { ChartStyleDialog } from "@/components/ChartStyleDialog";
 
 const Editor = () => {
   const { templateId } = useParams();
-  const { loadTemplate, showProperties, selectedElementId, elements } = useWireframe();
+  const { loadTemplate, showProperties, selectedElementId, elements, updateElementProperties } = useWireframe();
   const [showHeaderStyleDialog, setShowHeaderStyleDialog] = useState(false);
   const [showImageStyleDialog, setShowImageStyleDialog] = useState(false);
   const [showShapeStyleDialog, setShowShapeStyleDialog] = useState(false);
@@ -69,7 +70,12 @@ const Editor = () => {
             <ScreenTabs />
             <div className="flex-1 flex overflow-hidden">
               <Canvas />
-              {showProperties && selectedElementId && <PropertiesPanel onOpenStyleDialog={handleOpenStyleDialog} />}
+              {showProperties && selectedElementId && 
+                <PropertiesPanel 
+                  onOpenStyleDialog={handleOpenStyleDialog} 
+                  updateElementProperties={updateElementProperties}
+                />
+              }
             </div>
           </div>
         </div>
