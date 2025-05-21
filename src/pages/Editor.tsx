@@ -96,6 +96,7 @@ const Editor = () => {
               elementId={selectedElementId} 
               isOpen={showHeaderStyleDialog}
               onClose={() => setShowHeaderStyleDialog(false)}
+              onUpdate={handleHeaderStyleUpdate}
             />
           )}
           

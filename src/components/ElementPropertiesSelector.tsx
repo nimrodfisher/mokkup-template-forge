@@ -16,6 +16,8 @@ export function ElementPropertiesSelector({ updateElementProperties }: ElementPr
     
   if (!selectedElement) return null;
   
+  console.log("ElementPropertiesSelector: Rendering for element type", selectedElement.type);
+  
   // Render specific properties component based on element type
   switch (selectedElement.type) {
     case 'header':
