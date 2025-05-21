@@ -17,6 +17,7 @@ import { ShapeStyleDialog } from "@/components/ShapeStyleDialog";
 import { FilterStyleDialog } from "@/components/FilterStyleDialog";
 import { SaveTemplateDialog } from "@/components/SaveTemplateDialog";
 import { ChartStyleDialog } from "@/components/ChartStyleDialog";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 const Editor = () => {
   const { templateId } = useParams();
@@ -62,76 +63,78 @@ const Editor = () => {
   
   return (
     <DndProvider backend={HTML5Backend}>
-      <div className="flex flex-col h-screen bg-white">
-        <Navbar onSave={handleSaveAction} />
-        <div className="flex-1 flex overflow-hidden">
-          <Sidebar />
-          <div className="flex-1 flex flex-col overflow-hidden">
-            <ScreenTabs />
-            <div className="flex-1 flex overflow-hidden">
-              <Canvas />
-              {showProperties && selectedElementId && 
-                <PropertiesPanel 
-                  onOpenStyleDialog={handleOpenStyleDialog} 
-                  updateElementProperties={updateElementProperties}
-                />
-              }
+      <TooltipProvider>
+        <div className="flex flex-col h-screen bg-white">
+          <Navbar onSave={handleSaveAction} />
+          <div className="flex-1 flex overflow-hidden">
+            <Sidebar />
+            <div className="flex-1 flex flex-col overflow-hidden">
+              <ScreenTabs />
+              <div className="flex-1 flex overflow-hidden">
+                <Canvas />
+                {showProperties && selectedElementId && 
+                  <PropertiesPanel 
+                    onOpenStyleDialog={handleOpenStyleDialog} 
+                    updateElementProperties={updateElementProperties}
+                  />
+                }
+              </div>
             </div>
           </div>
-        </div>
-        <Toaster position="top-right" richColors />
-        
-        {/* Header Style Dialog */}
-        {selectedElementId && selectedElement?.type === 'header' && (
-          <HeaderStyleDialog 
-            elementId={selectedElementId} 
-            isOpen={showHeaderStyleDialog}
-            onClose={() => setShowHeaderStyleDialog(false)}
-          />
-        )}
-        
-        {/* Image Style Dialog */}
-        {selectedElementId && selectedElement?.type === 'image' && (
-          <ImageStyleDialog 
-            elementId={selectedElementId} 
-            open={showImageStyleDialog}
-            onClose={() => setShowImageStyleDialog(false)}
-          />
-        )}
-        
-        {/* Shape Style Dialog */}
-        {selectedElementId && selectedElement?.type === 'shapes' && (
-          <ShapeStyleDialog 
-            elementId={selectedElementId} 
-            isOpen={showShapeStyleDialog}
-            onClose={() => setShowShapeStyleDialog(false)}
-          />
-        )}
-        
-        {/* Filter Style Dialog */}
-        {selectedElementId && selectedElement?.type === 'filter' && (
-          <FilterStyleDialog 
-            elementId={selectedElementId} 
-            open={showFilterStyleDialog}
-            onClose={() => setShowFilterStyleDialog(false)}
-          />
-        )}
-        
-        {/* Chart Style Dialog */}
-        {selectedElementId && (selectedElement?.type === 'bar-chart' || selectedElement?.type === 'column-chart') && (
-          <ChartStyleDialog 
-            elementId={selectedElementId} 
-            open={showChartStyleDialog}
-            onClose={() => setShowChartStyleDialog(false)}
-          />
-        )}
+          <Toaster position="top-right" richColors />
+          
+          {/* Header Style Dialog */}
+          {selectedElementId && selectedElement?.type === 'header' && (
+            <HeaderStyleDialog 
+              elementId={selectedElementId} 
+              isOpen={showHeaderStyleDialog}
+              onClose={() => setShowHeaderStyleDialog(false)}
+            />
+          )}
+          
+          {/* Image Style Dialog */}
+          {selectedElementId && selectedElement?.type === 'image' && (
+            <ImageStyleDialog 
+              elementId={selectedElementId} 
+              open={showImageStyleDialog}
+              onClose={() => setShowImageStyleDialog(false)}
+            />
+          )}
+          
+          {/* Shape Style Dialog */}
+          {selectedElementId && selectedElement?.type === 'shapes' && (
+            <ShapeStyleDialog 
+              elementId={selectedElementId} 
+              isOpen={showShapeStyleDialog}
+              onClose={() => setShowShapeStyleDialog(false)}
+            />
+          )}
+          
+          {/* Filter Style Dialog */}
+          {selectedElementId && selectedElement?.type === 'filter' && (
+            <FilterStyleDialog 
+              elementId={selectedElementId} 
+              open={showFilterStyleDialog}
+              onClose={() => setShowFilterStyleDialog(false)}
+            />
+          )}
+          
+          {/* Chart Style Dialog */}
+          {selectedElementId && (selectedElement?.type === 'bar-chart' || selectedElement?.type === 'column-chart') && (
+            <ChartStyleDialog 
+              elementId={selectedElementId} 
+              open={showChartStyleDialog}
+              onClose={() => setShowChartStyleDialog(false)}
+            />
+          )}
 
-        {/* Save Template Dialog */}
-        <SaveTemplateDialog 
-          open={showSaveDialog}
-          onOpenChange={setShowSaveDialog}
-        />
-      </div>
+          {/* Save Template Dialog */}
+          <SaveTemplateDialog 
+            open={showSaveDialog}
+            onOpenChange={setShowSaveDialog}
+          />
+        </div>
+      </TooltipProvider>
     </DndProvider>
   );
 };
