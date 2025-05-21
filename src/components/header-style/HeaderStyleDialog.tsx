@@ -1,4 +1,5 @@
-import { useState } from "react";
+
+import { useState, useEffect } from "react";
 import { useWireframe } from "@/hooks/useWireframe";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -6,6 +7,9 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { X, Check } from "lucide-react";
 import { toast } from "sonner";
+import { Switch } from "@/components/ui/switch";
+import { Input } from "@/components/ui/input";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface HeaderStyleDialogProps {
   elementId: string;
@@ -18,8 +22,50 @@ export function HeaderStyleDialog({ elementId, isOpen, onClose }: HeaderStyleDia
   const element = elements.find(el => el.id === elementId);
   const [selectedVariant, setSelectedVariant] = useState<string>(element?.properties?.variant || 'default');
   
+  // Navigation settings
+  const [showNavigation, setShowNavigation] = useState<boolean>(element?.properties?.showNavigation || false);
+  const [navigationItems, setNavigationItems] = useState<string[]>(
+    element?.properties?.navigationItems || ["Navigation 1", "Navigation 2", "Navigation 3"]
+  );
+  
+  // Metrics settings
+  const [showMetrics, setShowMetrics] = useState<boolean>(element?.properties?.showMetrics || false);
+  const [metrics, setMetrics] = useState<Array<{title: string, value: string}>>(
+    element?.properties?.metrics || [
+      { title: "Metric 1", value: "123" },
+      { title: "Metric 2", value: "456" }
+    ]
+  );
+
+  // Update local state when element changes
+  useEffect(() => {
+    setSelectedVariant(element?.properties?.variant || 'default');
+    setShowNavigation(element?.properties?.showNavigation || false);
+    setNavigationItems(element?.properties?.navigationItems || ["Navigation 1", "Navigation 2", "Navigation 3"]);
+    setShowMetrics(element?.properties?.showMetrics || false);
+    setMetrics(element?.properties?.metrics || [{ title: "Metric 1", value: "123" }, { title: "Metric 2", value: "456" }]);
+  }, [element]);
+
+  const handleNavigationItemChange = (index: number, value: string) => {
+    const newItems = [...navigationItems];
+    newItems[index] = value;
+    setNavigationItems(newItems);
+  };
+
+  const handleMetricChange = (index: number, field: 'title' | 'value', value: string) => {
+    const newMetrics = [...metrics];
+    newMetrics[index][field] = value;
+    setMetrics(newMetrics);
+  };
+  
   const handleApplyStyle = () => {
-    updateElementProperties(elementId, { variant: selectedVariant });
+    updateElementProperties(elementId, { 
+      variant: selectedVariant,
+      showNavigation,
+      navigationItems,
+      showMetrics,
+      metrics
+    });
     toast.success("Header style applied successfully");
     onClose();
   };
@@ -204,49 +250,130 @@ export function HeaderStyleDialog({ elementId, isOpen, onClose }: HeaderStyleDia
           </Button>
         </DialogHeader>
         
-        <div className="py-4 px-6">
-          <div className="flex justify-between items-center mb-4">
-            <span className="text-sm text-muted-foreground">Available styles</span>
-            <Button 
-              variant="link" 
-              size="sm" 
-              className="text-xs" 
-              onClick={() => setSelectedVariant('default')}
-            >
-              Default
-            </Button>
-          </div>
+        <Tabs defaultValue="styles" className="w-full">
+          <TabsList className="grid grid-cols-2 mx-6 mt-4">
+            <TabsTrigger value="styles">Styles</TabsTrigger>
+            <TabsTrigger value="properties">Properties</TabsTrigger>
+          </TabsList>
           
-          <RadioGroup 
-            value={selectedVariant} 
-            onValueChange={setSelectedVariant}
-            className="grid grid-cols-2 gap-4 max-h-[400px] overflow-y-auto pr-2"
-          >
-            {headerStyles.map(style => (
-              <div key={style.id} className="relative">
-                <RadioGroupItem 
-                  value={style.id} 
-                  id={style.id} 
-                  className="sr-only peer"
-                />
-                <Label 
-                  htmlFor={style.id} 
-                  className="border rounded-md p-0 block cursor-pointer peer-focus:ring-2 peer-focus:ring-blue-400 peer-data-[state=checked]:border-blue-500"
-                >
-                  <div className="p-1">
-                    {style.preview}
-                    <div className="text-xs p-2 pt-3 text-center">{style.label}</div>
-                  </div>
-                  {selectedVariant === style.id && (
-                    <div className="absolute top-2 right-2 h-5 w-5 bg-blue-600 rounded-full flex items-center justify-center">
-                      <Check className="h-3 w-3 text-white" />
+          <TabsContent value="styles" className="p-6 pt-4">
+            <div className="flex justify-between items-center mb-4">
+              <span className="text-sm text-muted-foreground">Available styles</span>
+              <Button 
+                variant="link" 
+                size="sm" 
+                className="text-xs" 
+                onClick={() => setSelectedVariant('default')}
+              >
+                Default
+              </Button>
+            </div>
+            
+            <RadioGroup 
+              value={selectedVariant} 
+              onValueChange={setSelectedVariant}
+              className="grid grid-cols-2 gap-4 max-h-[400px] overflow-y-auto pr-2"
+            >
+              {headerStyles.map(style => (
+                <div key={style.id} className="relative">
+                  <RadioGroupItem 
+                    value={style.id} 
+                    id={style.id} 
+                    className="sr-only peer"
+                  />
+                  <Label 
+                    htmlFor={style.id} 
+                    className="border rounded-md p-0 block cursor-pointer peer-focus:ring-2 peer-focus:ring-blue-400 peer-data-[state=checked]:border-blue-500"
+                  >
+                    <div className="p-1">
+                      {style.preview}
+                      <div className="text-xs p-2 pt-3 text-center">{style.label}</div>
                     </div>
-                  )}
-                </Label>
+                    {selectedVariant === style.id && (
+                      <div className="absolute top-2 right-2 h-5 w-5 bg-blue-600 rounded-full flex items-center justify-center">
+                        <Check className="h-3 w-3 text-white" />
+                      </div>
+                    )}
+                  </Label>
+                </div>
+              ))}
+            </RadioGroup>
+          </TabsContent>
+          
+          <TabsContent value="properties" className="space-y-6 p-6 pt-4">
+            <div className="space-y-4">
+              <h3 className="text-sm font-medium">Navigation</h3>
+              <div className="flex items-center justify-between">
+                <span className="text-sm">Show navigation</span>
+                <Switch 
+                  checked={showNavigation} 
+                  onCheckedChange={setShowNavigation} 
+                  id="show-navigation"
+                />
               </div>
-            ))}
-          </RadioGroup>
-        </div>
+              
+              {showNavigation && (
+                <div className="space-y-2 pt-2">
+                  <h4 className="text-sm font-medium text-gray-500">Navigation items</h4>
+                  {navigationItems.map((item, index) => (
+                    <Input
+                      key={index}
+                      value={item}
+                      onChange={(e) => handleNavigationItemChange(index, e.target.value)}
+                      className="mb-2"
+                      placeholder={`Navigation ${index + 1}`}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+            
+            <div className="space-y-4 pt-4 border-t">
+              <h3 className="text-sm font-medium">Metrics</h3>
+              <div className="flex items-center justify-between">
+                <span className="text-sm">Show metrics</span>
+                <Switch 
+                  checked={showMetrics} 
+                  onCheckedChange={setShowMetrics} 
+                  id="show-metrics"
+                />
+              </div>
+              
+              {showMetrics && (
+                <div className="space-y-4 pt-2">
+                  {metrics.map((metric, index) => (
+                    <div key={index} className="grid grid-cols-2 gap-2">
+                      <div>
+                        <Label htmlFor={`metric-title-${index}`} className="text-xs text-gray-500 mb-1 block">
+                          Title
+                        </Label>
+                        <Input
+                          id={`metric-title-${index}`}
+                          value={metric.title}
+                          onChange={(e) => handleMetricChange(index, 'title', e.target.value)}
+                          placeholder="Metric title"
+                          className="text-sm"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor={`metric-value-${index}`} className="text-xs text-gray-500 mb-1 block">
+                          Value
+                        </Label>
+                        <Input
+                          id={`metric-value-${index}`}
+                          value={metric.value}
+                          onChange={(e) => handleMetricChange(index, 'value', e.target.value)}
+                          placeholder="123"
+                          className="text-sm"
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </TabsContent>
+        </Tabs>
         
         <DialogFooter className="bg-white p-4 border-t">
           <Button 
