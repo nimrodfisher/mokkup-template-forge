@@ -5,9 +5,10 @@ import { AreaChartProperties } from "./area-chart-properties/AreaChartProperties
 
 interface ElementPropertiesSelectorProps {
   updateElementProperties: (id: string, properties: Partial<Element['properties']>) => void;
+  onOpenStyleDialog?: () => void;
 }
 
-export function ElementPropertiesSelector({ updateElementProperties }: ElementPropertiesSelectorProps) {
+export function ElementPropertiesSelector({ updateElementProperties, onOpenStyleDialog }: ElementPropertiesSelectorProps) {
   const { selectedElementId, elements } = useWireframe();
   
   // Get the selected element
@@ -31,6 +32,7 @@ export function ElementPropertiesSelector({ updateElementProperties }: ElementPr
         <AreaChartProperties
           element={selectedElement}
           updateElementProperties={updateElementProperties}
+          onOpenStyleDialog={onOpenStyleDialog}
         />
       );
     // Add cases for other element types as needed

@@ -40,12 +40,8 @@ export const AreaChartDisplay: React.FC<AreaChartDisplayProps> = ({ element }) =
   } = properties;
 
   // Determine what data to display based on chart variant
-  let chartData = sampleData;
-  let chartConfig = {
-    basic: { dataset1: barColor },
-    stacked: { dataset1: barColor, dataset2: secondaryBarColor },
-  };
-
+  const chartData = sampleData;
+  
   return (
     <div className="flex flex-col h-full w-full bg-white overflow-hidden">
       <div className="p-2">
