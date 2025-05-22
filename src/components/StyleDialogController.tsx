@@ -10,6 +10,7 @@ import { ImageStyleDialog } from "./ImageStyleDialog";
 import { HeaderStyleDialog } from "./header-style/HeaderStyleDialog";
 import { ChartStyleDialog } from "./ChartStyleDialog";
 import { TableStyleDialog } from "./table-style/TableStyleDialog";
+import { GaugeStyleDialog } from "./GaugeStyleDialog";
 
 interface StyleDialogControllerProps {
   element: Element;
@@ -96,6 +97,15 @@ export function StyleDialogController({ element, dialogType, onClose }: StyleDia
     case 'table':
       return (
         <TableStyleDialog
+          elementId={element.id}
+          open={true}
+          onClose={onClose}
+        />
+      );
+      
+    case 'gauge':
+      return (
+        <GaugeStyleDialog
           elementId={element.id}
           open={true}
           onClose={onClose}
