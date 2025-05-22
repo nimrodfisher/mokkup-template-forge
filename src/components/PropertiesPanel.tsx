@@ -8,6 +8,7 @@ import { FilterProperties } from "./properties/FilterProperties";
 import { KpiProperties } from "./properties/KpiProperties";
 import { ImageProperties } from "./properties/ImageProperties";
 import { DefaultProperties } from "./properties/DefaultProperties";
+import { GaugeProperties } from "./gauge-properties/GaugeProperties";
 
 interface PropertiesPanelProps {
   onOpenStyleDialog?: () => void;
@@ -68,6 +69,14 @@ export function PropertiesPanel({ onOpenStyleDialog, updateElementProperties }: 
             updateElementProperties={updateElementProperties}
             toggleProperties={toggleProperties}
             updateImage={updateImage}
+          />
+        );
+      case 'gauge-chart':
+        return (
+          <GaugeProperties
+            element={selectedElement}
+            updateElementProperties={updateElementProperties}
+            onOpenStyleDialog={onOpenStyleDialog}
           />
         );
       default:

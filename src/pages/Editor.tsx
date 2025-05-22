@@ -19,6 +19,7 @@ import { SaveTemplateDialog } from "@/components/SaveTemplateDialog";
 import { ChartStyleDialog } from "@/components/ChartStyleDialog";
 import { AreaChartStyleDialog } from "@/components/AreaChartStyleDialog";
 import { TableStyleDialog } from "@/components/table-style/TableStyleDialog";
+import { GaugeStyleDialog } from "@/components/GaugeStyleDialog";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
 const Editor = () => {
@@ -31,6 +32,7 @@ const Editor = () => {
   const [showChartStyleDialog, setShowChartStyleDialog] = useState(false);
   const [showAreaChartStyleDialog, setShowAreaChartStyleDialog] = useState(false);
   const [showTableStyleDialog, setShowTableStyleDialog] = useState(false);
+  const [showGaugeStyleDialog, setShowGaugeStyleDialog] = useState(false);
   const [showSaveDialog, setShowSaveDialog] = useState(false);
   
   useEffect(() => {
@@ -62,6 +64,8 @@ const Editor = () => {
       setShowAreaChartStyleDialog(true);
     } else if (selectedElement?.type === 'simple-table') {
       setShowTableStyleDialog(true);
+    } else if (selectedElement?.type === 'gauge-chart') {
+      setShowGaugeStyleDialog(true);
     }
   };
 
@@ -152,6 +156,15 @@ const Editor = () => {
               elementId={selectedElementId} 
               open={showTableStyleDialog}
               onClose={() => setShowTableStyleDialog(false)}
+            />
+          )}
+          
+          {/* Gauge Style Dialog */}
+          {selectedElementId && selectedElement?.type === 'gauge-chart' && (
+            <GaugeStyleDialog 
+              elementId={selectedElementId} 
+              open={showGaugeStyleDialog}
+              onClose={() => setShowGaugeStyleDialog(false)}
             />
           )}
 

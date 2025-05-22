@@ -1,3 +1,4 @@
+
 import { ElementType } from '../types/wireframe';
 
 export function getDefaultSizeForType(type: ElementType): { width: number; height: number } {
@@ -14,6 +15,8 @@ export function getDefaultSizeForType(type: ElementType): { width: number; heigh
       return { width: 250, height: 200 };
     case 'shapes':
       return { width: 150, height: 150 };
+    case 'gauge-chart':
+      return { width: 250, height: 180 };
     case 'column-chart':
     case 'bar-chart':
     case 'line-chart':
@@ -159,6 +162,25 @@ export function getDefaultPropertiesForType(type: ElementType): any {
         showGridLines: true,
         showLabels: true,
         chartHeight: 200,
+      };
+    case 'gauge-chart':
+      return {
+        backgroundColor: 'transparent',
+        chartTitle: 'Title goes here',
+        showTitle: true,
+        gaugeStyle: 'default',
+        gaugeValue: 40,
+        gaugeMin: 0,
+        gaugeMax: 100,
+        gaugeMaxDisplay: 100,
+        gaugeTarget: 50,
+        gaugeUnits: 'K',
+        showGaugeNeedle: true,
+        showGaugeTarget: true,
+        showGaugeLabels: true,
+        textAlignment: 'center',
+        gaugePrimaryColor: '#4F46E5',
+        gaugeSecondaryColor: '#E5E7EB',
       };
     case 'delete':
       return {

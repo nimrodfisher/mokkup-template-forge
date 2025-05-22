@@ -12,6 +12,7 @@ import { DeleteRenderer } from "./DeleteRenderer";
 import { ChartRenderer } from "./ChartRenderer";
 import { TableDisplay } from "../TableDisplay";
 import { DefaultRenderer } from "./DefaultRenderer";
+import { GaugeChartRenderer } from "./GaugeChartRenderer";
 
 interface ElementRendererProps {
   element: Element;
@@ -41,6 +42,8 @@ export function ElementRenderer({ element, isEditable = false }: ElementRenderer
       return <ChartRenderer properties={element.properties} type={element.type} />;
     case 'simple-table':
       return <TableDisplay element={element} isEditable={isEditable} />;
+    case 'gauge-chart':
+      return <GaugeChartRenderer properties={element.properties} />;
     default:
       return <DefaultRenderer type={element.type} />;
   }

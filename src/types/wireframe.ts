@@ -1,6 +1,7 @@
+
 export type ElementType = 
   'header' | 'button' | 'filter' | 'kpi' | 'column-chart' | 'bar-chart' | 'line-chart' | 
-  'area-chart' | 'combo-chart' | 'pie-chart' | 'donut-chart' | 
+  'area-chart' | 'combo-chart' | 'pie-chart' | 'donut-chart' | 'gauge-chart' |
   'simple-table' | 'hierarchy-table' | 'geomap' | 'treemap' | 'heatmap' |
   'funnel-chart' | 'image' | 'textbox' | 'histogram' | 'gauge' | 'scatter-plot' |
   'bubble-chart' | 'waterfall' | 'shapes' | 'sankey' | 'quadrant-chart' | 'delete';
@@ -28,6 +29,9 @@ export type ShapeVariant =
 export type ChartVariant =
   'bar' | 'dropdown-bar' | 'kpi-bar' | 'multi-bar' | 'stacked-bar' |
   'basic-area' | 'kpi-area' | 'multi-area' | 'stacked-area';
+
+export type GaugeVariant =
+  'default' | 'speed-gauge';
 
 export interface Element {
   id: string;
@@ -113,6 +117,24 @@ export interface Element {
     cellTextColor?: string;
     alternateRowColor?: boolean;
     alternateRowBackground?: string;
+    // Gauge Chart properties
+    gaugeStyle?: GaugeVariant | string;
+    gaugeValue?: number;
+    gaugeMin?: number;
+    gaugeMax?: number;
+    gaugeMaxDisplay?: number;
+    gaugeTarget?: number;
+    gaugeUnits?: string;
+    showGaugeNeedle?: boolean;
+    showGaugeTarget?: boolean;
+    showGaugeLabels?: boolean;
+    gaugePrimaryColor?: string;
+    gaugeSecondaryColor?: string;
+    // Add-ons
+    showButtons?: boolean;
+    showDropdowns?: boolean;
+    showKpis?: boolean;
+    showText?: boolean;
   };
 }
 
