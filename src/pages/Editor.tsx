@@ -24,7 +24,14 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 
 const Editor = () => {
   const { templateId } = useParams();
-  const { loadTemplate, showProperties, selectedElementId, elements, updateElementProperties, fetchTemplates } = useWireframe();
+  const { 
+    loadTemplate, 
+    showProperties, 
+    selectedElementId, 
+    elements, 
+    updateElementProperties, 
+    fetchTemplates 
+  } = useWireframe();
   const [showHeaderStyleDialog, setShowHeaderStyleDialog] = useState(false);
   const [showImageStyleDialog, setShowImageStyleDialog] = useState(false);
   const [showShapeStyleDialog, setShowShapeStyleDialog] = useState(false);
@@ -37,13 +44,19 @@ const Editor = () => {
   
   useEffect(() => {
     // Fetch all templates when the component mounts
-    fetchTemplates();
+    fetchTemplates().catch(error => {
+      console.error("Error fetching templates:", error);
+    });
   }, [fetchTemplates]);
   
   useEffect(() => {
     if (templateId) {
-      loadTemplate(templateId);
-      toast.success("Template loaded successfully!");
+      loadTemplate(templateId).then(() => {
+        toast.success("Template loaded successfully!");
+      }).catch(error => {
+        console.error("Error loading template:", error);
+        toast.error("Failed to load template");
+      });
     }
   }, [templateId, loadTemplate]);
   

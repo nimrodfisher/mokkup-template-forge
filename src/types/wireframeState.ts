@@ -14,14 +14,15 @@ export interface WireframeState {
   updateElement: (id: string, updates: Partial<Element>) => void;
   removeElement: (id: string) => void;
   selectElement: (id: string | null) => void;
-  saveTemplate: (name: string) => void;
-  loadTemplate: (id: string) => void;
+  saveTemplate: (name: string) => Promise<void>;
+  loadTemplate: (id: string) => Promise<void>;
   createNewTemplate: () => void;
-  deleteTemplate: (id: string) => void;
+  deleteTemplate: (id: string) => Promise<void>;
   toggleProperties: () => void;
   updateElementProperties: (id: string, properties: Partial<Element['properties']>) => void;
   updateLogoImage: (id: string, logoUrl: string) => void;
   updateImage: (id: string, imageUrl: string) => void;
+  fetchTemplates: () => Promise<void>;
   
   // Screen actions
   addScreen: () => void;

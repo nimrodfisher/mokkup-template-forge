@@ -122,6 +122,33 @@ export type Database = {
           },
         ]
       }
+      templates: {
+        Row: {
+          created_at: string | null
+          elements: Json
+          id: string
+          name: string
+          screens: Json
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          elements: Json
+          id: string
+          name: string
+          screens: Json
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          elements?: Json
+          id?: string
+          name?: string
+          screens?: Json
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       user_sessions: {
         Row: {
           duration_seconds: number | null
