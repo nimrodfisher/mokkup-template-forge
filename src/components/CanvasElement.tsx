@@ -48,6 +48,9 @@ export function CanvasElement({ element, isSelected }: CanvasElementProps) {
       case 'simple-table':
         setActiveDialog('table');
         break;
+      case 'gauge-chart':
+        setActiveDialog('gauge');
+        break;
     }
   };
   

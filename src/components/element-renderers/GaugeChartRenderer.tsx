@@ -17,12 +17,16 @@ export function GaugeChartRenderer({ properties = {} }: GaugeChartRendererProps)
   const showNeedle = properties.showGaugeNeedle !== false;
   const showLabels = properties.showGaugeLabels !== false;
   const units = properties.gaugeUnits || '';
+  const gaugeStyle = properties.gaugeStyle || 'default';
   const primaryColor = properties.gaugePrimaryColor || '#4F46E5';
   const secondaryColor = properties.gaugeSecondaryColor || '#E5E7EB';
 
   // Calculate percentages for the arc
   const percentage = ((value - min) / (max - min)) * 100;
   const targetPercentage = ((target - min) / (max - min)) * 100;
+  
+  // Apply different styles based on the gauge style
+  const isSpeedGaugeStyle = gaugeStyle === 'speed-gauge';
   
   return (
     <div className="w-full h-full p-3 flex flex-col items-center">
