@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
@@ -8,6 +7,7 @@ import { X, Settings } from "lucide-react";
 import { Element } from "@/types/wireframe";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { AlignLeft, AlignCenter, AlignRight } from "lucide-react";
+import { ChevronDown } from "./ChevronDown";
 
 interface ShapePropertiesProps {
   element: Element;
