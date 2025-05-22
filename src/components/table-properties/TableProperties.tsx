@@ -7,6 +7,7 @@ import { Separator } from "@/components/ui/separator";
 import { TableHeadersEditor } from "./TableHeadersEditor";
 import { TableDataEditor } from "./TableDataEditor";
 import { TableOptions } from "./TableOptions";
+import { TableCellColorEditor } from "./TableCellColorEditor";
 
 interface TablePropertiesProps {
   element: Element;
@@ -27,6 +28,7 @@ export function TableProperties({ element, updateElementProperties, onOpenStyleD
     numRows = tableData.length,
     numColumns = tableHeaders.length,
     showTableBorder = true,
+    cellBackground = '#ffffff',
   } = properties;
 
   // Function to update headers
@@ -96,6 +98,11 @@ export function TableProperties({ element, updateElementProperties, onOpenStyleD
     });
   };
 
+  // Function to update cell background color
+  const updateCellBackground = (color: string) => {
+    updateElementProperties(element.id, { cellBackground: color });
+  };
+
   return (
     <div className="p-4 space-y-4">
       <div>
@@ -124,6 +131,13 @@ export function TableProperties({ element, updateElementProperties, onOpenStyleD
         onUpdateCell={updateCell}
         onAddRow={addRow}
         onRemoveRow={removeRow}
+      />
+
+      <Separator />
+
+      <TableCellColorEditor 
+        cellBackground={cellBackground}
+        onColorChange={updateCellBackground}
       />
 
       <Separator />

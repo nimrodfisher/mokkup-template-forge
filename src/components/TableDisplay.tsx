@@ -63,6 +63,7 @@ export function TableDisplay({ element }: TableDisplayProps) {
                   key={cellIndex} 
                   style={{ 
                     color: cellTextColor,
+                    backgroundColor: cellBackground,
                     borderBottom: showTableBorder ? '1px solid #e5e7eb' : 'none', 
                     borderRight: showTableBorder && cellIndex < row.length - 1 ? '1px solid #e5e7eb' : 'none',
                   }}
