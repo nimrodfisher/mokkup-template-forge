@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Element } from "@/types/wireframe";
 import { FilterStyleDialog } from "./FilterStyleDialog";
 import { KpiStyleDialog } from "./KpiStyleDialog";
@@ -9,7 +9,7 @@ import { ShapeStyleDialog } from "./ShapeStyleDialog";
 import { ImageStyleDialog } from "./ImageStyleDialog";
 import { HeaderStyleDialog } from "./header-style/HeaderStyleDialog";
 import { ChartStyleDialog } from "./ChartStyleDialog";
-import { TableStyleDialog } from "./TableStyleDialog";
+import { TableStyleDialog } from "./table-style/TableStyleDialog";
 
 interface StyleDialogControllerProps {
   element: Element;
