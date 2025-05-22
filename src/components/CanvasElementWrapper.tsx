@@ -3,6 +3,8 @@ import React from "react";
 import { useDrag } from "react-dnd";
 import { Element } from "@/types/wireframe";
 import { AreaChartDisplay } from "./AreaChartDisplay";
+import { TableDisplay } from "./TableDisplay";
+import { ElementRenderer } from "./element-renderers/ElementRenderer";
 
 interface CanvasElementWrapperProps {
   element: Element;
@@ -24,16 +26,6 @@ export const CanvasElementWrapper: React.FC<CanvasElementWrapperProps> = ({
     }),
   }));
 
-  // Render different component based on element type
-  const renderElementContent = () => {
-    switch (element.type) {
-      case 'area-chart':
-        return <AreaChartDisplay element={element} />;
-      default:
-        return <div className="flex items-center justify-center h-full">{element.type}</div>;
-    }
-  };
-
   return (
     <div
       ref={drag}
@@ -49,7 +41,7 @@ export const CanvasElementWrapper: React.FC<CanvasElementWrapperProps> = ({
       }}
       onClick={() => onClick(element.id)}
     >
-      {renderElementContent()}
+      <ElementRenderer element={element} />
       {isSelected && (
         <div className="absolute -top-1 -left-1 w-3 h-3 bg-blue-500 rounded-full" />
       )}
