@@ -1,3 +1,4 @@
+
 import { ElementType, useWireframe } from "@/hooks/useWireframe";
 import { useDrag } from "react-dnd";
 
@@ -7,7 +8,8 @@ interface ComponentItemProps {
 }
 
 export function ComponentItem({ label, type }: ComponentItemProps) {
-  const [, drag] = useDrag(() => ({
+  // Use useDrag without creating a new DndProvider
+  const [{ isDragging }, drag] = useDrag(() => ({
     type: 'COMPONENT',
     item: { type },
     collect: (monitor) => ({
@@ -18,7 +20,7 @@ export function ComponentItem({ label, type }: ComponentItemProps) {
   return (
     <div
       ref={drag}
-      className="aspect-w-5 aspect-h-3 bg-gray-50 border rounded-md flex flex-col items-center justify-center cursor-grab hover:border-blue-500 hover:shadow-sm transition-all"
+      className={`aspect-w-5 aspect-h-3 bg-gray-50 border rounded-md flex flex-col items-center justify-center cursor-grab hover:border-blue-500 hover:shadow-sm transition-all ${isDragging ? 'opacity-50' : ''}`}
     >
       <div className="p-2 text-center">
         <div className="mb-1 flex justify-center">

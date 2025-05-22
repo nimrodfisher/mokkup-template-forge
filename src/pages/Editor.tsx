@@ -76,6 +76,7 @@ const Editor = () => {
   
   return (
     <TooltipProvider>
+      {/* Make sure we only have ONE DndProvider in the entire app */}
       <DndProvider backend={HTML5Backend}>
         <div className="flex flex-col h-screen bg-white">
           <Navbar onSave={handleSaveAction} />

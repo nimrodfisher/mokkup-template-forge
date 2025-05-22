@@ -19,6 +19,7 @@ export function Canvas() {
     activeScreen && element.screenId === activeScreen.id
   );
   
+  // Use useDrop without creating a new DndProvider
   const [{ isOver }, drop] = useDrop(() => ({
     accept: 'COMPONENT',
     drop: (item: { type: ElementType }, monitor) => {

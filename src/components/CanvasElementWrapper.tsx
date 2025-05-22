@@ -17,7 +17,7 @@ export const CanvasElementWrapper: React.FC<CanvasElementWrapperProps> = ({
   isSelected,
   onClick,
 }) => {
-  // Set up drag functionality for the element
+  // Set up drag functionality for the element without creating a new DndProvider
   const [{ isDragging }, drag] = useDrag(() => ({
     type: 'canvas-element',
     item: { id: element.id },
