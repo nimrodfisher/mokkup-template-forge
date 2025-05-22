@@ -63,7 +63,7 @@ const TemplateGallery = () => {
     <div className="min-h-screen flex flex-col bg-gray-50">
       <header className="bg-white border-b">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <Link to="/" className="font-bold text-xl text-blue-600">WireBuilder</Link>
+          <Link to="/" className="font-bold text-xl text-blue-600">Alignify</Link>
           <div>
             <Link to="/editor">
               <Button className="gap-2">

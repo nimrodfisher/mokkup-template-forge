@@ -46,8 +46,8 @@ export const createTemplateSlice: StateCreator<
           .from('templates')
           .update({ 
             name,
-            screens,
-            elements,
+            screens: JSON.stringify(screens),
+            elements: JSON.stringify(elements),
             updated_at: new Date(now).toISOString()
           })
           .eq('id', activeTemplateId);
@@ -80,8 +80,8 @@ export const createTemplateSlice: StateCreator<
           .insert({ 
             id: newId,
             name,
-            screens,
-            elements,
+            screens: JSON.stringify(screens),
+            elements: JSON.stringify(elements),
             created_at: new Date(now).toISOString(),
             updated_at: new Date(now).toISOString()
           });
@@ -125,11 +125,14 @@ export const createTemplateSlice: StateCreator<
       if (error) throw error;
       
       if (data) {
+        const parsedScreens = JSON.parse(data.screens as string);
+        const parsedElements = JSON.parse(data.elements as string);
+        
         const template = {
           id: data.id,
           name: data.name,
-          screens: data.screens,
-          elements: data.elements,
+          screens: parsedScreens,
+          elements: parsedElements,
           createdAt: new Date(data.created_at).getTime(),
           updatedAt: new Date(data.updated_at).getTime(),
         };
@@ -203,8 +206,8 @@ export const createTemplateSlice: StateCreator<
         const templates = data.map(item => ({
           id: item.id,
           name: item.name,
-          screens: item.screens,
-          elements: item.elements,
+          screens: JSON.parse(item.screens as string),
+          elements: JSON.parse(item.elements as string),
           createdAt: new Date(item.created_at).getTime(),
           updatedAt: new Date(item.updated_at).getTime(),
         }));
