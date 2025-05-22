@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useWireframe } from "@/hooks/useWireframe";
 import { Button } from "@/components/ui/button";
@@ -12,17 +12,39 @@ import {
 } from "@/components/ui/card";
 import { format } from "date-fns";
 import { toast } from "sonner";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Loader2 } from "lucide-react";
 import { CanvasElement } from "@/components/CanvasElement";
 
 const TemplateGallery = () => {
-  const { templates, deleteTemplate } = useWireframe();
+  const { templates, deleteTemplate, fetchTemplates } = useWireframe();
   const navigate = useNavigate();
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   
-  const handleDelete = (id: string) => {
-    deleteTemplate(id);
-    toast.success("Template deleted successfully!");
+  useEffect(() => {
+    const loadTemplates = async () => {
+      try {
+        setIsLoading(true);
+        await fetchTemplates();
+      } catch (error) {
+        console.error("Error fetching templates:", error);
+        toast.error("Failed to fetch templates");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    loadTemplates();
+  }, [fetchTemplates]);
+  
+  const handleDelete = async (id: string) => {
+    try {
+      await deleteTemplate(id);
+      toast.success("Template deleted successfully!");
+    } catch (error) {
+      console.error("Error deleting template:", error);
+      toast.error("Failed to delete template");
+    }
   };
   
   // Function to get elements for a specific template
@@ -55,7 +77,12 @@ const TemplateGallery = () => {
       <main className="flex-1 container mx-auto px-4 py-8">
         <h1 className="text-2xl font-bold mb-6">Your Templates</h1>
         
-        {templates.length === 0 ? (
+        {isLoading ? (
+          <div className="flex justify-center items-center py-12">
+            <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
+            <span className="ml-2 text-lg">Loading templates...</span>
+          </div>
+        ) : templates.length === 0 ? (
           <div className="text-center py-12">
             <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-4">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

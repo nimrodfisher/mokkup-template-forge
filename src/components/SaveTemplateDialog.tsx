@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { useWireframe } from "@/hooks/useWireframe";
 import { toast } from "sonner";
 import { CanvasElement } from "@/components/CanvasElement";
+import { Loader2 } from "lucide-react";
 
 interface SaveTemplateDialogProps {
   open: boolean;
@@ -15,6 +16,7 @@ interface SaveTemplateDialogProps {
 
 export function SaveTemplateDialog({ open, onOpenChange }: SaveTemplateDialogProps) {
   const [name, setName] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
   const { saveTemplate, templates, activeTemplateId, elements, screens } = useWireframe();
   const previewRef = useRef<HTMLDivElement>(null);
   
@@ -33,15 +35,24 @@ export function SaveTemplateDialog({ open, onOpenChange }: SaveTemplateDialogPro
     }
   }, [open, activeTemplateId, templates]);
   
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!name.trim()) {
       toast.error("Please enter a template name");
       return;
     }
     
-    saveTemplate(name);
-    toast.success("Template saved successfully!");
-    onOpenChange(false);
+    setIsSaving(true);
+    
+    try {
+      await saveTemplate(name);
+      toast.success("Template saved successfully!");
+      onOpenChange(false);
+    } catch (error) {
+      console.error("Error saving template:", error);
+      toast.error("Failed to save template. Please try again.");
+    } finally {
+      setIsSaving(false);
+    }
   };
   
   return (
@@ -90,10 +101,19 @@ export function SaveTemplateDialog({ open, onOpenChange }: SaveTemplateDialogPro
           </div>
         </div>
         <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
+          <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isSaving}>
             Cancel
           </Button>
-          <Button onClick={handleSave}>Save Template</Button>
+          <Button onClick={handleSave} disabled={isSaving}>
+            {isSaving ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Saving...
+              </>
+            ) : (
+              'Save Template'
+            )}
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

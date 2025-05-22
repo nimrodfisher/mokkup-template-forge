@@ -1,3 +1,4 @@
+
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { Sidebar } from "@/components/sidebar";
@@ -23,7 +24,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 
 const Editor = () => {
   const { templateId } = useParams();
-  const { loadTemplate, showProperties, selectedElementId, elements, updateElementProperties } = useWireframe();
+  const { loadTemplate, showProperties, selectedElementId, elements, updateElementProperties, fetchTemplates } = useWireframe();
   const [showHeaderStyleDialog, setShowHeaderStyleDialog] = useState(false);
   const [showImageStyleDialog, setShowImageStyleDialog] = useState(false);
   const [showShapeStyleDialog, setShowShapeStyleDialog] = useState(false);
@@ -33,6 +34,11 @@ const Editor = () => {
   const [showTableStyleDialog, setShowTableStyleDialog] = useState(false);
   const [showGaugeStyleDialog, setShowGaugeStyleDialog] = useState(false);
   const [showSaveDialog, setShowSaveDialog] = useState(false);
+  
+  useEffect(() => {
+    // Fetch all templates when the component mounts
+    fetchTemplates();
+  }, [fetchTemplates]);
   
   useEffect(() => {
     if (templateId) {
