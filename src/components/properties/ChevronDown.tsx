@@ -1,7 +1,12 @@
 
 import React from 'react';
 
-export function ChevronDown({className}: {className?: string}) {
+interface ChevronDownProps {
+  className?: string;
+  open?: boolean;
+}
+
+export function ChevronDown({ className, open }: ChevronDownProps) {
   return (
     <svg 
       xmlns="http://www.w3.org/2000/svg" 
@@ -13,7 +18,7 @@ export function ChevronDown({className}: {className?: string}) {
       strokeWidth="2" 
       strokeLinecap="round" 
       strokeLinejoin="round" 
-      className={className || ""}
+      className={`transition-transform duration-200 ${open ? 'rotate-180' : ''} ${className || ""}`}
     >
       <polyline points="6 9 12 15 18 9"></polyline>
     </svg>
