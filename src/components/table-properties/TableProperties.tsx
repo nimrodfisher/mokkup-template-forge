@@ -3,10 +3,10 @@ import React from 'react';
 import { Element } from "@/types/wireframe";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Switch } from "@/components/ui/switch";
-import { Plus, Minus, Table2 } from "lucide-react";
+import { TableHeadersEditor } from "./TableHeadersEditor";
+import { TableDataEditor } from "./TableDataEditor";
+import { TableOptions } from "./TableOptions";
 
 interface TablePropertiesProps {
   element: Element;
@@ -109,99 +109,30 @@ export function TableProperties({ element, updateElementProperties, onOpenStyleD
 
       <Separator />
       
-      <div className="space-y-2">
-        <div className="flex items-center justify-between">
-          <Label>Headers</Label>
-          <div className="flex items-center space-x-2">
-            <Button 
-              variant="outline" 
-              size="sm" 
-              onClick={removeColumn} 
-              disabled={tableHeaders.length <= 1}
-            >
-              <Minus className="h-4 w-4" />
-            </Button>
-            <Button 
-              variant="outline" 
-              size="sm" 
-              onClick={addColumn}
-            >
-              <Plus className="h-4 w-4" />
-            </Button>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-3 gap-2">
-          {tableHeaders.map((header, index) => (
-            <Input
-              key={index}
-              value={header}
-              onChange={(e) => updateHeader(index, e.target.value)}
-              className="text-sm"
-            />
-          ))}
-        </div>
-      </div>
+      <TableHeadersEditor
+        tableHeaders={tableHeaders}
+        onUpdateHeader={updateHeader}
+        onAddColumn={addColumn}
+        onRemoveColumn={removeColumn}
+      />
 
       <Separator />
 
-      <div className="space-y-2">
-        <div className="flex items-center justify-between">
-          <Label>Table Data</Label>
-          <div className="flex items-center space-x-2">
-            <Button 
-              variant="outline" 
-              size="sm" 
-              onClick={removeRow}
-              disabled={tableData.length <= 1}
-            >
-              <Minus className="h-4 w-4" />
-            </Button>
-            <Button 
-              variant="outline" 
-              size="sm" 
-              onClick={addRow}
-            >
-              <Plus className="h-4 w-4" />
-            </Button>
-          </div>
-        </div>
-
-        <div className="max-h-64 overflow-y-auto space-y-2">
-          {tableData.map((row, rowIndex) => (
-            <div key={rowIndex} className="grid grid-cols-3 gap-2">
-              {Array.from({ length: numColumns }).map((_, colIndex) => (
-                <Input
-                  key={colIndex}
-                  value={row[colIndex] || ''}
-                  onChange={(e) => updateCell(rowIndex, colIndex, e.target.value)}
-                  className="text-sm"
-                />
-              ))}
-            </div>
-          ))}
-        </div>
-      </div>
+      <TableDataEditor
+        tableData={tableData}
+        numColumns={numColumns}
+        onUpdateCell={updateCell}
+        onAddRow={addRow}
+        onRemoveRow={removeRow}
+      />
 
       <Separator />
 
-      <div className="flex items-center space-x-2">
-        <Switch
-          id="showTableBorder"
-          checked={showTableBorder}
-          onCheckedChange={(checked) => updateElementProperties(element.id, { showTableBorder: checked })}
-        />
-        <Label htmlFor="showTableBorder">Show Table Border</Label>
-      </div>
-
-      <Button 
-        variant="outline" 
-        className="w-full"
-        onClick={onOpenStyleDialog}
-      >
-        <Table2 className="h-4 w-4 mr-2" />
-        Table Style Options
-      </Button>
+      <TableOptions
+        showTableBorder={showTableBorder}
+        onBorderToggle={(checked) => updateElementProperties(element.id, { showTableBorder: checked })}
+        onOpenStyleDialog={onOpenStyleDialog || (() => {})}
+      />
     </div>
   );
 }
