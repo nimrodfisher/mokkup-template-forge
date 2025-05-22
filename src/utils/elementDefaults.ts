@@ -1,4 +1,3 @@
-
 import { ElementType } from '../types/wireframe';
 
 export function getDefaultSizeForType(type: ElementType): { width: number; height: number } {
@@ -42,6 +41,8 @@ export function getDefaultSizeForType(type: ElementType): { width: number; heigh
       return { width: 250, height: 120 };
     case 'delete':
       return { width: 40, height: 40 };
+    case 'simple-table':
+      return { width: 400, height: 250 };
     default:
       return { width: 150, height: 80 };
   }
@@ -163,6 +164,25 @@ export function getDefaultPropertiesForType(type: ElementType): any {
       return {
         backgroundColor: '#EF4444',
         textColor: 'white',
+      };
+    case 'simple-table':
+      return {
+        tableTitle: 'Table Title',
+        tableHeaders: ['Header 1', 'Header 2', 'Header 3'],
+        tableData: [
+          ['Data 1', 'Data 2', 'Data 3'],
+          ['Data 4', 'Data 5', 'Data 6'],
+          ['Data 7', 'Data 8', 'Data 9'],
+        ],
+        numRows: 3,
+        numColumns: 3,
+        showTableBorder: true,
+        headerBackground: '#f3f4f6',
+        headerTextColor: '#111827',
+        cellBackground: '#ffffff',
+        cellTextColor: '#374151',
+        alternateRowColor: false,
+        alternateRowBackground: '#f9fafb',
       };
     default:
       return {};

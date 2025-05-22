@@ -3,6 +3,7 @@ import { useWireframe } from "@/hooks/useWireframe";
 import { Element } from "@/types/wireframe";
 import { HeaderProperties } from "./header-properties/HeaderProperties";
 import { AreaChartProperties } from "./area-chart-properties/AreaChartProperties";
+import { TableProperties } from "./table-properties/TableProperties";
 
 interface ElementPropertiesSelectorProps {
   updateElementProperties: (id: string, properties: Partial<Element['properties']>) => void;
@@ -31,6 +32,14 @@ export function ElementPropertiesSelector({ updateElementProperties, onOpenStyle
     case 'area-chart':
       return (
         <AreaChartProperties
+          element={selectedElement}
+          updateElementProperties={updateElementProperties}
+          onOpenStyleDialog={onOpenStyleDialog}
+        />
+      );
+    case 'simple-table':
+      return (
+        <TableProperties
           element={selectedElement}
           updateElementProperties={updateElementProperties}
           onOpenStyleDialog={onOpenStyleDialog}

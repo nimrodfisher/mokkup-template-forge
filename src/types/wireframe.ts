@@ -1,4 +1,3 @@
-
 export type ElementType = 
   'header' | 'button' | 'filter' | 'kpi' | 'column-chart' | 'bar-chart' | 'line-chart' | 
   'area-chart' | 'combo-chart' | 'pie-chart' | 'donut-chart' | 
@@ -101,6 +100,19 @@ export interface Element {
     showLegend?: boolean;
     showGridLines?: boolean;
     showLabels?: boolean;
+    // Table properties
+    tableTitle?: string;
+    tableHeaders?: string[];
+    tableData?: string[][];
+    numRows?: number;
+    numColumns?: number;
+    showTableBorder?: boolean;
+    headerBackground?: string;
+    headerTextColor?: string;
+    cellBackground?: string;
+    cellTextColor?: string;
+    alternateRowColor?: boolean;
+    alternateRowBackground?: string;
   };
 }
 

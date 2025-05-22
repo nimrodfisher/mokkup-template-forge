@@ -12,6 +12,8 @@ import { toast } from "sonner";
 import { ImageStyleDialog } from "./ImageStyleDialog";
 import { HeaderStyleDialog } from "./header-style/HeaderStyleDialog";
 import { ChartStyleDialog } from "./ChartStyleDialog";
+import { TableDisplay } from "./TableDisplay";
+import { TableStyleDialog } from "./TableStyleDialog";
 
 interface CanvasElementProps {
   element: Element;
@@ -27,6 +29,7 @@ export function CanvasElement({ element, isSelected }: CanvasElementProps) {
   const [showShapeStyleDialog, setShowShapeStyleDialog] = useState(false);
   const [showHeaderStyleDialog, setShowHeaderStyleDialog] = useState(false);
   const [showChartStyleDialog, setShowChartStyleDialog] = useState(false);
+  const [showTableStyleDialog, setShowTableStyleDialog] = useState(false);
   const { updateElement, selectElement, removeElement } = useWireframe();
   const [isDragging, setIsDragging] = useState(false);
   const [isResizing, setIsResizing] = useState(false);
@@ -54,6 +57,8 @@ export function CanvasElement({ element, isSelected }: CanvasElementProps) {
       setShowHeaderStyleDialog(true);
     } else if (element.type === 'bar-chart' || element.type === 'column-chart') {
       setShowChartStyleDialog(true);
+    } else if (element.type === 'simple-table') {
+      setShowTableStyleDialog(true);
     }
   };
   
@@ -657,6 +662,8 @@ export function CanvasElement({ element, isSelected }: CanvasElementProps) {
           </div>
         );
       }
+      case 'simple-table':
+        return <TableDisplay element={element} />;
       default:
         return (
           <div className="w-full h-full flex items-center justify-center p-2">
@@ -757,6 +764,14 @@ export function CanvasElement({ element, isSelected }: CanvasElementProps) {
           elementId={element.id}
           open={showChartStyleDialog}
           onClose={() => setShowChartStyleDialog(false)}
+        />
+      )}
+      
+      {showTableStyleDialog && (
+        <TableStyleDialog
+          elementId={element.id}
+          open={showTableStyleDialog}
+          onClose={() => setShowTableStyleDialog(false)}
         />
       )}
     </>

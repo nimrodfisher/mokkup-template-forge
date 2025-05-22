@@ -18,6 +18,7 @@ import { FilterStyleDialog } from "@/components/FilterStyleDialog";
 import { SaveTemplateDialog } from "@/components/SaveTemplateDialog";
 import { ChartStyleDialog } from "@/components/ChartStyleDialog";
 import { AreaChartStyleDialog } from "@/components/AreaChartStyleDialog";
+import { TableStyleDialog } from "@/components/TableStyleDialog";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
 const Editor = () => {
@@ -29,6 +30,7 @@ const Editor = () => {
   const [showFilterStyleDialog, setShowFilterStyleDialog] = useState(false);
   const [showChartStyleDialog, setShowChartStyleDialog] = useState(false);
   const [showAreaChartStyleDialog, setShowAreaChartStyleDialog] = useState(false);
+  const [showTableStyleDialog, setShowTableStyleDialog] = useState(false);
   const [showSaveDialog, setShowSaveDialog] = useState(false);
   
   useEffect(() => {
@@ -58,18 +60,14 @@ const Editor = () => {
       setShowChartStyleDialog(true);
     } else if (selectedElement?.type === 'area-chart') {
       setShowAreaChartStyleDialog(true);
+    } else if (selectedElement?.type === 'simple-table') {
+      setShowTableStyleDialog(true);
     }
   };
 
   // Function to handle save action
   const handleSaveAction = () => {
     setShowSaveDialog(true);
-  };
-  
-  // Function to handle updates from HeaderStyleDialog
-  const handleHeaderStyleUpdate = (elementId: string, properties: any) => {
-    console.log("Editor: Handling header style update", elementId, properties);
-    updateElementProperties(elementId, properties);
   };
   
   return (
@@ -145,6 +143,15 @@ const Editor = () => {
               elementId={selectedElementId} 
               open={showAreaChartStyleDialog}
               onClose={() => setShowAreaChartStyleDialog(false)}
+            />
+          )}
+          
+          {/* Table Style Dialog */}
+          {selectedElementId && selectedElement?.type === 'simple-table' && (
+            <TableStyleDialog 
+              elementId={selectedElementId} 
+              open={showTableStyleDialog}
+              onClose={() => setShowTableStyleDialog(false)}
             />
           )}
 
