@@ -147,6 +147,37 @@ export function TableDisplay({ element, isEditable = false }: TableDisplayProps)
     });
   };
 
+  // Render column controls above the table
+  const renderColumnControls = () => {
+    if (!isEditable || !showControls) return null;
+    
+    return (
+      <div className="flex absolute -top-8 left-0 right-0 justify-around">
+        {localHeaders.map((_, index) => (
+          <div key={index} className="flex space-x-1">
+            <Button 
+              variant="outline" 
+              size="icon" 
+              className="h-6 w-6 bg-white"
+              onClick={() => handleAddColumn(index)}
+            >
+              <Plus className="h-3 w-3" />
+            </Button>
+            <Button 
+              variant="outline" 
+              size="icon" 
+              className="h-6 w-6 bg-white"
+              onClick={() => handleDeleteColumn(index)}
+              disabled={localHeaders.length <= 1}
+            >
+              <Minus className="h-3 w-3" />
+            </Button>
+          </div>
+        ))}
+      </div>
+    );
+  };
+
   return (
     <div className="w-full h-full p-2 overflow-auto relative"
          onMouseEnter={() => isEditable && setShowControls(true)}
@@ -154,126 +185,114 @@ export function TableDisplay({ element, isEditable = false }: TableDisplayProps)
       {tableTitle && (
         <div className="text-base font-medium mb-2">{tableTitle}</div>
       )}
-      <Table className={showTableBorder ? 'border border-gray-200' : ''}>
-        <TableHeader style={{ backgroundColor: headerBackground }}>
-          <TableRow className="hover:bg-transparent">
-            {localHeaders.map((header, index) => (
-              <TableHead 
-                key={index} 
-                style={{ 
-                  color: headerTextColor,
-                  borderBottom: showTableBorder ? '1px solid #e5e7eb' : 'none',
-                  borderRight: showTableBorder && index < localHeaders.length - 1 ? '1px solid #e5e7eb' : 'none',
-                  position: 'relative',
-                  cursor: isEditable ? 'pointer' : 'default'
-                }}
-                onClick={() => handleHeaderClick(index)}
-              >
-                {editCell && editCell.row === -1 && editCell.col === index ? (
-                  <TableCellEditor 
-                    value={header} 
-                    onSave={(value) => handleSaveHeader(index, value)}
-                    textColor={headerTextColor}
-                    backgroundColor={headerBackground}
-                  />
-                ) : (
-                  <div className="relative">
-                    {header}
-                    {isEditable && showControls && (
-                      <div className="absolute -top-8 left-0 flex space-x-1">
-                        <Button 
-                          variant="outline" 
-                          size="icon" 
-                          className="h-6 w-6 bg-white"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleAddColumn(index);
-                          }}
-                        >
-                          <Plus className="h-3 w-3" />
-                        </Button>
-                        <Button 
-                          variant="outline" 
-                          size="icon" 
-                          className="h-6 w-6 bg-white"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleDeleteColumn(index);
-                          }}
-                          disabled={localHeaders.length <= 1}
-                        >
-                          <Minus className="h-3 w-3" />
-                        </Button>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </TableHead>
-            ))}
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {localData.map((row, rowIndex) => (
-            <TableRow 
-              key={rowIndex} 
-              className="hover:bg-transparent relative"
-              style={{ 
-                backgroundColor: alternateRowColor && rowIndex % 2 === 1 
-                  ? alternateRowBackground 
-                  : cellBackground 
-              }}
-            >
+      
+      <div className="relative">
+        {renderColumnControls()}
+        
+        <Table className={showTableBorder ? 'border border-gray-200' : ''}>
+          <TableHeader style={{ backgroundColor: headerBackground }}>
+            <TableRow className="hover:bg-transparent">
               {isEditable && showControls && (
-                <div className="absolute -left-8 top-1/2 -translate-y-1/2 flex flex-col space-y-1">
-                  <Button 
-                    variant="outline" 
-                    size="icon" 
-                    className="h-6 w-6 bg-white"
-                    onClick={() => handleAddRow(rowIndex)}
-                  >
-                    <Plus className="h-3 w-3" />
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    size="icon" 
-                    className="h-6 w-6 bg-white"
-                    onClick={() => handleDeleteRow(rowIndex)}
-                    disabled={localData.length <= 1}
-                  >
-                    <Minus className="h-3 w-3" />
-                  </Button>
-                </div>
-              )}
-              {row.map((cell, cellIndex) => (
-                <TableCell 
-                  key={cellIndex} 
+                <TableHead 
+                  className="w-10 p-0"
                   style={{ 
-                    color: cellTextColor,
-                    backgroundColor: cellBackground,
-                    borderBottom: showTableBorder ? '1px solid #e5e7eb' : 'none', 
-                    borderRight: showTableBorder && cellIndex < row.length - 1 ? '1px solid #e5e7eb' : 'none',
-                    padding: editCell && editCell.row === rowIndex && editCell.col === cellIndex ? '0' : undefined,
+                    borderBottom: showTableBorder ? '1px solid #e5e7eb' : 'none',
+                    borderRight: showTableBorder ? '1px solid #e5e7eb' : 'none'
+                  }}
+                ></TableHead>
+              )}
+              
+              {localHeaders.map((header, index) => (
+                <TableHead 
+                  key={index} 
+                  style={{ 
+                    color: headerTextColor,
+                    borderBottom: showTableBorder ? '1px solid #e5e7eb' : 'none',
+                    borderRight: showTableBorder && index < localHeaders.length - 1 ? '1px solid #e5e7eb' : 'none',
+                    position: 'relative',
                     cursor: isEditable ? 'pointer' : 'default'
                   }}
-                  onClick={() => handleCellClick(rowIndex, cellIndex)}
+                  onClick={() => handleHeaderClick(index)}
                 >
-                  {editCell && editCell.row === rowIndex && editCell.col === cellIndex ? (
+                  {editCell && editCell.row === -1 && editCell.col === index ? (
                     <TableCellEditor 
-                      value={cell} 
-                      onSave={(value) => handleSaveCell(rowIndex, cellIndex, value)}
-                      textColor={cellTextColor}
-                      backgroundColor={cellBackground}
+                      value={header} 
+                      onSave={(value) => handleSaveHeader(index, value)}
+                      textColor={headerTextColor}
+                      backgroundColor={headerBackground}
                     />
                   ) : (
-                    cell
+                    header
                   )}
-                </TableCell>
+                </TableHead>
               ))}
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHeader>
+          <TableBody>
+            {localData.map((row, rowIndex) => (
+              <TableRow 
+                key={rowIndex} 
+                className="hover:bg-transparent relative"
+                style={{ 
+                  backgroundColor: alternateRowColor && rowIndex % 2 === 1 
+                    ? alternateRowBackground 
+                    : cellBackground 
+                }}
+              >
+                {isEditable && showControls && (
+                  <TableCell className="p-0 w-10">
+                    <div className="flex flex-col space-y-1">
+                      <Button 
+                        variant="outline" 
+                        size="icon" 
+                        className="h-6 w-6"
+                        onClick={() => handleAddRow(rowIndex)}
+                      >
+                        <Plus className="h-3 w-3" />
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        size="icon" 
+                        className="h-6 w-6"
+                        onClick={() => handleDeleteRow(rowIndex)}
+                        disabled={localData.length <= 1}
+                      >
+                        <Minus className="h-3 w-3" />
+                      </Button>
+                    </div>
+                  </TableCell>
+                )}
+                
+                {row.map((cell, cellIndex) => (
+                  <TableCell 
+                    key={cellIndex} 
+                    style={{ 
+                      color: cellTextColor,
+                      backgroundColor: cellBackground,
+                      borderBottom: showTableBorder ? '1px solid #e5e7eb' : 'none', 
+                      borderRight: showTableBorder && cellIndex < row.length - 1 ? '1px solid #e5e7eb' : 'none',
+                      padding: editCell && editCell.row === rowIndex && editCell.col === cellIndex ? '0' : undefined,
+                      cursor: isEditable ? 'pointer' : 'default'
+                    }}
+                    onClick={() => handleCellClick(rowIndex, cellIndex)}
+                  >
+                    {editCell && editCell.row === rowIndex && editCell.col === cellIndex ? (
+                      <TableCellEditor 
+                        value={cell} 
+                        onSave={(value) => handleSaveCell(rowIndex, cellIndex, value)}
+                        textColor={cellTextColor}
+                        backgroundColor={cellBackground}
+                      />
+                    ) : (
+                      cell
+                    )}
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   );
 }
-
