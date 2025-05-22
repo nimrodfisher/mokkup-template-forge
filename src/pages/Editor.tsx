@@ -1,7 +1,6 @@
-
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { Sidebar } from "@/components/Sidebar";
+import { Sidebar } from "@/components/sidebar";
 import { Canvas } from "@/components/Canvas";
 import { Navbar } from "@/components/Navbar";
 import { useWireframe } from "@/hooks/useWireframe";
