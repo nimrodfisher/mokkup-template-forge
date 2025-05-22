@@ -70,7 +70,7 @@ export function CanvasElement({ element, isSelected }: CanvasElementProps) {
         onDoubleClick={handleDoubleClick}
       >
         <div className="h-full w-full" onKeyDown={handleDelete}>
-          <ElementRenderer element={element} />
+          <ElementRenderer element={element} isEditable={isSelected && element.type === 'simple-table'} />
         </div>
       </ElementInteraction>
       

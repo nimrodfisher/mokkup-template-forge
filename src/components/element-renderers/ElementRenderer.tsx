@@ -15,9 +15,10 @@ import { DefaultRenderer } from "./DefaultRenderer";
 
 interface ElementRendererProps {
   element: Element;
+  isEditable?: boolean;
 }
 
-export function ElementRenderer({ element }: ElementRendererProps) {
+export function ElementRenderer({ element, isEditable = false }: ElementRendererProps) {
   switch (element.type) {
     case 'header':
       return <HeaderRenderer properties={element.properties} />;
@@ -39,7 +40,7 @@ export function ElementRenderer({ element }: ElementRendererProps) {
     case 'column-chart':
       return <ChartRenderer properties={element.properties} type={element.type} />;
     case 'simple-table':
-      return <TableDisplay element={element} />;
+      return <TableDisplay element={element} isEditable={isEditable} />;
     default:
       return <DefaultRenderer type={element.type} />;
   }
