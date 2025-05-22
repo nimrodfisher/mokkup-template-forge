@@ -3,6 +3,9 @@ import React, { useState } from 'react';
 import { Element } from "@/types/wireframe";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 import { TableCellEditor } from "./table-properties/TableCellEditor";
+import { Button } from "./ui/button";
+import { Plus, Minus, ChevronDown, ChevronUp, ChevronLeft, ChevronRight } from "lucide-react";
+import { useWireframe } from "@/hooks/useWireframe";
 
 interface TableDisplayProps {
   element: Element;
@@ -10,6 +13,8 @@ interface TableDisplayProps {
 }
 
 export function TableDisplay({ element, isEditable = false }: TableDisplayProps) {
+  const { updateElementProperties } = useWireframe();
+  
   const {
     tableTitle,
     tableHeaders = ['Header 1', 'Header 2', 'Header 3'],
@@ -30,6 +35,7 @@ export function TableDisplay({ element, isEditable = false }: TableDisplayProps)
   const [editCell, setEditCell] = useState<{ row: number; col: number } | null>(null);
   const [localData, setLocalData] = useState(tableData);
   const [localHeaders, setLocalHeaders] = useState(tableHeaders);
+  const [showControls, setShowControls] = useState(false);
 
   // Function to handle cell click
   const handleCellClick = (rowIndex: number, colIndex: number) => {
@@ -52,8 +58,8 @@ export function TableDisplay({ element, isEditable = false }: TableDisplayProps)
     setLocalData(newData);
     setEditCell(null);
     
-    // If we could update the wireframe state, we would do it here
-    // updateElementProperties(element.id, { tableData: newData });
+    // Update the wireframe state
+    updateElementProperties(element.id, { tableData: newData });
   };
 
   // Function to save header data
@@ -63,12 +69,88 @@ export function TableDisplay({ element, isEditable = false }: TableDisplayProps)
     setLocalHeaders(newHeaders);
     setEditCell(null);
     
-    // If we could update the wireframe state, we would do it here
-    // updateElementProperties(element.id, { tableHeaders: newHeaders });
+    // Update the wireframe state
+    updateElementProperties(element.id, { tableHeaders: newHeaders });
+  };
+
+  // Function to add a new row
+  const handleAddRow = (index: number) => {
+    const newData = [...localData];
+    const newRow = Array(localHeaders.length).fill('New cell');
+    newData.splice(index + 1, 0, newRow);
+    setLocalData(newData);
+    
+    // Update the wireframe state
+    updateElementProperties(element.id, { 
+      tableData: newData,
+      numRows: newData.length
+    });
+  };
+
+  // Function to delete a row
+  const handleDeleteRow = (index: number) => {
+    if (localData.length <= 1) return; // Prevent deleting the last row
+    const newData = [...localData];
+    newData.splice(index, 1);
+    setLocalData(newData);
+    
+    // Update the wireframe state
+    updateElementProperties(element.id, { 
+      tableData: newData,
+      numRows: newData.length
+    });
+  };
+
+  // Function to add a new column
+  const handleAddColumn = (index: number) => {
+    const newHeaders = [...localHeaders];
+    newHeaders.splice(index + 1, 0, `New Header`);
+    
+    const newData = localData.map(row => {
+      const newRow = [...row];
+      newRow.splice(index + 1, 0, 'New cell');
+      return newRow;
+    });
+    
+    setLocalHeaders(newHeaders);
+    setLocalData(newData);
+    
+    // Update the wireframe state
+    updateElementProperties(element.id, { 
+      tableHeaders: newHeaders,
+      tableData: newData,
+      numColumns: newHeaders.length
+    });
+  };
+
+  // Function to delete a column
+  const handleDeleteColumn = (index: number) => {
+    if (localHeaders.length <= 1) return; // Prevent deleting the last column
+    
+    const newHeaders = [...localHeaders];
+    newHeaders.splice(index, 1);
+    
+    const newData = localData.map(row => {
+      const newRow = [...row];
+      newRow.splice(index, 1);
+      return newRow;
+    });
+    
+    setLocalHeaders(newHeaders);
+    setLocalData(newData);
+    
+    // Update the wireframe state
+    updateElementProperties(element.id, { 
+      tableHeaders: newHeaders,
+      tableData: newData,
+      numColumns: newHeaders.length
+    });
   };
 
   return (
-    <div className="w-full h-full p-2 overflow-auto">
+    <div className="w-full h-full p-2 overflow-auto relative"
+         onMouseEnter={() => isEditable && setShowControls(true)}
+         onMouseLeave={() => setShowControls(false)}>
       {tableTitle && (
         <div className="text-base font-medium mb-2">{tableTitle}</div>
       )}
@@ -95,7 +177,36 @@ export function TableDisplay({ element, isEditable = false }: TableDisplayProps)
                     backgroundColor={headerBackground}
                   />
                 ) : (
-                  header
+                  <div className="relative">
+                    {header}
+                    {isEditable && showControls && (
+                      <div className="absolute -top-8 left-0 flex space-x-1">
+                        <Button 
+                          variant="outline" 
+                          size="icon" 
+                          className="h-6 w-6 bg-white"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleAddColumn(index);
+                          }}
+                        >
+                          <Plus className="h-3 w-3" />
+                        </Button>
+                        <Button 
+                          variant="outline" 
+                          size="icon" 
+                          className="h-6 w-6 bg-white"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeleteColumn(index);
+                          }}
+                          disabled={localHeaders.length <= 1}
+                        >
+                          <Minus className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    )}
+                  </div>
                 )}
               </TableHead>
             ))}
@@ -105,13 +216,34 @@ export function TableDisplay({ element, isEditable = false }: TableDisplayProps)
           {localData.map((row, rowIndex) => (
             <TableRow 
               key={rowIndex} 
-              className="hover:bg-transparent"
+              className="hover:bg-transparent relative"
               style={{ 
                 backgroundColor: alternateRowColor && rowIndex % 2 === 1 
                   ? alternateRowBackground 
                   : cellBackground 
               }}
             >
+              {isEditable && showControls && (
+                <div className="absolute -left-8 top-1/2 -translate-y-1/2 flex flex-col space-y-1">
+                  <Button 
+                    variant="outline" 
+                    size="icon" 
+                    className="h-6 w-6 bg-white"
+                    onClick={() => handleAddRow(rowIndex)}
+                  >
+                    <Plus className="h-3 w-3" />
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="icon" 
+                    className="h-6 w-6 bg-white"
+                    onClick={() => handleDeleteRow(rowIndex)}
+                    disabled={localData.length <= 1}
+                  >
+                    <Minus className="h-3 w-3" />
+                  </Button>
+                </div>
+              )}
               {row.map((cell, cellIndex) => (
                 <TableCell 
                   key={cellIndex} 
@@ -144,3 +276,4 @@ export function TableDisplay({ element, isEditable = false }: TableDisplayProps)
     </div>
   );
 }
+
