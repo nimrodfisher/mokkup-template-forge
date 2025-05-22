@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useWireframe } from "@/hooks/useWireframe";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { Check } from "lucide-react";
+import { Check, Gauge } from "lucide-react";
 import { toast } from "sonner";
 
 interface GaugeStyleDialogProps {
@@ -119,6 +119,35 @@ export const GaugeStyleDialog = ({ elementId, open, onClose }: GaugeStyleDialogP
           </div>
         </div>
       )
+    },
+    {
+      id: 'gradient-gauge',
+      name: 'Gradient Gauge',
+      primaryColor: '#EC4899',
+      secondaryColor: '#F9A8D4',
+      display: (
+        <div className="border rounded-md p-4 bg-white">
+          <div className="text-sm font-medium mb-2">Title goes here</div>
+          <div className="relative w-full h-[100px]">
+            <div className="w-full h-full rounded-t-full overflow-hidden bg-gradient-to-r from-pink-100 to-pink-50" style={{ clipPath: 'polygon(0 50%, 100% 50%, 100% 0, 0 0)' }}>
+              <div className="w-[40%] h-full rounded-t-full bg-gradient-to-r from-pink-600 to-pink-400" style={{ clipPath: 'polygon(0 50%, 100% 50%, 100% 0, 0 0)' }}></div>
+            </div>
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-lg font-bold text-pink-700">40K</div>
+            <div className="absolute bottom-0 left-0 text-xs text-pink-700">0</div>
+            <div className="absolute bottom-0 right-0 text-xs text-pink-700">100K</div>
+            {/* Needle */}
+            <div className="absolute w-[1px] h-[50px] bg-pink-800 origin-bottom" 
+              style={{ 
+                bottom: '0px', 
+                left: '40%', 
+                transform: 'rotate(-30deg)',
+                transformOrigin: 'bottom'
+              }}>
+              <div className="absolute w-2 h-2 rounded-full bg-pink-800 -top-1 -left-1"></div>
+            </div>
+          </div>
+        </div>
+      )
     }
   ];
   
@@ -133,7 +162,7 @@ export const GaugeStyleDialog = ({ elementId, open, onClose }: GaugeStyleDialogP
       gaugeSecondaryColor: selectedTemplate.secondaryColor,
     });
     
-    toast.success("Gauge style updated");
+    toast.success("Gauge style updated successfully!");
     onClose();
   };
   
@@ -141,7 +170,10 @@ export const GaugeStyleDialog = ({ elementId, open, onClose }: GaugeStyleDialogP
     <Dialog open={open} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="sm:max-w-[700px] max-h-[90vh] overflow-auto">
         <DialogHeader>
-          <DialogTitle>Choose gauge style</DialogTitle>
+          <DialogTitle className="flex items-center gap-2">
+            <Gauge className="h-5 w-5" />
+            Choose gauge style
+          </DialogTitle>
         </DialogHeader>
         
         <div className="space-y-4 pt-4">
@@ -157,9 +189,9 @@ export const GaugeStyleDialog = ({ elementId, open, onClose }: GaugeStyleDialogP
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value={template.id} id={template.id} className="sr-only" />
                   <Label htmlFor={template.id} className="cursor-pointer w-full">
-                    <div className={`border-2 rounded-md p-2 transition-all ${gaugeStyle === template.id ? 'border-indigo-600' : 'border-gray-200'}`}>
+                    <div className={`border-2 rounded-md p-2 transition-all hover:border-gray-300 ${gaugeStyle === template.id ? 'border-indigo-600 shadow-sm' : 'border-gray-200'}`}>
                       <div className="flex justify-between items-start mb-2">
-                        <span>{template.name}</span>
+                        <span className="font-medium">{template.name}</span>
                         {gaugeStyle === template.id && (
                           <div className="h-5 w-5 bg-indigo-600 rounded-full flex items-center justify-center">
                             <Check className="h-3 w-3 text-white" />
