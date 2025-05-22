@@ -22,7 +22,7 @@ export const CanvasElementWrapper: React.FC<CanvasElementWrapperProps> = ({
     type: 'canvas-element',
     item: { id: element.id },
     collect: (monitor) => ({
-      isDragging: monitor.isDragging(),
+      isDragging: !!monitor.isDragging(),
     }),
   }));
 
