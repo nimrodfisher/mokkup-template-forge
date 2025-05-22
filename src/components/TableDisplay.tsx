@@ -1,10 +1,11 @@
 
 import React, { useState } from 'react';
 import { Element } from "@/types/wireframe";
-import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
-import { TableCellEditor } from "./table-properties/TableCellEditor";
-import { Button } from "./ui/button";
-import { Plus, Minus, ChevronDown, ChevronUp, ChevronLeft, ChevronRight } from "lucide-react";
+import { Table } from "@/components/ui/table";
+import { TableCellEditingEngine } from "./table-display/TableCellEditingEngine";
+import { TableManipulationControls } from "./table-display/TableManipulationControls";
+import { TableHeaderComponent } from "./table-display/TableHeader";
+import { TableBodyComponent } from "./table-display/TableBody";
 import { useWireframe } from "@/hooks/useWireframe";
 
 interface TableDisplayProps {
@@ -13,8 +14,7 @@ interface TableDisplayProps {
 }
 
 export function TableDisplay({ element, isEditable = false }: TableDisplayProps) {
-  const { updateElementProperties } = useWireframe();
-  
+  // Extract table properties from element
   const {
     tableTitle,
     tableHeaders = ['Header 1', 'Header 2', 'Header 3'],
@@ -32,151 +32,42 @@ export function TableDisplay({ element, isEditable = false }: TableDisplayProps)
     alternateRowBackground = '#f9fafb',
   } = element.properties || {};
 
-  const [editCell, setEditCell] = useState<{ row: number; col: number } | null>(null);
+  // State for local data and UI controls
   const [localData, setLocalData] = useState(tableData);
   const [localHeaders, setLocalHeaders] = useState(tableHeaders);
   const [showControls, setShowControls] = useState(false);
 
-  // Function to handle cell click
-  const handleCellClick = (rowIndex: number, colIndex: number) => {
-    if (isEditable) {
-      setEditCell({ row: rowIndex, col: colIndex });
-    }
-  };
+  // Use the editing engine hook
+  const {
+    editCell,
+    handleCellClick,
+    handleHeaderClick,
+    handleSaveCell,
+    handleSaveHeader
+  } = TableCellEditingEngine({
+    element,
+    localData, 
+    localHeaders,
+    isEditable
+  });
 
-  // Function to handle header click
-  const handleHeaderClick = (colIndex: number) => {
-    if (isEditable) {
-      setEditCell({ row: -1, col: colIndex });
-    }
-  };
+  // Use the table manipulation controls
+  const {
+    renderColumnControls,
+    renderRowControls
+  } = TableManipulationControls({
+    element,
+    localData,
+    localHeaders,
+    showControls,
+    isEditable
+  });
 
-  // Function to save cell data
-  const handleSaveCell = (rowIndex: number, colIndex: number, value: string) => {
-    const newData = [...localData];
-    newData[rowIndex][colIndex] = value;
-    setLocalData(newData);
-    setEditCell(null);
-    
-    // Update the wireframe state
-    updateElementProperties(element.id, { tableData: newData });
-  };
-
-  // Function to save header data
-  const handleSaveHeader = (colIndex: number, value: string) => {
-    const newHeaders = [...localHeaders];
-    newHeaders[colIndex] = value;
-    setLocalHeaders(newHeaders);
-    setEditCell(null);
-    
-    // Update the wireframe state
-    updateElementProperties(element.id, { tableHeaders: newHeaders });
-  };
-
-  // Function to add a new row
-  const handleAddRow = (index: number) => {
-    const newData = [...localData];
-    const newRow = Array(localHeaders.length).fill('New cell');
-    newData.splice(index + 1, 0, newRow);
-    setLocalData(newData);
-    
-    // Update the wireframe state
-    updateElementProperties(element.id, { 
-      tableData: newData,
-      numRows: newData.length
-    });
-  };
-
-  // Function to delete a row
-  const handleDeleteRow = (index: number) => {
-    if (localData.length <= 1) return; // Prevent deleting the last row
-    const newData = [...localData];
-    newData.splice(index, 1);
-    setLocalData(newData);
-    
-    // Update the wireframe state
-    updateElementProperties(element.id, { 
-      tableData: newData,
-      numRows: newData.length
-    });
-  };
-
-  // Function to add a new column
-  const handleAddColumn = (index: number) => {
-    const newHeaders = [...localHeaders];
-    newHeaders.splice(index + 1, 0, `New Header`);
-    
-    const newData = localData.map(row => {
-      const newRow = [...row];
-      newRow.splice(index + 1, 0, 'New cell');
-      return newRow;
-    });
-    
-    setLocalHeaders(newHeaders);
-    setLocalData(newData);
-    
-    // Update the wireframe state
-    updateElementProperties(element.id, { 
-      tableHeaders: newHeaders,
-      tableData: newData,
-      numColumns: newHeaders.length
-    });
-  };
-
-  // Function to delete a column
-  const handleDeleteColumn = (index: number) => {
-    if (localHeaders.length <= 1) return; // Prevent deleting the last column
-    
-    const newHeaders = [...localHeaders];
-    newHeaders.splice(index, 1);
-    
-    const newData = localData.map(row => {
-      const newRow = [...row];
-      newRow.splice(index, 1);
-      return newRow;
-    });
-    
-    setLocalHeaders(newHeaders);
-    setLocalData(newData);
-    
-    // Update the wireframe state
-    updateElementProperties(element.id, { 
-      tableHeaders: newHeaders,
-      tableData: newData,
-      numColumns: newHeaders.length
-    });
-  };
-
-  // Render column controls above the table
-  const renderColumnControls = () => {
-    if (!isEditable || !showControls) return null;
-    
-    return (
-      <div className="flex absolute -top-8 left-0 right-0 justify-around">
-        {localHeaders.map((_, index) => (
-          <div key={index} className="flex space-x-1">
-            <Button 
-              variant="outline" 
-              size="icon" 
-              className="h-6 w-6 bg-white"
-              onClick={() => handleAddColumn(index)}
-            >
-              <Plus className="h-3 w-3" />
-            </Button>
-            <Button 
-              variant="outline" 
-              size="icon" 
-              className="h-6 w-6 bg-white"
-              onClick={() => handleDeleteColumn(index)}
-              disabled={localHeaders.length <= 1}
-            >
-              <Minus className="h-3 w-3" />
-            </Button>
-          </div>
-        ))}
-      </div>
-    );
-  };
+  // Update local state when props change
+  React.useEffect(() => {
+    setLocalData(tableData);
+    setLocalHeaders(tableHeaders);
+  }, [tableData, tableHeaders]);
 
   return (
     <div className="w-full h-full p-2 overflow-auto relative"
@@ -190,107 +81,32 @@ export function TableDisplay({ element, isEditable = false }: TableDisplayProps)
         {renderColumnControls()}
         
         <Table className={showTableBorder ? 'border border-gray-200' : ''}>
-          <TableHeader style={{ backgroundColor: headerBackground }}>
-            <TableRow className="hover:bg-transparent">
-              {isEditable && showControls && (
-                <TableHead 
-                  className="w-10 p-0"
-                  style={{ 
-                    borderBottom: showTableBorder ? '1px solid #e5e7eb' : 'none',
-                    borderRight: showTableBorder ? '1px solid #e5e7eb' : 'none'
-                  }}
-                ></TableHead>
-              )}
-              
-              {localHeaders.map((header, index) => (
-                <TableHead 
-                  key={index} 
-                  style={{ 
-                    color: headerTextColor,
-                    borderBottom: showTableBorder ? '1px solid #e5e7eb' : 'none',
-                    borderRight: showTableBorder && index < localHeaders.length - 1 ? '1px solid #e5e7eb' : 'none',
-                    position: 'relative',
-                    cursor: isEditable ? 'pointer' : 'default'
-                  }}
-                  onClick={() => handleHeaderClick(index)}
-                >
-                  {editCell && editCell.row === -1 && editCell.col === index ? (
-                    <TableCellEditor 
-                      value={header} 
-                      onSave={(value) => handleSaveHeader(index, value)}
-                      textColor={headerTextColor}
-                      backgroundColor={headerBackground}
-                    />
-                  ) : (
-                    header
-                  )}
-                </TableHead>
-              ))}
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {localData.map((row, rowIndex) => (
-              <TableRow 
-                key={rowIndex} 
-                className="hover:bg-transparent relative"
-                style={{ 
-                  backgroundColor: alternateRowColor && rowIndex % 2 === 1 
-                    ? alternateRowBackground 
-                    : cellBackground 
-                }}
-              >
-                {isEditable && showControls && (
-                  <TableCell className="p-0 w-10">
-                    <div className="flex flex-col space-y-1">
-                      <Button 
-                        variant="outline" 
-                        size="icon" 
-                        className="h-6 w-6"
-                        onClick={() => handleAddRow(rowIndex)}
-                      >
-                        <Plus className="h-3 w-3" />
-                      </Button>
-                      <Button 
-                        variant="outline" 
-                        size="icon" 
-                        className="h-6 w-6"
-                        onClick={() => handleDeleteRow(rowIndex)}
-                        disabled={localData.length <= 1}
-                      >
-                        <Minus className="h-3 w-3" />
-                      </Button>
-                    </div>
-                  </TableCell>
-                )}
-                
-                {row.map((cell, cellIndex) => (
-                  <TableCell 
-                    key={cellIndex} 
-                    style={{ 
-                      color: cellTextColor,
-                      backgroundColor: cellBackground,
-                      borderBottom: showTableBorder ? '1px solid #e5e7eb' : 'none', 
-                      borderRight: showTableBorder && cellIndex < row.length - 1 ? '1px solid #e5e7eb' : 'none',
-                      padding: editCell && editCell.row === rowIndex && editCell.col === cellIndex ? '0' : undefined,
-                      cursor: isEditable ? 'pointer' : 'default'
-                    }}
-                    onClick={() => handleCellClick(rowIndex, cellIndex)}
-                  >
-                    {editCell && editCell.row === rowIndex && editCell.col === cellIndex ? (
-                      <TableCellEditor 
-                        value={cell} 
-                        onSave={(value) => handleSaveCell(rowIndex, cellIndex, value)}
-                        textColor={cellTextColor}
-                        backgroundColor={cellBackground}
-                      />
-                    ) : (
-                      cell
-                    )}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))}
-          </TableBody>
+          <TableHeaderComponent 
+            headers={localHeaders}
+            headerBackground={headerBackground}
+            headerTextColor={headerTextColor}
+            showTableBorder={showTableBorder}
+            isEditable={isEditable}
+            showControls={showControls}
+            editCell={editCell}
+            onHeaderClick={handleHeaderClick}
+            onSaveHeader={handleSaveHeader}
+          />
+          
+          <TableBodyComponent 
+            data={localData}
+            cellBackground={cellBackground}
+            cellTextColor={cellTextColor}
+            showTableBorder={showTableBorder}
+            alternateRowColor={alternateRowColor}
+            alternateRowBackground={alternateRowBackground}
+            isEditable={isEditable}
+            showControls={showControls}
+            editCell={editCell}
+            onCellClick={handleCellClick}
+            onSaveCell={handleSaveCell}
+            renderRowControls={renderRowControls}
+          />
         </Table>
       </div>
     </div>
