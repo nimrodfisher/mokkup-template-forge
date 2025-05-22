@@ -18,7 +18,7 @@ import { FilterStyleDialog } from "@/components/FilterStyleDialog";
 import { SaveTemplateDialog } from "@/components/SaveTemplateDialog";
 import { ChartStyleDialog } from "@/components/ChartStyleDialog";
 import { AreaChartStyleDialog } from "@/components/AreaChartStyleDialog";
-import { TableStyleDialog } from "@/components/TableStyleDialog";
+import { TableStyleDialog } from "@/components/table-style/TableStyleDialog";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
 const Editor = () => {
