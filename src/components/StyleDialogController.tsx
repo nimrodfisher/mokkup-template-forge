@@ -13,6 +13,7 @@ import { TableStyleDialog } from "./table-style/TableStyleDialog";
 import { GaugeStyleDialog } from "./GaugeStyleDialog";
 import { HeatmapStyleDialog } from "./heatmap-style/HeatmapStyleDialog";
 import { QuadrantStyleDialog } from "./quadrant-style/QuadrantStyleDialog";
+import { ScatterPlotStyleDialog } from "./scatter-plot-style/ScatterPlotStyleDialog";
 
 interface StyleDialogControllerProps {
   element: Element;
@@ -126,6 +127,15 @@ export function StyleDialogController({ element, dialogType, onClose }: StyleDia
     case 'quadrant':
       return (
         <QuadrantStyleDialog
+          elementId={element.id}
+          open={true}
+          onClose={onClose}
+        />
+      );
+      
+    case 'scatter-plot':
+      return (
+        <ScatterPlotStyleDialog
           elementId={element.id}
           open={true}
           onClose={onClose}

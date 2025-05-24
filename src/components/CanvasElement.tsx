@@ -57,6 +57,9 @@ export function CanvasElement({ element, isSelected }: CanvasElementProps) {
       case 'quadrant-chart':
         setActiveDialog('quadrant');
         break;
+      case 'scatter-plot':
+        setActiveDialog('scatter-plot');
+        break;
     }
   };
   

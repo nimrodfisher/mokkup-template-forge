@@ -1,4 +1,3 @@
-
 export type ElementType = 
   'header' | 'button' | 'filter' | 'kpi' | 'column-chart' | 'bar-chart' | 'line-chart' | 
   'area-chart' | 'combo-chart' | 'pie-chart' | 'donut-chart' | 'gauge-chart' |
@@ -38,6 +37,9 @@ export type HeatmapVariant =
 
 export type QuadrantVariant =
   'default' | 'priority-matrix' | 'risk-assessment' | 'performance-potential';
+
+export type ScatterPlotVariant =
+  'default' | 'correlation-analysis' | 'performance-comparison' | 'trend-analysis';
 
 export interface Element {
   id: string;
@@ -158,6 +160,17 @@ export interface Element {
     xAxisLabel?: string;
     yAxisLabel?: string;
     quadrantLabels?: Array<{label: string, position: string}>;
+    // Scatter Plot properties
+    scatterPlotStyle?: ScatterPlotVariant | string;
+    scatterPlotTitle?: string;
+    scatterPlotData?: Array<{name: string, x: number, y: number, size?: number}>;
+    scatterPlotPrimaryColor?: string;
+    scatterPlotSecondaryColor?: string;
+    scatterXAxisLabel?: string;
+    scatterYAxisLabel?: string;
+    showTrendLine?: boolean;
+    showCorrelation?: boolean;
+    correlationValue?: number;
     // Add-ons
     showButtons?: boolean;
     showDropdowns?: boolean;

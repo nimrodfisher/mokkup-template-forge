@@ -1,4 +1,3 @@
-
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { Sidebar } from "@/components/sidebar";
@@ -21,6 +20,7 @@ import { TableStyleDialog } from "@/components/table-style/TableStyleDialog";
 import { GaugeStyleDialog } from "@/components/GaugeStyleDialog";
 import { HeatmapStyleDialog } from "@/components/heatmap-style/HeatmapStyleDialog";
 import { QuadrantStyleDialog } from "@/components/quadrant-style/QuadrantStyleDialog";
+import { ScatterPlotStyleDialog } from "@/components/scatter-plot-style/ScatterPlotStyleDialog";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
 const Editor = () => {
@@ -46,6 +46,7 @@ const Editor = () => {
   const [showGaugeStyleDialog, setShowGaugeStyleDialog] = useState(false);
   const [showHeatmapStyleDialog, setShowHeatmapStyleDialog] = useState(false);
   const [showQuadrantStyleDialog, setShowQuadrantStyleDialog] = useState(false);
+  const [showScatterPlotStyleDialog, setShowScatterPlotStyleDialog] = useState(false);
   const [showSaveDialog, setShowSaveDialog] = useState(false);
   
   useEffect(() => {
@@ -94,6 +95,8 @@ const Editor = () => {
       setShowHeatmapStyleDialog(true);
     } else if (selectedElement?.type === 'quadrant-chart') {
       setShowQuadrantStyleDialog(true);
+    } else if (selectedElement?.type === 'scatter-plot') {
+      setShowScatterPlotStyleDialog(true);
     }
   };
 
@@ -210,6 +213,15 @@ const Editor = () => {
               elementId={selectedElementId} 
               open={showQuadrantStyleDialog}
               onClose={() => setShowQuadrantStyleDialog(false)}
+            />
+          )}
+
+          {/* Scatter Plot Style Dialog */}
+          {selectedElementId && selectedElement?.type === 'scatter-plot' && (
+            <ScatterPlotStyleDialog 
+              elementId={selectedElementId} 
+              open={showScatterPlotStyleDialog}
+              onClose={() => setShowScatterPlotStyleDialog(false)}
             />
           )}
 

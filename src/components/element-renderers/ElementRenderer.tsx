@@ -15,6 +15,7 @@ import { DefaultRenderer } from "./DefaultRenderer";
 import { GaugeChartRenderer } from "./GaugeChartRenderer";
 import { HeatmapRenderer } from "./HeatmapRenderer";
 import { QuadrantChartRenderer } from "./QuadrantChartRenderer";
+import { ScatterPlotRenderer } from "./ScatterPlotRenderer";
 
 interface ElementRendererProps {
   element: Element;
@@ -50,6 +51,8 @@ export function ElementRenderer({ element, isEditable = false }: ElementRenderer
       return <HeatmapRenderer properties={element.properties} />;
     case 'quadrant-chart':
       return <QuadrantChartRenderer properties={element.properties} />;
+    case 'scatter-plot':
+      return <ScatterPlotRenderer properties={element.properties} />;
     default:
       return <DefaultRenderer type={element.type} />;
   }

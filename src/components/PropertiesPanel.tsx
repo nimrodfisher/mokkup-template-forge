@@ -11,6 +11,7 @@ import { DefaultProperties } from "./properties/DefaultProperties";
 import { GaugeProperties } from "./gauge-properties/GaugeProperties";
 import { HeatmapProperties } from "./heatmap-properties/HeatmapProperties";
 import { QuadrantProperties } from "./quadrant-properties/QuadrantProperties";
+import { ScatterPlotProperties } from "./scatter-plot-properties/ScatterPlotProperties";
 
 interface PropertiesPanelProps {
   onOpenStyleDialog?: () => void;
@@ -92,6 +93,14 @@ export function PropertiesPanel({ onOpenStyleDialog, updateElementProperties }: 
       case 'quadrant-chart':
         return (
           <QuadrantProperties
+            element={selectedElement}
+            updateElementProperties={updateElementProperties}
+            onOpenStyleDialog={onOpenStyleDialog}
+          />
+        );
+      case 'scatter-plot':
+        return (
+          <ScatterPlotProperties
             element={selectedElement}
             updateElementProperties={updateElementProperties}
             onOpenStyleDialog={onOpenStyleDialog}
