@@ -1,3 +1,4 @@
+
 export type ElementType = 
   'header' | 'button' | 'filter' | 'kpi' | 'column-chart' | 'bar-chart' | 'line-chart' | 
   'area-chart' | 'combo-chart' | 'pie-chart' | 'donut-chart' | 'gauge-chart' |
@@ -34,6 +35,9 @@ export type GaugeVariant =
 
 export type HeatmapVariant =
   'default' | 'kpis-heatmap' | 'intensity-heatmap' | 'gradient-heatmap';
+
+export type QuadrantVariant =
+  'default' | 'priority-matrix' | 'risk-assessment' | 'performance-potential';
 
 export interface Element {
   id: string;
@@ -145,6 +149,15 @@ export interface Element {
     showLegends?: boolean;
     heatmapButtons?: Array<{title: string, alignment: string}>;
     heatmapKpis?: Array<{title: string, value: string, change?: string}>;
+    // Quadrant Chart properties
+    quadrantStyle?: QuadrantVariant | string;
+    quadrantTitle?: string;
+    quadrantData?: Array<{name: string, x: number, y: number}>;
+    quadrantPrimaryColor?: string;
+    quadrantSecondaryColor?: string;
+    xAxisLabel?: string;
+    yAxisLabel?: string;
+    quadrantLabels?: Array<{label: string, position: string}>;
     // Add-ons
     showButtons?: boolean;
     showDropdowns?: boolean;

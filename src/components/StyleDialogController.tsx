@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Element } from "@/types/wireframe";
 import { FilterStyleDialog } from "./FilterStyleDialog";
@@ -11,6 +12,7 @@ import { ChartStyleDialog } from "./ChartStyleDialog";
 import { TableStyleDialog } from "./table-style/TableStyleDialog";
 import { GaugeStyleDialog } from "./GaugeStyleDialog";
 import { HeatmapStyleDialog } from "./heatmap-style/HeatmapStyleDialog";
+import { QuadrantStyleDialog } from "./quadrant-style/QuadrantStyleDialog";
 
 interface StyleDialogControllerProps {
   element: Element;
@@ -115,6 +117,15 @@ export function StyleDialogController({ element, dialogType, onClose }: StyleDia
     case 'heatmap':
       return (
         <HeatmapStyleDialog
+          elementId={element.id}
+          open={true}
+          onClose={onClose}
+        />
+      );
+      
+    case 'quadrant':
+      return (
+        <QuadrantStyleDialog
           elementId={element.id}
           open={true}
           onClose={onClose}

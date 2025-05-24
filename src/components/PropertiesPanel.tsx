@@ -1,3 +1,4 @@
+
 import { Element } from "@/types/wireframe";
 import { useWireframe } from "@/hooks/useWireframe";
 import { useState, useRef } from "react";
@@ -9,6 +10,7 @@ import { ImageProperties } from "./properties/ImageProperties";
 import { DefaultProperties } from "./properties/DefaultProperties";
 import { GaugeProperties } from "./gauge-properties/GaugeProperties";
 import { HeatmapProperties } from "./heatmap-properties/HeatmapProperties";
+import { QuadrantProperties } from "./quadrant-properties/QuadrantProperties";
 
 interface PropertiesPanelProps {
   onOpenStyleDialog?: () => void;
@@ -82,6 +84,14 @@ export function PropertiesPanel({ onOpenStyleDialog, updateElementProperties }: 
       case 'heatmap':
         return (
           <HeatmapProperties
+            element={selectedElement}
+            updateElementProperties={updateElementProperties}
+            onOpenStyleDialog={onOpenStyleDialog}
+          />
+        );
+      case 'quadrant-chart':
+        return (
+          <QuadrantProperties
             element={selectedElement}
             updateElementProperties={updateElementProperties}
             onOpenStyleDialog={onOpenStyleDialog}
