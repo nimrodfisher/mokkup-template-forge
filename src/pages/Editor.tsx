@@ -1,3 +1,4 @@
+
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { Sidebar } from "@/components/sidebar";
@@ -9,7 +10,6 @@ import { useParams } from "react-router-dom";
 import { ScreenTabs } from "@/components/ScreenTabs";
 import { PropertiesPanel } from "@/components/PropertiesPanel";
 import { toast } from "sonner";
-import { Toaster } from "sonner";
 import { HeaderStyleDialog } from "@/components/header-style/HeaderStyleDialog";
 import { ImageStyleDialog } from "@/components/ImageStyleDialog";
 import { ShapeStyleDialog } from "@/components/ShapeStyleDialog";
@@ -20,10 +20,13 @@ import { AreaChartStyleDialog } from "@/components/AreaChartStyleDialog";
 import { TableStyleDialog } from "@/components/table-style/TableStyleDialog";
 import { GaugeStyleDialog } from "@/components/GaugeStyleDialog";
 import { HeatmapStyleDialog } from "@/components/heatmap-style/HeatmapStyleDialog";
+import { QuadrantStyleDialog } from "@/components/quadrant-style/QuadrantStyleDialog";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
 const Editor = () => {
-  const { templateId } = useParams();
+  const params = useParams();
+  const templateId = params?.templateId;
+  
   const { 
     loadTemplate, 
     showProperties, 
@@ -32,6 +35,7 @@ const Editor = () => {
     updateElementProperties, 
     fetchTemplates 
   } = useWireframe();
+  
   const [showHeaderStyleDialog, setShowHeaderStyleDialog] = useState(false);
   const [showImageStyleDialog, setShowImageStyleDialog] = useState(false);
   const [showShapeStyleDialog, setShowShapeStyleDialog] = useState(false);
@@ -41,6 +45,7 @@ const Editor = () => {
   const [showTableStyleDialog, setShowTableStyleDialog] = useState(false);
   const [showGaugeStyleDialog, setShowGaugeStyleDialog] = useState(false);
   const [showHeatmapStyleDialog, setShowHeatmapStyleDialog] = useState(false);
+  const [showQuadrantStyleDialog, setShowQuadrantStyleDialog] = useState(false);
   const [showSaveDialog, setShowSaveDialog] = useState(false);
   
   useEffect(() => {
@@ -87,6 +92,8 @@ const Editor = () => {
       setShowGaugeStyleDialog(true);
     } else if (selectedElement?.type === 'heatmap') {
       setShowHeatmapStyleDialog(true);
+    } else if (selectedElement?.type === 'quadrant-chart') {
+      setShowQuadrantStyleDialog(true);
     }
   };
 
@@ -97,7 +104,6 @@ const Editor = () => {
   
   return (
     <TooltipProvider>
-      {/* Make sure we only have ONE DndProvider in the entire app */}
       <DndProvider backend={HTML5Backend}>
         <div className="flex flex-col h-screen bg-white">
           <Navbar onSave={handleSaveAction} />
@@ -116,7 +122,6 @@ const Editor = () => {
               </div>
             </div>
           </div>
-          <Toaster position="top-right" richColors />
           
           {/* Header Style Dialog */}
           {selectedElementId && selectedElement?.type === 'header' && (
@@ -196,6 +201,15 @@ const Editor = () => {
               elementId={selectedElementId} 
               open={showHeatmapStyleDialog}
               onClose={() => setShowHeatmapStyleDialog(false)}
+            />
+          )}
+
+          {/* Quadrant Style Dialog */}
+          {selectedElementId && selectedElement?.type === 'quadrant-chart' && (
+            <QuadrantStyleDialog 
+              elementId={selectedElementId} 
+              open={showQuadrantStyleDialog}
+              onClose={() => setShowQuadrantStyleDialog(false)}
             />
           )}
 
