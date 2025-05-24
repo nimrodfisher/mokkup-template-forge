@@ -35,7 +35,6 @@ export function ElementsTab() {
     
     // Table elements
     { type: 'simple-table', label: 'Simple Table', category: 'tables' },
-    { type: 'hierarchy-table', label: 'Hierarchy Table', category: 'tables' },
     
     // Other visualizations
     { type: 'geomap', label: 'Geomap', category: 'other' },
