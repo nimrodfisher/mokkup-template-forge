@@ -1,4 +1,3 @@
-
 export type ElementType = 
   'header' | 'button' | 'filter' | 'kpi' | 'column-chart' | 'bar-chart' | 'line-chart' | 
   'area-chart' | 'combo-chart' | 'pie-chart' | 'donut-chart' | 'gauge-chart' |
@@ -32,6 +31,9 @@ export type ChartVariant =
 
 export type GaugeVariant =
   'default' | 'speed-gauge';
+
+export type HeatmapVariant =
+  'default' | 'kpis-heatmap' | 'intensity-heatmap' | 'gradient-heatmap';
 
 export interface Element {
   id: string;
@@ -130,6 +132,19 @@ export interface Element {
     showGaugeLabels?: boolean;
     gaugePrimaryColor?: string;
     gaugeSecondaryColor?: string;
+    // Heatmap properties
+    heatmapStyle?: HeatmapVariant | string;
+    heatmapTitle?: string;
+    heatmapData?: Array<{label: string, value: number}>;
+    heatmapRows?: number;
+    heatmapColumns?: number;
+    heatmapPrimaryColor?: string;
+    heatmapSecondaryColor?: string;
+    heatmapOrientation?: 'horizontal' | 'vertical';
+    showDataLabels?: boolean;
+    showLegends?: boolean;
+    heatmapButtons?: Array<{title: string, alignment: string}>;
+    heatmapKpis?: Array<{title: string, value: string, change?: string}>;
     // Add-ons
     showButtons?: boolean;
     showDropdowns?: boolean;

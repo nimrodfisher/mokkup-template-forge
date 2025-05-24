@@ -1,4 +1,3 @@
-
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { Sidebar } from "@/components/sidebar";
@@ -20,6 +19,7 @@ import { ChartStyleDialog } from "@/components/ChartStyleDialog";
 import { AreaChartStyleDialog } from "@/components/AreaChartStyleDialog";
 import { TableStyleDialog } from "@/components/table-style/TableStyleDialog";
 import { GaugeStyleDialog } from "@/components/GaugeStyleDialog";
+import { HeatmapStyleDialog } from "@/components/heatmap-style/HeatmapStyleDialog";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
 const Editor = () => {
@@ -40,6 +40,7 @@ const Editor = () => {
   const [showAreaChartStyleDialog, setShowAreaChartStyleDialog] = useState(false);
   const [showTableStyleDialog, setShowTableStyleDialog] = useState(false);
   const [showGaugeStyleDialog, setShowGaugeStyleDialog] = useState(false);
+  const [showHeatmapStyleDialog, setShowHeatmapStyleDialog] = useState(false);
   const [showSaveDialog, setShowSaveDialog] = useState(false);
   
   useEffect(() => {
@@ -84,6 +85,8 @@ const Editor = () => {
       setShowTableStyleDialog(true);
     } else if (selectedElement?.type === 'gauge-chart') {
       setShowGaugeStyleDialog(true);
+    } else if (selectedElement?.type === 'heatmap') {
+      setShowHeatmapStyleDialog(true);
     }
   };
 
@@ -184,6 +187,15 @@ const Editor = () => {
               elementId={selectedElementId} 
               open={showGaugeStyleDialog}
               onClose={() => setShowGaugeStyleDialog(false)}
+            />
+          )}
+          
+          {/* Heatmap Style Dialog */}
+          {selectedElementId && selectedElement?.type === 'heatmap' && (
+            <HeatmapStyleDialog 
+              elementId={selectedElementId} 
+              open={showHeatmapStyleDialog}
+              onClose={() => setShowHeatmapStyleDialog(false)}
             />
           )}
 

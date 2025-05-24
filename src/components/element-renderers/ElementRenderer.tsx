@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Element } from "@/types/wireframe";
 import { HeaderRenderer } from "./HeaderRenderer";
@@ -13,6 +12,7 @@ import { ChartRenderer } from "./ChartRenderer";
 import { TableDisplay } from "../TableDisplay";
 import { DefaultRenderer } from "./DefaultRenderer";
 import { GaugeChartRenderer } from "./GaugeChartRenderer";
+import { HeatmapRenderer } from "./HeatmapRenderer";
 
 interface ElementRendererProps {
   element: Element;
@@ -44,6 +44,8 @@ export function ElementRenderer({ element, isEditable = false }: ElementRenderer
       return <TableDisplay element={element} isEditable={isEditable} />;
     case 'gauge-chart':
       return <GaugeChartRenderer properties={element.properties} />;
+    case 'heatmap':
+      return <HeatmapRenderer properties={element.properties} />;
     default:
       return <DefaultRenderer type={element.type} />;
   }

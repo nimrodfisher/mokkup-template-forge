@@ -1,4 +1,3 @@
-
 import { Element } from "@/types/wireframe";
 import { useWireframe } from "@/hooks/useWireframe";
 import { useState, useRef } from "react";
@@ -9,6 +8,7 @@ import { KpiProperties } from "./properties/KpiProperties";
 import { ImageProperties } from "./properties/ImageProperties";
 import { DefaultProperties } from "./properties/DefaultProperties";
 import { GaugeProperties } from "./gauge-properties/GaugeProperties";
+import { HeatmapProperties } from "./heatmap-properties/HeatmapProperties";
 
 interface PropertiesPanelProps {
   onOpenStyleDialog?: () => void;
@@ -74,6 +74,14 @@ export function PropertiesPanel({ onOpenStyleDialog, updateElementProperties }: 
       case 'gauge-chart':
         return (
           <GaugeProperties
+            element={selectedElement}
+            updateElementProperties={updateElementProperties}
+            onOpenStyleDialog={onOpenStyleDialog}
+          />
+        );
+      case 'heatmap':
+        return (
+          <HeatmapProperties
             element={selectedElement}
             updateElementProperties={updateElementProperties}
             onOpenStyleDialog={onOpenStyleDialog}

@@ -1,4 +1,3 @@
-
 import { ElementType } from '../types/wireframe';
 
 export function getDefaultSizeForType(type: ElementType): { width: number; height: number } {
@@ -38,8 +37,9 @@ export function getDefaultSizeForType(type: ElementType): { width: number; heigh
     case 'geomap':
       return { width: 400, height: 300 };
     case 'treemap':
-    case 'heatmap':
       return { width: 300, height: 300 };
+    case 'heatmap':
+      return { width: 300, height: 250 };
     case 'textbox':
       return { width: 250, height: 120 };
     case 'delete':
@@ -181,6 +181,32 @@ export function getDefaultPropertiesForType(type: ElementType): any {
         textAlignment: 'center',
         gaugePrimaryColor: '#4F46E5',
         gaugeSecondaryColor: '#E5E7EB',
+      };
+    case 'heatmap':
+      return {
+        backgroundColor: 'transparent',
+        heatmapTitle: 'Title goes here',
+        showTitle: true,
+        textAlignment: 'left',
+        heatmapStyle: 'default',
+        heatmapPrimaryColor: '#3B82F6',
+        heatmapSecondaryColor: '#EFF6FF',
+        heatmapRows: 5,
+        heatmapColumns: 5,
+        showDataLabels: true,
+        heatmapOrientation: 'horizontal',
+        showLegends: false,
+        showButtons: false,
+        showKpis: false,
+        heatmapData: [
+          { label: 'Data A', value: 86 },
+          { label: 'Data B', value: 56 },
+          { label: 'Data C', value: 21 },
+          { label: 'Data D', value: 18 },
+          { label: 'Data E', value: 67 }
+        ],
+        heatmapButtons: [],
+        heatmapKpis: []
       };
     case 'delete':
       return {
