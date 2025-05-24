@@ -14,6 +14,7 @@ import { GaugeStyleDialog } from "./GaugeStyleDialog";
 import { HeatmapStyleDialog } from "./heatmap-style/HeatmapStyleDialog";
 import { QuadrantStyleDialog } from "./quadrant-style/QuadrantStyleDialog";
 import { ScatterPlotStyleDialog } from "./scatter-plot-style/ScatterPlotStyleDialog";
+import { GeomapStyleDialog } from "./geomap-style/GeomapStyleDialog";
 
 interface StyleDialogControllerProps {
   element: Element;
@@ -136,6 +137,15 @@ export function StyleDialogController({ element, dialogType, onClose }: StyleDia
     case 'scatter-plot':
       return (
         <ScatterPlotStyleDialog
+          elementId={element.id}
+          open={true}
+          onClose={onClose}
+        />
+      );
+      
+    case 'geomap':
+      return (
+        <GeomapStyleDialog
           elementId={element.id}
           open={true}
           onClose={onClose}

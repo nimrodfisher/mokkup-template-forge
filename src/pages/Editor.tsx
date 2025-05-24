@@ -1,3 +1,4 @@
+
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { Sidebar } from "@/components/sidebar";
@@ -21,6 +22,7 @@ import { GaugeStyleDialog } from "@/components/GaugeStyleDialog";
 import { HeatmapStyleDialog } from "@/components/heatmap-style/HeatmapStyleDialog";
 import { QuadrantStyleDialog } from "@/components/quadrant-style/QuadrantStyleDialog";
 import { ScatterPlotStyleDialog } from "@/components/scatter-plot-style/ScatterPlotStyleDialog";
+import { GeomapStyleDialog } from "@/components/geomap-style/GeomapStyleDialog";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
 const Editor = () => {
@@ -47,6 +49,7 @@ const Editor = () => {
   const [showHeatmapStyleDialog, setShowHeatmapStyleDialog] = useState(false);
   const [showQuadrantStyleDialog, setShowQuadrantStyleDialog] = useState(false);
   const [showScatterPlotStyleDialog, setShowScatterPlotStyleDialog] = useState(false);
+  const [showGeomapStyleDialog, setShowGeomapStyleDialog] = useState(false);
   const [showSaveDialog, setShowSaveDialog] = useState(false);
   
   useEffect(() => {
@@ -97,6 +100,8 @@ const Editor = () => {
       setShowQuadrantStyleDialog(true);
     } else if (selectedElement?.type === 'scatter-plot') {
       setShowScatterPlotStyleDialog(true);
+    } else if (selectedElement?.type === 'geomap') {
+      setShowGeomapStyleDialog(true);
     }
   };
 
@@ -222,6 +227,15 @@ const Editor = () => {
               elementId={selectedElementId} 
               open={showScatterPlotStyleDialog}
               onClose={() => setShowScatterPlotStyleDialog(false)}
+            />
+          )}
+
+          {/* Geomap Style Dialog */}
+          {selectedElementId && selectedElement?.type === 'geomap' && (
+            <GeomapStyleDialog 
+              elementId={selectedElementId} 
+              open={showGeomapStyleDialog}
+              onClose={() => setShowGeomapStyleDialog(false)}
             />
           )}
 

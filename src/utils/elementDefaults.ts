@@ -1,3 +1,4 @@
+
 import { ElementType } from '../types/wireframe';
 
 export function getDefaultSizeForType(type: ElementType): { width: number; height: number } {
@@ -207,6 +208,27 @@ export function getDefaultPropertiesForType(type: ElementType): any {
         ],
         heatmapButtons: [],
         heatmapKpis: []
+      };
+    case 'geomap':
+      return {
+        backgroundColor: 'transparent',
+        geomapTitle: 'Geographic Data',
+        showTitle: true,
+        textAlignment: 'left',
+        geomapStyle: 'default',
+        geomapPrimaryColor: '#3B82F6',
+        geomapSecondaryColor: '#EFF6FF',
+        geomapRegion: 'world',
+        showTooltips: true,
+        showZoomControls: true,
+        mapProjection: 'mercator',
+        geomapData: [
+          { region: 'North America', value: 75, coordinates: [-100, 45] },
+          { region: 'Europe', value: 65, coordinates: [10, 50] },
+          { region: 'Asia', value: 85, coordinates: [100, 35] },
+          { region: 'South America', value: 45, coordinates: [-60, -15] },
+          { region: 'Africa', value: 55, coordinates: [20, 0] }
+        ]
       };
     case 'delete':
       return {

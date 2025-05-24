@@ -60,6 +60,9 @@ export function CanvasElement({ element, isSelected }: CanvasElementProps) {
       case 'scatter-plot':
         setActiveDialog('scatter-plot');
         break;
+      case 'geomap':
+        setActiveDialog('geomap');
+        break;
     }
   };
   

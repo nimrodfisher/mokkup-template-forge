@@ -1,3 +1,4 @@
+
 export type ElementType = 
   'header' | 'button' | 'filter' | 'kpi' | 'column-chart' | 'bar-chart' | 'line-chart' | 
   'area-chart' | 'combo-chart' | 'pie-chart' | 'donut-chart' | 'gauge-chart' |
@@ -40,6 +41,9 @@ export type QuadrantVariant =
 
 export type ScatterPlotVariant =
   'default' | 'correlation-analysis' | 'performance-comparison' | 'trend-analysis';
+
+export type GeomapVariant =
+  'default' | 'choropleth' | 'bubble-map' | 'heat-intensity';
 
 export interface Element {
   id: string;
@@ -171,6 +175,16 @@ export interface Element {
     showTrendLine?: boolean;
     showCorrelation?: boolean;
     correlationValue?: number;
+    // Geomap properties
+    geomapStyle?: GeomapVariant | string;
+    geomapTitle?: string;
+    geomapData?: Array<{region: string, value: number, coordinates?: [number, number]}>;
+    geomapPrimaryColor?: string;
+    geomapSecondaryColor?: string;
+    geomapRegion?: 'world' | 'usa' | 'europe' | 'asia';
+    showTooltips?: boolean;
+    showZoomControls?: boolean;
+    mapProjection?: 'mercator' | 'natural-earth' | 'equal-earth';
     // Add-ons
     showButtons?: boolean;
     showDropdowns?: boolean;
