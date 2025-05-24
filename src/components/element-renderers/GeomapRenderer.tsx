@@ -15,6 +15,12 @@ export function GeomapRenderer({ properties }: GeomapRendererProps) {
     geomapRegion = 'world',
     showTooltips = true,
     showZoomControls = true,
+    showButtons = false,
+    showDropdowns = false,
+    showKpis = false,
+    showText = false,
+    geomapButtons = [],
+    geomapKpis = [],
     geomapData = [
       { region: 'North America', value: 75, coordinates: [-100, 45] },
       { region: 'Europe', value: 65, coordinates: [10, 50] },
@@ -24,12 +30,71 @@ export function GeomapRenderer({ properties }: GeomapRendererProps) {
     ]
   } = properties;
 
+  const renderAddOns = () => (
+    <div className="absolute top-2 left-2 z-20 space-y-2">
+      {/* KPIs */}
+      {showKpis && geomapKpis.length > 0 && (
+        <div className="bg-white p-2 rounded shadow-sm space-y-1">
+          {geomapKpis.map((kpi: any, index: number) => (
+            <div key={index} className="text-xs">
+              <div className="font-medium text-gray-700">{kpi.title}</div>
+              <div className="flex items-center gap-2">
+                <span className="text-lg font-bold">{kpi.value}</span>
+                {kpi.change && (
+                  <span className="text-green-600 text-xs">↗ {kpi.change}</span>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Buttons */}
+      {showButtons && geomapButtons.length > 0 && (
+        <div className="flex flex-wrap gap-1">
+          {geomapButtons.map((button: any, index: number) => (
+            <button
+              key={index}
+              className="px-2 py-1 bg-blue-600 text-white text-xs rounded hover:bg-blue-700"
+            >
+              {button.title}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* Dropdowns */}
+      {showDropdowns && (
+        <div className="bg-white rounded shadow-sm">
+          <select className="px-2 py-1 text-xs border rounded">
+            <option>Select Region</option>
+            <option>North America</option>
+            <option>Europe</option>
+            <option>Asia</option>
+          </select>
+        </div>
+      )}
+
+      {/* Text */}
+      {showText && (
+        <div className="bg-white p-2 rounded shadow-sm">
+          <div className="text-xs text-gray-600">
+            Interactive geographic visualization
+          </div>
+        </div>
+      )}
+    </div>
+  );
+
   const renderDefaultGeomap = () => (
     <div className="w-full h-full bg-gray-50 border rounded-lg relative overflow-hidden">
       {/* Title */}
       <div className="absolute top-2 left-2 z-10">
         <h3 className="text-sm font-medium text-gray-800">{geomapTitle}</h3>
       </div>
+
+      {/* Add-ons */}
+      {renderAddOns()}
 
       {/* Zoom Controls */}
       {showZoomControls && (
@@ -82,6 +147,9 @@ export function GeomapRenderer({ properties }: GeomapRendererProps) {
         <h3 className="text-sm font-medium text-gray-800">{geomapTitle}</h3>
       </div>
 
+      {/* Add-ons */}
+      {renderAddOns()}
+
       <div className="absolute inset-0 flex items-center justify-center">
         <div className="relative w-full h-full">
           {/* Choropleth regions */}
@@ -113,6 +181,9 @@ export function GeomapRenderer({ properties }: GeomapRendererProps) {
         <h3 className="text-sm font-medium text-gray-800">{geomapTitle}</h3>
       </div>
 
+      {/* Add-ons */}
+      {renderAddOns()}
+
       <div className="absolute inset-0 flex items-center justify-center">
         <div className="relative w-full h-full">
           {/* Base map */}
@@ -143,6 +214,9 @@ export function GeomapRenderer({ properties }: GeomapRendererProps) {
       <div className="absolute top-2 left-2 z-10">
         <h3 className="text-sm font-medium text-white">{geomapTitle}</h3>
       </div>
+
+      {/* Add-ons */}
+      {renderAddOns()}
 
       <div className="absolute inset-0">
         {/* Heat intensity visualization */}

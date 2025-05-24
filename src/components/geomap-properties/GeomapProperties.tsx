@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { GeomapDetailsSection } from "./GeomapDetailsSection";
 import { GeomapDataSection } from "./GeomapDataSection";
 import { GeomapAppearanceSection } from "./GeomapAppearanceSection";
+import { GeomapAddOnsSection } from "./GeomapAddOnsSection";
 
 interface GeomapPropertiesProps {
   element: Element;
@@ -18,6 +19,7 @@ export function GeomapProperties({ element, updateElementProperties, onOpenStyle
   const [detailsOpen, setDetailsOpen] = React.useState(true);
   const [dataOpen, setDataOpen] = React.useState(true);
   const [propertiesOpen, setPropertiesOpen] = React.useState(true);
+  const [addOnsOpen, setAddOnsOpen] = React.useState(false);
   
   const handleChange = (field: string, value: any) => {
     updateElementProperties(element.id, { [field]: value });
@@ -56,6 +58,13 @@ export function GeomapProperties({ element, updateElementProperties, onOpenStyle
         handleChange={handleChange}
         propertiesOpen={propertiesOpen}
         setPropertiesOpen={setPropertiesOpen}
+      />
+      
+      <GeomapAddOnsSection 
+        properties={properties}
+        handleChange={handleChange}
+        addOnsOpen={addOnsOpen}
+        setAddOnsOpen={setAddOnsOpen}
       />
     </div>
   );
