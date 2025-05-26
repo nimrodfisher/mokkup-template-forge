@@ -119,6 +119,26 @@ export function WaterfallRenderer({ properties = {} }: WaterfallRendererProps) {
     }
   };
 
+  // Custom tick component for rotated labels
+  const CustomXAxisTick = (props: any) => {
+    const { x, y, payload } = props;
+    return (
+      <g transform={`translate(${x},${y})`}>
+        <text 
+          x={0} 
+          y={0} 
+          dy={16} 
+          textAnchor={xAxisLabelRotation !== 0 ? 'end' : 'middle'}
+          fill="#6b7280" 
+          fontSize="12"
+          transform={`rotate(${xAxisLabelRotation})`}
+        >
+          {payload.value}
+        </text>
+      </g>
+    );
+  };
+
   return (
     <div className="h-full w-full bg-white border border-gray-200 rounded-lg p-4">
       {showTitle && (
@@ -167,12 +187,7 @@ export function WaterfallRenderer({ properties = {} }: WaterfallRendererProps) {
                   dataKey="category" 
                   axisLine={false}
                   tickLine={false}
-                  tick={showXAxisLabels ? { 
-                    fontSize: 12, 
-                    fill: '#6b7280',
-                    angle: xAxisLabelRotation,
-                    textAnchor: xAxisLabelRotation !== 0 ? 'end' : 'middle'
-                  } : false}
+                  tick={showXAxisLabels ? (xAxisLabelRotation !== 0 ? <CustomXAxisTick /> : { fontSize: 12, fill: '#6b7280' }) : false}
                 />
               )}
               {showYAxis && (
