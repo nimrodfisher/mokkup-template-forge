@@ -73,7 +73,6 @@ export interface Element {
     showCustomText?: boolean;
     enableStylize?: boolean;
     stylizeOption?: 'horizontal' | 'vertical' | 'centered';
-    showDropdowns?: boolean;
     headerDropdowns?: Array<{title: string, values: string[], editText?: string}>;
     // Filter properties
     filterTitle?: string;
@@ -210,7 +209,7 @@ export interface Element {
     showTooltips?: boolean;
     showZoomControls?: boolean;
     mapProjection?: 'mercator' | 'natural-earth' | 'equal-earth';
-    // Add-ons
+    // Add-ons - consolidated under one section
     showButtons?: boolean;
     showDropdowns?: boolean;
     showKpis?: boolean;
