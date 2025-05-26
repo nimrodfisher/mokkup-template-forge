@@ -40,6 +40,21 @@ export function WaterfallYAxisSection({ properties, elementId, updateElementProp
             />
           </div>
 
+          {properties.showYAxisTitle && (
+            <div>
+              <Label htmlFor="yAxisTitle" className="text-sm text-gray-600">Title Text</Label>
+              <Input
+                id="yAxisTitle"
+                value={properties.yAxisTitle || ''}
+                onChange={(e) => 
+                  updateElementProperties(elementId, { yAxisTitle: e.target.value })
+                }
+                placeholder="Y Axis Title"
+                className="text-sm mt-1"
+              />
+            </div>
+          )}
+
           <div>
             <Label className="text-sm text-gray-600">Range</Label>
             <div className="grid grid-cols-2 gap-2 mt-1">
@@ -81,6 +96,37 @@ export function WaterfallYAxisSection({ properties, elementId, updateElementProp
               }
               className="text-sm"
             />
+          </div>
+
+          <div className="flex items-center justify-between">
+            <Label htmlFor="showYAxisLabels" className="text-sm">Labels</Label>
+            <Switch
+              id="showYAxisLabels"
+              checked={properties.showYAxisLabels !== false}
+              onCheckedChange={(checked) => 
+                updateElementProperties(elementId, { showYAxisLabels: checked })
+              }
+            />
+          </div>
+
+          <div>
+            <Label className="text-sm text-gray-600">Label Format</Label>
+            <Select
+              value={properties.yAxisLabelFormat || 'number'}
+              onValueChange={(value) => 
+                updateElementProperties(elementId, { yAxisLabelFormat: value })
+              }
+            >
+              <SelectTrigger className="text-sm mt-1">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="number">Number</SelectItem>
+                <SelectItem value="currency">Currency</SelectItem>
+                <SelectItem value="percentage">Percentage</SelectItem>
+                <SelectItem value="decimal">Decimal</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </div>
       </div>

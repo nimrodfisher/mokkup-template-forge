@@ -3,6 +3,7 @@ import React from 'react';
 import { Element } from '@/types/wireframe';
 import { WaterfallDetailsSection } from './WaterfallDetailsSection';
 import { WaterfallDataSection } from './WaterfallDataSection';
+import { WaterfallXAxisSection } from './WaterfallXAxisSection';
 import { WaterfallYAxisSection } from './WaterfallYAxisSection';
 import { WaterfallPropertiesSection } from './WaterfallPropertiesSection';
 import { WaterfallAppearanceSection } from './WaterfallAppearanceSection';
@@ -23,6 +24,22 @@ export function WaterfallProperties({ element, updateElementProperties, onOpenSt
   return (
     <div className="space-y-4">
       <WaterfallDetailsSection 
+        properties={properties}
+        elementId={element.id}
+        updateElementProperties={updateElementProperties}
+      />
+      
+      <Separator />
+      
+      <WaterfallDataSection 
+        properties={properties}
+        elementId={element.id}
+        updateElementProperties={updateElementProperties}
+      />
+      
+      <Separator />
+      
+      <WaterfallXAxisSection 
         properties={properties}
         elementId={element.id}
         updateElementProperties={updateElementProperties}

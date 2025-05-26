@@ -6,17 +6,27 @@ interface WaterfallRendererProps {
   properties?: {
     waterfallTitle?: string;
     showTitle?: boolean;
+    titleAlignment?: string;
+    chartAlignment?: string;
     waterfallData?: Array<{category: string, value: number, isTotal?: boolean}>;
     waterfallPrimaryColor?: string;
     waterfallSecondaryColor?: string;
     waterfallTotalColor?: string;
     showGridLines?: boolean;
     showLabels?: boolean;
+    showXAxis?: boolean;
+    showXAxisTitle?: boolean;
+    xAxisTitle?: string;
+    xAxisLabelRotation?: number;
+    showXAxisLabels?: boolean;
     showYAxis?: boolean;
     showYAxisTitle?: boolean;
+    yAxisTitle?: string;
     yAxisMin?: number;
     yAxisMax?: number;
     yAxisStepSize?: number;
+    showYAxisLabels?: boolean;
+    yAxisLabelFormat?: string;
     columnWidth?: number;
     showDataLabels?: boolean;
     showLegends?: boolean;
@@ -35,6 +45,8 @@ export function WaterfallRenderer({ properties = {} }: WaterfallRendererProps) {
   const {
     waterfallTitle = 'Waterfall Chart',
     showTitle = true,
+    titleAlignment = 'left',
+    chartAlignment = 'left',
     waterfallData = [
       { category: 'Jan 22', value: 50, isTotal: false },
       { category: 'Feb 22', value: 130, isTotal: false },
@@ -48,9 +60,18 @@ export function WaterfallRenderer({ properties = {} }: WaterfallRendererProps) {
     waterfallTotalColor = '#10B981',
     showGridLines = true,
     showLabels = true,
+    showXAxis = true,
+    showXAxisTitle = false,
+    xAxisTitle = '',
+    xAxisLabelRotation = 0,
+    showXAxisLabels = true,
     showYAxis = true,
+    showYAxisTitle = false,
+    yAxisTitle = '',
     yAxisMin = 0,
     yAxisMax = 600,
+    showYAxisLabels = true,
+    yAxisLabelFormat = 'number',
     columnWidth = 50,
     showDataLabels = false,
     showLegends = false,
@@ -69,10 +90,41 @@ export function WaterfallRenderer({ properties = {} }: WaterfallRendererProps) {
 
   const barSize = Math.max(20, Math.min(100, columnWidth));
 
+  const formatYAxisLabel = (value: number) => {
+    switch (yAxisLabelFormat) {
+      case 'currency':
+        return `$${value.toLocaleString()}`;
+      case 'percentage':
+        return `${value}%`;
+      case 'decimal':
+        return value.toFixed(2);
+      default:
+        return value.toLocaleString();
+    }
+  };
+
+  const getTitleAlignment = () => {
+    switch (titleAlignment) {
+      case 'center': return 'text-center';
+      case 'right': return 'text-right';
+      default: return 'text-left';
+    }
+  };
+
+  const getChartAlignment = () => {
+    switch (chartAlignment) {
+      case 'center': return 'justify-center';
+      case 'right': return 'justify-end';
+      default: return 'justify-start';
+    }
+  };
+
   return (
     <div className="h-full w-full bg-white border border-gray-200 rounded-lg p-4">
       {showTitle && (
-        <h3 className="text-lg font-semibold text-gray-800 mb-4">{waterfallTitle}</h3>
+        <h3 className={`text-lg font-semibold text-gray-800 mb-4 ${getTitleAlignment()}`}>
+          {waterfallTitle}
+        </h3>
       )}
       
       {(showButtons || waterfallButtons.length > 0) && waterfallButtons.length > 0 && (
@@ -91,51 +143,78 @@ export function WaterfallRenderer({ properties = {} }: WaterfallRendererProps) {
         </div>
       )}
 
-      <div className="flex-1 relative" style={{ height: '200px' }}>
-        <ResponsiveContainer width="100%" height="100%">
-          <BarChart 
-            data={waterfallData} 
-            margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-          >
-            {showGridLines && <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />}
-            <XAxis 
-              dataKey="category" 
-              axisLine={false}
-              tickLine={false}
-              tick={{ fontSize: 12, fill: '#6b7280' }}
-            />
-            {showYAxis && (
-              <YAxis 
-                domain={[yAxisMin, yAxisMax]}
-                axisLine={false}
-                tickLine={false}
-                tick={{ fontSize: 12, fill: '#6b7280' }}
-              />
-            )}
-            {showLegends && (
-              <Legend 
-                verticalAlign={legendPosition.includes('top') ? 'top' : 'bottom'}
-                align={legendPosition.includes('left') ? 'left' : 'right'}
-                height={36}
-              />
-            )}
-            <Bar 
-              dataKey="value" 
-              radius={[2, 2, 0, 0]}
-              maxBarSize={barSize}
+      <div className={`flex ${getChartAlignment()}`}>
+        <div className="flex-1 relative" style={{ height: '200px', maxWidth: chartAlignment === 'center' ? '80%' : '100%' }}>
+          {showYAxisTitle && yAxisTitle && (
+            <div className="absolute left-0 top-1/2 transform -rotate-90 -translate-y-1/2 -translate-x-6">
+              <span className="text-sm text-gray-600 font-medium">{yAxisTitle}</span>
+            </div>
+          )}
+          
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart 
+              data={waterfallData} 
+              margin={{ 
+                top: 5, 
+                right: 30, 
+                left: showYAxisTitle ? 40 : 20, 
+                bottom: showXAxisTitle ? 40 : 5 
+              }}
             >
-              {waterfallData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={getBarColor(entry, index)} />
-              ))}
-            </Bar>
-          </BarChart>
-        </ResponsiveContainer>
-        
-        {showDataLabels && (
-          <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
-            {/* Data labels would be positioned here */}
-          </div>
-        )}
+              {showGridLines && <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />}
+              {showXAxis && (
+                <XAxis 
+                  dataKey="category" 
+                  axisLine={false}
+                  tickLine={false}
+                  tick={showXAxisLabels ? { 
+                    fontSize: 12, 
+                    fill: '#6b7280',
+                    angle: xAxisLabelRotation,
+                    textAnchor: xAxisLabelRotation !== 0 ? 'end' : 'middle'
+                  } : false}
+                />
+              )}
+              {showYAxis && (
+                <YAxis 
+                  domain={[yAxisMin, yAxisMax]}
+                  axisLine={false}
+                  tickLine={false}
+                  tick={showYAxisLabels ? { fontSize: 12, fill: '#6b7280' } : false}
+                  tickFormatter={formatYAxisLabel}
+                />
+              )}
+              {showLegends && (
+                <Legend 
+                  verticalAlign={legendPosition.includes('top') ? 'top' : 'bottom'}
+                  align={legendPosition.includes('left') ? 'left' : 'right'}
+                  height={36}
+                />
+              )}
+              <Bar 
+                dataKey="value" 
+                radius={[2, 2, 0, 0]}
+                maxBarSize={barSize}
+              >
+                {waterfallData.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={getBarColor(entry, index)} />
+                ))}
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
+          
+          {showXAxisTitle && xAxisTitle && (
+            <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-6">
+              <span className="text-sm text-gray-600 font-medium">{xAxisTitle}</span>
+            </div>
+          )}
+          
+          {showDataLabels && (
+            <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
+              {/* Data labels would be positioned here */}
+            </div>
+          )}
+        </div>
       </div>
 
       {(showKpis || waterfallKpis.length > 0) && waterfallKpis.length > 0 && (
