@@ -1,4 +1,3 @@
-
 import { useWireframe } from "@/hooks/useWireframe";
 import { Element } from "@/types/wireframe";
 import { HeaderProperties } from "./header-properties/HeaderProperties";
@@ -29,6 +28,7 @@ export function ElementPropertiesSelector({ updateElementProperties, onOpenStyle
         <HeaderProperties 
           element={selectedElement} 
           updateElementProperties={updateElementProperties}
+          onOpenStyleDialog={onOpenStyleDialog}
         />
       );
     case 'area-chart':
@@ -63,7 +63,6 @@ export function ElementPropertiesSelector({ updateElementProperties, onOpenStyle
           onOpenStyleDialog={onOpenStyleDialog}
         />
       );
-    // Add cases for other element types as needed
     default:
       return (
         <div className="p-4 text-sm text-gray-500">

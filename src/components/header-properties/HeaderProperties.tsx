@@ -7,15 +7,20 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import { HeaderAddOnsSection } from "./HeaderAddOnsSection";
+import { HeaderVariationSection } from "./HeaderVariationSection";
+import { HeaderDesignSection } from "./HeaderDesignSection";
 
 interface HeaderPropertiesProps {
   element: Element;
   updateElementProperties: (id: string, properties: Partial<Element['properties']>) => void;
+  onOpenStyleDialog?: () => void;
 }
 
-export function HeaderProperties({ element, updateElementProperties }: HeaderPropertiesProps) {
+export function HeaderProperties({ element, updateElementProperties, onOpenStyleDialog }: HeaderPropertiesProps) {
   const [showNavOptions, setShowNavOptions] = useState(false);
   const [showMetricOptions, setShowMetricOptions] = useState(false);
+  const [showAddOns, setShowAddOns] = useState(false);
 
   // Local state for properties
   const [showNavigation, setShowNavigation] = useState<boolean>(element.properties?.showNavigation || false);
@@ -69,6 +74,11 @@ export function HeaderProperties({ element, updateElementProperties }: HeaderPro
     setMetrics(newMetrics);
     updateElementProperties(element.id, { metrics: newMetrics });
     console.log("Metrics updated:", newMetrics);
+  };
+
+  // Handle add-ons changes
+  const handleAddOnsChange = (field: string, value: any) => {
+    updateElementProperties(element.id, { [field]: value });
   };
 
   return (
@@ -171,6 +181,30 @@ export function HeaderProperties({ element, updateElementProperties }: HeaderPro
           </div>
         )}
       </div>
+
+      <Separator />
+
+      {/* Add Ons Section */}
+      <HeaderAddOnsSection
+        properties={element.properties || {}}
+        handleChange={handleAddOnsChange}
+        addOnsOpen={showAddOns}
+        setAddOnsOpen={setShowAddOns}
+      />
+
+      <Separator />
+
+      {/* Variation Section */}
+      <HeaderVariationSection
+        properties={element.properties || {}}
+        onOpenStyleDialog={onOpenStyleDialog}
+      />
+
+      {/* Design Customizations Section */}
+      <HeaderDesignSection
+        properties={element.properties || {}}
+        onOpenStyleDialog={onOpenStyleDialog}
+      />
     </div>
   );
 }

@@ -68,6 +68,13 @@ export interface Element {
     secondaryLogoUrl?: string;
     showMetrics?: boolean;
     metrics?: Array<{title: string, value: string}>;
+    // Header Add-ons properties
+    showSecondaryLogo?: boolean;
+    showCustomText?: boolean;
+    enableStylize?: boolean;
+    stylizeOption?: 'horizontal' | 'vertical' | 'centered';
+    showDropdowns?: boolean;
+    headerDropdowns?: Array<{title: string, values: string[], editText?: string}>;
     // Filter properties
     filterTitle?: string;
     filterVariant?: FilterVariant;
