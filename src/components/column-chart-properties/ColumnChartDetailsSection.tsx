@@ -4,6 +4,7 @@ import { ChevronDown } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface ColumnChartDetailsSectionProps {
   properties: any;
@@ -13,6 +14,9 @@ interface ColumnChartDetailsSectionProps {
 }
 
 export function ColumnChartDetailsSection({ properties, handleChange, detailsOpen, setDetailsOpen }: ColumnChartDetailsSectionProps) {
+  const chartVariant = properties.chartVariant || 'default';
+  const showLegendOption = chartVariant !== 'default';
+
   return (
     <>
       <div className="border-b pb-2 mb-2">
@@ -37,6 +41,24 @@ export function ColumnChartDetailsSection({ properties, handleChange, detailsOpe
             />
           </div>
           
+          <div>
+            <Label className="text-sm font-medium">Chart Variant</Label>
+            <Select
+              value={chartVariant}
+              onValueChange={(value) => handleChange('chartVariant', value)}
+            >
+              <SelectTrigger className="text-xs">
+                <SelectValue placeholder="Select variant" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="default">Standard</SelectItem>
+                <SelectItem value="grouped">Grouped</SelectItem>
+                <SelectItem value="stacked">Stacked</SelectItem>
+                <SelectItem value="gradient">Gradient</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          
           <div className="flex items-center justify-between">
             <Label className="text-sm font-medium">Show Title</Label>
             <Switch
@@ -45,13 +67,15 @@ export function ColumnChartDetailsSection({ properties, handleChange, detailsOpe
             />
           </div>
           
-          <div className="flex items-center justify-between">
-            <Label className="text-sm font-medium">Show Legend</Label>
-            <Switch
-              checked={properties.showLegend !== false}
-              onCheckedChange={(checked) => handleChange('showLegend', checked)}
-            />
-          </div>
+          {showLegendOption && (
+            <div className="flex items-center justify-between">
+              <Label className="text-sm font-medium">Show Legend</Label>
+              <Switch
+                checked={properties.showLegend !== false}
+                onCheckedChange={(checked) => handleChange('showLegend', checked)}
+              />
+            </div>
+          )}
           
           <div className="flex items-center justify-between">
             <Label className="text-sm font-medium">Show Grid Lines</Label>

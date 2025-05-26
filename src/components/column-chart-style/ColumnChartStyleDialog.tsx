@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { useWireframe } from '@/hooks/useWireframe';
@@ -13,54 +13,75 @@ interface ColumnChartStyleDialogProps {
 }
 
 export function ColumnChartStyleDialog({ elementId, open, onClose }: ColumnChartStyleDialogProps) {
-  const { updateElementProperties } = useWireframe();
+  const { updateElementProperties, elements } = useWireframe();
   const [selectedTemplate, setSelectedTemplate] = useState<string>('default');
 
-  const applyTemplate = () => {
-    const templateConfigs: Record<string, {
-      chartVariant: ChartVariant;
-      barColor: string;
-      secondaryBarColor: string;
-      showLegend: boolean;
-      showGridLines: boolean;
-      tertiaryBarColor?: string;
-    }> = {
-      default: {
-        chartVariant: 'default',
-        barColor: '#3B82F6',
-        secondaryBarColor: '#818CF8',
-        showLegend: true,
-        showGridLines: true,
-      },
-      grouped: {
-        chartVariant: 'grouped',
-        barColor: '#10B981',
-        secondaryBarColor: '#34D399',
-        showLegend: true,
-        showGridLines: true,
-      },
-      stacked: {
-        chartVariant: 'stacked',
-        barColor: '#F59E0B',
-        secondaryBarColor: '#FBBF24',
-        tertiaryBarColor: '#FCD34D',
-        showLegend: true,
-        showGridLines: false,
-      },
-      gradient: {
-        chartVariant: 'gradient',
-        barColor: '#8B5CF6',
-        secondaryBarColor: '#A78BFA',
-        showLegend: false,
-        showGridLines: true,
-      },
-    };
+  // Get current element to determine initial template
+  const currentElement = elements.find(el => el.id === elementId);
+  
+  useEffect(() => {
+    if (currentElement && currentElement.properties) {
+      const variant = currentElement.properties.chartVariant;
+      if (variant) {
+        setSelectedTemplate(variant);
+      }
+    }
+  }, [currentElement]);
 
+  const templateConfigs: Record<string, {
+    chartVariant: ChartVariant;
+    barColor: string;
+    secondaryBarColor: string;
+    showLegend: boolean;
+    showGridLines: boolean;
+    tertiaryBarColor?: string;
+  }> = {
+    default: {
+      chartVariant: 'default',
+      barColor: '#3B82F6',
+      secondaryBarColor: '#818CF8',
+      showLegend: true,
+      showGridLines: true,
+    },
+    grouped: {
+      chartVariant: 'grouped',
+      barColor: '#10B981',
+      secondaryBarColor: '#34D399',
+      showLegend: true,
+      showGridLines: true,
+    },
+    stacked: {
+      chartVariant: 'stacked',
+      barColor: '#F59E0B',
+      secondaryBarColor: '#FBBF24',
+      tertiaryBarColor: '#FCD34D',
+      showLegend: true,
+      showGridLines: false,
+    },
+    gradient: {
+      chartVariant: 'gradient',
+      barColor: '#8B5CF6',
+      secondaryBarColor: '#A78BFA',
+      showLegend: false,
+      showGridLines: true,
+    },
+  };
+
+  const applyTemplate = () => {
     const config = templateConfigs[selectedTemplate];
     if (config) {
       updateElementProperties(elementId, config);
     }
     onClose();
+  };
+
+  // Apply template immediately when selected (for preview)
+  const handleTemplateSelect = (templateId: string) => {
+    setSelectedTemplate(templateId);
+    const config = templateConfigs[templateId];
+    if (config) {
+      updateElementProperties(elementId, config);
+    }
   };
 
   return (
@@ -72,15 +93,12 @@ export function ColumnChartStyleDialog({ elementId, open, onClose }: ColumnChart
         
         <ColumnChartTemplates 
           selectedTemplate={selectedTemplate}
-          onSelectTemplate={setSelectedTemplate}
+          onSelectTemplate={handleTemplateSelect}
         />
         
         <div className="flex justify-end space-x-2 pt-4 border-t">
           <Button variant="outline" onClick={onClose}>
-            Cancel
-          </Button>
-          <Button onClick={applyTemplate}>
-            Apply Style
+            Close
           </Button>
         </div>
       </DialogContent>

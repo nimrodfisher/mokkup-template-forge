@@ -12,6 +12,10 @@ interface ColumnChartAppearanceSectionProps {
 }
 
 export function ColumnChartAppearanceSection({ properties, handleChange, propertiesOpen, setPropertiesOpen }: ColumnChartAppearanceSectionProps) {
+  const chartVariant = properties.chartVariant || 'default';
+  const showSecondaryColor = chartVariant === 'grouped' || chartVariant === 'stacked' || chartVariant === 'gradient';
+  const showTertiaryColor = chartVariant === 'stacked';
+
   return (
     <>
       <div className="border-b pb-2 mb-2">
@@ -44,23 +48,45 @@ export function ColumnChartAppearanceSection({ properties, handleChange, propert
             </div>
           </div>
           
-          <div>
-            <Label className="text-sm font-medium">Secondary Color</Label>
-            <div className="flex items-center gap-2">
-              <Input
-                type="color"
-                value={properties.secondaryBarColor || '#818CF8'}
-                onChange={(e) => handleChange('secondaryBarColor', e.target.value)}
-                className="w-12 h-8 p-1 border rounded"
-              />
-              <Input
-                value={properties.secondaryBarColor || '#818CF8'}
-                onChange={(e) => handleChange('secondaryBarColor', e.target.value)}
-                placeholder="#818CF8"
-                className="text-xs flex-1"
-              />
+          {showSecondaryColor && (
+            <div>
+              <Label className="text-sm font-medium">Secondary Color</Label>
+              <div className="flex items-center gap-2">
+                <Input
+                  type="color"
+                  value={properties.secondaryBarColor || '#818CF8'}
+                  onChange={(e) => handleChange('secondaryBarColor', e.target.value)}
+                  className="w-12 h-8 p-1 border rounded"
+                />
+                <Input
+                  value={properties.secondaryBarColor || '#818CF8'}
+                  onChange={(e) => handleChange('secondaryBarColor', e.target.value)}
+                  placeholder="#818CF8"
+                  className="text-xs flex-1"
+                />
+              </div>
             </div>
-          </div>
+          )}
+          
+          {showTertiaryColor && (
+            <div>
+              <Label className="text-sm font-medium">Tertiary Color</Label>
+              <div className="flex items-center gap-2">
+                <Input
+                  type="color"
+                  value={properties.tertiaryBarColor || '#C7D2FE'}
+                  onChange={(e) => handleChange('tertiaryBarColor', e.target.value)}
+                  className="w-12 h-8 p-1 border rounded"
+                />
+                <Input
+                  value={properties.tertiaryBarColor || '#C7D2FE'}
+                  onChange={(e) => handleChange('tertiaryBarColor', e.target.value)}
+                  placeholder="#C7D2FE"
+                  className="text-xs flex-1"
+                />
+              </div>
+            </div>
+          )}
           
           <div>
             <Label className="text-sm font-medium">Chart Height</Label>
