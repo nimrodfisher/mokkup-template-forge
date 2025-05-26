@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Element } from "@/types/wireframe";
 import { HeaderRenderer } from "./HeaderRenderer";
@@ -18,6 +17,7 @@ import { QuadrantChartRenderer } from "./QuadrantChartRenderer";
 import { ScatterPlotRenderer } from "./ScatterPlotRenderer";
 import { GeomapRenderer } from "./GeomapRenderer";
 import { PieChartRenderer } from "./PieChartRenderer";
+import { WaterfallRenderer } from "./WaterfallRenderer";
 
 interface ElementRendererProps {
   element: Element;
@@ -59,6 +59,8 @@ export function ElementRenderer({ element, isEditable = false }: ElementRenderer
       return <ScatterPlotRenderer properties={element.properties} />;
     case 'geomap':
       return <GeomapRenderer properties={element.properties} />;
+    case 'waterfall':
+      return <WaterfallRenderer properties={element.properties} />;
     default:
       return <DefaultRenderer type={element.type} />;
   }

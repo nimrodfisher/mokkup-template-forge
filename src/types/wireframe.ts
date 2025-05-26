@@ -48,6 +48,9 @@ export type ScatterPlotVariant =
 export type GeomapVariant =
   'world' | 'usa' | 'europe' | 'asia';
 
+export type WaterfallVariant =
+  'basic-waterfall' | 'with-buttons' | 'with-kpis';
+
 export interface Element {
   id: string;
   type: ElementType;
@@ -209,6 +212,15 @@ export interface Element {
     showTooltips?: boolean;
     showZoomControls?: boolean;
     mapProjection?: 'mercator' | 'natural-earth' | 'equal-earth';
+    // Waterfall properties
+    waterfallVariant?: WaterfallVariant;
+    waterfallTitle?: string;
+    waterfallData?: Array<{category: string, value: number, isTotal?: boolean}>;
+    waterfallPrimaryColor?: string;
+    waterfallSecondaryColor?: string;
+    waterfallTotalColor?: string;
+    waterfallButtons?: Array<{title: string, alignment: string}>;
+    waterfallKpis?: Array<{title: string, value: string, change?: string}>;
     // Add-ons - consolidated under one section
     showButtons?: boolean;
     showDropdowns?: boolean;

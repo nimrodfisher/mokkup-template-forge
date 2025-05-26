@@ -308,6 +308,28 @@ export function getDefaultPropertiesForType(type: ElementType): any {
         alternateRowColor: false,
         alternateRowBackground: '#f9fafb',
       };
+    case 'waterfall':
+      return {
+        backgroundColor: 'transparent',
+        waterfallTitle: 'Waterfall Chart',
+        showTitle: true,
+        waterfallVariant: 'basic-waterfall',
+        waterfallPrimaryColor: '#4F46E5',
+        waterfallSecondaryColor: '#818CF8',
+        waterfallTotalColor: '#10B981',
+        showGridLines: true,
+        showLabels: true,
+        waterfallData: [
+          { category: 'Jan 22', value: 50, isTotal: false },
+          { category: 'Feb 22', value: 130, isTotal: false },
+          { category: 'Mar 22', value: 80, isTotal: false },
+          { category: 'Apr 22', value: 150, isTotal: false },
+          { category: 'May 22', value: 120, isTotal: false },
+          { category: 'Total', value: 530, isTotal: true }
+        ],
+        waterfallButtons: [],
+        waterfallKpis: []
+      };
     default:
       return {};
   }

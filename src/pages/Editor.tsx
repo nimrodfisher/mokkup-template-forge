@@ -1,4 +1,3 @@
-
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { Sidebar } from "@/components/sidebar";
@@ -25,6 +24,7 @@ import { ScatterPlotStyleDialog } from "@/components/scatter-plot-style/ScatterP
 import { GeomapStyleDialog } from "@/components/geomap-style/GeomapStyleDialog";
 import { ColumnChartStyleDialog } from "@/components/column-chart-style/ColumnChartStyleDialog";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { WaterfallStyleDialog } from "@/components/waterfall-style/WaterfallStyleDialog";
 
 const Editor = () => {
   const params = useParams();
@@ -51,6 +51,7 @@ const Editor = () => {
   const [showQuadrantStyleDialog, setShowQuadrantStyleDialog] = useState(false);
   const [showScatterPlotStyleDialog, setShowScatterPlotStyleDialog] = useState(false);
   const [showGeomapStyleDialog, setShowGeomapStyleDialog] = useState(false);
+  const [showWaterfallStyleDialog, setShowWaterfallStyleDialog] = useState(false);
   const [showSaveDialog, setShowSaveDialog] = useState(false);
   
   useEffect(() => {
@@ -103,6 +104,8 @@ const Editor = () => {
       setShowScatterPlotStyleDialog(true);
     } else if (selectedElement?.type === 'geomap') {
       setShowGeomapStyleDialog(true);
+    } else if (selectedElement?.type === 'waterfall') {
+      setShowWaterfallStyleDialog(true);
     }
   };
 
@@ -237,6 +240,15 @@ const Editor = () => {
               elementId={selectedElementId} 
               open={showGeomapStyleDialog}
               onClose={() => setShowGeomapStyleDialog(false)}
+            />
+          )}
+
+          {/* Waterfall Style Dialog */}
+          {selectedElementId && selectedElement?.type === 'waterfall' && (
+            <WaterfallStyleDialog 
+              elementId={selectedElementId} 
+              open={showWaterfallStyleDialog}
+              onClose={() => setShowWaterfallStyleDialog(false)}
             />
           )}
 

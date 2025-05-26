@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useWireframe } from "@/hooks/useWireframe";
 import { toast } from "sonner";
@@ -64,6 +63,9 @@ export function CanvasElement({ element, isSelected }: CanvasElementProps) {
         break;
       case 'geomap':
         setActiveDialog('geomap');
+        break;
+      case 'waterfall':
+        setActiveDialog('waterfall');
         break;
     }
   };

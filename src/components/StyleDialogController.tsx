@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Element } from "@/types/wireframe";
 import { FilterStyleDialog } from "./FilterStyleDialog";
@@ -17,6 +16,7 @@ import { ScatterPlotStyleDialog } from "./scatter-plot-style/ScatterPlotStyleDia
 import { GeomapStyleDialog } from "./geomap-style/GeomapStyleDialog";
 import { ColumnChartStyleDialog } from "./column-chart-style/ColumnChartStyleDialog";
 import { PieChartStyleDialog } from "./pie-chart-style/PieChartStyleDialog";
+import { WaterfallStyleDialog } from "./waterfall-style/WaterfallStyleDialog";
 
 interface StyleDialogControllerProps {
   element: Element;
@@ -166,6 +166,15 @@ export function StyleDialogController({ element, dialogType, onClose }: StyleDia
     case 'pie-chart':
       return (
         <PieChartStyleDialog
+          elementId={element.id}
+          open={true}
+          onClose={onClose}
+        />
+      );
+      
+    case 'waterfall':
+      return (
+        <WaterfallStyleDialog
           elementId={element.id}
           open={true}
           onClose={onClose}
