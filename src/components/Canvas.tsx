@@ -1,15 +1,23 @@
-
 import React from 'react';
 import { useWireframe } from '@/hooks/useWireframe';
 import { HeaderRenderer } from '@/components/element-renderers/HeaderRenderer';
 import { ImageRenderer } from '@/components/element-renderers/ImageRenderer';
+import { ShapesRenderer } from '@/components/element-renderers/ShapesRenderer';
+import { FilterRenderer } from '@/components/element-renderers/FilterRenderer';
+import { KpiRenderer } from '@/components/element-renderers/KpiRenderer';
 import { ButtonRenderer } from '@/components/element-renderers/ButtonRenderer';
 import { TextboxRenderer } from '@/components/element-renderers/TextboxRenderer';
 import { ChartRenderer } from '@/components/element-renderers/ChartRenderer';
+import { AreaChartRenderer } from '@/components/element-renderers/AreaChartRenderer';
+import { TableRenderer } from '@/components/element-renderers/TableRenderer';
+import { GaugeRenderer } from '@/components/element-renderers/GaugeRenderer';
+import { HeatmapRenderer } from '@/components/element-renderers/HeatmapRenderer';
+import { QuadrantRenderer } from '@/components/element-renderers/QuadrantRenderer';
+import { ScatterPlotRenderer } from '@/components/element-renderers/ScatterPlotRenderer';
+import { GeomapRenderer } from '@/components/element-renderers/GeomapRenderer';
 import { ColumnChartRenderer } from '@/components/element-renderers/ColumnChartRenderer';
 import { PieChartRenderer } from '@/components/element-renderers/PieChartRenderer';
 import { WaterfallRenderer } from './element-renderers/WaterfallRenderer';
-import { ElementRenderer } from './element-renderers/ElementRenderer';
 
 export const Canvas = () => {
   const { elements, selectedElementId, updateElement, removeElement, updateElementProperties, screens } = useWireframe();
@@ -37,42 +45,119 @@ export const Canvas = () => {
         >
           {element.type === 'header' && (
             <HeaderRenderer
+              id={element.id}
               properties={element.properties}
               onResize={(width, height) => updateElement(element.id, { size: { width, height } })}
             />
           )}
           {element.type === 'image' && (
             <ImageRenderer
+              id={element.id}
+              properties={element.properties}
+              onResize={(width, height) => updateElement(element.id, { size: { width, height } })}
+            />
+          )}
+          {element.type === 'shapes' && (
+            <ShapesRenderer
+              id={element.id}
+              properties={element.properties}
+              onResize={(width, height) => updateElement(element.id, { size: { width, height } })}
+            />
+          )}
+          {element.type === 'filter' && (
+            <FilterRenderer
+              id={element.id}
+              properties={element.properties}
+              onResize={(width, height) => updateElement(element.id, { size: { width, height } })}
+            />
+          )}
+          {element.type === 'kpi' && (
+            <KpiRenderer
+              id={element.id}
               properties={element.properties}
               onResize={(width, height) => updateElement(element.id, { size: { width, height } })}
             />
           )}
           {element.type === 'button' && (
             <ButtonRenderer
+              id={element.id}
               properties={element.properties}
               onResize={(width, height) => updateElement(element.id, { size: { width, height } })}
             />
           )}
           {element.type === 'textbox' && (
             <TextboxRenderer
+              id={element.id}
               properties={element.properties}
               onResize={(width, height) => updateElement(element.id, { size: { width, height } })}
             />
           )}
           {element.type === 'bar-chart' && (
             <ChartRenderer
+              id={element.id}
               properties={element.properties}
               onResize={(width, height) => updateElement(element.id, { size: { width, height } })}
             />
           )}
           {element.type === 'column-chart' && (
             <ColumnChartRenderer
+              id={element.id}
               properties={element.properties}
               onResize={(width, height) => updateElement(element.id, { size: { width, height } })}
             />
           )}
-          {element.type === 'pie-chart' && (
+          {element.type === 'area-chart' && (
+            <AreaChartRenderer
+              id={element.id}
+              properties={element.properties}
+              onResize={(width, height) => updateElement(element.id, { size: { width, height } })}
+            />
+          )}
+          {element.type === 'simple-table' && (
+            <TableRenderer
+              id={element.id}
+              properties={element.properties}
+              onResize={(width, height) => updateElement(element.id, { size: { width, height } })}
+            />
+          )}
+          {element.type === 'gauge-chart' && (
+            <GaugeRenderer
+              id={element.id}
+              properties={element.properties}
+              onResize={(width, height) => updateElement(element.id, { size: { width, height } })}
+            />
+          )}
+          {element.type === 'heatmap' && (
+            <HeatmapRenderer
+              id={element.id}
+              properties={element.properties}
+              onResize={(width, height) => updateElement(element.id, { size: { width, height } })}
+            />
+          )}
+          {element.type === 'quadrant-chart' && (
+            <QuadrantRenderer
+              id={element.id}
+              properties={element.properties}
+              onResize={(width, height) => updateElement(element.id, { size: { width, height } })}
+            />
+          )}
+          {element.type === 'scatter-plot' && (
+            <ScatterPlotRenderer
+              id={element.id}
+              properties={element.properties}
+              onResize={(width, height) => updateElement(element.id, { size: { width, height } })}
+            />
+          )}
+          {element.type === 'geomap' && (
+            <GeomapRenderer
+              id={element.id}
+              properties={element.properties}
+              onResize={(width, height) => updateElement(element.id, { size: { width, height } })}
+            />
+          )}
+           {element.type === 'pie-chart' && (
             <PieChartRenderer
+              id={element.id}
               properties={element.properties}
               onResize={(width, height) => updateElement(element.id, { size: { width, height } })}
             />
@@ -84,10 +169,6 @@ export const Canvas = () => {
               onUpdate={(properties) => updateElementProperties(element.id, properties)}
               onRemove={() => removeElement(element.id)}
             />
-          )}
-          {/* For all other element types, use the generic ElementRenderer */}
-          {!['header', 'image', 'button', 'textbox', 'bar-chart', 'column-chart', 'pie-chart', 'waterfall'].includes(element.type) && (
-            <ElementRenderer element={element} />
           )}
         </div>
       ))}
