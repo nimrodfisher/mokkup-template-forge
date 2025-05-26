@@ -195,6 +195,29 @@ export function getDefaultPropertiesForType(type: ElementType): any {
         showLabels: true,
         chartHeight: 200,
       };
+    case 'pie-chart':
+      return {
+        backgroundColor: 'transparent',
+        pieChartTitle: 'Title goes here',
+        pieChartVariant: 'default',
+        showTitle: true,
+        showPieLegend: false,
+        showPieLabels: true,
+        showPercentages: true,
+        pieInnerRadius: 0,
+        pieOuterRadius: 80,
+        chartHeight: 300,
+        pieChartData: [
+          { name: 'Text A', value: 30, color: '#4F46E5' },
+          { name: 'Text B', value: 25, color: '#7C3AED' },
+          { name: 'Text C', value: 20, color: '#06B6D4' },
+          { name: 'Text D', value: 20, color: '#8B5CF6' },
+          { name: 'Text E', value: 5, color: '#EC4899' }
+        ],
+        pieChartButtons: [],
+        pieChartKpis: [],
+        pieColors: ['#4F46E5', '#7C3AED', '#06B6D4', '#8B5CF6', '#EC4899']
+      };
     case 'gauge-chart':
       return {
         backgroundColor: 'transparent',

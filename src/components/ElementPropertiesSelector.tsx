@@ -5,6 +5,7 @@ import { HeaderProperties } from "./header-properties/HeaderProperties";
 import { AreaChartProperties } from "./area-chart-properties/AreaChartProperties";
 import { TableProperties } from "./table-properties/TableProperties";
 import { ColumnChartProperties } from "./column-chart-properties/ColumnChartProperties";
+import { PieChartProperties } from "./pie-chart-properties/PieChartProperties";
 
 interface ElementPropertiesSelectorProps {
   updateElementProperties: (id: string, properties: Partial<Element['properties']>) => void;
@@ -41,6 +42,14 @@ export function ElementPropertiesSelector({ updateElementProperties, onOpenStyle
     case 'column-chart':
       return (
         <ColumnChartProperties
+          element={selectedElement}
+          updateElementProperties={updateElementProperties}
+          onOpenStyleDialog={onOpenStyleDialog}
+        />
+      );
+    case 'pie-chart':
+      return (
+        <PieChartProperties
           element={selectedElement}
           updateElementProperties={updateElementProperties}
           onOpenStyleDialog={onOpenStyleDialog}

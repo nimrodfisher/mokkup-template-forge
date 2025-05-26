@@ -1,4 +1,3 @@
-
 export type ElementType = 
   'header' | 'button' | 'filter' | 'kpi' | 'column-chart' | 'bar-chart' | 'line-chart' | 
   'area-chart' | 'combo-chart' | 'pie-chart' | 'donut-chart' | 'gauge-chart' |
@@ -31,20 +30,8 @@ export type ChartVariant =
   'basic-area' | 'kpi-area' | 'multi-area' | 'stacked-area' |
   'default' | 'grouped' | 'stacked' | 'gradient';
 
-export type GaugeVariant =
-  'default' | 'speed-gauge';
-
-export type HeatmapVariant =
-  'default' | 'kpis-heatmap' | 'intensity-heatmap' | 'gradient-heatmap';
-
-export type QuadrantVariant =
-  'default' | 'priority-matrix' | 'risk-assessment' | 'performance-potential';
-
-export type ScatterPlotVariant =
-  'default' | 'correlation-analysis' | 'performance-comparison' | 'trend-analysis';
-
-export type GeomapVariant =
-  'default' | 'choropleth' | 'bubble-map' | 'heat-intensity';
+export type PieChartVariant =
+  'default' | 'with-legend' | 'with-buttons' | 'with-kpis';
 
 export interface Element {
   id: string;
@@ -120,6 +107,18 @@ export interface Element {
     showLegend?: boolean;
     showGridLines?: boolean;
     showLabels?: boolean;
+    // Pie Chart properties
+    pieChartVariant?: PieChartVariant;
+    pieChartTitle?: string;
+    pieChartData?: Array<{name: string, value: number, color?: string}>;
+    pieChartButtons?: Array<{title: string, alignment: string}>;
+    pieChartKpis?: Array<{title: string, value: string, change?: string}>;
+    pieColors?: string[];
+    showPieLabels?: boolean;
+    showPieLegend?: boolean;
+    pieInnerRadius?: number;
+    pieOuterRadius?: number;
+    showPercentages?: boolean;
     // Table properties
     tableTitle?: string;
     tableHeaders?: string[];

@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useWireframe } from "@/hooks/useWireframe";
 import { toast } from "sonner";
@@ -42,6 +43,9 @@ export function CanvasElement({ element, isSelected }: CanvasElementProps) {
         break;
       case 'column-chart':
         setActiveDialog('column-chart');
+        break;
+      case 'pie-chart':
+        setActiveDialog('pie-chart');
         break;
       case 'simple-table':
         setActiveDialog('table');

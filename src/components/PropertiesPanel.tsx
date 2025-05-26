@@ -1,3 +1,4 @@
+
 import { Element } from "@/types/wireframe";
 import { useWireframe } from "@/hooks/useWireframe";
 import { useState, useRef } from "react";
@@ -13,6 +14,7 @@ import { QuadrantProperties } from "./quadrant-properties/QuadrantProperties";
 import { ScatterPlotProperties } from "./scatter-plot-properties/ScatterPlotProperties";
 import { GeomapProperties } from "./geomap-properties/GeomapProperties";
 import { ColumnChartProperties } from "./column-chart-properties/ColumnChartProperties";
+import { PieChartProperties } from "./pie-chart-properties/PieChartProperties";
 
 interface PropertiesPanelProps {
   onOpenStyleDialog?: () => void;
@@ -118,6 +120,14 @@ export function PropertiesPanel({ onOpenStyleDialog, updateElementProperties }: 
       case 'column-chart':
         return (
           <ColumnChartProperties
+            element={selectedElement}
+            updateElementProperties={updateElementProperties}
+            onOpenStyleDialog={onOpenStyleDialog}
+          />
+        );
+      case 'pie-chart':
+        return (
+          <PieChartProperties
             element={selectedElement}
             updateElementProperties={updateElementProperties}
             onOpenStyleDialog={onOpenStyleDialog}
