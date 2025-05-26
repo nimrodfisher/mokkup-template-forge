@@ -37,19 +37,16 @@ export const Canvas = () => {
           {element.type === 'header' && (
             <HeaderRenderer
               properties={element.properties}
-              onResize={(width, height) => updateElement(element.id, { size: { width, height } })}
             />
           )}
           {element.type === 'image' && (
             <ImageRenderer
               properties={element.properties}
-              onResize={(width, height) => updateElement(element.id, { size: { width, height } })}
             />
           )}
           {element.type === 'button' && (
             <ButtonRenderer
               properties={element.properties}
-              onResize={(width, height) => updateElement(element.id, { size: { width, height } })}
             />
           )}
           {element.type === 'textbox' && (
@@ -60,13 +57,12 @@ export const Canvas = () => {
           {element.type === 'bar-chart' && (
             <ChartRenderer
               properties={element.properties}
-              onResize={(width, height) => updateElement(element.id, { size: { width, height } })}
+              type="bar-chart"
             />
           )}
           {element.type === 'pie-chart' && (
             <PieChartRenderer
               properties={element.properties}
-              onResize={(width, height) => updateElement(element.id, { size: { width, height } })}
             />
           )}
           {element.type === 'waterfall' && (
