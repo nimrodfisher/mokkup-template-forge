@@ -20,30 +20,30 @@ export function WaterfallStyleTemplate({ variant, isSelected, onClick, title }: 
       { category: 'Total', value: 530, isTotal: true }
     ];
 
+    const baseProperties = {
+      waterfallTitle: 'Title goes here',
+      waterfallData: baseData,
+      showTitle: true,
+      showGridLines: true,
+      showLabels: true,
+    };
+
     switch (variant) {
       case 'basic-waterfall':
         return {
-          waterfallVariant: variant,
-          waterfallTitle: 'Title goes here',
-          waterfallData: baseData,
-          showTitle: true,
+          ...baseProperties,
+          waterfallVariant: 'basic-waterfall' as const,
           waterfallPrimaryColor: '#4F46E5',
           waterfallSecondaryColor: '#818CF8',
           waterfallTotalColor: '#10B981',
-          showGridLines: true,
-          showLabels: true,
         };
       case 'with-buttons':
         return {
-          waterfallVariant: variant,
-          waterfallTitle: 'Title goes here',
-          waterfallData: baseData,
-          showTitle: true,
+          ...baseProperties,
+          waterfallVariant: 'with-buttons' as const,
           waterfallPrimaryColor: '#059669',
           waterfallSecondaryColor: '#34D399',
           waterfallTotalColor: '#10B981',
-          showGridLines: true,
-          showLabels: true,
           waterfallButtons: [
             { title: 'Title 1', alignment: 'left' },
             { title: 'Title 2', alignment: 'right' }
@@ -51,15 +51,12 @@ export function WaterfallStyleTemplate({ variant, isSelected, onClick, title }: 
         };
       case 'with-kpis':
         return {
-          waterfallVariant: variant,
-          waterfallTitle: 'Title goes here',
-          waterfallData: baseData,
-          showTitle: true,
+          ...baseProperties,
+          waterfallVariant: 'with-kpis' as const,
           waterfallPrimaryColor: '#7C3AED',
           waterfallSecondaryColor: '#A78BFA',
           waterfallTotalColor: '#10B981',
           showGridLines: false,
-          showLabels: true,
           waterfallKpis: [
             { title: 'Metric 1', value: '1234', change: '12%' },
             { title: 'Metric 2', value: '1234', change: '12%' }
@@ -67,15 +64,11 @@ export function WaterfallStyleTemplate({ variant, isSelected, onClick, title }: 
         };
       default:
         return {
-          waterfallVariant: 'basic-waterfall',
-          waterfallTitle: 'Title goes here',
-          waterfallData: baseData,
-          showTitle: true,
+          ...baseProperties,
+          waterfallVariant: 'basic-waterfall' as const,
           waterfallPrimaryColor: '#4F46E5',
           waterfallSecondaryColor: '#818CF8',
           waterfallTotalColor: '#10B981',
-          showGridLines: true,
-          showLabels: true,
         };
     }
   };
