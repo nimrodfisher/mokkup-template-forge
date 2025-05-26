@@ -1,6 +1,8 @@
-
-import React from 'react';
+import React, { useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Cell, Legend } from 'recharts';
+import { Button } from '@/components/ui/button';
+import { Edit, Trash2 } from 'lucide-react';
+import { WaterfallEditDialog } from '../waterfall-edit/WaterfallEditDialog';
 
 interface WaterfallRendererProps {
   properties?: {
@@ -39,9 +41,14 @@ interface WaterfallRendererProps {
     showKpis?: boolean;
     showText?: boolean;
   };
+  isSelected?: boolean;
+  onUpdate?: (properties: any) => void;
+  onRemove?: () => void;
 }
 
-export function WaterfallRenderer({ properties = {} }: WaterfallRendererProps) {
+export function WaterfallRenderer({ properties = {}, isSelected = false, onUpdate, onRemove }: WaterfallRendererProps) {
+  const [showEditDialog, setShowEditDialog] = useState(false);
+
   const {
     waterfallTitle = 'Waterfall Chart',
     showTitle = true,
@@ -139,8 +146,50 @@ export function WaterfallRenderer({ properties = {} }: WaterfallRendererProps) {
     );
   };
 
+  const handleEdit = () => {
+    setShowEditDialog(true);
+  };
+
+  const handleRemove = () => {
+    if (onRemove && window.confirm('Are you sure you want to remove this chart?')) {
+      onRemove();
+    }
+  };
+
+  const handleUpdate = (newProperties: any) => {
+    if (onUpdate) {
+      onUpdate(newProperties);
+    }
+  };
+
   return (
-    <div className="h-full w-full bg-white border border-gray-200 rounded-lg p-4">
+    <div className="h-full w-full bg-white border border-gray-200 rounded-lg p-4 relative">
+      {/* Edit/Remove Controls - Only show when selected */}
+      {isSelected && (onUpdate || onRemove) && (
+        <div className="absolute top-2 right-2 z-10 flex space-x-1">
+          {onUpdate && (
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={handleEdit}
+              className="h-8 w-8 p-0 bg-white hover:bg-gray-50"
+            >
+              <Edit className="h-4 w-4" />
+            </Button>
+          )}
+          {onRemove && (
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={handleRemove}
+              className="h-8 w-8 p-0 bg-white hover:bg-red-50 text-red-500 hover:text-red-700"
+            >
+              <Trash2 className="h-4 w-4" />
+            </Button>
+          )}
+        </div>
+      )}
+
       {showTitle && (
         <h3 className={`text-lg font-semibold text-gray-800 mb-4 ${getTitleAlignment()}`}>
           {waterfallTitle}
@@ -245,6 +294,15 @@ export function WaterfallRenderer({ properties = {} }: WaterfallRendererProps) {
           ))}
         </div>
       )}
+
+      {/* Edit Dialog */}
+      <WaterfallEditDialog
+        open={showEditDialog}
+        onClose={() => setShowEditDialog(false)}
+        variant={waterfallVariant}
+        properties={properties}
+        onUpdate={handleUpdate}
+      />
     </div>
   );
 }
