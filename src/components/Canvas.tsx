@@ -6,6 +6,7 @@ import { ImageRenderer } from '@/components/element-renderers/ImageRenderer';
 import { ButtonRenderer } from '@/components/element-renderers/ButtonRenderer';
 import { TextboxRenderer } from '@/components/element-renderers/TextboxRenderer';
 import { ChartRenderer } from '@/components/element-renderers/ChartRenderer';
+import { ColumnChartRenderer } from '@/components/element-renderers/ColumnChartRenderer';
 import { PieChartRenderer } from '@/components/element-renderers/PieChartRenderer';
 import { WaterfallRenderer } from './element-renderers/WaterfallRenderer';
 import { ElementRenderer } from './element-renderers/ElementRenderer';
@@ -37,32 +38,43 @@ export const Canvas = () => {
           {element.type === 'header' && (
             <HeaderRenderer
               properties={element.properties}
+              onResize={(width, height) => updateElement(element.id, { size: { width, height } })}
             />
           )}
           {element.type === 'image' && (
             <ImageRenderer
               properties={element.properties}
+              onResize={(width, height) => updateElement(element.id, { size: { width, height } })}
             />
           )}
           {element.type === 'button' && (
             <ButtonRenderer
               properties={element.properties}
+              onResize={(width, height) => updateElement(element.id, { size: { width, height } })}
             />
           )}
           {element.type === 'textbox' && (
             <TextboxRenderer
               properties={element.properties}
+              onResize={(width, height) => updateElement(element.id, { size: { width, height } })}
             />
           )}
           {element.type === 'bar-chart' && (
             <ChartRenderer
               properties={element.properties}
-              type="bar-chart"
+              onResize={(width, height) => updateElement(element.id, { size: { width, height } })}
+            />
+          )}
+          {element.type === 'column-chart' && (
+            <ColumnChartRenderer
+              properties={element.properties}
+              onResize={(width, height) => updateElement(element.id, { size: { width, height } })}
             />
           )}
           {element.type === 'pie-chart' && (
             <PieChartRenderer
               properties={element.properties}
+              onResize={(width, height) => updateElement(element.id, { size: { width, height } })}
             />
           )}
           {element.type === 'waterfall' && (
@@ -74,7 +86,7 @@ export const Canvas = () => {
             />
           )}
           {/* For all other element types, use the generic ElementRenderer */}
-          {!['header', 'image', 'button', 'textbox', 'bar-chart', 'pie-chart', 'waterfall'].includes(element.type) && (
+          {!['header', 'image', 'button', 'textbox', 'bar-chart', 'column-chart', 'pie-chart', 'waterfall'].includes(element.type) && (
             <ElementRenderer element={element} />
           )}
         </div>
