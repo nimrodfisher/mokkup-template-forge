@@ -28,7 +28,8 @@ export type ShapeVariant =
 
 export type ChartVariant =
   'bar' | 'dropdown-bar' | 'kpi-bar' | 'multi-bar' | 'stacked-bar' |
-  'basic-area' | 'kpi-area' | 'multi-area' | 'stacked-area';
+  'basic-area' | 'kpi-area' | 'multi-area' | 'stacked-area' |
+  'default' | 'grouped' | 'stacked' | 'gradient';
 
 export type GaugeVariant =
   'default' | 'speed-gauge';
@@ -110,6 +111,9 @@ export interface Element {
     chartVariant?: ChartVariant;
     chartTitle?: string;
     chartHeight?: number;
+    chartData?: Array<{category: string, value: number}>;
+    chartButtons?: Array<{title: string, alignment: string}>;
+    chartKpis?: Array<{title: string, value: string, change?: string}>;
     barColor?: string;
     secondaryBarColor?: string;
     tertiaryBarColor?: string;

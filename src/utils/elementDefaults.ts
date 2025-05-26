@@ -1,4 +1,3 @@
-
 import { ElementType } from '../types/wireframe';
 
 export function getDefaultSizeForType(type: ElementType): { width: number; height: number } {
@@ -139,7 +138,6 @@ export function getDefaultPropertiesForType(type: ElementType): any {
         borderColor: '#e5e7eb',
       };
     case 'bar-chart':
-    case 'column-chart':
       return {
         backgroundColor: 'transparent',
         chartTitle: 'Title goes here',
@@ -151,6 +149,39 @@ export function getDefaultPropertiesForType(type: ElementType): any {
         showGridLines: true,
         showLabels: true,
         chartHeight: 200,
+        chartData: [
+          { category: 'Jan', value: 65 },
+          { category: 'Feb', value: 78 },
+          { category: 'Mar', value: 52 },
+          { category: 'Apr', value: 84 },
+          { category: 'May', value: 71 },
+          { category: 'Jun', value: 93 }
+        ],
+        chartButtons: [],
+        chartKpis: []
+      };
+    case 'column-chart':
+      return {
+        backgroundColor: 'transparent',
+        chartTitle: 'Title goes here',
+        chartVariant: 'default',
+        barColor: '#4F46E5',
+        secondaryBarColor: '#818CF8',
+        tertiaryBarColor: '#C7D2FE',
+        showLegend: true,
+        showGridLines: true,
+        showLabels: true,
+        chartHeight: 200,
+        chartData: [
+          { category: 'Jan', value: 65 },
+          { category: 'Feb', value: 78 },
+          { category: 'Mar', value: 52 },
+          { category: 'Apr', value: 84 },
+          { category: 'May', value: 71 },
+          { category: 'Jun', value: 93 }
+        ],
+        chartButtons: [],
+        chartKpis: []
       };
     case 'area-chart':
       return {

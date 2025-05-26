@@ -4,6 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Button } from '@/components/ui/button';
 import { useWireframe } from '@/hooks/useWireframe';
 import { ColumnChartTemplates } from './ColumnChartTemplates';
+import { ChartVariant } from '@/types/wireframe';
 
 interface ColumnChartStyleDialogProps {
   elementId: string;
@@ -16,7 +17,14 @@ export function ColumnChartStyleDialog({ elementId, open, onClose }: ColumnChart
   const [selectedTemplate, setSelectedTemplate] = useState<string>('default');
 
   const applyTemplate = () => {
-    const templateConfigs = {
+    const templateConfigs: Record<string, {
+      chartVariant: ChartVariant;
+      barColor: string;
+      secondaryBarColor: string;
+      showLegend: boolean;
+      showGridLines: boolean;
+      tertiaryBarColor?: string;
+    }> = {
       default: {
         chartVariant: 'default',
         barColor: '#3B82F6',
@@ -48,7 +56,7 @@ export function ColumnChartStyleDialog({ elementId, open, onClose }: ColumnChart
       },
     };
 
-    const config = templateConfigs[selectedTemplate as keyof typeof templateConfigs];
+    const config = templateConfigs[selectedTemplate];
     if (config) {
       updateElementProperties(elementId, config);
     }
