@@ -53,6 +53,7 @@ export function PieChartAddOnsSection({ properties, handleChange, addOnsOpen, se
     handleChange('pieChartKpis', newKpis);
   };
 
+  // Don't render if no add-ons are available for current variant
   if (!showButtonsSection && !showKpisSection) {
     return null;
   }

@@ -15,9 +15,48 @@ interface PieChartDetailsSectionProps {
 
 export function PieChartDetailsSection({ properties, handleChange, detailsOpen, setDetailsOpen }: PieChartDetailsSectionProps) {
   const pieChartVariant = properties.pieChartVariant || 'default';
-  const showLegendOption = pieChartVariant === 'with-legend';
-  const showButtonsOption = pieChartVariant === 'with-buttons';
-  const showKpisOption = pieChartVariant === 'with-kpis';
+  
+  const handleVariantChange = (value: string) => {
+    handleChange('pieChartVariant', value);
+    
+    // Apply template-specific defaults when variant changes
+    switch (value) {
+      case 'default':
+        handleChange('showPieLegend', false);
+        handleChange('showPieLabels', true);
+        handleChange('showPercentages', true);
+        handleChange('pieChartButtons', []);
+        handleChange('pieChartKpis', []);
+        break;
+      case 'with-legend':
+        handleChange('showPieLegend', true);
+        handleChange('showPieLabels', false);
+        handleChange('showPercentages', false);
+        handleChange('pieChartButtons', []);
+        handleChange('pieChartKpis', []);
+        break;
+      case 'with-buttons':
+        handleChange('showPieLegend', false);
+        handleChange('showPieLabels', false);
+        handleChange('showPercentages', false);
+        handleChange('pieChartButtons', [
+          { title: 'Title 1', alignment: 'left' },
+          { title: 'Title 2', alignment: 'right' }
+        ]);
+        handleChange('pieChartKpis', []);
+        break;
+      case 'with-kpis':
+        handleChange('showPieLegend', false);
+        handleChange('showPieLabels', false);
+        handleChange('showPercentages', false);
+        handleChange('pieChartButtons', []);
+        handleChange('pieChartKpis', [
+          { title: 'Metric 1', value: '1234', change: '12%' },
+          { title: 'Metric 2', value: '1234', change: '12%' }
+        ]);
+        break;
+    }
+  };
 
   return (
     <>
@@ -47,7 +86,7 @@ export function PieChartDetailsSection({ properties, handleChange, detailsOpen, 
             <Label className="text-sm font-medium">Chart Variant</Label>
             <Select
               value={pieChartVariant}
-              onValueChange={(value) => handleChange('pieChartVariant', value)}
+              onValueChange={handleVariantChange}
             >
               <SelectTrigger className="text-xs">
                 <SelectValue placeholder="Select variant" />
@@ -69,7 +108,7 @@ export function PieChartDetailsSection({ properties, handleChange, detailsOpen, 
             />
           </div>
           
-          {showLegendOption && (
+          {pieChartVariant === 'with-legend' && (
             <div className="flex items-center justify-between">
               <Label className="text-sm font-medium">Show Legend</Label>
               <Switch

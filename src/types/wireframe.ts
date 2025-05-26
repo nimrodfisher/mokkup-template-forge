@@ -33,6 +33,21 @@ export type ChartVariant =
 export type PieChartVariant =
   'default' | 'with-legend' | 'with-buttons' | 'with-kpis';
 
+export type GaugeVariant =
+  'default' | 'digital' | 'speed' | 'round' | 'gradient';
+
+export type HeatmapVariant =
+  'default' | 'with-buttons' | 'with-kpis';
+
+export type QuadrantVariant =
+  'default' | 'with-labels' | 'with-data';
+
+export type ScatterPlotVariant =
+  'default' | 'with-trend' | 'with-correlation';
+
+export type GeomapVariant =
+  'world' | 'usa' | 'europe' | 'asia';
+
 export interface Element {
   id: string;
   type: ElementType;
