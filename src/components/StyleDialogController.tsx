@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Element } from "@/types/wireframe";
 import { FilterStyleDialog } from "./FilterStyleDialog";
@@ -15,6 +14,7 @@ import { HeatmapStyleDialog } from "./heatmap-style/HeatmapStyleDialog";
 import { QuadrantStyleDialog } from "./quadrant-style/QuadrantStyleDialog";
 import { ScatterPlotStyleDialog } from "./scatter-plot-style/ScatterPlotStyleDialog";
 import { GeomapStyleDialog } from "./geomap-style/GeomapStyleDialog";
+import { ColumnChartStyleDialog } from "./column-chart-style/ColumnChartStyleDialog";
 
 interface StyleDialogControllerProps {
   element: Element;
@@ -146,6 +146,15 @@ export function StyleDialogController({ element, dialogType, onClose }: StyleDia
     case 'geomap':
       return (
         <GeomapStyleDialog
+          elementId={element.id}
+          open={true}
+          onClose={onClose}
+        />
+      );
+      
+    case 'column-chart':
+      return (
+        <ColumnChartStyleDialog
           elementId={element.id}
           open={true}
           onClose={onClose}

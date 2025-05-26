@@ -23,6 +23,7 @@ import { HeatmapStyleDialog } from "@/components/heatmap-style/HeatmapStyleDialo
 import { QuadrantStyleDialog } from "@/components/quadrant-style/QuadrantStyleDialog";
 import { ScatterPlotStyleDialog } from "@/components/scatter-plot-style/ScatterPlotStyleDialog";
 import { GeomapStyleDialog } from "@/components/geomap-style/GeomapStyleDialog";
+import { ColumnChartStyleDialog } from "@/components/column-chart-style/ColumnChartStyleDialog";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
 const Editor = () => {

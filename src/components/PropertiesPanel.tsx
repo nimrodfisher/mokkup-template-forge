@@ -1,4 +1,3 @@
-
 import { Element } from "@/types/wireframe";
 import { useWireframe } from "@/hooks/useWireframe";
 import { useState, useRef } from "react";
@@ -13,6 +12,7 @@ import { HeatmapProperties } from "./heatmap-properties/HeatmapProperties";
 import { QuadrantProperties } from "./quadrant-properties/QuadrantProperties";
 import { ScatterPlotProperties } from "./scatter-plot-properties/ScatterPlotProperties";
 import { GeomapProperties } from "./geomap-properties/GeomapProperties";
+import { ColumnChartProperties } from "./column-chart-properties/ColumnChartProperties";
 
 interface PropertiesPanelProps {
   onOpenStyleDialog?: () => void;
@@ -110,6 +110,14 @@ export function PropertiesPanel({ onOpenStyleDialog, updateElementProperties }: 
       case 'geomap':
         return (
           <GeomapProperties
+            element={selectedElement}
+            updateElementProperties={updateElementProperties}
+            onOpenStyleDialog={onOpenStyleDialog}
+          />
+        );
+      case 'column-chart':
+        return (
+          <ColumnChartProperties
             element={selectedElement}
             updateElementProperties={updateElementProperties}
             onOpenStyleDialog={onOpenStyleDialog}

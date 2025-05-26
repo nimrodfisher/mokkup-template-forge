@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Element } from "@/types/wireframe";
 
@@ -8,182 +7,216 @@ interface ChartRendererProps {
 }
 
 export function ChartRenderer({ properties = {}, type }: ChartRendererProps) {
-  const chartVariant = properties.chartVariant || 'bar';
+  const chartVariant = properties.chartVariant || 'default';
   const barColor = properties.barColor || '#4F46E5';
   const secondaryBarColor = properties.secondaryBarColor || '#818CF8';
   const tertiaryBarColor = properties.tertiaryBarColor || '#C7D2FE';
-  const chartTitle = properties.chartTitle || 'Title goes here';
+  const chartTitle = properties.chartTitle || 'Chart Title';
   const showLegend = properties.showLegend !== false;
+  const showTitle = properties.showTitle !== false;
+  const chartData = properties.chartData || [
+    { category: 'Jan', value: 65 },
+    { category: 'Feb', value: 78 },
+    { category: 'Mar', value: 52 },
+    { category: 'Apr', value: 84 },
+    { category: 'May', value: 71 },
+    { category: 'Jun', value: 93 }
+  ];
   
-  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
-  const values = [40, 60, 20, 70, 50, 35];
-  const values2 = [30, 40, 35, 45, 30, 25];
-  const values3 = [25, 30, 40, 30, 35, 40];
+  const chartButtons = properties.chartButtons || [];
+  const chartKpis = properties.chartKpis || [];
   
-  // Helper to render the chart based on variant
+  // Normalize values for display
+  const maxValue = Math.max(...chartData.map((item: any) => item.value));
+  const normalizedData = chartData.map((item: any) => ({
+    ...item,
+    normalizedValue: (item.value / maxValue) * 100
+  }));
+  
+  // Render chart based on type and variant
   const renderChart = () => {
-    switch (chartVariant) {
-      case 'dropdown-bar':
-        return (
-          <div className="flex flex-col">
-            <div className="flex items-center justify-end mb-2">
-              <div className="text-xs border px-2 py-1 rounded flex items-center text-gray-700">
-                Title 1
-                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="ml-1"><path d="m6 9 6 6 6-6"/></svg>
-              </div>
+    if (type === 'column-chart') {
+      switch (chartVariant) {
+        case 'grouped':
+          return (
+            <div className="h-32 flex items-end justify-center space-x-3">
+              {normalizedData.map((item: any, index: number) => (
+                <div key={index} className="flex flex-col items-center">
+                  <div className="flex space-x-1 items-end">
+                    <div 
+                      className="w-6 rounded-sm transition-all" 
+                      style={{ 
+                        height: `${item.normalizedValue * 0.8}px`,
+                        backgroundColor: barColor,
+                        minHeight: '8px'
+                      }}
+                    ></div>
+                    <div 
+                      className="w-6 rounded-sm transition-all" 
+                      style={{ 
+                        height: `${(item.normalizedValue * 0.6)}px`,
+                        backgroundColor: secondaryBarColor,
+                        minHeight: '6px'
+                      }}
+                    ></div>
+                  </div>
+                  <div className="text-xs mt-1 text-gray-600">{item.category}</div>
+                </div>
+              ))}
             </div>
-            {months.map((month, index) => (
-              <div key={month} className="flex items-center space-x-2 mb-1">
-                <div className="text-xs text-gray-500 w-12">{month} 22</div>
-                <div 
-                  className="bg-indigo-600 h-4 rounded transition-all" 
-                  style={{ 
-                    width: `${values[index]}%`,
-                    backgroundColor: barColor
-                  }}
-                ></div>
-              </div>
-            ))}
-          </div>
-        );
-      
-      case 'kpi-bar':
-        return (
-          <div className="flex flex-col">
-            <div className="flex items-center mb-2">
-              <div className="flex items-center text-xs text-blue-700 mr-3">
-                <span className="mr-1" style={{ color: barColor }}>●</span> Metric 1
-              </div>
-              <div className="text-xs text-gray-700">1234 | 12% <span className="text-green-600">▲</span></div>
+          );
+        
+        case 'stacked':
+          return (
+            <div className="h-32 flex items-end justify-center space-x-2">
+              {normalizedData.map((item: any, index: number) => (
+                <div key={index} className="flex flex-col items-center">
+                  <div className="w-8 flex flex-col">
+                    <div 
+                      className="w-8 rounded-t-sm transition-all" 
+                      style={{ 
+                        height: `${item.normalizedValue * 0.3}px`,
+                        backgroundColor: tertiaryBarColor,
+                        minHeight: '4px'
+                      }}
+                    ></div>
+                    <div 
+                      className="w-8 transition-all" 
+                      style={{ 
+                        height: `${item.normalizedValue * 0.3}px`,
+                        backgroundColor: secondaryBarColor,
+                        minHeight: '4px'
+                      }}
+                    ></div>
+                    <div 
+                      className="w-8 rounded-b-sm transition-all" 
+                      style={{ 
+                        height: `${item.normalizedValue * 0.4}px`,
+                        backgroundColor: barColor,
+                        minHeight: '6px'
+                      }}
+                    ></div>
+                  </div>
+                  <div className="text-xs mt-1 text-gray-600">{item.category}</div>
+                </div>
+              ))}
             </div>
-            {months.map((month, index) => (
-              <div key={month} className="flex items-center space-x-2 mb-1">
-                <div className="text-xs text-gray-500 w-12">{month} 22</div>
-                <div 
-                  className="bg-indigo-600 h-4 rounded transition-all" 
-                  style={{ 
-                    width: `${values[index]}%`,
-                    backgroundColor: barColor
-                  }}
-                ></div>
-              </div>
-            ))}
-          </div>
-        );
-      
-      case 'multi-bar':
-        return (
-          <div className="flex flex-col">
-            {showLegend && (
-              <div className="flex items-center mb-2">
-                <div className="flex items-center text-xs mr-3">
-                  <span className="mr-1" style={{ color: barColor }}>●</span> Dataset 1
-                </div>
-                <div className="flex items-center text-xs mr-3">
-                  <span className="mr-1" style={{ color: secondaryBarColor }}>●</span> Dataset 2
-                </div>
-              </div>
-            )}
-            {months.map((month, index) => (
-              <div key={month} className="flex items-center space-x-2 mb-1">
-                <div className="text-xs text-gray-500 w-12">{month} 22</div>
-                <div className="flex">
+          );
+        
+        case 'gradient':
+          return (
+            <div className="h-32 flex items-end justify-center space-x-2">
+              {normalizedData.map((item: any, index: number) => (
+                <div key={index} className="flex flex-col items-center">
                   <div 
-                    className="h-4 transition-all" 
+                    className="w-8 rounded-sm transition-all bg-gradient-to-t" 
                     style={{ 
-                      width: `${values[index]}%`,
+                      height: `${item.normalizedValue}px`,
+                      background: `linear-gradient(to top, ${barColor}, ${secondaryBarColor})`,
+                      minHeight: '8px'
+                    }}
+                  ></div>
+                  <div className="text-xs mt-1 text-gray-600">{item.category}</div>
+                </div>
+              ))}
+            </div>
+          );
+        
+        default: // Standard column chart
+          return (
+            <div className="h-32 flex items-end justify-center space-x-2">
+              {normalizedData.map((item: any, index: number) => (
+                <div key={index} className="flex flex-col items-center">
+                  <div 
+                    className="w-8 rounded-sm transition-all" 
+                    style={{ 
+                      height: `${item.normalizedValue}px`,
                       backgroundColor: barColor,
-                      borderTopLeftRadius: '0.25rem',
-                      borderBottomLeftRadius: '0.25rem'
+                      minHeight: '8px'
                     }}
                   ></div>
-                  <div 
-                    className="h-4 transition-all" 
-                    style={{ 
-                      width: `${values2[index]}%`,
-                      backgroundColor: secondaryBarColor,
-                      borderTopRightRadius: '0.25rem',
-                      borderBottomRightRadius: '0.25rem'
-                    }}
-                  ></div>
+                  <div className="text-xs mt-1 text-gray-600">{item.category}</div>
                 </div>
-              </div>
-            ))}
-          </div>
-        );
-      
-      case 'stacked-bar':
-        return (
-          <div className="flex flex-col">
-            {showLegend && (
-              <div className="flex items-center mb-2">
-                <div className="flex items-center text-xs mr-3">
-                  <span className="mr-1" style={{ color: barColor }}>●</span> Dataset 1
-                </div>
-                <div className="flex items-center text-xs mr-3">
-                  <span className="mr-1" style={{ color: secondaryBarColor }}>●</span> Dataset 2
-                </div>
-                <div className="flex items-center text-xs mr-3">
-                  <span className="mr-1" style={{ color: tertiaryBarColor }}>●</span> Dataset 3
-                </div>
-              </div>
-            )}
-            {months.map((month, index) => (
-              <div key={month} className="flex items-center space-x-2 mb-1">
-                <div className="text-xs text-gray-500 w-12">{month} 22</div>
-                <div className="flex">
-                  <div 
-                    className="h-4 transition-all" 
-                    style={{ 
-                      width: `${values[index]/3}%`,
-                      backgroundColor: barColor,
-                    }}
-                  ></div>
-                  <div 
-                    className="h-4 transition-all" 
-                    style={{ 
-                      width: `${values2[index]/3}%`,
-                      backgroundColor: secondaryBarColor,
-                    }}
-                  ></div>
-                  <div 
-                    className="h-4 transition-all" 
-                    style={{ 
-                      width: `${values3[index]/3}%`,
-                      backgroundColor: tertiaryBarColor,
-                      borderTopRightRadius: '0.25rem',
-                      borderBottomRightRadius: '0.25rem'
-                    }}
-                  ></div>
-                </div>
-              </div>
-            ))}
-          </div>
-        );
-      
-      default: // regular bar
-        return (
-          <div className="flex flex-col">
-            {months.map((month, index) => (
-              <div key={month} className="flex items-center space-x-2 mb-1">
-                <div className="text-xs text-gray-500 w-12">{month} 22</div>
-                <div 
-                  className="bg-indigo-600 h-4 rounded transition-all" 
-                  style={{ 
-                    width: `${values[index]}%`,
-                    backgroundColor: barColor
-                  }}
-                ></div>
-              </div>
-            ))}
-          </div>
-        );
+              ))}
+            </div>
+          );
+      }
     }
+    
+    // Bar chart rendering (existing logic)
+    return (
+      <div className="flex flex-col">
+        {normalizedData.map((item: any, index: number) => (
+          <div key={index} className="flex items-center space-x-2 mb-1">
+            <div className="text-xs text-gray-500 w-12">{item.category}</div>
+            <div 
+              className="bg-indigo-600 h-4 rounded transition-all" 
+              style={{ 
+                width: `${item.normalizedValue}%`,
+                backgroundColor: barColor
+              }}
+            ></div>
+          </div>
+        ))}
+      </div>
+    );
   };
   
   return (
     <div className="w-full h-full p-3 overflow-auto">
-      <div className="text-sm font-medium mb-2">{chartTitle}</div>
+      {/* Add-ons at the top */}
+      {(properties.showButtons !== false && chartButtons.length > 0) && (
+        <div className="flex justify-between items-center mb-2">
+          <div className="flex space-x-2">
+            {chartButtons.map((button: any, index: number) => (
+              <button
+                key={index}
+                className="text-xs px-2 py-1 bg-gray-100 rounded border hover:bg-gray-200"
+              >
+                {button.title}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+      
+      {/* KPIs */}
+      {(properties.showKpis !== false && chartKpis.length > 0) && (
+        <div className="flex flex-wrap gap-4 mb-3">
+          {chartKpis.map((kpi: any, index: number) => (
+            <div key={index} className="text-xs">
+              <div className="text-gray-500">{kpi.title}</div>
+              <div className="font-semibold">
+                {kpi.value} 
+                {kpi.change && (
+                  <span className="text-green-600 ml-1">{kpi.change}</span>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+      
+      {showTitle && <div className="text-sm font-medium mb-2">{chartTitle}</div>}
+      
+      {showLegend && chartVariant !== 'default' && (
+        <div className="flex items-center mb-2 text-xs">
+          <div className="flex items-center mr-3">
+            <span className="mr-1" style={{ color: barColor }}>●</span> Series 1
+          </div>
+          {chartVariant === 'grouped' || chartVariant === 'stacked' ? (
+            <div className="flex items-center mr-3">
+              <span className="mr-1" style={{ color: secondaryBarColor }}>●</span> Series 2
+            </div>
+          ) : null}
+          {chartVariant === 'stacked' && (
+            <div className="flex items-center mr-3">
+              <span className="mr-1" style={{ color: tertiaryBarColor }}>●</span> Series 3
+            </div>
+          )}
+        </div>
+      )}
+      
       {renderChart()}
     </div>
   );
