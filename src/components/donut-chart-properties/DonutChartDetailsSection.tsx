@@ -26,7 +26,7 @@ export function DonutChartDetailsSection({
         onClick={() => setDetailsOpen(!detailsOpen)}
       >
         <span className="font-medium">Details</span>
-        <ChevronDown isOpen={detailsOpen} />
+        <ChevronDown open={detailsOpen} />
       </div>
       
       {detailsOpen && (

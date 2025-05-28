@@ -25,7 +25,7 @@ export function DonutChartAppearanceSection({
         onClick={() => setPropertiesOpen(!propertiesOpen)}
       >
         <span className="font-medium">Properties</span>
-        <ChevronDown isOpen={propertiesOpen} />
+        <ChevronDown open={propertiesOpen} />
       </div>
       
       {propertiesOpen && (

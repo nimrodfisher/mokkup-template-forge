@@ -63,7 +63,7 @@ export function DonutChartAddOnsSection({
         onClick={() => setAddOnsOpen(!addOnsOpen)}
       >
         <span className="font-medium">Add Ons</span>
-        <ChevronDown isOpen={addOnsOpen} />
+        <ChevronDown open={addOnsOpen} />
       </div>
       
       {addOnsOpen && (

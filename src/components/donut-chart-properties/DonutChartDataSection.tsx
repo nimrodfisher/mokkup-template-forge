@@ -50,7 +50,7 @@ export function DonutChartDataSection({
         onClick={() => setDataOpen(!dataOpen)}
       >
         <span className="font-medium">Data</span>
-        <ChevronDown isOpen={dataOpen} />
+        <ChevronDown open={dataOpen} />
       </div>
       
       {dataOpen && (
