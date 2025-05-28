@@ -17,6 +17,7 @@ import { GeomapStyleDialog } from "./geomap-style/GeomapStyleDialog";
 import { ColumnChartStyleDialog } from "./column-chart-style/ColumnChartStyleDialog";
 import { PieChartStyleDialog } from "./pie-chart-style/PieChartStyleDialog";
 import { WaterfallStyleDialog } from "./waterfall-style/WaterfallStyleDialog";
+import { DonutChartStyleDialog } from "./donut-chart-style/DonutChartStyleDialog";
 
 interface StyleDialogControllerProps {
   element: Element;
@@ -175,6 +176,15 @@ export function StyleDialogController({ element, dialogType, onClose }: StyleDia
     case 'waterfall':
       return (
         <WaterfallStyleDialog
+          elementId={element.id}
+          open={true}
+          onClose={onClose}
+        />
+      );
+      
+    case 'donut-chart':
+      return (
+        <DonutChartStyleDialog
           elementId={element.id}
           open={true}
           onClose={onClose}

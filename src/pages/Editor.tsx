@@ -25,6 +25,7 @@ import { GeomapStyleDialog } from "@/components/geomap-style/GeomapStyleDialog";
 import { ColumnChartStyleDialog } from "@/components/column-chart-style/ColumnChartStyleDialog";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { WaterfallStyleDialog } from "@/components/waterfall-style/WaterfallStyleDialog";
+import { DonutChartStyleDialog } from "@/components/donut-chart-style/DonutChartStyleDialog";
 
 const Editor = () => {
   const params = useParams();
@@ -53,6 +54,7 @@ const Editor = () => {
   const [showGeomapStyleDialog, setShowGeomapStyleDialog] = useState(false);
   const [showWaterfallStyleDialog, setShowWaterfallStyleDialog] = useState(false);
   const [showSaveDialog, setShowSaveDialog] = useState(false);
+  const [showDonutChartStyleDialog, setShowDonutChartStyleDialog] = useState(false);
   
   useEffect(() => {
     // Fetch all templates when the component mounts
@@ -106,6 +108,8 @@ const Editor = () => {
       setShowGeomapStyleDialog(true);
     } else if (selectedElement?.type === 'waterfall') {
       setShowWaterfallStyleDialog(true);
+    } else if (selectedElement?.type === 'donut-chart') {
+      setShowDonutChartStyleDialog(true);
     }
   };
 
@@ -249,6 +253,15 @@ const Editor = () => {
               elementId={selectedElementId} 
               open={showWaterfallStyleDialog}
               onClose={() => setShowWaterfallStyleDialog(false)}
+            />
+          )}
+
+          {/* Donut Chart Style Dialog */}
+          {selectedElementId && selectedElement?.type === 'donut-chart' && (
+            <DonutChartStyleDialog 
+              elementId={selectedElementId} 
+              open={showDonutChartStyleDialog}
+              onClose={() => setShowDonutChartStyleDialog(false)}
             />
           )}
 

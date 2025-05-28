@@ -263,6 +263,29 @@ export function getDefaultPropertiesForType(type: ElementType): any {
         heatmapButtons: [],
         heatmapKpis: []
       };
+    case 'donut-chart':
+      return {
+        backgroundColor: 'transparent',
+        donutChartTitle: 'Title goes here',
+        donutChartVariant: 'default',
+        showTitle: true,
+        showDonutLegend: false,
+        showDonutLabels: true,
+        showDonutPercentages: true,
+        donutInnerRadius: 40,
+        donutOuterRadius: 80,
+        chartHeight: 300,
+        donutChartData: [
+          { name: 'Text A', value: 30, color: '#4F46E5' },
+          { name: 'Text B', value: 25, color: '#7C3AED' },
+          { name: 'Text C', value: 20, color: '#06B6D4' },
+          { name: 'Text D', value: 20, color: '#8B5CF6' },
+          { name: 'Text E', value: 5, color: '#EC4899' }
+        ],
+        donutChartButtons: [],
+        donutChartKpis: [],
+        donutColors: ['#4F46E5', '#7C3AED', '#06B6D4', '#8B5CF6', '#EC4899']
+      };
     case 'geomap':
       return {
         backgroundColor: 'transparent',

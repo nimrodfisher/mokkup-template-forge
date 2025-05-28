@@ -51,6 +51,9 @@ export type GeomapVariant =
 export type WaterfallVariant =
   'basic-waterfall' | 'with-buttons' | 'with-kpis';
 
+export type DonutChartVariant =
+  'default' | 'with-legend' | 'with-buttons' | 'with-kpis';
+
 export interface Element {
   id: string;
   type: ElementType;
@@ -143,6 +146,18 @@ export interface Element {
     pieInnerRadius?: number;
     pieOuterRadius?: number;
     showPercentages?: boolean;
+    // Donut Chart properties
+    donutChartVariant?: DonutChartVariant;
+    donutChartTitle?: string;
+    donutChartData?: Array<{name: string, value: number, color?: string}>;
+    donutChartButtons?: Array<{title: string, alignment: string}>;
+    donutChartKpis?: Array<{title: string, value: string, change?: string}>;
+    donutColors?: string[];
+    showDonutLabels?: boolean;
+    showDonutLegend?: boolean;
+    donutInnerRadius?: number;
+    donutOuterRadius?: number;
+    showDonutPercentages?: boolean;
     // Table properties
     tableTitle?: string;
     tableHeaders?: string[];
