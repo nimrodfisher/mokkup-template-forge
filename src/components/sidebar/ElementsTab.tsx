@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { ElementType } from "@/hooks/useWireframe";
 import { SidebarCategoryFilter } from "./SidebarCategoryFilter";
@@ -23,7 +24,6 @@ export function ElementsTab() {
     { type: 'area-chart', label: 'Area Chart', category: 'charts' },
     { type: 'combo-chart', label: 'Combo Chart', category: 'charts' },
     { type: 'pie-chart', label: 'Pie Chart', category: 'charts' },
-    { type: 'donut-chart', label: 'Donut Chart', category: 'charts' },
     { type: 'funnel-chart', label: 'Funnel Chart', category: 'charts' },
     { type: 'histogram', label: 'Histogram', category: 'charts' },
     { type: 'gauge', label: 'Gauge', category: 'charts' },

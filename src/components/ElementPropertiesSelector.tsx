@@ -1,3 +1,4 @@
+
 import { useWireframe } from "@/hooks/useWireframe";
 import { Element } from "@/types/wireframe";
 import { HeaderProperties } from "./header-properties/HeaderProperties";
@@ -6,7 +7,6 @@ import { TableProperties } from "./table-properties/TableProperties";
 import { ColumnChartProperties } from "./column-chart-properties/ColumnChartProperties";
 import { PieChartProperties } from "./pie-chart-properties/PieChartProperties";
 import { WaterfallProperties } from "./waterfall-properties/WaterfallProperties";
-import { DonutChartProperties } from "./donut-chart-properties/DonutChartProperties";
 
 interface ElementPropertiesSelectorProps {
   updateElementProperties: (id: string, properties: Partial<Element['properties']>) => void;
@@ -68,14 +68,6 @@ export function ElementPropertiesSelector({ updateElementProperties, onOpenStyle
     case 'waterfall':
       return (
         <WaterfallProperties
-          element={selectedElement}
-          updateElementProperties={updateElementProperties}
-          onOpenStyleDialog={onOpenStyleDialog}
-        />
-      );
-    case 'donut-chart':
-      return (
-        <DonutChartProperties
           element={selectedElement}
           updateElementProperties={updateElementProperties}
           onOpenStyleDialog={onOpenStyleDialog}

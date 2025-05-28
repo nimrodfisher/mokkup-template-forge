@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Element } from "@/types/wireframe";
 import { HeaderRenderer } from "./HeaderRenderer";
@@ -18,7 +19,6 @@ import { ScatterPlotRenderer } from "./ScatterPlotRenderer";
 import { GeomapRenderer } from "./GeomapRenderer";
 import { PieChartRenderer } from "./PieChartRenderer";
 import { WaterfallRenderer } from "./WaterfallRenderer";
-import { DonutChartRenderer } from "./DonutChartRenderer";
 
 interface ElementRendererProps {
   element: Element;
@@ -62,8 +62,6 @@ export function ElementRenderer({ element, isEditable = false }: ElementRenderer
       return <GeomapRenderer properties={element.properties} />;
     case 'waterfall':
       return <WaterfallRenderer properties={element.properties} />;
-    case 'donut-chart':
-      return <DonutChartRenderer properties={element.properties} />;
     default:
       return <DefaultRenderer type={element.type} />;
   }

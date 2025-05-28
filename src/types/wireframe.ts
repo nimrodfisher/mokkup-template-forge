@@ -1,6 +1,6 @@
 export type ElementType = 
   'header' | 'button' | 'filter' | 'kpi' | 'column-chart' | 'bar-chart' | 'line-chart' | 
-  'area-chart' | 'combo-chart' | 'pie-chart' | 'donut-chart' | 'gauge-chart' |
+  'area-chart' | 'combo-chart' | 'pie-chart' | 'gauge-chart' |
   'simple-table' | 'hierarchy-table' | 'geomap' | 'treemap' | 'heatmap' |
   'funnel-chart' | 'image' | 'textbox' | 'histogram' | 'gauge' | 'scatter-plot' |
   'bubble-chart' | 'waterfall' | 'shapes' | 'sankey' | 'quadrant-chart' | 'delete';
