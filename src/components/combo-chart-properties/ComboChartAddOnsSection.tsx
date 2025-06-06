@@ -1,10 +1,12 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Element } from '@/types/wireframe';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, Edit } from 'lucide-react';
 
 interface ComboChartAddOnsSectionProps {
   element: Element;
@@ -13,6 +15,39 @@ interface ComboChartAddOnsSectionProps {
 
 export function ComboChartAddOnsSection({ element, updateElementProperties }: ComboChartAddOnsSectionProps) {
   const [isOpen, setIsOpen] = React.useState(false);
+  const [editingKpi, setEditingKpi] = useState<number | null>(null);
+  const [tempValue, setTempValue] = useState('');
+
+  const chartKpis = element.properties?.chartKpis || [
+    { title: 'Total Sales', value: '$245K', change: '+12%' },
+    { title: 'Growth Rate', value: '8.5%', change: '+2.1%' }
+  ];
+
+  const handleKpiEdit = (index: number, currentValue: string) => {
+    setEditingKpi(index);
+    setTempValue(currentValue);
+  };
+
+  const handleKpiSave = (index: number) => {
+    const updatedKpis = [...chartKpis];
+    updatedKpis[index] = { ...updatedKpis[index], value: tempValue };
+    updateElementProperties(element.id, { chartKpis: updatedKpis });
+    setEditingKpi(null);
+    setTempValue('');
+  };
+
+  const handleKpiCancel = () => {
+    setEditingKpi(null);
+    setTempValue('');
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent, index: number) => {
+    if (e.key === 'Enter') {
+      handleKpiSave(index);
+    } else if (e.key === 'Escape') {
+      handleKpiCancel();
+    }
+  };
 
   return (
     <Collapsible open={isOpen} onOpenChange={setIsOpen}>
@@ -38,6 +73,64 @@ export function ComboChartAddOnsSection({ element, updateElementProperties }: Co
             onCheckedChange={(checked) => updateElementProperties(element.id, { showKpis: checked })}
           />
         </div>
+
+        {element.properties?.showKpis && (
+          <div className="space-y-3 mt-4">
+            <Label className="text-sm font-medium">Edit KPI Values</Label>
+            {chartKpis.map((kpi, index) => (
+              <div key={index} className="p-3 border rounded-lg bg-white">
+                <div className="text-sm text-gray-600 mb-2">{kpi.title}</div>
+                <div className="flex items-center gap-2">
+                  {editingKpi === index ? (
+                    <div className="flex items-center gap-2">
+                      <Input
+                        value={tempValue}
+                        onChange={(e) => setTempValue(e.target.value)}
+                        onKeyDown={(e) => handleKeyPress(e, index)}
+                        className="h-8 w-24"
+                        autoFocus
+                      />
+                      <Button 
+                        size="sm" 
+                        onClick={() => handleKpiSave(index)}
+                        className="h-8"
+                      >
+                        Save
+                      </Button>
+                      <Button 
+                        size="sm" 
+                        variant="outline" 
+                        onClick={handleKpiCancel}
+                        className="h-8"
+                      >
+                        Cancel
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-medium">{kpi.value}</span>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => handleKpiEdit(index, kpi.value)}
+                        className="h-6 w-6 p-0"
+                      >
+                        <Edit className="h-3 w-3" />
+                      </Button>
+                    </div>
+                  )}
+                  {kpi.change && (
+                    <span className={`text-xs px-2 py-1 rounded ${
+                      kpi.change.startsWith('+') ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                    }`}>
+                      {kpi.change}
+                    </span>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </CollapsibleContent>
     </Collapsible>
   );
