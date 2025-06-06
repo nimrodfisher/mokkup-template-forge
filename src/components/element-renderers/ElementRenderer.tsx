@@ -1,6 +1,6 @@
-
 import React from 'react';
 import { Element } from "@/types/wireframe";
+import { useWireframe } from "@/hooks/useWireframe";
 import { HeaderRenderer } from "./HeaderRenderer";
 import { ButtonRenderer } from "./ButtonRenderer";
 import { TextboxRenderer } from "./TextboxRenderer";
@@ -27,6 +27,12 @@ interface ElementRendererProps {
 }
 
 export function ElementRenderer({ element, isEditable = false }: ElementRendererProps) {
+  const { updateElementProperties } = useWireframe();
+
+  const handleUpdateProperties = (properties: Partial<Element['properties']>) => {
+    updateElementProperties(element.id, properties);
+  };
+
   switch (element.type) {
     case 'header':
       return <HeaderRenderer properties={element.properties} />;
@@ -48,7 +54,7 @@ export function ElementRenderer({ element, isEditable = false }: ElementRenderer
     case 'column-chart':
       return <ChartRenderer properties={element.properties} type={element.type} />;
     case 'combo-chart':
-      return <ComboChartRenderer properties={element.properties} />;
+      return <ComboChartRenderer properties={element.properties} onUpdateProperties={handleUpdateProperties} />;
     case 'pie-chart':
       return <PieChartRenderer properties={element.properties} />;
     case 'simple-table':

@@ -1,14 +1,19 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { ComposedChart, Bar, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Element } from '@/types/wireframe';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 
 interface ComboChartRendererProps {
   properties: Element['properties'];
+  onUpdateProperties?: (properties: Partial<Element['properties']>) => void;
 }
 
-export function ComboChartRenderer({ properties }: ComboChartRendererProps) {
+export function ComboChartRenderer({ properties, onUpdateProperties }: ComboChartRendererProps) {
+  const [editingKpi, setEditingKpi] = useState<number | null>(null);
+  const [tempValue, setTempValue] = useState('');
+
   const {
     chartTitle = 'Combo Chart',
     chartData = [
@@ -56,6 +61,34 @@ export function ComboChartRenderer({ properties }: ComboChartRendererProps) {
     }
   };
 
+  const handleKpiClick = (index: number, currentValue: string) => {
+    setEditingKpi(index);
+    setTempValue(currentValue);
+  };
+
+  const handleKpiSave = (index: number) => {
+    if (onUpdateProperties && chartKpis) {
+      const updatedKpis = [...chartKpis];
+      updatedKpis[index] = { ...updatedKpis[index], value: tempValue };
+      onUpdateProperties({ chartKpis: updatedKpis });
+    }
+    setEditingKpi(null);
+    setTempValue('');
+  };
+
+  const handleKpiCancel = () => {
+    setEditingKpi(null);
+    setTempValue('');
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent, index: number) => {
+    if (e.key === 'Enter') {
+      handleKpiSave(index);
+    } else if (e.key === 'Escape') {
+      handleKpiCancel();
+    }
+  };
+
   return (
     <div className="w-full h-full bg-white border rounded-lg p-4">
       <div className="flex items-center justify-between mb-4">
@@ -90,7 +123,24 @@ export function ComboChartRenderer({ properties }: ComboChartRendererProps) {
             <div key={index} className="bg-gray-50 p-3 rounded-lg">
               <div className="text-sm text-gray-600">{kpi.title}</div>
               <div className="flex items-center gap-2">
-                <span className="text-lg font-semibold">{kpi.value}</span>
+                {editingKpi === index ? (
+                  <Input
+                    value={tempValue}
+                    onChange={(e) => setTempValue(e.target.value)}
+                    onBlur={() => handleKpiSave(index)}
+                    onKeyDown={(e) => handleKeyPress(e, index)}
+                    className="text-lg font-semibold h-8 w-20"
+                    autoFocus
+                  />
+                ) : (
+                  <span 
+                    className="text-lg font-semibold cursor-pointer hover:bg-gray-100 px-1 rounded"
+                    onClick={() => handleKpiClick(index, kpi.value)}
+                    title="Click to edit"
+                  >
+                    {kpi.value}
+                  </span>
+                )}
                 {kpi.change && (
                   <span className={`text-xs px-2 py-1 rounded ${
                     kpi.change.startsWith('+') ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
