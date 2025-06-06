@@ -2,6 +2,7 @@
 import React from 'react';
 import { ComposedChart, Bar, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Element } from '@/types/wireframe';
+import { Button } from '@/components/ui/button';
 
 interface ComboChartRendererProps {
   properties: Element['properties'];
@@ -24,13 +25,83 @@ export function ComboChartRenderer({ properties }: ComboChartRendererProps) {
     showGridLines = true,
     showLabels = true,
     chartHeight = 300,
-    chartVariant = 'default'
+    chartVariant = 'default',
+    showButtons = false,
+    chartButtons = [
+      { title: 'Export', alignment: 'left' },
+      { title: 'Filter', alignment: 'right' }
+    ],
+    showKpis = false,
+    chartKpis = [
+      { title: 'Total Sales', value: '$245K', change: '+12%' },
+      { title: 'Growth Rate', value: '8.5%', change: '+2.1%' }
+    ]
   } = properties || {};
+
+  const handleButtonClick = (buttonTitle: string) => {
+    console.log(`${buttonTitle} button clicked`);
+    // Add specific functionality based on button title
+    switch (buttonTitle.toLowerCase()) {
+      case 'export':
+        console.log('Exporting chart data...');
+        break;
+      case 'filter':
+        console.log('Opening filter options...');
+        break;
+      case 'refresh':
+        console.log('Refreshing chart data...');
+        break;
+      default:
+        console.log(`${buttonTitle} action triggered`);
+    }
+  };
 
   return (
     <div className="w-full h-full bg-white border rounded-lg p-4">
-      {chartTitle && (
-        <h3 className="text-lg font-semibold mb-4 text-gray-800">{chartTitle}</h3>
+      <div className="flex items-center justify-between mb-4">
+        <div>
+          {chartTitle && (
+            <h3 className="text-lg font-semibold text-gray-800">{chartTitle}</h3>
+          )}
+        </div>
+        
+        {/* Action Buttons */}
+        {showButtons && chartButtons && chartButtons.length > 0 && (
+          <div className="flex items-center gap-2">
+            {chartButtons.map((button, index) => (
+              <Button
+                key={index}
+                variant="outline"
+                size="sm"
+                onClick={() => handleButtonClick(button.title)}
+                className="text-xs"
+              >
+                {button.title}
+              </Button>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* KPIs Section */}
+      {showKpis && chartKpis && chartKpis.length > 0 && (
+        <div className="grid grid-cols-2 gap-4 mb-4">
+          {chartKpis.map((kpi, index) => (
+            <div key={index} className="bg-gray-50 p-3 rounded-lg">
+              <div className="text-sm text-gray-600">{kpi.title}</div>
+              <div className="flex items-center gap-2">
+                <span className="text-lg font-semibold">{kpi.value}</span>
+                {kpi.change && (
+                  <span className={`text-xs px-2 py-1 rounded ${
+                    kpi.change.startsWith('+') ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                  }`}>
+                    {kpi.change}
+                  </span>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
       )}
       
       <div style={{ height: chartHeight }}>
