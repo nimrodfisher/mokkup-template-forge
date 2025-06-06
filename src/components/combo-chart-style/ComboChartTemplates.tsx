@@ -53,28 +53,6 @@ export function ComboChartTemplates({ elementId, onClose }: ComboChartTemplatesP
           { category: 'Jun 22', value: 45, line: 25 }
         ]
       }
-    },
-    {
-      id: 'multi-combo',
-      name: 'Multi Combo',
-      preview: 'Multi-series combo chart',
-      properties: {
-        chartVariant: 'multi-combo',
-        chartTitle: 'Title goes here',
-        showLegend: true,
-        showGridLines: true,
-        showLabels: true,
-        barColor: '#3b82f6',
-        lineColor: '#10b981',
-        chartData: [
-          { category: 'Jan 22', value: 50, line: 45 },
-          { category: 'Feb 22', value: 30, line: 25 },
-          { category: 'Mar 22', value: 40, line: 55 },
-          { category: 'Apr 22', value: 30, line: 25 },
-          { category: 'May 22', value: 55, line: 35 },
-          { category: 'Jun 22', value: 60, line: 45 }
-        ]
-      }
     }
   ];
 
