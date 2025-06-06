@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Element } from "@/types/wireframe";
 import { FilterStyleDialog } from "./FilterStyleDialog";
@@ -17,6 +18,7 @@ import { GeomapStyleDialog } from "./geomap-style/GeomapStyleDialog";
 import { ColumnChartStyleDialog } from "./column-chart-style/ColumnChartStyleDialog";
 import { PieChartStyleDialog } from "./pie-chart-style/PieChartStyleDialog";
 import { WaterfallStyleDialog } from "./waterfall-style/WaterfallStyleDialog";
+import { ComboChartStyleDialog } from "./combo-chart-style/ComboChartStyleDialog";
 
 interface StyleDialogControllerProps {
   element: Element;
@@ -157,6 +159,15 @@ export function StyleDialogController({ element, dialogType, onClose }: StyleDia
     case 'column-chart':
       return (
         <ColumnChartStyleDialog
+          elementId={element.id}
+          open={true}
+          onClose={onClose}
+        />
+      );
+      
+    case 'combo-chart':
+      return (
+        <ComboChartStyleDialog
           elementId={element.id}
           open={true}
           onClose={onClose}

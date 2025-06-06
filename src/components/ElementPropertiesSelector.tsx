@@ -7,6 +7,7 @@ import { TableProperties } from "./table-properties/TableProperties";
 import { ColumnChartProperties } from "./column-chart-properties/ColumnChartProperties";
 import { PieChartProperties } from "./pie-chart-properties/PieChartProperties";
 import { WaterfallProperties } from "./waterfall-properties/WaterfallProperties";
+import { ComboChartProperties } from "./combo-chart-properties/ComboChartProperties";
 
 interface ElementPropertiesSelectorProps {
   updateElementProperties: (id: string, properties: Partial<Element['properties']>) => void;
@@ -44,6 +45,14 @@ export function ElementPropertiesSelector({ updateElementProperties, onOpenStyle
     case 'column-chart':
       return (
         <ColumnChartProperties
+          element={selectedElement}
+          updateElementProperties={updateElementProperties}
+          onOpenStyleDialog={onOpenStyleDialog}
+        />
+      );
+    case 'combo-chart':
+      return (
+        <ComboChartProperties
           element={selectedElement}
           updateElementProperties={updateElementProperties}
           onOpenStyleDialog={onOpenStyleDialog}

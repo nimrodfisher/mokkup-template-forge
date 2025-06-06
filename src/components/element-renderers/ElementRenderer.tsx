@@ -19,6 +19,7 @@ import { ScatterPlotRenderer } from "./ScatterPlotRenderer";
 import { GeomapRenderer } from "./GeomapRenderer";
 import { PieChartRenderer } from "./PieChartRenderer";
 import { WaterfallRenderer } from "./WaterfallRenderer";
+import { ComboChartRenderer } from "./ComboChartRenderer";
 
 interface ElementRendererProps {
   element: Element;
@@ -46,6 +47,8 @@ export function ElementRenderer({ element, isEditable = false }: ElementRenderer
     case 'bar-chart':
     case 'column-chart':
       return <ChartRenderer properties={element.properties} type={element.type} />;
+    case 'combo-chart':
+      return <ComboChartRenderer properties={element.properties} />;
     case 'pie-chart':
       return <PieChartRenderer properties={element.properties} />;
     case 'simple-table':

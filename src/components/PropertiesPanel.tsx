@@ -15,6 +15,7 @@ import { ScatterPlotProperties } from "./scatter-plot-properties/ScatterPlotProp
 import { GeomapProperties } from "./geomap-properties/GeomapProperties";
 import { ColumnChartProperties } from "./column-chart-properties/ColumnChartProperties";
 import { PieChartProperties } from "./pie-chart-properties/PieChartProperties";
+import { ComboChartProperties } from "./combo-chart-properties/ComboChartProperties";
 
 interface PropertiesPanelProps {
   onOpenStyleDialog?: () => void;
@@ -120,6 +121,14 @@ export function PropertiesPanel({ onOpenStyleDialog, updateElementProperties }: 
       case 'column-chart':
         return (
           <ColumnChartProperties
+            element={selectedElement}
+            updateElementProperties={updateElementProperties}
+            onOpenStyleDialog={onOpenStyleDialog}
+          />
+        );
+      case 'combo-chart':
+        return (
+          <ComboChartProperties
             element={selectedElement}
             updateElementProperties={updateElementProperties}
             onOpenStyleDialog={onOpenStyleDialog}

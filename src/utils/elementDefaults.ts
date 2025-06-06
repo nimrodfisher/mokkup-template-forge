@@ -1,52 +1,49 @@
-import { ElementType } from '../types/wireframe';
+import { ElementType } from '@/types/wireframe';
 
 export function getDefaultSizeForType(type: ElementType): { width: number; height: number } {
   switch (type) {
     case 'header':
-      return { width: 600, height: 60 };
+      return { width: 800, height: 80 };
     case 'button':
       return { width: 120, height: 40 };
     case 'filter':
       return { width: 200, height: 40 };
     case 'kpi':
       return { width: 200, height: 120 };
-    case 'image':
-      return { width: 250, height: 200 };
-    case 'shapes':
-      return { width: 150, height: 150 };
-    case 'gauge-chart':
-      return { width: 250, height: 180 };
     case 'column-chart':
     case 'bar-chart':
     case 'line-chart':
     case 'area-chart':
     case 'combo-chart':
     case 'pie-chart':
+    case 'gauge-chart':
+    case 'heatmap':
+    case 'quadrant-chart':
+    case 'scatter-plot':
+    case 'waterfall':
+      return { width: 400, height: 300 };
     case 'simple-table':
     case 'hierarchy-table':
-    case 'scatter-plot':
-    case 'bubble-chart':
-    case 'waterfall':
+      return { width: 400, height: 200 };
+    case 'geomap':
+    case 'treemap':
+      return { width: 400, height: 300 };
     case 'funnel-chart':
     case 'histogram':
     case 'gauge':
+    case 'bubble-chart':
     case 'sankey':
-    case 'quadrant-chart':
       return { width: 300, height: 200 };
-    case 'geomap':
-      return { width: 400, height: 300 };
-    case 'treemap':
-      return { width: 300, height: 300 };
-    case 'heatmap':
-      return { width: 300, height: 250 };
+    case 'image':
+      return { width: 200, height: 150 };
     case 'textbox':
-      return { width: 250, height: 120 };
+      return { width: 300, height: 100 };
+    case 'shapes':
+      return { width: 100, height: 100 };
     case 'delete':
-      return { width: 40, height: 40 };
-    case 'simple-table':
-      return { width: 400, height: 250 };
+      return { width: 50, height: 50 };
     default:
-      return { width: 150, height: 80 };
+      return { width: 200, height: 100 };
   }
 }
 

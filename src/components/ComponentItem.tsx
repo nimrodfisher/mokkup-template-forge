@@ -1,3 +1,4 @@
+
 import { ElementType, useWireframe } from "@/hooks/useWireframe";
 import { useDrag } from "react-dnd";
 
@@ -91,6 +92,19 @@ function ComponentIcon({ type }: { type: ElementType }) {
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M3 18h18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
           <path d="M3 12L8 9 13 15 21 6V18H3V12Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      );
+    case 'combo-chart':
+      return (
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3 18h18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+          <rect x="5" y="12" width="3" height="6" rx="1" stroke="currentColor" strokeWidth="1.5" />
+          <rect x="10" y="8" width="3" height="10" rx="1" stroke="currentColor" strokeWidth="1.5" />
+          <rect x="15" y="14" width="3" height="4" rx="1" stroke="currentColor" strokeWidth="1.5" />
+          <path d="M6.5 10L11.5 6L16.5 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          <circle cx="6.5" cy="10" r="2" fill="currentColor" />
+          <circle cx="11.5" cy="6" r="2" fill="currentColor" />
+          <circle cx="16.5" cy="12" r="2" fill="currentColor" />
         </svg>
       );
     case 'pie-chart':
