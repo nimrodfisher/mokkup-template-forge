@@ -1,3 +1,4 @@
+
 export type ElementType = 
   'header' | 'button' | 'filter' | 'kpi' | 'column-chart' | 'bar-chart' | 'line-chart' | 
   'area-chart' | 'combo-chart' | 'pie-chart' | 'gauge-chart' |
@@ -129,6 +130,7 @@ export interface Element {
     chartButtons?: Array<{title: string, alignment: string}>;
     chartKpis?: Array<{title: string, value: string, change?: string}>;
     barColor?: string;
+    lineColor?: string;
     secondaryBarColor?: string;
     tertiaryBarColor?: string;
     showLegend?: boolean;
