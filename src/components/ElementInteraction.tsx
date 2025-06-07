@@ -1,6 +1,9 @@
 
 import React, { useState } from 'react';
 import { useWireframe, Element } from "@/hooks/useWireframe";
+import { Button } from "@/components/ui/button";
+import { Trash2 } from "lucide-react";
+import { toast } from "sonner";
 
 interface ElementInteractionProps {
   element: Element;
@@ -15,7 +18,7 @@ export function ElementInteraction({
   children, 
   onDoubleClick 
 }: ElementInteractionProps) {
-  const { updateElement, selectElement } = useWireframe();
+  const { updateElement, selectElement, removeElement } = useWireframe();
   const [isDragging, setIsDragging] = useState(false);
   const [isResizing, setIsResizing] = useState(false);
   
@@ -90,6 +93,12 @@ export function ElementInteraction({
     document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseup', handleMouseUp);
   };
+
+  const handleDeleteElement = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    removeElement(element.id);
+    toast.success(`${element.type} deleted`);
+  };
   
   const handleDelete = (e: React.KeyboardEvent) => {
     // This is handled in the parent component
@@ -117,10 +126,23 @@ export function ElementInteraction({
       {children}
       
       {isSelected && (
-        <div
-          className="absolute bottom-0 right-0 w-4 h-4 bg-blue-500 cursor-nwse-resize"
-          onMouseDown={handleResizeMouseDown}
-        />
+        <>
+          {/* Resize handle */}
+          <div
+            className="absolute bottom-0 right-0 w-4 h-4 bg-blue-500 cursor-nwse-resize"
+            onMouseDown={handleResizeMouseDown}
+          />
+          
+          {/* Delete button */}
+          <Button
+            variant="ghost"
+            size="sm"
+            className="absolute -top-8 -right-8 h-6 w-6 p-0 bg-red-500 hover:bg-red-600 text-white rounded-full"
+            onClick={handleDeleteElement}
+          >
+            <Trash2 className="h-3 w-3" />
+          </Button>
+        </>
       )}
     </div>
   );
