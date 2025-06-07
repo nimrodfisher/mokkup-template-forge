@@ -1,45 +1,75 @@
 
 import React from 'react';
 import { useWireframe } from '@/hooks/useWireframe';
-import { Button } from '@/components/ui/button';
 import { ComboChartRenderer } from '../element-renderers/ComboChartRenderer';
+import { X } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
-interface ComboChartStyleTemplateProps {
-  template: {
-    id: string;
-    name: string;
-    preview: string;
-    properties: any;
-  };
-  elementId: string;
-  onClose: () => void;
+interface TemplateData {
+  id: string;
+  name: string;
+  preview: string;
+  properties: any;
 }
 
-export function ComboChartStyleTemplate({ template, elementId, onClose }: ComboChartStyleTemplateProps) {
+interface ComboChartStyleTemplateProps {
+  template: TemplateData;
+  elementId: string;
+  onClose: () => void;
+  onDelete?: (templateId: string) => void;
+}
+
+export function ComboChartStyleTemplate({ 
+  template, 
+  elementId, 
+  onClose,
+  onDelete 
+}: ComboChartStyleTemplateProps) {
   const { updateElementProperties } = useWireframe();
 
-  const handleApplyStyle = () => {
+  const handleApplyTemplate = () => {
     updateElementProperties(elementId, template.properties);
     onClose();
   };
 
+  const handleDelete = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (onDelete) {
+      onDelete(template.id);
+    }
+  };
+
   return (
-    <div className="border rounded-lg p-4 hover:border-blue-500 transition-colors">
-      <div className="aspect-video mb-4 border rounded bg-gray-50 overflow-hidden">
-        <div className="h-full scale-75 origin-top-left">
-          <ComboChartRenderer properties={template.properties} />
-        </div>
-      </div>
-      
-      <div className="flex items-center justify-between">
-        <div>
-          <h3 className="font-medium">{template.name}</h3>
-          <p className="text-sm text-gray-600">{template.preview}</p>
+    <div className="relative">
+      <div 
+        className="border border-gray-200 rounded-lg p-4 cursor-pointer hover:border-blue-300 hover:shadow-md transition-all"
+        onClick={handleApplyTemplate}
+      >
+        {/* Delete button */}
+        {onDelete && (
+          <Button
+            variant="ghost"
+            size="sm"
+            className="absolute top-2 right-2 h-6 w-6 p-0 hover:bg-red-100 hover:text-red-600 z-10"
+            onClick={handleDelete}
+          >
+            <X className="h-4 w-4" />
+          </Button>
+        )}
+        
+        <div className="mb-3">
+          <h4 className="font-medium text-sm">{template.name}</h4>
+          <p className="text-xs text-gray-500 mt-1">{template.preview}</p>
         </div>
         
-        <Button onClick={handleApplyStyle} className="bg-blue-600 hover:bg-blue-700">
-          Apply style
-        </Button>
+        <div className="h-32 bg-gray-50 rounded border">
+          <ComboChartRenderer 
+            properties={{
+              ...template.properties,
+              chartHeight: 120
+            }}
+          />
+        </div>
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { ComboChartStyleTemplate } from './ComboChartStyleTemplate';
+import { toast } from 'sonner';
 
 interface ComboChartTemplatesProps {
   elementId: string;
@@ -8,7 +9,7 @@ interface ComboChartTemplatesProps {
 }
 
 export function ComboChartTemplates({ elementId, onClose }: ComboChartTemplatesProps) {
-  const templates = [
+  const [templates, setTemplates] = useState([
     {
       id: 'basic-combo',
       name: 'Basic Combo',
@@ -54,7 +55,12 @@ export function ComboChartTemplates({ elementId, onClose }: ComboChartTemplatesP
         ]
       }
     }
-  ];
+  ]);
+
+  const handleDeleteTemplate = (templateId: string) => {
+    setTemplates(prevTemplates => prevTemplates.filter(template => template.id !== templateId));
+    toast.success('Template deleted');
+  };
 
   return (
     <div>
@@ -70,9 +76,16 @@ export function ComboChartTemplates({ elementId, onClose }: ComboChartTemplatesP
             template={template}
             elementId={elementId}
             onClose={onClose}
+            onDelete={handleDeleteTemplate}
           />
         ))}
       </div>
+      
+      {templates.length === 0 && (
+        <div className="text-center text-gray-500 py-8">
+          <p>No templates available</p>
+        </div>
+      )}
     </div>
   );
 }
