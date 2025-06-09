@@ -19,6 +19,11 @@ export function CanvasElement({ element, isSelected }: CanvasElementProps) {
   const handleDoubleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     
+    // Skip double-click for textbox elements
+    if (element.type === 'textbox') {
+      return;
+    }
+    
     switch (element.type) {
       case 'filter':
         setActiveDialog('filter');
@@ -28,9 +33,6 @@ export function CanvasElement({ element, isSelected }: CanvasElementProps) {
         break;
       case 'button':
         setActiveDialog('button');
-        break;
-      case 'textbox':
-        setActiveDialog('textbox');
         break;
       case 'image':
         setActiveDialog('image');
