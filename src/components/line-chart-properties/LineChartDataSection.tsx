@@ -13,13 +13,16 @@ interface LineChartDataSectionProps {
 
 export function LineChartDataSection({ element, updateElementProperties }: LineChartDataSectionProps) {
   const chartData = element.properties?.chartData || [
-    { category: 'Jan 22', value: 30 },
-    { category: 'Feb 22', value: 45 },
-    { category: 'Mar 22', value: 35 },
-    { category: 'Apr 22', value: 50 },
-    { category: 'May 22', value: 25 },
-    { category: 'Jun 22', value: 60 }
+    { category: 'Jan 22', value: 30, line: 25 },
+    { category: 'Feb 22', value: 45, line: 35 },
+    { category: 'Mar 22', value: 35, line: 40 },
+    { category: 'Apr 22', value: 50, line: 45 },
+    { category: 'May 22', value: 25, line: 30 },
+    { category: 'Jun 22', value: 60, line: 55 }
   ];
+
+  const chartVariant = element.properties?.chartVariant || 'basic-line';
+  const isMultiLine = chartVariant === 'multi-line';
 
   const handleDataChange = (index: number, field: string, value: string | number) => {
     const newData = [...chartData];
@@ -28,7 +31,17 @@ export function LineChartDataSection({ element, updateElementProperties }: LineC
   };
 
   const addDataPoint = () => {
-    const newData = [...chartData, { category: `Item ${chartData.length + 1}`, value: 0 }];
+    const newPoint = { 
+      category: `Item ${chartData.length + 1}`, 
+      value: 0 
+    };
+    
+    // Add line data for multi-line charts
+    if (isMultiLine) {
+      newPoint.line = 0;
+    }
+    
+    const newData = [...chartData, newPoint];
     updateElementProperties(element.id, { chartData: newData });
   };
 
@@ -48,7 +61,7 @@ export function LineChartDataSection({ element, updateElementProperties }: LineC
       
       <div className="space-y-3 max-h-64 overflow-y-auto">
         {chartData.map((item, index) => (
-          <div key={index} className="flex items-center gap-2 p-2 border rounded">
+          <div key={index} className="flex items-center gap-2 p-3 border rounded-lg">
             <div className="flex-1">
               <Label className="text-xs text-gray-500">Category</Label>
               <Input
@@ -58,8 +71,9 @@ export function LineChartDataSection({ element, updateElementProperties }: LineC
                 placeholder="Category"
               />
             </div>
+            
             <div className="flex-1">
-              <Label className="text-xs text-gray-500">Value</Label>
+              <Label className="text-xs text-gray-500">Primary Value</Label>
               <Input
                 type="number"
                 value={item.value}
@@ -68,17 +82,41 @@ export function LineChartDataSection({ element, updateElementProperties }: LineC
                 placeholder="Value"
               />
             </div>
+            
+            {isMultiLine && (
+              <div className="flex-1">
+                <Label className="text-xs text-gray-500">Secondary Value</Label>
+                <Input
+                  type="number"
+                  value={item.line || 0}
+                  onChange={(e) => handleDataChange(index, 'line', parseInt(e.target.value) || 0)}
+                  className="mt-1 text-xs"
+                  placeholder="Line Value"
+                />
+              </div>
+            )}
+            
             <Button 
               onClick={() => removeDataPoint(index)} 
               size="sm" 
               variant="outline"
-              className="mt-4"
+              className="mt-4 shrink-0"
             >
               <Minus className="h-3 w-3" />
             </Button>
           </div>
         ))}
       </div>
+
+      {isMultiLine && (
+        <div className="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
+          <h5 className="text-sm font-medium text-blue-800 mb-2">Multi-Line Chart Data</h5>
+          <p className="text-xs text-blue-600">
+            This chart supports multiple data series. Each data point includes both primary and secondary values 
+            that will be displayed as separate lines on the chart.
+          </p>
+        </div>
+      )}
     </div>
   );
 }
