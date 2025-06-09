@@ -17,9 +17,6 @@ import { GeomapProperties } from "./geomap-properties/GeomapProperties";
 import { ColumnChartProperties } from "./column-chart-properties/ColumnChartProperties";
 import { PieChartProperties } from "./pie-chart-properties/PieChartProperties";
 import { ComboChartProperties } from "./combo-chart-properties/ComboChartProperties";
-import { useIsMobile } from "@/hooks/use-mobile";
-import { X } from "lucide-react";
-import { Button } from "@/components/ui/button";
 
 interface PropertiesPanelProps {
   onOpenStyleDialog?: () => void;
@@ -28,7 +25,6 @@ interface PropertiesPanelProps {
 
 export function PropertiesPanel({ onOpenStyleDialog, updateElementProperties }: PropertiesPanelProps) {
   const { elements, selectedElementId, showProperties, toggleProperties, updateElement, updateLogoImage, updateImage } = useWireframe();
-  const isMobile = useIsMobile();
   
   const selectedElement = elements.find(el => el.id === selectedElementId);
   
@@ -168,25 +164,7 @@ export function PropertiesPanel({ onOpenStyleDialog, updateElementProperties }: 
   };
   
   return (
-    <div className={`
-      ${isMobile 
-        ? 'w-full h-full overflow-auto bg-background' 
-        : 'w-72 border-l bg-background overflow-auto h-full'
-      }
-    `}>
-      {isMobile && (
-        <div className="flex items-center justify-between p-4 border-b">
-          <h2 className="font-semibold">Properties</h2>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={toggleProperties}
-            className="h-8 w-8 p-0"
-          >
-            <X className="h-4 w-4" />
-          </Button>
-        </div>
-      )}
+    <div className="w-72 border-l bg-white overflow-auto h-full">
       <div className="p-4">
         {renderPropertiesComponent()}
       </div>

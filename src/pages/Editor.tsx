@@ -25,12 +25,10 @@ import { GeomapStyleDialog } from "@/components/geomap-style/GeomapStyleDialog";
 import { ColumnChartStyleDialog } from "@/components/column-chart-style/ColumnChartStyleDialog";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { WaterfallStyleDialog } from "@/components/waterfall-style/WaterfallStyleDialog";
-import { useIsMobile } from "@/hooks/use-mobile";
 
 const Editor = () => {
   const params = useParams();
   const templateId = params?.templateId;
-  const isMobile = useIsMobile();
   
   const { 
     loadTemplate, 
@@ -119,33 +117,20 @@ const Editor = () => {
   return (
     <TooltipProvider>
       <DndProvider backend={HTML5Backend}>
-        <div className="flex flex-col h-screen bg-background">
+        <div className="flex flex-col h-screen bg-white">
           <Navbar onSave={handleSaveAction} />
           <div className="flex-1 flex overflow-hidden">
-            {/* Sidebar - hidden on mobile, shown on larger screens */}
-            <div className={`${isMobile ? 'hidden' : 'block'}`}>
-              <Sidebar />
-            </div>
-            
+            <Sidebar />
             <div className="flex-1 flex flex-col overflow-hidden">
               <ScreenTabs />
               <div className="flex-1 flex overflow-hidden">
                 <Canvas />
-                
-                {/* Properties Panel - responsive positioning */}
-                {showProperties && selectedElementId && (
-                  <div className={`
-                    ${isMobile 
-                      ? 'fixed inset-x-0 bottom-0 h-80 z-50 bg-background border-t' 
-                      : 'relative'
-                    }
-                  `}>
-                    <PropertiesPanel 
-                      onOpenStyleDialog={handleOpenStyleDialog} 
-                      updateElementProperties={updateElementProperties}
-                    />
-                  </div>
-                )}
+                {showProperties && selectedElementId && 
+                  <PropertiesPanel 
+                    onOpenStyleDialog={handleOpenStyleDialog} 
+                    updateElementProperties={updateElementProperties}
+                  />
+                }
               </div>
             </div>
           </div>
