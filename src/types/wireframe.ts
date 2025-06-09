@@ -106,18 +106,29 @@ export interface Element {
     textboxContent?: string;
     textboxTitle?: string;
     showTextboxTitle?: boolean;
-    textAlignment?: 'left' | 'center' | 'right';
-    fontSize?: 'sm' | 'md' | 'lg' | 'xl';
-    fontWeight?: 'normal' | 'medium' | 'bold';
+    textAlignment?: 'left' | 'center' | 'right' | 'justify';
+    fontSize?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+    fontWeight?: 'light' | 'normal' | 'medium' | 'semibold' | 'bold' | 'extrabold';
+    fontFamily?: 'inter' | 'roboto' | 'open-sans' | 'lato' | 'montserrat' | 'poppins' | 'source-sans' | 'nunito' | 'raleway' | 'merriweather' | 'playfair' | 'crimson';
+    lineHeight?: 'tight' | 'snug' | 'normal' | 'relaxed' | 'loose';
+    letterSpacing?: 'tighter' | 'tight' | 'normal' | 'wide' | 'wider' | 'widest';
+    backgroundOpacity?: number;
+    showBorder?: boolean;
+    borderColor?: string;
+    borderWidth?: string;
+    borderStyle?: 'solid' | 'dashed' | 'dotted';
+    borderRadius?: 'none' | 'sm' | 'md' | 'lg' | 'xl' | 'full';
+    padding?: number;
+    showShadow?: boolean;
+    shadowSize?: 'sm' | 'md' | 'lg' | 'xl';
+    textDecoration?: 'none' | 'underline' | 'line-through' | 'overline';
+    textTransform?: 'none' | 'uppercase' | 'lowercase' | 'capitalize';
     // Image properties
     imageUrl?: string;
     imageAlt?: string;
     imageFit?: 'contain' | 'cover' | 'fill' | 'none' | 'scale-down';
-    borderRadius?: 'none' | 'sm' | 'md' | 'lg' | 'full';
     hasBorder?: boolean;
-    borderColor?: string;
     hasShadow?: boolean;
-    shadowSize?: 'sm' | 'md' | 'lg' | 'xl';
     // Shape properties
     shapeVariant?: ShapeVariant;
     shapeColor?: string;
