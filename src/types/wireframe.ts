@@ -1,4 +1,3 @@
-
 export type ElementType = 
   'header' | 'button' | 'filter' | 'kpi' | 'column-chart' | 'bar-chart' | 'line-chart' | 
   'area-chart' | 'combo-chart' | 'pie-chart' | 'gauge-chart' |
@@ -29,7 +28,8 @@ export type ShapeVariant =
 export type ChartVariant =
   'bar' | 'dropdown-bar' | 'kpi-bar' | 'multi-bar' | 'stacked-bar' |
   'basic-area' | 'kpi-area' | 'multi-area' | 'stacked-area' |
-  'default' | 'grouped' | 'stacked' | 'gradient';
+  'default' | 'grouped' | 'stacked' | 'gradient' |
+  'basic-combo' | 'kpi-combo' | 'advanced-combo' | 'multi-line-combo';
 
 export type PieChartVariant =
   'default' | 'with-legend' | 'with-buttons' | 'with-kpis';
@@ -147,6 +147,23 @@ export interface Element {
     showLegend?: boolean;
     showGridLines?: boolean;
     showLabels?: boolean;
+    // Combo Chart specific properties
+    chartBackground?: string;
+    plotBackground?: string;
+    enableAnimation?: boolean;
+    animationDuration?: number;
+    customTooltip?: boolean;
+    tooltipFormat?: string;
+    labelPosition?: 'top' | 'middle' | 'bottom' | 'inside' | 'outside';
+    enableZoom?: boolean;
+    enablePan?: boolean;
+    enableExport?: boolean;
+    exportFormats?: 'png' | 'jpg' | 'svg' | 'pdf';
+    colorPalettes?: Array<{
+      id: string;
+      name: string;
+      colors: string[];
+    }>;
     // Pie Chart properties
     pieChartVariant?: PieChartVariant;
     pieChartTitle?: string;
