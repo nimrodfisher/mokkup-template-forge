@@ -16,9 +16,6 @@ import { GeomapProperties } from "./geomap-properties/GeomapProperties";
 import { ColumnChartProperties } from "./column-chart-properties/ColumnChartProperties";
 import { PieChartProperties } from "./pie-chart-properties/PieChartProperties";
 import { ComboChartProperties } from "./combo-chart-properties/ComboChartProperties";
-import { Button } from "@/components/ui/button";
-import { Trash2 } from "lucide-react";
-import { toast } from "sonner";
 
 interface PropertiesPanelProps {
   onOpenStyleDialog?: () => void;
@@ -26,20 +23,13 @@ interface PropertiesPanelProps {
 }
 
 export function PropertiesPanel({ onOpenStyleDialog, updateElementProperties }: PropertiesPanelProps) {
-  const { elements, selectedElementId, showProperties, toggleProperties, updateElement, updateLogoImage, updateImage, removeElement } = useWireframe();
+  const { elements, selectedElementId, showProperties, toggleProperties, updateElement, updateLogoImage, updateImage } = useWireframe();
   
   const selectedElement = elements.find(el => el.id === selectedElementId);
   
   if (!selectedElement || !showProperties) {
     return null;
   }
-
-  const handleDeleteElement = () => {
-    if (selectedElementId) {
-      removeElement(selectedElementId);
-      toast.success(`${selectedElement.type} deleted`);
-    }
-  };
   
   // Render the appropriate properties component based on the element type
   const renderPropertiesComponent = () => {
@@ -166,19 +156,6 @@ export function PropertiesPanel({ onOpenStyleDialog, updateElementProperties }: 
   return (
     <div className="w-72 border-l bg-white overflow-auto h-full">
       <div className="p-4">
-        {/* Header with delete button */}
-        <div className="flex items-center justify-between mb-4 pb-3 border-b">
-          <h3 className="font-semibold text-lg capitalize">{selectedElement.type} Properties</h3>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={handleDeleteElement}
-            className="text-red-600 hover:text-red-700 hover:bg-red-50"
-          >
-            <Trash2 className="h-4 w-4" />
-          </Button>
-        </div>
-        
         {renderPropertiesComponent()}
       </div>
     </div>
