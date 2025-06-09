@@ -17,6 +17,7 @@ import { GeomapProperties } from "./geomap-properties/GeomapProperties";
 import { ColumnChartProperties } from "./column-chart-properties/ColumnChartProperties";
 import { PieChartProperties } from "./pie-chart-properties/PieChartProperties";
 import { ComboChartProperties } from "./combo-chart-properties/ComboChartProperties";
+import { LineChartProperties } from "./line-chart-properties/LineChartProperties";
 
 interface PropertiesPanelProps {
   onOpenStyleDialog?: () => void;
@@ -131,6 +132,14 @@ export function PropertiesPanel({ onOpenStyleDialog, updateElementProperties }: 
       case 'column-chart':
         return (
           <ColumnChartProperties
+            element={selectedElement}
+            updateElementProperties={updateElementProperties}
+            onOpenStyleDialog={onOpenStyleDialog}
+          />
+        );
+      case 'line-chart':
+        return (
+          <LineChartProperties
             element={selectedElement}
             updateElementProperties={updateElementProperties}
             onOpenStyleDialog={onOpenStyleDialog}

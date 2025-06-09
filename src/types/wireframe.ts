@@ -1,3 +1,4 @@
+
 export type ElementType = 
   'header' | 'button' | 'filter' | 'kpi' | 'column-chart' | 'bar-chart' | 'line-chart' | 
   'area-chart' | 'combo-chart' | 'pie-chart' | 'gauge-chart' |
@@ -29,7 +30,8 @@ export type ChartVariant =
   'bar' | 'dropdown-bar' | 'kpi-bar' | 'multi-bar' | 'stacked-bar' |
   'basic-area' | 'kpi-area' | 'multi-area' | 'stacked-area' |
   'default' | 'grouped' | 'stacked' | 'gradient' |
-  'basic-combo' | 'kpi-combo' | 'advanced-combo' | 'multi-line-combo';
+  'basic-combo' | 'kpi-combo' | 'advanced-combo' | 'multi-line-combo' |
+  'basic-line' | 'multi-line' | 'stepped-line' | 'curved-line';
 
 export type PieChartVariant =
   'default' | 'with-legend' | 'with-buttons' | 'with-kpis';
@@ -137,7 +139,13 @@ export interface Element {
     chartVariant?: ChartVariant;
     chartTitle?: string;
     chartHeight?: number;
-    chartData?: Array<{category: string, value: number}>;
+    chartData?: Array<{
+      category: string; 
+      value: number;
+      line?: number;
+      secondary?: number;
+      tertiary?: number;
+    }>;
     chartButtons?: Array<{title: string, alignment: string}>;
     chartKpis?: Array<{title: string, value: string, change?: string}>;
     barColor?: string;
@@ -164,6 +172,13 @@ export interface Element {
       name: string;
       colors: string[];
     }>;
+    // Line Chart specific properties
+    lineStyle?: 'solid' | 'dashed' | 'dotted';
+    lineWidth?: number;
+    showMarkers?: boolean;
+    markerStyle?: 'circle' | 'square' | 'triangle' | 'diamond';
+    markerSize?: number;
+    curveType?: 'linear' | 'monotone' | 'basis' | 'step';
     // Pie Chart properties
     pieChartVariant?: PieChartVariant;
     pieChartTitle?: string;

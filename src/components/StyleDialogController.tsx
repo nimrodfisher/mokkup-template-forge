@@ -19,6 +19,7 @@ import { ColumnChartStyleDialog } from "./column-chart-style/ColumnChartStyleDia
 import { PieChartStyleDialog } from "./pie-chart-style/PieChartStyleDialog";
 import { WaterfallStyleDialog } from "./waterfall-style/WaterfallStyleDialog";
 import { ComboChartStyleDialog } from "./combo-chart-style/ComboChartStyleDialog";
+import { LineChartStyleDialog } from "./line-chart-style/LineChartStyleDialog";
 
 interface StyleDialogControllerProps {
   element: Element;
@@ -159,6 +160,15 @@ export function StyleDialogController({ element, dialogType, onClose }: StyleDia
     case 'column-chart':
       return (
         <ColumnChartStyleDialog
+          elementId={element.id}
+          open={true}
+          onClose={onClose}
+        />
+      );
+      
+    case 'line-chart':
+      return (
+        <LineChartStyleDialog
           elementId={element.id}
           open={true}
           onClose={onClose}

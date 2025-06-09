@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Element } from "@/types/wireframe";
 import { useWireframe } from "@/hooks/useWireframe";
@@ -20,6 +21,7 @@ import { GeomapRenderer } from "./GeomapRenderer";
 import { PieChartRenderer } from "./PieChartRenderer";
 import { WaterfallRenderer } from "./WaterfallRenderer";
 import { ComboChartRenderer } from "./ComboChartRenderer";
+import { LineChartRenderer } from "./LineChartRenderer";
 
 interface ElementRendererProps {
   element: Element;
@@ -53,6 +55,8 @@ export function ElementRenderer({ element, isEditable = false }: ElementRenderer
     case 'bar-chart':
     case 'column-chart':
       return <ChartRenderer properties={element.properties} type={element.type} />;
+    case 'line-chart':
+      return <LineChartRenderer properties={element.properties} onUpdateProperties={handleUpdateProperties} />;
     case 'combo-chart':
       return <ComboChartRenderer properties={element.properties} onUpdateProperties={handleUpdateProperties} />;
     case 'pie-chart':
