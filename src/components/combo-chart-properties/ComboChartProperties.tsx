@@ -7,7 +7,6 @@ import { ComboChartDetailsSection } from './ComboChartDetailsSection';
 import { ComboChartDataSection } from './ComboChartDataSection';
 import { ComboChartAppearanceSection } from './ComboChartAppearanceSection';
 import { ComboChartAddOnsSection } from './ComboChartAddOnsSection';
-import { ComboChartAdvancedSection } from './ComboChartAdvancedSection';
 import { ComboChartColorSection } from './ComboChartColorSection';
 
 interface ComboChartPropertiesProps {
@@ -36,10 +35,9 @@ export function ComboChartProperties({
       </div>
       
       <Tabs defaultValue="details" className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="details" className="text-xs">Details</TabsTrigger>
           <TabsTrigger value="styling" className="text-xs">Styling</TabsTrigger>
-          <TabsTrigger value="advanced" className="text-xs">Advanced</TabsTrigger>
         </TabsList>
         
         <TabsContent value="details" className="space-y-4 mt-4">
@@ -66,13 +64,6 @@ export function ComboChartProperties({
           />
           
           <ComboChartColorSection 
-            element={element}
-            updateElementProperties={updateElementProperties}
-          />
-        </TabsContent>
-        
-        <TabsContent value="advanced" className="space-y-4 mt-4">
-          <ComboChartAdvancedSection 
             element={element}
             updateElementProperties={updateElementProperties}
           />
