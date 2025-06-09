@@ -8,6 +8,7 @@ import { FilterProperties } from "./properties/FilterProperties";
 import { KpiProperties } from "./properties/KpiProperties";
 import { ImageProperties } from "./properties/ImageProperties";
 import { DefaultProperties } from "./properties/DefaultProperties";
+import { TextboxProperties } from "./properties/TextboxProperties";
 import { GaugeProperties } from "./gauge-properties/GaugeProperties";
 import { HeatmapProperties } from "./heatmap-properties/HeatmapProperties";
 import { QuadrantProperties } from "./quadrant-properties/QuadrantProperties";
@@ -76,6 +77,15 @@ export function PropertiesPanel({ onOpenStyleDialog, updateElementProperties }: 
             updateElementProperties={updateElementProperties}
             toggleProperties={toggleProperties}
             updateImage={updateImage}
+          />
+        );
+      case 'textbox':
+        return (
+          <TextboxProperties
+            element={selectedElement}
+            updateElementProperties={updateElementProperties}
+            toggleProperties={toggleProperties}
+            onOpenStyleDialog={onOpenStyleDialog}
           />
         );
       case 'gauge-chart':
