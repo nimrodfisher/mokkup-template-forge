@@ -64,12 +64,12 @@ export function ComboChartTemplates({ elementId, onClose }: ComboChartTemplatesP
 
   return (
     <div>
-      <div className="mb-4">
-        <span className="text-sm text-gray-600">Available styles</span>
-        <span className="ml-auto text-sm text-blue-600">Default</span>
+      <div className="mb-4 flex flex-col sm:flex-row sm:items-center justify-between">
+        <span className="text-sm text-gray-600 mb-2 sm:mb-0">Available styles</span>
+        <span className="text-sm text-blue-600">Default</span>
       </div>
       
-      <div className="grid grid-cols-1 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {templates.map((template) => (
           <ComboChartStyleTemplate
             key={template.id}

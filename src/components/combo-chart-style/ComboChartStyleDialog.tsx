@@ -13,7 +13,7 @@ interface ComboChartStyleDialogProps {
 export function ComboChartStyleDialog({ elementId, open, onClose }: ComboChartStyleDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-4xl w-[95vw] max-h-[90vh] overflow-y-auto p-4 md:p-6">
         <DialogHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
           <DialogTitle className="text-lg font-semibold">Choose style</DialogTitle>
           <button

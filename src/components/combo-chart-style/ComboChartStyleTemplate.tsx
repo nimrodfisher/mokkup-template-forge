@@ -42,7 +42,7 @@ export function ComboChartStyleTemplate({
   return (
     <div className="relative">
       <div 
-        className="border border-gray-200 rounded-lg p-4 cursor-pointer hover:border-blue-300 hover:shadow-md transition-all"
+        className="border border-gray-200 rounded-lg p-3 md:p-4 cursor-pointer hover:border-blue-300 hover:shadow-md transition-all"
         onClick={handleApplyTemplate}
       >
         {/* Delete button */}
@@ -62,11 +62,11 @@ export function ComboChartStyleTemplate({
           <p className="text-xs text-gray-500 mt-1">{template.preview}</p>
         </div>
         
-        <div className="h-32 bg-gray-50 rounded border">
+        <div className="h-24 sm:h-32 bg-gray-50 rounded border">
           <ComboChartRenderer 
             properties={{
               ...template.properties,
-              chartHeight: 120
+              chartHeight: 96
             }}
           />
         </div>
