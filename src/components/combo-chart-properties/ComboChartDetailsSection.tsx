@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Element } from '@/types/wireframe';
+import { Element, ChartVariant } from '@/types/wireframe';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -17,7 +17,7 @@ export function ComboChartDetailsSection({ element, updateElementProperties }: C
   };
 
   const handleVariantChange = (value: string) => {
-    updateElementProperties(element.id, { chartVariant: value });
+    updateElementProperties(element.id, { chartVariant: value as ChartVariant });
   };
 
   const handleHeightChange = (value: number[]) => {
