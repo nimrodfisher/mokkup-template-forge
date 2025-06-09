@@ -1,9 +1,9 @@
 
 import React from 'react';
-import { ComposedChart, Bar, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { ComposedChart, Bar, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Area } from 'recharts';
 import { Element } from '@/types/wireframe';
 import { Button } from '@/components/ui/button';
-import { Download, Filter, RefreshCw, MoreHorizontal } from 'lucide-react';
+import { Download, Filter, RefreshCw, MoreHorizontal, ZoomIn, ZoomOut } from 'lucide-react';
 
 interface ComboChartRendererProps {
   properties: Element['properties'];
@@ -61,7 +61,6 @@ export function ComboChartRenderer({ properties, onUpdateProperties }: ComboChar
       case 'export':
         if (enableExport) {
           console.log(`Exporting chart as ${exportFormats}...`);
-          // Add export functionality here
         }
         break;
       case 'filter':
@@ -69,6 +68,12 @@ export function ComboChartRenderer({ properties, onUpdateProperties }: ComboChar
         break;
       case 'refresh':
         console.log('Refreshing chart data...');
+        break;
+      case 'zoom in':
+        console.log('Zooming in...');
+        break;
+      case 'zoom out':
+        console.log('Zooming out...');
         break;
       default:
         console.log(`${buttonTitle} action triggered`);
@@ -131,6 +136,9 @@ export function ComboChartRenderer({ properties, onUpdateProperties }: ComboChar
     );
   };
 
+  const isAdvancedVariant = chartVariant === 'advanced-combo';
+  const isMultiChartVariant = chartVariant === 'multi-line-combo';
+
   return (
     <div 
       className="w-full h-full border rounded-lg p-4"
@@ -141,12 +149,39 @@ export function ComboChartRenderer({ properties, onUpdateProperties }: ComboChar
           {chartTitle && (
             <h3 className="text-lg font-semibold text-gray-800">{chartTitle}</h3>
           )}
+          {isAdvancedVariant && (
+            <p className="text-xs text-gray-500 mt-1">Advanced Interactive Chart</p>
+          )}
+          {isMultiChartVariant && (
+            <p className="text-xs text-gray-500 mt-1">Multi-Series Comparison Chart</p>
+          )}
         </div>
         
-        {/* Action Buttons */}
-        {showButtons && chartButtons && chartButtons.length > 0 && (
+        {/* Advanced Action Buttons */}
+        {(showButtons || isAdvancedVariant) && (
           <div className="flex items-center gap-2">
-            {chartButtons.map((button, index) => {
+            {isAdvancedVariant && enableZoom && (
+              <>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handleButtonClick('Zoom In')}
+                  className="text-xs"
+                >
+                  <ZoomIn className="h-3 w-3" />
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handleButtonClick('Zoom Out')}
+                  className="text-xs"
+                >
+                  <ZoomOut className="h-3 w-3" />
+                </Button>
+              </>
+            )}
+            
+            {chartButtons && chartButtons.length > 0 && chartButtons.map((button, index) => {
               const getIcon = (title: string) => {
                 switch (title.toLowerCase()) {
                   case 'export':
@@ -177,11 +212,11 @@ export function ComboChartRenderer({ properties, onUpdateProperties }: ComboChar
         )}
       </div>
 
-      {/* KPIs Section */}
-      {showKpis && chartKpis && chartKpis.length > 0 && (
+      {/* Advanced KPIs Section */}
+      {(showKpis || isAdvancedVariant || isMultiChartVariant) && chartKpis && chartKpis.length > 0 && (
         <div className="grid grid-cols-2 gap-4 mb-4">
           {chartKpis.map((kpi, index) => (
-            <div key={index} className="bg-gray-50 p-3 rounded-lg">
+            <div key={index} className="bg-gray-50 p-3 rounded-lg border">
               <div className="text-sm text-gray-600">{kpi.title}</div>
               <div className="flex items-center gap-2">
                 <span className="text-lg font-semibold">{kpi.value}</span>
@@ -200,7 +235,7 @@ export function ComboChartRenderer({ properties, onUpdateProperties }: ComboChar
       
       <div 
         style={{ height: chartHeight, backgroundColor: plotBackground }}
-        className="rounded"
+        className="rounded border"
       >
         <ResponsiveContainer width="100%" height="100%">
           <ComposedChart 
@@ -221,6 +256,7 @@ export function ComboChartRenderer({ properties, onUpdateProperties }: ComboChar
               tickLine={showLabels}
               stroke="#94a3b8"
             />
+            
             {customTooltip ? (
               <Tooltip content={<CustomTooltip />} />
             ) : (
@@ -233,42 +269,68 @@ export function ComboChartRenderer({ properties, onUpdateProperties }: ComboChar
                 }}
               />
             )}
+            
             {showLegend && (
               <Legend 
                 wrapperStyle={{ fontSize: '12px', color: '#64748b' }}
               />
             )}
             
+            {/* Primary Bar */}
             <Bar 
               dataKey="value" 
               fill={barColor}
               name="Primary Data"
               radius={[2, 2, 0, 0]}
               animationDuration={enableAnimation ? animationDuration : 0}
+              label={showDataLabels ? renderDataLabel : false}
             />
             
-            {chartVariant === 'multi-line-combo' && (
+            {/* Secondary Bar for Multi-Chart */}
+            {isMultiChartVariant && (
               <Bar 
                 dataKey="secondary" 
                 fill={secondaryBarColor}
                 name="Secondary Data"
                 radius={[2, 2, 0, 0]}
                 animationDuration={enableAnimation ? animationDuration : 0}
+                label={showDataLabels ? renderDataLabel : false}
               />
             )}
             
+            {/* Tertiary Bar for Multi-Chart */}
+            {isMultiChartVariant && chartData.some(d => d.tertiary) && (
+              <Bar 
+                dataKey="tertiary" 
+                fill={tertiaryBarColor}
+                name="Tertiary Data"
+                radius={[2, 2, 0, 0]}
+                animationDuration={enableAnimation ? animationDuration : 0}
+                label={showDataLabels ? renderDataLabel : false}
+              />
+            )}
+            
+            {/* Primary Line */}
             <Line 
               type="monotone" 
               dataKey="line" 
               stroke={lineColor}
-              strokeWidth={2}
+              strokeWidth={isAdvancedVariant ? 3 : 2}
               name="Line Data"
-              dot={{ fill: lineColor, strokeWidth: 2, r: 4 }}
+              dot={{ fill: lineColor, strokeWidth: 2, r: isAdvancedVariant ? 5 : 4 }}
               animationDuration={enableAnimation ? animationDuration : 0}
             />
           </ComposedChart>
         </ResponsiveContainer>
       </div>
+      
+      {/* Advanced Features Indicator */}
+      {isAdvancedVariant && (
+        <div className="mt-3 flex justify-between text-xs text-gray-500">
+          <span>Interactive Features: {enableZoom ? 'Zoom' : ''} {enablePan ? 'Pan' : ''} {enableExport ? 'Export' : ''}</span>
+          <span>Animation: {enableAnimation ? `${animationDuration}ms` : 'Disabled'}</span>
+        </div>
+      )}
     </div>
   );
 }

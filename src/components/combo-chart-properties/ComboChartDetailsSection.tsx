@@ -17,7 +17,35 @@ export function ComboChartDetailsSection({ element, updateElementProperties }: C
   };
 
   const handleVariantChange = (value: string) => {
-    updateElementProperties(element.id, { chartVariant: value as ChartVariant });
+    const chartVariant = value as ChartVariant;
+    updateElementProperties(element.id, { chartVariant });
+    
+    // Apply specific configurations for advanced variants
+    if (value === 'advanced-combo') {
+      updateElementProperties(element.id, {
+        enableAnimation: true,
+        animationDuration: 1500,
+        customTooltip: true,
+        enableZoom: true,
+        enablePan: true,
+        enableExport: true,
+        showDataLabels: true,
+        labelPosition: 'top'
+      });
+    } else if (value === 'multi-line-combo') {
+      updateElementProperties(element.id, {
+        chartData: [
+          { category: 'Jan', value: 30, line: 25, secondary: 20, tertiary: 15 },
+          { category: 'Feb', value: 45, line: 35, secondary: 30, tertiary: 25 },
+          { category: 'Mar', value: 35, line: 40, secondary: 25, tertiary: 30 },
+          { category: 'Apr', value: 50, line: 45, secondary: 35, tertiary: 40 },
+          { category: 'May', value: 25, line: 30, secondary: 40, tertiary: 35 },
+          { category: 'Jun', value: 60, line: 55, secondary: 45, tertiary: 50 }
+        ],
+        showLegend: true,
+        enableAnimation: true
+      });
+    }
   };
 
   const handleHeightChange = (value: number[]) => {
@@ -52,9 +80,8 @@ export function ComboChartDetailsSection({ element, updateElementProperties }: C
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="basic-combo">Basic Combo</SelectItem>
-              <SelectItem value="kpi-combo">KPI Combo</SelectItem>
               <SelectItem value="advanced-combo">Advanced Combo</SelectItem>
-              <SelectItem value="multi-line-combo">Multi-Line Combo</SelectItem>
+              <SelectItem value="multi-line-combo">Multi-Chart Combo</SelectItem>
             </SelectContent>
           </Select>
         </div>
