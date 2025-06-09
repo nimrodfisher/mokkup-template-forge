@@ -1,11 +1,10 @@
 
 import React from 'react';
 import { Element } from '@/types/wireframe';
-import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { Switch } from '@/components/ui/switch';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { ChevronDown } from 'lucide-react';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Slider } from '@/components/ui/slider';
 
 interface ComboChartDetailsSectionProps {
   element: Element;
@@ -13,44 +12,68 @@ interface ComboChartDetailsSectionProps {
 }
 
 export function ComboChartDetailsSection({ element, updateElementProperties }: ComboChartDetailsSectionProps) {
-  const [isOpen, setIsOpen] = React.useState(true);
-  
   const handleTitleChange = (value: string) => {
     updateElementProperties(element.id, { chartTitle: value });
   };
-  
-  const handleShowTitleChange = (checked: boolean) => {
-    updateElementProperties(element.id, { showTitle: checked });
+
+  const handleVariantChange = (value: string) => {
+    updateElementProperties(element.id, { chartVariant: value });
+  };
+
+  const handleHeightChange = (value: number[]) => {
+    updateElementProperties(element.id, { chartHeight: value[0] });
   };
 
   return (
-    <Collapsible open={isOpen} onOpenChange={setIsOpen}>
-      <CollapsibleTrigger className="flex items-center justify-between w-full p-2 text-sm font-medium bg-gray-50 hover:bg-gray-100 rounded">
-        Details
-        <ChevronDown className={`h-4 w-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
-      </CollapsibleTrigger>
-      <CollapsibleContent className="space-y-3 p-2">
-        <div className="flex items-center justify-between">
-          <Label htmlFor="showTitle">Title</Label>
-          <Switch
-            id="showTitle"
-            checked={element.properties?.showTitle ?? true}
-            onCheckedChange={handleShowTitleChange}
+    <div className="space-y-4">
+      <h4 className="text-sm font-medium text-gray-700 border-b pb-2">Chart Details</h4>
+      
+      <div className="space-y-3">
+        <div>
+          <Label htmlFor="chart-title" className="text-xs font-medium text-gray-600">
+            Chart Title
+          </Label>
+          <Input
+            id="chart-title"
+            value={element.properties?.chartTitle || ''}
+            onChange={(e) => handleTitleChange(e.target.value)}
+            placeholder="Enter chart title"
+            className="mt-1"
           />
         </div>
-        
-        {element.properties?.showTitle !== false && (
-          <div>
-            <Label htmlFor="chartTitle">Edit Text</Label>
-            <Input
-              id="chartTitle"
-              value={element.properties?.chartTitle || 'Title goes here'}
-              onChange={(e) => handleTitleChange(e.target.value)}
-              placeholder="Enter chart title"
-            />
-          </div>
-        )}
-      </CollapsibleContent>
-    </Collapsible>
+
+        <div>
+          <Label htmlFor="chart-variant" className="text-xs font-medium text-gray-600">
+            Chart Type
+          </Label>
+          <Select value={element.properties?.chartVariant || 'basic-combo'} onValueChange={handleVariantChange}>
+            <SelectTrigger className="mt-1">
+              <SelectValue placeholder="Select chart type" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="basic-combo">Basic Combo</SelectItem>
+              <SelectItem value="kpi-combo">KPI Combo</SelectItem>
+              <SelectItem value="advanced-combo">Advanced Combo</SelectItem>
+              <SelectItem value="multi-line-combo">Multi-Line Combo</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div>
+          <Label htmlFor="chart-height" className="text-xs font-medium text-gray-600">
+            Chart Height: {element.properties?.chartHeight || 300}px
+          </Label>
+          <Slider
+            id="chart-height"
+            min={200}
+            max={600}
+            step={50}
+            value={[element.properties?.chartHeight || 300]}
+            onValueChange={handleHeightChange}
+            className="mt-2"
+          />
+        </div>
+      </div>
+    </div>
   );
 }

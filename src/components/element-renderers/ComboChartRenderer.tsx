@@ -3,6 +3,7 @@ import React from 'react';
 import { ComposedChart, Bar, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Element } from '@/types/wireframe';
 import { Button } from '@/components/ui/button';
+import { Download, Filter, RefreshCw, MoreHorizontal } from 'lucide-react';
 
 interface ComboChartRendererProps {
   properties: Element['properties'];
@@ -13,20 +14,22 @@ export function ComboChartRenderer({ properties, onUpdateProperties }: ComboChar
   const {
     chartTitle = 'Combo Chart',
     chartData = [
-      { category: 'Jan 22', value: 30, line: 25 },
-      { category: 'Feb 22', value: 45, line: 35 },
-      { category: 'Mar 22', value: 35, line: 40 },
-      { category: 'Apr 22', value: 50, line: 45 },
-      { category: 'May 22', value: 25, line: 30 },
-      { category: 'Jun 22', value: 60, line: 55 }
+      { category: 'Jan 22', value: 30, line: 25, secondary: 20 },
+      { category: 'Feb 22', value: 45, line: 35, secondary: 30 },
+      { category: 'Mar 22', value: 35, line: 40, secondary: 25 },
+      { category: 'Apr 22', value: 50, line: 45, secondary: 35 },
+      { category: 'May 22', value: 25, line: 30, secondary: 40 },
+      { category: 'Jun 22', value: 60, line: 55, secondary: 45 }
     ],
     barColor = '#3b82f6',
     lineColor = '#10b981',
+    secondaryBarColor = '#f59e0b',
+    tertiaryBarColor = '#ef4444',
     showLegend = true,
     showGridLines = true,
     showLabels = true,
     chartHeight = 300,
-    chartVariant = 'default',
+    chartVariant = 'basic-combo',
     showButtons = false,
     chartButtons = [
       { title: 'Export', alignment: 'left' },
@@ -36,15 +39,30 @@ export function ComboChartRenderer({ properties, onUpdateProperties }: ComboChar
     chartKpis = [
       { title: 'Total Sales', value: '$245K', change: '+12%' },
       { title: 'Growth Rate', value: '8.5%', change: '+2.1%' }
-    ]
+    ],
+    chartBackground = '#ffffff',
+    plotBackground = '#f8fafc',
+    enableAnimation = true,
+    animationDuration = 1000,
+    showDataLabels = false,
+    labelPosition = 'top',
+    customTooltip = false,
+    tooltipFormat = '{name}: {value}',
+    enableZoom = false,
+    enablePan = false,
+    enableExport = false,
+    exportFormats = 'png'
   } = properties || {};
 
   const handleButtonClick = (buttonTitle: string) => {
     console.log(`${buttonTitle} button clicked`);
-    // Add specific functionality based on button title
+    
     switch (buttonTitle.toLowerCase()) {
       case 'export':
-        console.log('Exporting chart data...');
+        if (enableExport) {
+          console.log(`Exporting chart as ${exportFormats}...`);
+          // Add export functionality here
+        }
         break;
       case 'filter':
         console.log('Opening filter options...');
@@ -57,8 +75,67 @@ export function ComboChartRenderer({ properties, onUpdateProperties }: ComboChar
     }
   };
 
+  const CustomTooltip = ({ active, payload, label }: any) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="bg-white p-3 border rounded-lg shadow-lg">
+          <p className="font-medium">{label}</p>
+          {payload.map((entry: any, index: number) => (
+            <p key={index} style={{ color: entry.color }}>
+              {customTooltip && tooltipFormat 
+                ? tooltipFormat.replace('{name}', entry.name).replace('{value}', entry.value)
+                : `${entry.name}: ${entry.value}`
+              }
+            </p>
+          ))}
+        </div>
+      );
+    }
+    return null;
+  };
+
+  const renderDataLabel = (props: any) => {
+    if (!showDataLabels) return null;
+    
+    const { x, y, width, height, value } = props;
+    let labelY = y;
+    
+    switch (labelPosition) {
+      case 'top':
+        labelY = y - 5;
+        break;
+      case 'middle':
+        labelY = y + height / 2;
+        break;
+      case 'bottom':
+        labelY = y + height + 15;
+        break;
+      case 'inside':
+        labelY = y + height / 2;
+        break;
+      case 'outside':
+        labelY = y - 5;
+        break;
+    }
+    
+    return (
+      <text 
+        x={x + width / 2} 
+        y={labelY} 
+        fill="#666" 
+        textAnchor="middle" 
+        fontSize={10}
+      >
+        {value}
+      </text>
+    );
+  };
+
   return (
-    <div className="w-full h-full bg-white border rounded-lg p-4">
+    <div 
+      className="w-full h-full border rounded-lg p-4"
+      style={{ backgroundColor: chartBackground }}
+    >
       <div className="flex items-center justify-between mb-4">
         <div>
           {chartTitle && (
@@ -69,17 +146,33 @@ export function ComboChartRenderer({ properties, onUpdateProperties }: ComboChar
         {/* Action Buttons */}
         {showButtons && chartButtons && chartButtons.length > 0 && (
           <div className="flex items-center gap-2">
-            {chartButtons.map((button, index) => (
-              <Button
-                key={index}
-                variant="outline"
-                size="sm"
-                onClick={() => handleButtonClick(button.title)}
-                className="text-xs"
-              >
-                {button.title}
-              </Button>
-            ))}
+            {chartButtons.map((button, index) => {
+              const getIcon = (title: string) => {
+                switch (title.toLowerCase()) {
+                  case 'export':
+                    return <Download className="h-3 w-3" />;
+                  case 'filter':
+                    return <Filter className="h-3 w-3" />;
+                  case 'refresh':
+                    return <RefreshCw className="h-3 w-3" />;
+                  default:
+                    return <MoreHorizontal className="h-3 w-3" />;
+                }
+              };
+
+              return (
+                <Button
+                  key={index}
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handleButtonClick(button.title)}
+                  className="text-xs"
+                >
+                  {getIcon(button.title)}
+                  <span className="ml-1">{button.title}</span>
+                </Button>
+              );
+            })}
           </div>
         )}
       </div>
@@ -105,29 +198,65 @@ export function ComboChartRenderer({ properties, onUpdateProperties }: ComboChar
         </div>
       )}
       
-      <div style={{ height: chartHeight }}>
+      <div 
+        style={{ height: chartHeight, backgroundColor: plotBackground }}
+        className="rounded"
+      >
         <ResponsiveContainer width="100%" height="100%">
-          <ComposedChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-            {showGridLines && <CartesianGrid strokeDasharray="3 3" />}
+          <ComposedChart 
+            data={chartData} 
+            margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+          >
+            {showGridLines && <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />}
             <XAxis 
               dataKey="category" 
-              tick={{ fontSize: 12 }}
+              tick={{ fontSize: 12, fill: '#64748b' }}
               axisLine={showLabels}
               tickLine={showLabels}
+              stroke="#94a3b8"
             />
             <YAxis 
-              tick={{ fontSize: 12 }}
+              tick={{ fontSize: 12, fill: '#64748b' }}
               axisLine={showLabels}
               tickLine={showLabels}
+              stroke="#94a3b8"
             />
-            <Tooltip />
-            {showLegend && <Legend />}
+            {customTooltip ? (
+              <Tooltip content={<CustomTooltip />} />
+            ) : (
+              <Tooltip 
+                contentStyle={{
+                  backgroundColor: 'white',
+                  border: '1px solid #e2e8f0',
+                  borderRadius: '8px',
+                  boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+                }}
+              />
+            )}
+            {showLegend && (
+              <Legend 
+                wrapperStyle={{ fontSize: '12px', color: '#64748b' }}
+              />
+            )}
+            
             <Bar 
               dataKey="value" 
               fill={barColor}
-              name="Bar Data"
+              name="Primary Data"
               radius={[2, 2, 0, 0]}
+              animationDuration={enableAnimation ? animationDuration : 0}
             />
+            
+            {chartVariant === 'multi-line-combo' && (
+              <Bar 
+                dataKey="secondary" 
+                fill={secondaryBarColor}
+                name="Secondary Data"
+                radius={[2, 2, 0, 0]}
+                animationDuration={enableAnimation ? animationDuration : 0}
+              />
+            )}
+            
             <Line 
               type="monotone" 
               dataKey="line" 
@@ -135,6 +264,7 @@ export function ComboChartRenderer({ properties, onUpdateProperties }: ComboChar
               strokeWidth={2}
               name="Line Data"
               dot={{ fill: lineColor, strokeWidth: 2, r: 4 }}
+              animationDuration={enableAnimation ? animationDuration : 0}
             />
           </ComposedChart>
         </ResponsiveContainer>
