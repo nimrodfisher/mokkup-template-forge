@@ -54,15 +54,15 @@ export function LineChartDataSection({ element, updateElementProperties }: LineC
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h4 className="text-sm font-medium text-gray-700 border-b pb-2 flex-1">Data Points</h4>
-        <Button onClick={addDataPoint} size="sm" variant="outline" className="ml-2">
+        <Button onClick={addDataPoint} size="sm" variant="outline" className="ml-2 shrink-0">
           <Plus className="h-3 w-3" />
         </Button>
       </div>
       
       <div className="space-y-3 max-h-64 overflow-y-auto">
         {chartData.map((item, index) => (
-          <div key={index} className="flex items-center gap-2 p-3 border rounded-lg">
-            <div className="flex-1">
+          <div key={index} className="flex flex-col sm:flex-row items-start sm:items-center gap-2 p-3 border rounded-lg">
+            <div className="flex-1 w-full sm:w-auto">
               <Label className="text-xs text-gray-500">Category</Label>
               <Input
                 value={item.category}
@@ -72,7 +72,7 @@ export function LineChartDataSection({ element, updateElementProperties }: LineC
               />
             </div>
             
-            <div className="flex-1">
+            <div className="flex-1 w-full sm:w-auto">
               <Label className="text-xs text-gray-500">Primary Value</Label>
               <Input
                 type="number"
@@ -84,7 +84,7 @@ export function LineChartDataSection({ element, updateElementProperties }: LineC
             </div>
             
             {isMultiLine && (
-              <div className="flex-1">
+              <div className="flex-1 w-full sm:w-auto">
                 <Label className="text-xs text-gray-500">Secondary Value</Label>
                 <Input
                   type="number"
@@ -100,7 +100,7 @@ export function LineChartDataSection({ element, updateElementProperties }: LineC
               onClick={() => removeDataPoint(index)} 
               size="sm" 
               variant="outline"
-              className="mt-4 shrink-0"
+              className="mt-4 sm:mt-0 shrink-0 w-full sm:w-auto"
             >
               <Minus className="h-3 w-3" />
             </Button>

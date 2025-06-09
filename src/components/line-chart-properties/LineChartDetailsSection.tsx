@@ -56,49 +56,51 @@ export function LineChartDetailsSection({ element, updateElementProperties }: Li
       <h4 className="text-sm font-medium text-gray-700 border-b pb-2">Chart Details</h4>
       
       <div className="space-y-3">
-        <div>
-          <Label htmlFor="chart-title" className="text-xs font-medium text-gray-600">
-            Chart Title
-          </Label>
-          <Input
-            id="chart-title"
-            value={element.properties?.chartTitle || ''}
-            onChange={(e) => handleTitleChange(e.target.value)}
-            placeholder="Enter chart title"
-            className="mt-1"
-          />
-        </div>
+        <div className="grid grid-cols-1 gap-3">
+          <div>
+            <Label htmlFor="chart-title" className="text-xs font-medium text-gray-600">
+              Chart Title
+            </Label>
+            <Input
+              id="chart-title"
+              value={element.properties?.chartTitle || ''}
+              onChange={(e) => handleTitleChange(e.target.value)}
+              placeholder="Enter chart title"
+              className="mt-1"
+            />
+          </div>
 
-        <div>
-          <Label htmlFor="chart-variant" className="text-xs font-medium text-gray-600">
-            Chart Type
-          </Label>
-          <Select value={element.properties?.chartVariant || 'basic-line'} onValueChange={handleVariantChange}>
-            <SelectTrigger className="mt-1">
-              <SelectValue placeholder="Select chart type" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="basic-line">Basic Line</SelectItem>
-              <SelectItem value="multi-line">Multi-Line</SelectItem>
-              <SelectItem value="stepped-line">Stepped Line</SelectItem>
-              <SelectItem value="curved-line">Curved Line</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+          <div>
+            <Label htmlFor="chart-variant" className="text-xs font-medium text-gray-600">
+              Chart Type
+            </Label>
+            <Select value={element.properties?.chartVariant || 'basic-line'} onValueChange={handleVariantChange}>
+              <SelectTrigger className="mt-1">
+                <SelectValue placeholder="Select chart type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="basic-line">Basic Line</SelectItem>
+                <SelectItem value="multi-line">Multi-Line</SelectItem>
+                <SelectItem value="stepped-line">Stepped Line</SelectItem>
+                <SelectItem value="curved-line">Curved Line</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
 
-        <div>
-          <Label htmlFor="chart-height" className="text-xs font-medium text-gray-600">
-            Chart Height: {element.properties?.chartHeight || 300}px
-          </Label>
-          <Slider
-            id="chart-height"
-            min={200}
-            max={600}
-            step={50}
-            value={[element.properties?.chartHeight || 300]}
-            onValueChange={handleHeightChange}
-            className="mt-2"
-          />
+          <div>
+            <Label htmlFor="chart-height" className="text-xs font-medium text-gray-600">
+              Chart Height: {element.properties?.chartHeight || 300}px
+            </Label>
+            <Slider
+              id="chart-height"
+              min={200}
+              max={600}
+              step={50}
+              value={[element.properties?.chartHeight || 300]}
+              onValueChange={handleHeightChange}
+              className="mt-2"
+            />
+          </div>
         </div>
       </div>
     </div>

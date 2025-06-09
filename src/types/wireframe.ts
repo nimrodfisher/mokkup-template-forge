@@ -1,4 +1,3 @@
-
 export type ElementType = 
   'header' | 'button' | 'filter' | 'kpi' | 'column-chart' | 'bar-chart' | 'line-chart' | 
   'area-chart' | 'combo-chart' | 'pie-chart' | 'gauge-chart' |
@@ -331,4 +330,12 @@ export interface WireframeState {
   switchScreen: (id: string) => void;
   renameScreen: (id: string, name: string) => void;
   deleteScreen: (id: string) => void;
+}
+
+export interface ChartDataPoint {
+  category: string;
+  value: number;
+  line?: number;
+  secondary?: number;
+  tertiary?: number;
 }
