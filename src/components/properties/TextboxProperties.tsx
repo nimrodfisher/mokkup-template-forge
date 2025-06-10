@@ -90,31 +90,33 @@ export function TextboxProperties({
       <div className="space-y-4">
         <div className="font-medium text-sm">Typography</div>
         
-        {/* Text Alignment */}
+        {/* Text Alignment - Made responsive */}
         <div>
           <Label>Text Alignment</Label>
-          <RadioGroup 
-            value={properties.textAlignment || 'left'}
-            onValueChange={(value) => handleChange('textAlignment', value)}
-            className="flex space-x-4 mt-2"
-          >
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="left" id="align-left" />
-              <Label htmlFor="align-left">Left</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="center" id="align-center" />
-              <Label htmlFor="align-center">Center</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="right" id="align-right" />
-              <Label htmlFor="align-right">Right</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="justify" id="align-justify" />
-              <Label htmlFor="align-justify">Justify</Label>
-            </div>
-          </RadioGroup>
+          <div className="mt-2">
+            <RadioGroup 
+              value={properties.textAlignment || 'left'}
+              onValueChange={(value) => handleChange('textAlignment', value)}
+              className="grid grid-cols-2 sm:grid-cols-4 gap-2"
+            >
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="left" id="align-left" />
+                <Label htmlFor="align-left" className="text-xs sm:text-sm">Left</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="center" id="align-center" />
+                <Label htmlFor="align-center" className="text-xs sm:text-sm">Center</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="right" id="align-right" />
+                <Label htmlFor="align-right" className="text-xs sm:text-sm">Right</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="justify" id="align-justify" />
+                <Label htmlFor="align-justify" className="text-xs sm:text-sm">Justify</Label>
+              </div>
+            </RadioGroup>
+          </div>
         </div>
         
         {/* Font Family */}
@@ -144,74 +146,78 @@ export function TextboxProperties({
           </Select>
         </div>
         
-        {/* Font Size */}
+        {/* Font Size - Made responsive */}
         <div>
           <Label>Font Size</Label>
-          <RadioGroup 
-            value={properties.fontSize || 'md'}
-            onValueChange={(value) => handleChange('fontSize', value)}
-            className="flex flex-wrap gap-4 mt-2"
-          >
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="xs" id="size-xs" />
-              <Label htmlFor="size-xs">XS</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="sm" id="size-sm" />
-              <Label htmlFor="size-sm">Small</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="md" id="size-md" />
-              <Label htmlFor="size-md">Medium</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="lg" id="size-lg" />
-              <Label htmlFor="size-lg">Large</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="xl" id="size-xl" />
-              <Label htmlFor="size-xl">XL</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="2xl" id="size-2xl" />
-              <Label htmlFor="size-2xl">2XL</Label>
-            </div>
-          </RadioGroup>
+          <div className="mt-2">
+            <RadioGroup 
+              value={properties.fontSize || 'md'}
+              onValueChange={(value) => handleChange('fontSize', value)}
+              className="grid grid-cols-2 sm:grid-cols-3 gap-2"
+            >
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="xs" id="size-xs" />
+                <Label htmlFor="size-xs" className="text-xs sm:text-sm">XS</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="sm" id="size-sm" />
+                <Label htmlFor="size-sm" className="text-xs sm:text-sm">Small</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="md" id="size-md" />
+                <Label htmlFor="size-md" className="text-xs sm:text-sm">Medium</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="lg" id="size-lg" />
+                <Label htmlFor="size-lg" className="text-xs sm:text-sm">Large</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="xl" id="size-xl" />
+                <Label htmlFor="size-xl" className="text-xs sm:text-sm">XL</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="2xl" id="size-2xl" />
+                <Label htmlFor="size-2xl" className="text-xs sm:text-sm">2XL</Label>
+              </div>
+            </RadioGroup>
+          </div>
         </div>
         
-        {/* Font Weight */}
+        {/* Font Weight - Made responsive */}
         <div>
           <Label>Font Weight</Label>
-          <RadioGroup 
-            value={properties.fontWeight || 'normal'}
-            onValueChange={(value) => handleChange('fontWeight', value)}
-            className="flex flex-wrap gap-4 mt-2"
-          >
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="light" id="weight-light" />
-              <Label htmlFor="weight-light">Light</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="normal" id="weight-normal" />
-              <Label htmlFor="weight-normal">Normal</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="medium" id="weight-medium" />
-              <Label htmlFor="weight-medium">Medium</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="semibold" id="weight-semibold" />
-              <Label htmlFor="weight-semibold">Semibold</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="bold" id="weight-bold" />
-              <Label htmlFor="weight-bold">Bold</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="extrabold" id="weight-extrabold" />
-              <Label htmlFor="weight-extrabold">Extra Bold</Label>
-            </div>
-          </RadioGroup>
+          <div className="mt-2">
+            <RadioGroup 
+              value={properties.fontWeight || 'normal'}
+              onValueChange={(value) => handleChange('fontWeight', value)}
+              className="grid grid-cols-2 sm:grid-cols-3 gap-2"
+            >
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="light" id="weight-light" />
+                <Label htmlFor="weight-light" className="text-xs sm:text-sm">Light</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="normal" id="weight-normal" />
+                <Label htmlFor="weight-normal" className="text-xs sm:text-sm">Normal</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="medium" id="weight-medium" />
+                <Label htmlFor="weight-medium" className="text-xs sm:text-sm">Medium</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="semibold" id="weight-semibold" />
+                <Label htmlFor="weight-semibold" className="text-xs sm:text-sm">Semibold</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="bold" id="weight-bold" />
+                <Label htmlFor="weight-bold" className="text-xs sm:text-sm">Bold</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="extrabold" id="weight-extrabold" />
+                <Label htmlFor="weight-extrabold" className="text-xs sm:text-sm">Extra Bold</Label>
+              </div>
+            </RadioGroup>
+          </div>
         </div>
 
         {/* Line Height */}

@@ -31,7 +31,7 @@ export function LineChartDataSection({ element, updateElementProperties }: LineC
   };
 
   const addDataPoint = () => {
-    const newPoint = { 
+    const newPoint: any = { 
       category: `Item ${chartData.length + 1}`, 
       value: 0 
     };
@@ -60,7 +60,7 @@ export function LineChartDataSection({ element, updateElementProperties }: LineC
       </div>
       
       <div className="space-y-3 max-h-64 overflow-y-auto">
-        {chartData.map((item, index) => (
+        {chartData.map((item: any, index) => (
           <div key={index} className="flex flex-col sm:flex-row items-start sm:items-center gap-2 p-3 border rounded-lg">
             <div className="flex-1 w-full sm:w-auto">
               <Label className="text-xs text-gray-500">Category</Label>
