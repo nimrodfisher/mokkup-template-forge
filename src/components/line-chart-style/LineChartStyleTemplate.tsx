@@ -62,11 +62,20 @@ export function LineChartStyleTemplate({
           <p className="text-xs text-gray-500 mt-1">{template.preview}</p>
         </div>
         
-        <div className="h-24 sm:h-32 bg-gray-50 rounded border">
+        <div className="h-32 w-full bg-gray-50 rounded border overflow-hidden">
           <LineChartRenderer 
             properties={{
               ...template.properties,
-              chartHeight: 96
+              chartHeight: 128,
+              chartTitle: template.properties.chartTitle || 'Preview',
+              showButtons: false,
+              showKpis: false,
+              chartData: template.properties.chartData || [
+                { category: 'A', value: 30, line: 25 },
+                { category: 'B', value: 45, line: 35 },
+                { category: 'C', value: 35, line: 40 },
+                { category: 'D', value: 50, line: 45 }
+              ]
             }}
           />
         </div>
