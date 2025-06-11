@@ -62,17 +62,17 @@ export function LineChartStyleTemplate({
           <p className="text-xs text-gray-500 mt-1">{template.preview}</p>
         </div>
         
-        <div className="h-32 w-full bg-gray-50 rounded border overflow-hidden p-2">
-          <div className="h-full w-full">
+        <div className="h-40 w-full bg-gray-50 rounded border overflow-hidden">
+          <div className="h-full w-full p-1">
             <LineChartRenderer 
               properties={{
                 ...template.properties,
-                chartHeight: 112,
+                chartHeight: 152,
                 chartTitle: '',
                 showButtons: false,
                 showKpis: false,
                 showLegend: false,
-                showLabels: false,
+                showLabels: true,
                 showGridLines: false,
                 chartBackground: 'transparent',
                 plotBackground: 'transparent',
