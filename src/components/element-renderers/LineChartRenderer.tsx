@@ -101,13 +101,13 @@ export function LineChartRenderer({ properties, onUpdateProperties }: LineChartR
 
   return (
     <div 
-      className="w-full h-full border rounded-lg p-4"
+      className="w-full h-full border rounded-lg p-4 overflow-hidden"
       style={{ backgroundColor: chartBackground }}
     >
-      <div className="flex items-center justify-between mb-4">
-        <div>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-2">
+        <div className="min-w-0 flex-1">
           {chartTitle && (
-            <h3 className="text-lg font-semibold text-gray-800">{chartTitle}</h3>
+            <h3 className="text-lg font-semibold text-gray-800 truncate">{chartTitle}</h3>
           )}
           {isMultiLineVariant && (
             <p className="text-xs text-gray-500 mt-1">Multi-Series Line Chart</p>
@@ -115,7 +115,7 @@ export function LineChartRenderer({ properties, onUpdateProperties }: LineChartR
         </div>
         
         {showButtons && chartButtons && chartButtons.length > 0 && (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             {chartButtons.map((button, index) => {
               const getIcon = (title: string) => {
                 switch (title.toLowerCase()) {
@@ -139,7 +139,7 @@ export function LineChartRenderer({ properties, onUpdateProperties }: LineChartR
                   className="text-xs"
                 >
                   {getIcon(button.title)}
-                  <span className="ml-1">{button.title}</span>
+                  <span className="ml-1 hidden sm:inline">{button.title}</span>
                 </Button>
               );
             })}
@@ -148,12 +148,12 @@ export function LineChartRenderer({ properties, onUpdateProperties }: LineChartR
       </div>
 
       {showKpis && chartKpis && chartKpis.length > 0 && (
-        <div className="grid grid-cols-2 gap-4 mb-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
           {chartKpis.map((kpi, index) => (
             <div key={index} className="bg-gray-50 p-3 rounded-lg border">
-              <div className="text-sm text-gray-600">{kpi.title}</div>
+              <div className="text-sm text-gray-600 truncate">{kpi.title}</div>
               <div className="flex items-center gap-2">
-                <span className="text-lg font-semibold">{kpi.value}</span>
+                <span className="text-lg font-semibold truncate">{kpi.value}</span>
                 {kpi.change && (
                   <span className={`text-xs px-2 py-1 rounded ${
                     kpi.change.startsWith('+') ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
@@ -168,34 +168,36 @@ export function LineChartRenderer({ properties, onUpdateProperties }: LineChartR
       )}
       
       <div 
-        style={{ height: chartHeight, backgroundColor: plotBackground }}
-        className="rounded border"
+        style={{ height: Math.min(chartHeight, 400), backgroundColor: plotBackground }}
+        className="rounded border w-full"
       >
         <ResponsiveContainer width="100%" height="100%">
           <LineChart 
             data={chartData} 
-            margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+            margin={{ top: 10, right: 20, left: 10, bottom: 10 }}
           >
             {showGridLines && <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />}
             <XAxis 
               dataKey="category" 
-              tick={{ fontSize: 12, fill: '#64748b' }}
+              tick={{ fontSize: 10, fill: '#64748b' }}
               axisLine={showLabels}
               tickLine={showLabels}
               stroke="#94a3b8"
+              interval="preserveStartEnd"
             />
             <YAxis 
-              tick={{ fontSize: 12, fill: '#64748b' }}
+              tick={{ fontSize: 10, fill: '#64748b' }}
               axisLine={showLabels}
               tickLine={showLabels}
               stroke="#94a3b8"
+              width={40}
             />
             
             <Tooltip content={<CustomTooltip />} />
             
             {showLegend && (
               <Legend 
-                wrapperStyle={{ fontSize: '12px', color: '#64748b' }}
+                wrapperStyle={{ fontSize: '10px', color: '#64748b' }}
               />
             )}
             

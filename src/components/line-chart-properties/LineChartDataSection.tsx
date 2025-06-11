@@ -31,7 +31,7 @@ export function LineChartDataSection({ element, updateElementProperties }: LineC
   };
 
   const addDataPoint = () => {
-    const newPoint = { 
+    const newPoint: any = { 
       category: `Item ${chartData.length + 1}`, 
       value: 0 
     };
