@@ -62,29 +62,31 @@ export function LineChartStyleTemplate({
           <p className="text-xs text-gray-500 mt-1">{template.preview}</p>
         </div>
         
-        <div className="h-40 w-full bg-gray-50 rounded border overflow-hidden">
-          <div className="h-full w-full p-1">
-            <LineChartRenderer 
-              properties={{
-                ...template.properties,
-                chartHeight: 152,
-                chartTitle: '',
-                showButtons: false,
-                showKpis: false,
-                showLegend: false,
-                showLabels: true,
-                showGridLines: false,
-                chartBackground: 'transparent',
-                plotBackground: 'transparent',
-                enableAnimation: false,
-                chartData: template.properties.chartData || [
-                  { category: 'A', value: 30, line: 25 },
-                  { category: 'B', value: 45, line: 35 },
-                  { category: 'C', value: 35, line: 40 },
-                  { category: 'D', value: 50, line: 45 }
-                ]
-              }}
-            />
+        <div className="h-32 w-full bg-gray-50 rounded border overflow-hidden relative">
+          <div className="absolute inset-0 p-1">
+            <div className="w-full h-full overflow-hidden">
+              <LineChartRenderer 
+                properties={{
+                  ...template.properties,
+                  chartHeight: 120,
+                  chartTitle: '',
+                  showButtons: false,
+                  showKpis: false,
+                  showLegend: false,
+                  showLabels: false,
+                  showGridLines: false,
+                  chartBackground: 'transparent',
+                  plotBackground: 'transparent',
+                  enableAnimation: false,
+                  chartData: template.properties.chartData || [
+                    { category: 'A', value: 30, line: 25 },
+                    { category: 'B', value: 45, line: 35 },
+                    { category: 'C', value: 35, line: 40 },
+                    { category: 'D', value: 50, line: 45 }
+                  ]
+                }}
+              />
+            </div>
           </div>
         </div>
       </div>
