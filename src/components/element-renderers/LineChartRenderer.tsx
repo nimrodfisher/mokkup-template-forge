@@ -99,15 +99,21 @@ export function LineChartRenderer({ properties, onUpdateProperties }: LineChartR
 
   const isMultiLineVariant = chartVariant === 'multi-line';
 
+  // Calculate available height for chart
+  const headerHeight = chartTitle ? 60 : 20;
+  const kpiHeight = (showKpis && chartKpis && chartKpis.length > 0) ? 80 : 0;
+  const buttonHeight = (showButtons && chartButtons && chartButtons.length > 0) ? 40 : 0;
+  const availableHeight = Math.max(200, Math.min(chartHeight, 400) - headerHeight - kpiHeight - buttonHeight);
+
   return (
     <div 
-      className="w-full h-full border rounded-lg p-4 overflow-hidden"
+      className="w-full h-full border rounded-lg p-2 sm:p-4 overflow-hidden flex flex-col"
       style={{ backgroundColor: chartBackground }}
     >
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-2">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-2 gap-2 shrink-0">
         <div className="min-w-0 flex-1">
           {chartTitle && (
-            <h3 className="text-lg font-semibold text-gray-800 truncate">{chartTitle}</h3>
+            <h3 className="text-sm sm:text-lg font-semibold text-gray-800 truncate">{chartTitle}</h3>
           )}
           {isMultiLineVariant && (
             <p className="text-xs text-gray-500 mt-1">Multi-Series Line Chart</p>
@@ -115,7 +121,7 @@ export function LineChartRenderer({ properties, onUpdateProperties }: LineChartR
         </div>
         
         {showButtons && chartButtons && chartButtons.length > 0 && (
-          <div className="flex items-center gap-2 flex-wrap">
+          <div className="flex items-center gap-1 sm:gap-2 flex-wrap shrink-0">
             {chartButtons.map((button, index) => {
               const getIcon = (title: string) => {
                 switch (title.toLowerCase()) {
@@ -136,7 +142,7 @@ export function LineChartRenderer({ properties, onUpdateProperties }: LineChartR
                   variant="outline"
                   size="sm"
                   onClick={() => handleButtonClick(button.title)}
-                  className="text-xs"
+                  className="text-xs p-1 sm:p-2"
                 >
                   {getIcon(button.title)}
                   <span className="ml-1 hidden sm:inline">{button.title}</span>
@@ -148,14 +154,14 @@ export function LineChartRenderer({ properties, onUpdateProperties }: LineChartR
       </div>
 
       {showKpis && chartKpis && chartKpis.length > 0 && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 mb-2 shrink-0">
           {chartKpis.map((kpi, index) => (
-            <div key={index} className="bg-gray-50 p-3 rounded-lg border">
-              <div className="text-sm text-gray-600 truncate">{kpi.title}</div>
+            <div key={index} className="bg-gray-50 p-2 sm:p-3 rounded-lg border">
+              <div className="text-xs sm:text-sm text-gray-600 truncate">{kpi.title}</div>
               <div className="flex items-center gap-2">
-                <span className="text-lg font-semibold truncate">{kpi.value}</span>
+                <span className="text-sm sm:text-lg font-semibold truncate">{kpi.value}</span>
                 {kpi.change && (
-                  <span className={`text-xs px-2 py-1 rounded ${
+                  <span className={`text-xs px-1 sm:px-2 py-1 rounded ${
                     kpi.change.startsWith('+') ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
                   }`}>
                     {kpi.change}
@@ -168,36 +174,42 @@ export function LineChartRenderer({ properties, onUpdateProperties }: LineChartR
       )}
       
       <div 
-        style={{ height: Math.min(chartHeight, 400), backgroundColor: plotBackground }}
-        className="rounded border w-full"
+        style={{ 
+          height: availableHeight, 
+          backgroundColor: plotBackground,
+          minHeight: '200px'
+        }}
+        className="rounded border w-full flex-1"
       >
         <ResponsiveContainer width="100%" height="100%">
           <LineChart 
             data={chartData} 
-            margin={{ top: 10, right: 20, left: 10, bottom: 10 }}
+            margin={{ top: 5, right: 5, left: 5, bottom: 5 }}
           >
             {showGridLines && <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />}
             <XAxis 
               dataKey="category" 
-              tick={{ fontSize: 10, fill: '#64748b' }}
+              tick={{ fontSize: 9, fill: '#64748b' }}
               axisLine={showLabels}
               tickLine={showLabels}
               stroke="#94a3b8"
               interval="preserveStartEnd"
+              height={30}
             />
             <YAxis 
-              tick={{ fontSize: 10, fill: '#64748b' }}
+              tick={{ fontSize: 9, fill: '#64748b' }}
               axisLine={showLabels}
               tickLine={showLabels}
               stroke="#94a3b8"
-              width={40}
+              width={35}
             />
             
             <Tooltip content={<CustomTooltip />} />
             
             {showLegend && (
               <Legend 
-                wrapperStyle={{ fontSize: '10px', color: '#64748b' }}
+                wrapperStyle={{ fontSize: '9px', color: '#64748b' }}
+                iconSize={8}
               />
             )}
             
@@ -212,7 +224,7 @@ export function LineChartRenderer({ properties, onUpdateProperties }: LineChartR
               dot={showMarkers ? { 
                 fill: lineColor, 
                 strokeWidth: 2, 
-                r: markerSize 
+                r: Math.max(3, markerSize - 1)
               } : false}
               animationDuration={enableAnimation ? animationDuration : 0}
             />
@@ -229,7 +241,7 @@ export function LineChartRenderer({ properties, onUpdateProperties }: LineChartR
                 dot={showMarkers ? { 
                   fill: secondaryBarColor, 
                   strokeWidth: 2, 
-                  r: markerSize 
+                  r: Math.max(3, markerSize - 1)
                 } : false}
                 animationDuration={enableAnimation ? animationDuration : 0}
               />
@@ -247,7 +259,7 @@ export function LineChartRenderer({ properties, onUpdateProperties }: LineChartR
                 dot={showMarkers ? { 
                   fill: tertiaryBarColor, 
                   strokeWidth: 2, 
-                  r: markerSize 
+                  r: Math.max(3, markerSize - 1)
                 } : false}
                 animationDuration={enableAnimation ? animationDuration : 0}
               />
