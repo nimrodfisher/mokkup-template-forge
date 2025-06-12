@@ -151,6 +151,12 @@ function ComponentIcon({ type }: { type: ElementType }) {
           <path d="M6 16l3-3 2 2 5-5 3 3" stroke="currentColor" strokeWidth="1.5" />
         </svg>
       );
+    case 'shapes':
+      return (
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="12,2 22,20 2,20" stroke="currentColor" strokeWidth="1.5" fill="none" />
+        </svg>
+      );
     case 'delete':
       return (
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
