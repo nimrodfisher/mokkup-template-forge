@@ -1,3 +1,4 @@
+
 export type ElementType = 
   'header' | 'button' | 'filter' | 'kpi' | 'column-chart' | 'bar-chart' | 'line-chart' | 
   'area-chart' | 'combo-chart' | 'pie-chart' | 'gauge-chart' |
@@ -133,6 +134,8 @@ export interface Element {
     // Shape properties
     shapeVariant?: ShapeVariant;
     shapeColor?: string;
+    shapeWidth?: number;
+    shapeHeight?: number;
     showTitle?: boolean;
     // Chart properties
     chartVariant?: ChartVariant;
