@@ -12,6 +12,10 @@ export const ShapeDisplay = ({ element }: { element: Element }) => {
   const hasBorder = properties.hasBorder === true;
   const borderColor = properties.borderColor || '#e5e7eb';
   
+  // Size properties with defaults that fit within typical canvas elements
+  const shapeWidth = properties.shapeWidth || 60;
+  const shapeHeight = properties.shapeHeight || 40;
+  
   const renderShape = () => {
     switch (variant) {
       case 'triangle':
@@ -30,9 +34,9 @@ export const ShapeDisplay = ({ element }: { element: Element }) => {
                 style={{ 
                   width: 0, 
                   height: 0, 
-                  borderLeft: '40px solid transparent',
-                  borderRight: '40px solid transparent',
-                  borderBottom: `80px solid ${shapeColor}`,
+                  borderLeft: `${shapeWidth/2}px solid transparent`,
+                  borderRight: `${shapeWidth/2}px solid transparent`,
+                  borderBottom: `${shapeHeight}px solid ${shapeColor}`,
                 }}
               />
             </div>
@@ -52,8 +56,9 @@ export const ShapeDisplay = ({ element }: { element: Element }) => {
             )}
             <div className="flex-1 flex items-center justify-center">
               <div 
-                className="w-24 h-12"
                 style={{ 
+                  width: `${shapeWidth}px`,
+                  height: `${shapeHeight}px`,
                   backgroundColor: shapeColor,
                   border: hasBorder ? `2px solid ${borderColor}` : 'none',
                 }}
@@ -77,8 +82,8 @@ export const ShapeDisplay = ({ element }: { element: Element }) => {
               <div 
                 className="rounded-full"
                 style={{ 
-                  width: '60px',
-                  height: '60px',
+                  width: `${Math.min(shapeWidth, shapeHeight)}px`,
+                  height: `${Math.min(shapeWidth, shapeHeight)}px`,
                   backgroundColor: shapeColor,
                   border: hasBorder ? `2px solid ${borderColor}` : 'none',
                 }}
@@ -102,8 +107,8 @@ export const ShapeDisplay = ({ element }: { element: Element }) => {
               <div 
                 className="rounded-full"
                 style={{ 
-                  width: '90px',
-                  height: '45px',
+                  width: `${shapeWidth}px`,
+                  height: `${shapeHeight}px`,
                   backgroundColor: shapeColor,
                   border: hasBorder ? `2px solid ${borderColor}` : 'none',
                 }}
@@ -129,9 +134,9 @@ export const ShapeDisplay = ({ element }: { element: Element }) => {
                 style={{ 
                   width: 0, 
                   height: 0, 
-                  borderLeft: '40px solid transparent',
-                  borderRight: '40px solid transparent',
-                  borderBottom: `80px solid ${shapeColor}`,
+                  borderLeft: `${shapeWidth/2}px solid transparent`,
+                  borderRight: `${shapeWidth/2}px solid transparent`,
+                  borderBottom: `${shapeHeight}px solid ${shapeColor}`,
                 }}
               />
             </div>
@@ -141,7 +146,7 @@ export const ShapeDisplay = ({ element }: { element: Element }) => {
   };
   
   return (
-    <div className="w-full h-full p-2 bg-white">
+    <div className="w-full h-full p-2 bg-white overflow-hidden">
       {renderShape()}
     </div>
   );

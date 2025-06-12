@@ -1,8 +1,10 @@
+
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { Slider } from "@/components/ui/slider";
 import { X, Settings } from "lucide-react";
 import { Element } from "@/types/wireframe";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
@@ -26,6 +28,9 @@ export function ShapeProperties({
   const [textColor, setTextColor] = useState(properties.textColor || '#000000');
   const [shapeColor, setShapeColor] = useState(properties.shapeColor || '#9b87f5');
   const [borderColor, setBorderColor] = useState(properties.borderColor || '#e5e7eb');
+  
+  const shapeWidth = properties.shapeWidth || 60;
+  const shapeHeight = properties.shapeHeight || 40;
   
   return (
     <div className="space-y-4">
@@ -90,6 +95,36 @@ export function ShapeProperties({
                 <AlignRight className="h-4 w-4" />
               </ToggleGroupItem>
             </ToggleGroup>
+          </div>
+          
+          <div className="space-y-3 border-t pt-3">
+            <h4 className="text-sm font-semibold">Shape Size</h4>
+            
+            <div className="space-y-2">
+              <Label htmlFor="shape-width">Width: {shapeWidth}px</Label>
+              <Slider
+                id="shape-width"
+                min={20}
+                max={150}
+                step={5}
+                value={[shapeWidth]}
+                onValueChange={([value]) => updateElementProperties(element.id, { shapeWidth: value })}
+                className="w-full"
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="shape-height">Height: {shapeHeight}px</Label>
+              <Slider
+                id="shape-height"
+                min={20}
+                max={100}
+                step={5}
+                value={[shapeHeight]}
+                onValueChange={([value]) => updateElementProperties(element.id, { shapeHeight: value })}
+                className="w-full"
+              />
+            </div>
           </div>
           
           <div className="flex justify-between items-center">
