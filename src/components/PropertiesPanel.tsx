@@ -19,6 +19,7 @@ import { PieChartProperties } from "./pie-chart-properties/PieChartProperties";
 import { ComboChartProperties } from "./combo-chart-properties/ComboChartProperties";
 import { LineChartProperties } from "./line-chart-properties/LineChartProperties";
 import { BarChartProperties } from "./bar-chart-properties/BarChartProperties";
+import { WaterfallProperties } from "./waterfall-properties/WaterfallProperties";
 
 interface PropertiesPanelProps {
   onOpenStyleDialog?: () => void;
@@ -96,6 +97,14 @@ export function PropertiesPanel({ onOpenStyleDialog, updateElementProperties }: 
       case 'bar-chart':
         return (
           <BarChartProperties
+            element={selectedElement}
+            updateElementProperties={handleUpdateElementProperties}
+            onOpenStyleDialog={onOpenStyleDialog}
+          />
+        );
+      case 'waterfall':
+        return (
+          <WaterfallProperties
             element={selectedElement}
             updateElementProperties={handleUpdateElementProperties}
             onOpenStyleDialog={onOpenStyleDialog}

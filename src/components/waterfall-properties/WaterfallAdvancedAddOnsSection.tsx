@@ -21,7 +21,7 @@ export function WaterfallAdvancedAddOnsSection({ properties, elementId, updateEl
 
   const addButton = () => {
     const newButtons = [...waterfallButtons, { title: 'Title1', alignment: 'left' }];
-    updateElementProperties(elementId, { waterfallButtons: newButtons });
+    updateElementProperties(elementId, { waterfallButtons: newButtons, showButtons: true });
   };
 
   const updateButton = (index: number, field: string, value: string) => {
@@ -32,22 +32,29 @@ export function WaterfallAdvancedAddOnsSection({ properties, elementId, updateEl
 
   const removeButton = (index: number) => {
     const newButtons = waterfallButtons.filter((_: any, i: number) => i !== index);
-    updateElementProperties(elementId, { waterfallButtons: newButtons });
-  };
-
-  const addDropdown = () => {
-    const newDropdowns = [...waterfallDropdowns, { title: 'Dropdown', values: ['Option 1', 'Option 2'] }];
-    updateElementProperties(elementId, { waterfallDropdowns: newDropdowns });
+    updateElementProperties(elementId, { 
+      waterfallButtons: newButtons,
+      showButtons: newButtons.length > 0
+    });
   };
 
   const addKpi = () => {
     const newKpis = [...waterfallKpis, { title: 'Metric', value: '123', change: '12%' }];
+    updateElementProperties(elementId, { waterfallKpis: newKpis, showKpis: true });
+  };
+
+  const updateKpi = (index: number, field: string, value: string) => {
+    const newKpis = [...waterfallKpis];
+    newKpis[index] = { ...newKpis[index], [field]: value };
     updateElementProperties(elementId, { waterfallKpis: newKpis });
   };
 
-  const addText = () => {
-    const newText = [...waterfallText, { content: 'Text content', alignment: 'left' }];
-    updateElementProperties(elementId, { waterfallText: newText });
+  const removeKpi = (index: number) => {
+    const newKpis = waterfallKpis.filter((_: any, i: number) => i !== index);
+    updateElementProperties(elementId, { 
+      waterfallKpis: newKpis,
+      showKpis: newKpis.length > 0
+    });
   };
 
   return (
@@ -75,46 +82,49 @@ export function WaterfallAdvancedAddOnsSection({ properties, elementId, updateEl
               <div className="flex items-center justify-between">
                 <Label className="text-xs text-gray-600">Alignment</Label>
                 <div className="flex gap-1">
-                  <Button variant="outline" size="sm" className="h-6 w-6 p-0">
-                    <span className="text-xs">L</span>
+                  <Button variant="outline" size="sm" className="h-6 w-6 p-0 text-xs">
+                    L
                   </Button>
-                  <Button variant="outline" size="sm" className="h-6 w-6 p-0">
-                    <span className="text-xs">C</span>
+                  <Button variant="outline" size="sm" className="h-6 w-6 p-0 text-xs">
+                    C
                   </Button>
-                  <Button variant="outline" size="sm" className="h-6 w-6 p-0">
-                    <span className="text-xs">R</span>
+                  <Button variant="outline" size="sm" className="h-6 w-6 p-0 text-xs">
+                    R
                   </Button>
                 </div>
               </div>
               
-              {waterfallButtons.map((button: any, index: number) => (
-                <div key={index} className="flex items-center gap-2 p-2 bg-gray-50 rounded">
-                  <GripVertical className="h-4 w-4 text-gray-400" />
-                  <Input
-                    value={button.title}
-                    onChange={(e) => updateButton(index, 'title', e.target.value)}
-                    className="text-sm flex-1"
-                  />
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={() => removeButton(index)}
-                    className="h-6 w-6 p-0 text-red-500"
-                  >
-                    <Trash2 className="h-3 w-3" />
-                  </Button>
-                </div>
-              ))}
-              
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={addButton}
-                className="w-full text-blue-600 border-blue-200"
-              >
-                <Plus className="h-4 w-4 mr-1" />
-                Add Button
-              </Button>
+              <div className="space-y-2">
+                {waterfallButtons.map((button: any, index: number) => (
+                  <div key={index} className="flex items-center gap-2 p-2 bg-gray-50 rounded">
+                    <GripVertical className="h-4 w-4 text-gray-400" />
+                    <Input
+                      value={button.title}
+                      onChange={(e) => updateButton(index, 'title', e.target.value)}
+                      className="text-sm flex-1"
+                      placeholder="Button title"
+                    />
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => removeButton(index)}
+                      className="h-6 w-6 p-0 text-red-500"
+                    >
+                      <Trash2 className="h-3 w-3" />
+                    </Button>
+                  </div>
+                ))}
+                
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={addButton}
+                  className="w-full text-blue-600 border-blue-200 hover:bg-blue-50"
+                >
+                  <Plus className="h-4 w-4 mr-1" />
+                  Add Button
+                </Button>
+              </div>
             </div>
           )}
         </div>
@@ -152,6 +162,56 @@ export function WaterfallAdvancedAddOnsSection({ properties, elementId, updateEl
               }}
             />
           </div>
+
+          {(properties.showKpis || waterfallKpis.length > 0) && (
+            <div className="space-y-2">
+              {waterfallKpis.map((kpi: any, index: number) => (
+                <div key={index} className="space-y-2 p-2 bg-gray-50 rounded">
+                  <div className="flex items-center gap-2">
+                    <GripVertical className="h-4 w-4 text-gray-400" />
+                    <Input
+                      value={kpi.title}
+                      onChange={(e) => updateKpi(index, 'title', e.target.value)}
+                      className="text-sm flex-1"
+                      placeholder="KPI Title"
+                    />
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => removeKpi(index)}
+                      className="h-6 w-6 p-0 text-red-500"
+                    >
+                      <Trash2 className="h-3 w-3" />
+                    </Button>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <Input
+                      value={kpi.value}
+                      onChange={(e) => updateKpi(index, 'value', e.target.value)}
+                      placeholder="Value"
+                      className="text-sm"
+                    />
+                    <Input
+                      value={kpi.change || ''}
+                      onChange={(e) => updateKpi(index, 'change', e.target.value)}
+                      placeholder="Change %"
+                      className="text-sm"
+                    />
+                  </div>
+                </div>
+              ))}
+              
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={addKpi}
+                className="w-full text-blue-600 border-blue-200 hover:bg-blue-50"
+              >
+                <Plus className="h-4 w-4 mr-1" />
+                Add KPI
+              </Button>
+            </div>
+          )}
         </div>
 
         {/* Text Section */}

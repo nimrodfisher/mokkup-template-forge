@@ -147,12 +147,13 @@ export function WaterfallRenderer({ properties = {} }: WaterfallRendererProps) {
         </h3>
       )}
       
+      {/* Buttons Section */}
       {(showButtons || waterfallButtons.length > 0) && waterfallButtons.length > 0 && (
         <div className="flex justify-between mb-4">
           {waterfallButtons.map((button, index) => (
             <button
               key={index}
-              className={`px-3 py-1 text-sm border border-gray-300 rounded ${
+              className={`px-3 py-1 text-sm border border-gray-300 rounded hover:bg-gray-50 ${
                 button.alignment === 'left' ? 'mr-auto' : 
                 button.alignment === 'right' ? 'ml-auto' : 'mx-auto'
               }`}
@@ -232,6 +233,7 @@ export function WaterfallRenderer({ properties = {} }: WaterfallRendererProps) {
         </div>
       </div>
 
+      {/* KPIs Section */}
       {(showKpis || waterfallKpis.length > 0) && waterfallKpis.length > 0 && (
         <div className="flex justify-around mt-4 pt-4 border-t border-gray-200">
           {waterfallKpis.map((kpi, index) => (
