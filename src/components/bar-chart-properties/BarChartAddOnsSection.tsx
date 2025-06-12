@@ -30,7 +30,7 @@ export function BarChartAddOnsSection({
   };
 
   const addButton = () => {
-    const newButtons = [...chartButtons, { title: 'New Button', alignment: 'left' }];
+    const newButtons = [...chartButtons, { title: 'New Button', alignment: 'right' }];
     handleChange('chartButtons', newButtons);
   };
 
@@ -70,7 +70,7 @@ export function BarChartAddOnsSection({
           {/* Buttons Section */}
           <div>
             <div className="flex items-center justify-between mb-2">
-              <Label className="text-xs">Buttons</Label>
+              <Label className="text-xs font-medium">Buttons</Label>
               <Switch
                 checked={properties.showButtons === true}
                 onCheckedChange={(checked) => handleChange('showButtons', checked)}
@@ -97,15 +97,16 @@ export function BarChartAddOnsSection({
                       <div>
                         <Label className="text-xs">Title</Label>
                         <Input
-                          value={button.title}
+                          value={button.title || ''}
                           onChange={(e) => updateButton(index, 'title', e.target.value)}
                           className="mt-1 h-7 text-xs"
+                          placeholder="Button Text"
                         />
                       </div>
                       <div>
                         <Label className="text-xs">Alignment</Label>
                         <Select
-                          value={button.alignment}
+                          value={button.alignment || 'right'}
                           onValueChange={(value) => updateButton(index, 'alignment', value)}
                         >
                           <SelectTrigger className="mt-1 h-7 text-xs">
@@ -138,7 +139,7 @@ export function BarChartAddOnsSection({
           {/* KPIs Section */}
           <div>
             <div className="flex items-center justify-between mb-2">
-              <Label className="text-xs">KPIs</Label>
+              <Label className="text-xs font-medium">KPIs</Label>
               <Switch
                 checked={properties.showKpis === true}
                 onCheckedChange={(checked) => handleChange('showKpis', checked)}
@@ -165,18 +166,20 @@ export function BarChartAddOnsSection({
                       <div>
                         <Label className="text-xs">Title</Label>
                         <Input
-                          value={kpi.title}
+                          value={kpi.title || ''}
                           onChange={(e) => updateKpi(index, 'title', e.target.value)}
                           className="mt-1 h-7 text-xs"
+                          placeholder="KPI Name"
                         />
                       </div>
                       <div className="grid grid-cols-2 gap-2">
                         <div>
                           <Label className="text-xs">Value</Label>
                           <Input
-                            value={kpi.value}
+                            value={kpi.value || ''}
                             onChange={(e) => updateKpi(index, 'value', e.target.value)}
                             className="mt-1 h-7 text-xs"
+                            placeholder="1,234"
                           />
                         </div>
                         <div>

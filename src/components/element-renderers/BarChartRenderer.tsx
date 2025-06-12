@@ -19,6 +19,8 @@ export function BarChartRenderer({ properties = {} }: BarChartRendererProps) {
   const chartVariant = properties.chartVariant || 'bar';
   const showKpis = properties.showKpis || false;
   const showButtons = properties.showButtons || false;
+  const chartButtons = properties.chartButtons || [];
+  const chartKpis = properties.chartKpis || [];
 
   // Sample data - in a real app this would come from props
   const defaultData = [
@@ -54,12 +56,43 @@ export function BarChartRenderer({ properties = {} }: BarChartRendererProps) {
     }
   };
 
+  const getButtonAlignment = (alignment: string) => {
+    switch (alignment) {
+      case 'center':
+        return 'justify-center';
+      case 'right':
+        return 'justify-end';
+      default:
+        return 'justify-start';
+    }
+  };
+
+  const defaultKpis = [
+    { title: 'Total', value: '1,234', change: '+12%' },
+    { title: 'Average', value: '567', change: '+8%' },
+    { title: 'Growth', value: '+12%', change: '+3%' }
+  ];
+
+  const kpisToShow = chartKpis.length > 0 ? chartKpis : defaultKpis;
+
   return (
     <div className="w-full h-full p-3 flex flex-col">
       {/* Header section with title and optional buttons */}
       <div className="flex justify-between items-center mb-2">
         <div className="text-sm font-medium">{chartTitle}</div>
-        {showButtons && (
+        {showButtons && chartButtons.length > 0 && (
+          <div className={`flex gap-2 ${getButtonAlignment(chartButtons[0]?.alignment || 'right')}`}>
+            {chartButtons.map((button: any, index: number) => (
+              <button 
+                key={index}
+                className="px-2 py-1 text-xs bg-gray-100 rounded hover:bg-gray-200 transition-colors"
+              >
+                {button.title || 'Button'}
+              </button>
+            ))}
+          </div>
+        )}
+        {showButtons && chartButtons.length === 0 && (
           <div className="flex gap-2">
             <button className="px-2 py-1 text-xs bg-gray-100 rounded hover:bg-gray-200">
               Filter
@@ -74,18 +107,21 @@ export function BarChartRenderer({ properties = {} }: BarChartRendererProps) {
       {/* KPI section */}
       {showKpis && (
         <div className="flex gap-4 mb-3 p-2 bg-gray-50 rounded">
-          <div className="text-center">
-            <div className="text-lg font-bold" style={{ color: barColor }}>1,234</div>
-            <div className="text-xs text-gray-600">Total</div>
-          </div>
-          <div className="text-center">
-            <div className="text-lg font-bold" style={{ color: secondaryBarColor }}>567</div>
-            <div className="text-xs text-gray-600">Average</div>
-          </div>
-          <div className="text-center">
-            <div className="text-lg font-bold text-green-600">+12%</div>
-            <div className="text-xs text-gray-600">Growth</div>
-          </div>
+          {kpisToShow.slice(0, 3).map((kpi: any, index: number) => (
+            <div key={index} className="text-center flex-1">
+              <div className="text-lg font-bold" style={{ 
+                color: index === 0 ? barColor : index === 1 ? secondaryBarColor : '#059669' 
+              }}>
+                {kpi.value}
+              </div>
+              <div className="text-xs text-gray-600">{kpi.title}</div>
+              {kpi.change && (
+                <div className={`text-xs ${kpi.change.startsWith('+') ? 'text-green-600' : 'text-red-600'}`}>
+                  {kpi.change}
+                </div>
+              )}
+            </div>
+          ))}
         </div>
       )}
 
