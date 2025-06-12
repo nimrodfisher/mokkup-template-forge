@@ -75,12 +75,12 @@ export function WaterfallStyleTemplate({ variant, isSelected, onClick, title }: 
 
   return (
     <div 
-      className={`border-2 rounded-lg p-4 cursor-pointer transition-all hover:shadow-md ${
+      className={`border-2 rounded-lg p-3 cursor-pointer transition-all hover:shadow-md ${
         isSelected ? 'border-blue-500 bg-blue-50' : 'border-gray-200'
       }`}
       onClick={onClick}
     >
-      <div className="h-48 mb-3">
+      <div className="h-32 mb-2">
         <WaterfallRenderer properties={getTemplateProperties()} />
       </div>
       <div className="text-sm font-medium text-gray-700">{title}</div>
