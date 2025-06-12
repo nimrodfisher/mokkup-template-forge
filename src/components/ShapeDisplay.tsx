@@ -12,8 +12,6 @@ export const ShapeDisplay = ({ element }: { element: Element }) => {
   const hasBorder = properties.hasBorder === true;
   const borderColor = properties.borderColor || '#e5e7eb';
   
-  const borderStyle = hasBorder ? `2px solid ${borderColor}` : 'none';
-  
   const renderShape = () => {
     switch (variant) {
       case 'triangle':
@@ -35,7 +33,6 @@ export const ShapeDisplay = ({ element }: { element: Element }) => {
                   borderLeft: '40px solid transparent',
                   borderRight: '40px solid transparent',
                   borderBottom: `80px solid ${shapeColor}`,
-                  border: hasBorder ? `1px solid ${borderColor}` : undefined,
                 }}
               />
             </div>
@@ -58,7 +55,7 @@ export const ShapeDisplay = ({ element }: { element: Element }) => {
                 className="w-24 h-12"
                 style={{ 
                   backgroundColor: shapeColor,
-                  border: borderStyle,
+                  border: hasBorder ? `2px solid ${borderColor}` : 'none',
                 }}
               />
             </div>
@@ -83,7 +80,7 @@ export const ShapeDisplay = ({ element }: { element: Element }) => {
                   width: '60px',
                   height: '60px',
                   backgroundColor: shapeColor,
-                  border: borderStyle,
+                  border: hasBorder ? `2px solid ${borderColor}` : 'none',
                 }}
               />
             </div>
@@ -108,7 +105,7 @@ export const ShapeDisplay = ({ element }: { element: Element }) => {
                   width: '90px',
                   height: '45px',
                   backgroundColor: shapeColor,
-                  border: borderStyle,
+                  border: hasBorder ? `2px solid ${borderColor}` : 'none',
                 }}
               />
             </div>
@@ -135,7 +132,6 @@ export const ShapeDisplay = ({ element }: { element: Element }) => {
                   borderLeft: '40px solid transparent',
                   borderRight: '40px solid transparent',
                   borderBottom: `80px solid ${shapeColor}`,
-                  border: hasBorder ? `1px solid ${borderColor}` : undefined,
                 }}
               />
             </div>
