@@ -71,11 +71,11 @@ export function StyleDialogController({ element, dialogType, onClose }: StyleDia
     case 'filter':
       return <FilterStyleDialog {...commonProps} />;
     case 'button':
-      return <ButtonStyleDialog {...commonProps} isOpen={true} />;
+      return <ButtonStyleDialog {...commonProps} />;
     case 'kpi':
-      return <KpiStyleDialog {...commonProps} isOpen={true} />;
+      return <KpiStyleDialog {...commonProps} />;
     case 'textbox':
-      return <TextboxStyleDialog {...commonProps} isOpen={true} />;
+      return <TextboxStyleDialog {...commonProps} />;
     case 'area-chart':
       return <AreaChartStyleDialog {...commonProps} />;
     default:

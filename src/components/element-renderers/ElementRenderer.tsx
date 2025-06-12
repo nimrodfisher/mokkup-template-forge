@@ -46,7 +46,7 @@ export function ElementRenderer({ element, isEditable = false }: ElementRenderer
     case 'kpi':
       return <KpiDisplay element={element} />;
     case 'column-chart':
-      return <ChartRenderer properties={properties} />;
+      return <ChartRenderer properties={properties} type="column-chart" />;
     case 'bar-chart':
       return <BarChartRenderer properties={properties} />;
     case 'combo-chart':
