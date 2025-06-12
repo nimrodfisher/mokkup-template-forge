@@ -1,16 +1,15 @@
 
 import { useState, useEffect } from "react";
 import { Element } from "@/hooks/useWireframe";
-import { Input } from "@/components/ui/input";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Textarea } from "@/components/ui/textarea";
-import { ChevronDown, ChevronUp, Upload, Trash2 } from "lucide-react";
 import { HeaderAddOnsSection } from "./HeaderAddOnsSection";
 import { HeaderVariationSection } from "./HeaderVariationSection";
 import { HeaderDesignSection } from "./HeaderDesignSection";
+import { HeaderTitleSection } from "./HeaderTitleSection";
+import { HeaderLogoSection } from "./HeaderLogoSection";
+import { HeaderDescriptionSection } from "./HeaderDescriptionSection";
+import { HeaderNavigationSection } from "./HeaderNavigationSection";
+import { HeaderMetricsSection } from "./HeaderMetricsSection";
 
 interface HeaderPropertiesProps {
   element: Element;
@@ -19,10 +18,6 @@ interface HeaderPropertiesProps {
 }
 
 export function HeaderProperties({ element, updateElementProperties, onOpenStyleDialog }: HeaderPropertiesProps) {
-  const [showNavOptions, setShowNavOptions] = useState(false);
-  const [showMetricOptions, setShowMetricOptions] = useState(false);
-  const [showLogoOptions, setShowLogoOptions] = useState(false);
-  const [showDescriptionOptions, setShowDescriptionOptions] = useState(false);
   const [showAddOns, setShowAddOns] = useState(false);
 
   // Local state for properties
@@ -51,21 +46,6 @@ export function HeaderProperties({ element, updateElementProperties, onOpenStyle
     setShowLogo(element.properties?.showLogo || false);
     setDescription(element.properties?.description || '');
     setTitle(element.properties?.title || 'DASHBOARD TITLE');
-    
-    // Auto-expand sections based on template variant
-    const variant = element.properties?.variant;
-    if (variant === 'with-metrics' || variant === 'title-metrics') {
-      setShowMetricOptions(true);
-    }
-    if (variant === 'navigation-top' || variant === 'dark-navigation' || variant === 'centered-navigation-purple') {
-      setShowNavOptions(true);
-    }
-    if (variant === 'with-description') {
-      setShowDescriptionOptions(true);
-    }
-    if (variant === 'default' || variant === 'with-metrics' || variant === 'navigation-top' || variant === 'dark-navigation' || variant === 'colorful-banner' || variant === 'gradient') {
-      setShowLogoOptions(true);
-    }
   }, [element]);
 
   // Handle title change
@@ -195,237 +175,48 @@ export function HeaderProperties({ element, updateElementProperties, onOpenStyle
       <Separator />
 
       {/* Title Section - Always show */}
-      <div className="space-y-2">
-        <div className="font-medium text-sm">Title</div>
-        <div>
-          <Label htmlFor="header-title" className="text-xs text-gray-500 mb-1 block">
-            Header Title
-          </Label>
-          <Input
-            id="header-title"
-            value={title}
-            onChange={(e) => handleTitleChange(e.target.value)}
-            className="text-sm h-8"
-            placeholder="Enter header title"
-          />
-        </div>
-      </div>
-
-      <Separator />
+      <HeaderTitleSection
+        title={title}
+        onTitleChange={handleTitleChange}
+      />
 
       {/* Logo Section - Show for variants that support it */}
       {supportsLogo() && (
-        <>
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <div className="font-medium text-sm">Logo</div>
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                onClick={() => setShowLogoOptions(!showLogoOptions)}
-                className="h-7 w-7 p-0"
-              >
-                {showLogoOptions ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-              </Button>
-            </div>
-            
-            <div className="flex items-center justify-between">
-              <Label htmlFor="show-logo" className="text-sm">Show logo</Label>
-              <Switch 
-                id="show-logo"
-                checked={showLogo} 
-                onCheckedChange={handleLogoToggle}
-              />
-            </div>
-            
-            {showLogoOptions && showLogo && (
-              <div className="space-y-3 pt-2">
-                <div>
-                  <Label className="text-xs text-gray-500 mb-2 block">Upload Logo</Label>
-                  <div className="flex flex-col space-y-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="w-full justify-center"
-                      onClick={() => document.getElementById('logo-upload')?.click()}
-                    >
-                      <Upload className="h-4 w-4 mr-2" />
-                      {element.properties?.logoUrl ? 'Change Logo' : 'Upload Logo'}
-                    </Button>
-                    <input
-                      id="logo-upload"
-                      type="file"
-                      accept="image/*"
-                      onChange={handleLogoUpload}
-                      className="hidden"
-                    />
-                    {element.properties?.logoUrl && (
-                      <div className="mt-2 p-2 border rounded-md">
-                        <img 
-                          src={element.properties.logoUrl} 
-                          alt="Logo Preview" 
-                          className="h-12 w-auto object-contain mx-auto mb-2"
-                        />
-                        <Button 
-                          variant="destructive" 
-                          size="sm"
-                          className="w-full"
-                          onClick={handleLogoRemove}
-                        >
-                          <Trash2 className="h-4 w-4 mr-2" />
-                          Remove Logo
-                        </Button>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-          <Separator />
-        </>
+        <HeaderLogoSection
+          showLogo={showLogo}
+          logoUrl={element.properties?.logoUrl}
+          onLogoToggle={handleLogoToggle}
+          onLogoUpload={handleLogoUpload}
+          onLogoRemove={handleLogoRemove}
+        />
       )}
 
       {/* Description Section - Only show for with-description variant */}
       {supportsDescription() && (
-        <>
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <div className="font-medium text-sm">Description</div>
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                onClick={() => setShowDescriptionOptions(!showDescriptionOptions)}
-                className="h-7 w-7 p-0"
-              >
-                {showDescriptionOptions ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-              </Button>
-            </div>
-            
-            {showDescriptionOptions && (
-              <div className="space-y-2 pt-2">
-                <Label htmlFor="header-description" className="text-xs text-gray-500 mb-1 block">
-                  Description Text
-                </Label>
-                <Textarea
-                  id="header-description"
-                  value={description}
-                  onChange={(e) => handleDescriptionChange(e.target.value)}
-                  className="text-sm h-20 resize-none"
-                  placeholder="Enter description text"
-                />
-              </div>
-            )}
-          </div>
-          <Separator />
-        </>
+        <HeaderDescriptionSection
+          description={description}
+          onDescriptionChange={handleDescriptionChange}
+        />
       )}
       
       {/* Navigation Section - Only show for variants that support it */}
       {supportsNavigation() && (
-        <>
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <div className="font-medium text-sm">Navigation</div>
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                onClick={() => setShowNavOptions(!showNavOptions)}
-                className="h-7 w-7 p-0"
-              >
-                {showNavOptions ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-              </Button>
-            </div>
-            
-            <div className="flex items-center justify-between">
-              <Label htmlFor="show-nav" className="text-sm">Show navigation</Label>
-              <Switch 
-                id="show-nav"
-                checked={showNavigation} 
-                onCheckedChange={handleNavigationToggle}
-              />
-            </div>
-            
-            {showNavOptions && showNavigation && (
-              <div className="space-y-2 pt-2">
-                {navigationItems.map((item, index) => (
-                  <div key={index} className="mb-2">
-                    <Label htmlFor={`nav-item-${index}`} className="text-xs text-gray-500 mb-1 block">
-                      Item {index + 1}
-                    </Label>
-                    <Input
-                      id={`nav-item-${index}`}
-                      value={item}
-                      onChange={(e) => handleNavigationItemChange(index, e.target.value)}
-                      className="text-sm h-8"
-                    />
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-          <Separator />
-        </>
+        <HeaderNavigationSection
+          showNavigation={showNavigation}
+          navigationItems={navigationItems}
+          onNavigationToggle={handleNavigationToggle}
+          onNavigationItemChange={handleNavigationItemChange}
+        />
       )}
       
       {/* Metrics Section - Only show for variants that support it */}
       {supportsMetrics() && (
-        <>
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <div className="font-medium text-sm">Metrics</div>
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                onClick={() => setShowMetricOptions(!showMetricOptions)}
-                className="h-7 w-7 p-0"
-              >
-                {showMetricOptions ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-              </Button>
-            </div>
-            
-            <div className="flex items-center justify-between">
-              <Label htmlFor="show-metrics" className="text-sm">Show metrics</Label>
-              <Switch 
-                id="show-metrics"
-                checked={showMetrics} 
-                onCheckedChange={handleMetricToggle}
-              />
-            </div>
-            
-            {showMetricOptions && showMetrics && (
-              <div className="space-y-3 pt-2">
-                {metrics.map((metric, index) => (
-                  <div key={index} className="space-y-2">
-                    <div>
-                      <Label htmlFor={`metric-title-${index}`} className="text-xs text-gray-500 mb-1 block">
-                        Title {index + 1}
-                      </Label>
-                      <Input
-                        id={`metric-title-${index}`}
-                        value={metric.title}
-                        onChange={(e) => handleMetricChange(index, 'title', e.target.value)}
-                        className="text-sm h-8 mb-1"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor={`metric-value-${index}`} className="text-xs text-gray-500 mb-1 block">
-                        Value {index + 1}
-                      </Label>
-                      <Input
-                        id={`metric-value-${index}`}
-                        value={metric.value}
-                        onChange={(e) => handleMetricChange(index, 'value', e.target.value)}
-                        className="text-sm h-8"
-                      />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-          <Separator />
-        </>
+        <HeaderMetricsSection
+          showMetrics={showMetrics}
+          metrics={metrics}
+          onMetricToggle={handleMetricToggle}
+          onMetricChange={handleMetricChange}
+        />
       )}
 
       {/* Add Ons Section */}
