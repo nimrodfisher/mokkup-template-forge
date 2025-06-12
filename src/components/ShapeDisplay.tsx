@@ -13,23 +13,23 @@ export const ShapeDisplay = ({ element }: { element: Element }) => {
   const borderColor = properties.borderColor || '#e5e7eb';
   
   // Size properties with defaults that fit within typical canvas elements
-  const shapeWidth = properties.shapeWidth || 60;
-  const shapeHeight = properties.shapeHeight || 40;
+  const shapeWidth = Math.min(properties.shapeWidth || 60, 120);
+  const shapeHeight = Math.min(properties.shapeHeight || 40, 80);
   
   const renderShape = () => {
     switch (variant) {
       case 'triangle':
         return (
-          <div className="flex flex-col h-full min-h-[120px]">
+          <div className="flex flex-col h-full w-full">
             {showTitle && (
               <div 
-                className={`mb-2 text-sm font-medium text-${textAlignment}`}
+                className={`mb-2 text-sm font-medium text-${textAlignment} px-2 flex-shrink-0`}
                 style={{ color: textColor }}
               >
                 {title}
               </div>
             )}
-            <div className="flex-1 flex items-center justify-center">
+            <div className="flex-1 flex items-center justify-center min-h-0 overflow-hidden">
               <div 
                 style={{ 
                   width: 0, 
@@ -45,22 +45,24 @@ export const ShapeDisplay = ({ element }: { element: Element }) => {
         
       case 'rectangle':
         return (
-          <div className="flex flex-col h-full min-h-[120px]">
+          <div className="flex flex-col h-full w-full">
             {showTitle && (
               <div 
-                className={`mb-2 text-sm font-medium text-${textAlignment}`}
+                className={`mb-2 text-sm font-medium text-${textAlignment} px-2 flex-shrink-0`}
                 style={{ color: textColor }}
               >
                 {title}
               </div>
             )}
-            <div className="flex-1 flex items-center justify-center">
+            <div className="flex-1 flex items-center justify-center min-h-0 overflow-hidden">
               <div 
                 style={{ 
                   width: `${shapeWidth}px`,
                   height: `${shapeHeight}px`,
                   backgroundColor: shapeColor,
                   border: hasBorder ? `2px solid ${borderColor}` : 'none',
+                  maxWidth: '100%',
+                  maxHeight: '100%',
                 }}
               />
             </div>
@@ -69,16 +71,16 @@ export const ShapeDisplay = ({ element }: { element: Element }) => {
         
       case 'circle':
         return (
-          <div className="flex flex-col h-full min-h-[120px]">
+          <div className="flex flex-col h-full w-full">
             {showTitle && (
               <div 
-                className={`mb-2 text-sm font-medium text-${textAlignment}`}
+                className={`mb-2 text-sm font-medium text-${textAlignment} px-2 flex-shrink-0`}
                 style={{ color: textColor }}
               >
                 {title}
               </div>
             )}
-            <div className="flex-1 flex items-center justify-center">
+            <div className="flex-1 flex items-center justify-center min-h-0 overflow-hidden">
               <div 
                 className="rounded-full"
                 style={{ 
@@ -86,6 +88,8 @@ export const ShapeDisplay = ({ element }: { element: Element }) => {
                   height: `${Math.min(shapeWidth, shapeHeight)}px`,
                   backgroundColor: shapeColor,
                   border: hasBorder ? `2px solid ${borderColor}` : 'none',
+                  maxWidth: '100%',
+                  maxHeight: '100%',
                 }}
               />
             </div>
@@ -94,16 +98,16 @@ export const ShapeDisplay = ({ element }: { element: Element }) => {
         
       case 'oval':
         return (
-          <div className="flex flex-col h-full min-h-[120px]">
+          <div className="flex flex-col h-full w-full">
             {showTitle && (
               <div 
-                className={`mb-2 text-sm font-medium text-${textAlignment}`}
+                className={`mb-2 text-sm font-medium text-${textAlignment} px-2 flex-shrink-0`}
                 style={{ color: textColor }}
               >
                 {title}
               </div>
             )}
-            <div className="flex-1 flex items-center justify-center">
+            <div className="flex-1 flex items-center justify-center min-h-0 overflow-hidden">
               <div 
                 className="rounded-full"
                 style={{ 
@@ -111,6 +115,8 @@ export const ShapeDisplay = ({ element }: { element: Element }) => {
                   height: `${shapeHeight}px`,
                   backgroundColor: shapeColor,
                   border: hasBorder ? `2px solid ${borderColor}` : 'none',
+                  maxWidth: '100%',
+                  maxHeight: '100%',
                 }}
               />
             </div>
@@ -120,16 +126,16 @@ export const ShapeDisplay = ({ element }: { element: Element }) => {
       default:
         // Fallback to triangle if variant is undefined
         return (
-          <div className="flex flex-col h-full min-h-[120px]">
+          <div className="flex flex-col h-full w-full">
             {showTitle && (
               <div 
-                className={`mb-2 text-sm font-medium text-${textAlignment}`}
+                className={`mb-2 text-sm font-medium text-${textAlignment} px-2 flex-shrink-0`}
                 style={{ color: textColor }}
               >
                 {title}
               </div>
             )}
-            <div className="flex-1 flex items-center justify-center">
+            <div className="flex-1 flex items-center justify-center min-h-0 overflow-hidden">
               <div 
                 style={{ 
                   width: 0, 
