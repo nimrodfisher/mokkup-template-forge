@@ -21,12 +21,24 @@ interface WaterfallPropertiesProps {
 export function WaterfallProperties({ element, updateElementProperties, onOpenStyleDialog }: WaterfallPropertiesProps) {
   const properties = element.properties || {};
 
+  console.log('WaterfallProperties rendering with element:', element.id);
+  console.log('Current properties:', properties);
+
+  const handleUpdateProperties = (newProperties: any) => {
+    console.log('Updating waterfall properties:', newProperties);
+    updateElementProperties(element.id, newProperties);
+  };
+
   return (
     <div className="space-y-4">
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-lg font-semibold">Waterfall Chart Properties</h2>
+      </div>
+
       <WaterfallDetailsSection 
         properties={properties}
         elementId={element.id}
-        updateElementProperties={updateElementProperties}
+        updateElementProperties={handleUpdateProperties}
       />
       
       <Separator />
@@ -34,7 +46,7 @@ export function WaterfallProperties({ element, updateElementProperties, onOpenSt
       <WaterfallDataSection 
         properties={properties}
         elementId={element.id}
-        updateElementProperties={updateElementProperties}
+        updateElementProperties={handleUpdateProperties}
       />
       
       <Separator />
@@ -42,7 +54,7 @@ export function WaterfallProperties({ element, updateElementProperties, onOpenSt
       <WaterfallXAxisSection 
         properties={properties}
         elementId={element.id}
-        updateElementProperties={updateElementProperties}
+        updateElementProperties={handleUpdateProperties}
       />
       
       <Separator />
@@ -50,7 +62,7 @@ export function WaterfallProperties({ element, updateElementProperties, onOpenSt
       <WaterfallYAxisSection 
         properties={properties}
         elementId={element.id}
-        updateElementProperties={updateElementProperties}
+        updateElementProperties={handleUpdateProperties}
       />
       
       <Separator />
@@ -58,7 +70,7 @@ export function WaterfallProperties({ element, updateElementProperties, onOpenSt
       <WaterfallPropertiesSection 
         properties={properties}
         elementId={element.id}
-        updateElementProperties={updateElementProperties}
+        updateElementProperties={handleUpdateProperties}
       />
       
       <Separator />
@@ -66,7 +78,7 @@ export function WaterfallProperties({ element, updateElementProperties, onOpenSt
       <WaterfallAppearanceSection 
         properties={properties}
         elementId={element.id}
-        updateElementProperties={updateElementProperties}
+        updateElementProperties={handleUpdateProperties}
       />
       
       <Separator />
@@ -74,7 +86,7 @@ export function WaterfallProperties({ element, updateElementProperties, onOpenSt
       <WaterfallAdvancedAddOnsSection 
         properties={properties}
         elementId={element.id}
-        updateElementProperties={updateElementProperties}
+        updateElementProperties={handleUpdateProperties}
       />
       
       <Separator />

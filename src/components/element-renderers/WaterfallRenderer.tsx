@@ -42,6 +42,8 @@ interface WaterfallRendererProps {
 }
 
 export function WaterfallRenderer({ properties = {} }: WaterfallRendererProps) {
+  console.log('WaterfallRenderer rendering with properties:', properties);
+  
   const {
     waterfallTitle = 'Waterfall Chart',
     showTitle = true,
@@ -148,8 +150,8 @@ export function WaterfallRenderer({ properties = {} }: WaterfallRendererProps) {
       )}
       
       {/* Buttons Section */}
-      {(showButtons || waterfallButtons.length > 0) && waterfallButtons.length > 0 && (
-        <div className="flex justify-between mb-4">
+      {(showButtons && waterfallButtons.length > 0) && (
+        <div className="flex flex-wrap gap-2 justify-between mb-4">
           {waterfallButtons.map((button, index) => (
             <button
               key={index}
@@ -234,11 +236,11 @@ export function WaterfallRenderer({ properties = {} }: WaterfallRendererProps) {
       </div>
 
       {/* KPIs Section */}
-      {(showKpis || waterfallKpis.length > 0) && waterfallKpis.length > 0 && (
-        <div className="flex justify-around mt-4 pt-4 border-t border-gray-200">
+      {(showKpis && waterfallKpis.length > 0) && (
+        <div className="flex flex-wrap justify-around mt-4 pt-4 border-t border-gray-200 gap-4">
           {waterfallKpis.map((kpi, index) => (
-            <div key={index} className="text-center">
-              <div className="text-sm text-gray-600">{kpi.title}</div>
+            <div key={index} className="text-center min-w-0 flex-1">
+              <div className="text-sm text-gray-600 truncate">{kpi.title}</div>
               <div className="text-lg font-semibold">{kpi.value}</div>
               {kpi.change && (
                 <div className="text-sm text-green-600">{kpi.change}</div>

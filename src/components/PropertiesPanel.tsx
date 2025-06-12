@@ -38,6 +38,9 @@ export function PropertiesPanel({ onOpenStyleDialog, updateElementProperties }: 
   // Use the wireframe's updateElementProperties if the prop version isn't provided
   const handleUpdateElementProperties = updateElementProperties || wireframeUpdateProperties;
   
+  console.log('Selected element type:', selectedElement.type);
+  console.log('Selected element properties:', selectedElement.properties);
+  
   // Render the appropriate properties component based on the element type
   const renderPropertiesComponent = () => {
     switch (selectedElement.type) {
@@ -103,6 +106,7 @@ export function PropertiesPanel({ onOpenStyleDialog, updateElementProperties }: 
           />
         );
       case 'waterfall':
+        console.log('Rendering WaterfallProperties for element:', selectedElement.id);
         return (
           <WaterfallProperties
             element={selectedElement}
