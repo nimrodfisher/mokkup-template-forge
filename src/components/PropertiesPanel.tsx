@@ -18,6 +18,7 @@ import { ColumnChartProperties } from "./column-chart-properties/ColumnChartProp
 import { PieChartProperties } from "./pie-chart-properties/PieChartProperties";
 import { ComboChartProperties } from "./combo-chart-properties/ComboChartProperties";
 import { LineChartProperties } from "./line-chart-properties/LineChartProperties";
+import { BarChartProperties } from "./bar-chart-properties/BarChartProperties";
 
 interface PropertiesPanelProps {
   onOpenStyleDialog?: () => void;
@@ -86,6 +87,14 @@ export function PropertiesPanel({ onOpenStyleDialog, updateElementProperties }: 
             element={selectedElement}
             updateElementProperties={updateElementProperties}
             toggleProperties={toggleProperties}
+            onOpenStyleDialog={onOpenStyleDialog}
+          />
+        );
+      case 'bar-chart':
+        return (
+          <BarChartProperties
+            element={selectedElement}
+            updateElementProperties={updateElementProperties}
             onOpenStyleDialog={onOpenStyleDialog}
           />
         );

@@ -1,26 +1,26 @@
 
 import React from 'react';
-import { Element } from "@/types/wireframe";
-import { FilterStyleDialog } from "./FilterStyleDialog";
-import { KpiStyleDialog } from "./KpiStyleDialog";
-import { ButtonStyleDialog } from "./ButtonStyleDialog";
-import { TextboxStyleDialog } from "./TextboxStyleDialog";
-import { ShapeStyleDialog } from "./ShapeStyleDialog";
-import { ImageStyleDialog } from "./ImageStyleDialog";
-import { HeaderStyleDialog } from "./header-style/HeaderStyleDialog";
-import { ChartStyleDialog } from "./ChartStyleDialog";
-import { TableStyleDialog } from "./table-style/TableStyleDialog";
-import { GaugeStyleDialog } from "./GaugeStyleDialog";
-import { HeatmapStyleDialog } from "./heatmap-style/HeatmapStyleDialog";
-import { QuadrantStyleDialog } from "./quadrant-style/QuadrantStyleDialog";
-import { ScatterPlotStyleDialog } from "./scatter-plot-style/ScatterPlotStyleDialog";
-import { GeomapStyleDialog } from "./geomap-style/GeomapStyleDialog";
-import { ColumnChartStyleDialog } from "./column-chart-style/ColumnChartStyleDialog";
-import { PieChartStyleDialog } from "./pie-chart-style/PieChartStyleDialog";
-import { WaterfallStyleDialog } from "./waterfall-style/WaterfallStyleDialog";
-import { ComboChartStyleDialog } from "./combo-chart-style/ComboChartStyleDialog";
-import { LineChartStyleDialog } from "./line-chart-style/LineChartStyleDialog";
-import { BarChartStyleDialog } from "./bar-chart-style/BarChartStyleDialog";
+import { Element } from '@/types/wireframe';
+import { HeaderStyleDialog } from './header-style/HeaderStyleDialog';
+import { BarChartStyleDialog } from './bar-chart-style/BarChartStyleDialog';
+import { ColumnChartStyleDialog } from './column-chart-style/ColumnChartStyleDialog';
+import { PieChartStyleDialog } from './pie-chart-style/PieChartStyleDialog';
+import { ComboChartStyleDialog } from './combo-chart-style/ComboChartStyleDialog';
+import { LineChartStyleDialog } from './line-chart-style/LineChartStyleDialog';
+import { TableStyleDialog } from './table-style/TableStyleDialog';
+import { GaugeStyleDialog } from './GaugeStyleDialog';
+import { HeatmapStyleDialog } from './heatmap-style/HeatmapStyleDialog';
+import { QuadrantStyleDialog } from './quadrant-style/QuadrantStyleDialog';
+import { ScatterPlotStyleDialog } from './scatter-plot-style/ScatterPlotStyleDialog';
+import { GeomapStyleDialog } from './geomap-style/GeomapStyleDialog';
+import { WaterfallStyleDialog } from './waterfall-style/WaterfallStyleDialog';
+import { ImageStyleDialog } from './ImageStyleDialog';
+import { ShapeStyleDialog } from './ShapeStyleDialog';
+import { FilterStyleDialog } from './FilterStyleDialog';
+import { ButtonStyleDialog } from './ButtonStyleDialog';
+import { KpiStyleDialog } from './KpiStyleDialog';
+import { TextboxStyleDialog } from './TextboxStyleDialog';
+import { AreaChartStyleDialog } from './AreaChartStyleDialog';
 
 interface StyleDialogControllerProps {
   element: Element;
@@ -30,188 +30,54 @@ interface StyleDialogControllerProps {
 
 export function StyleDialogController({ element, dialogType, onClose }: StyleDialogControllerProps) {
   if (!dialogType) return null;
-  
-  switch (dialogType) {
-    case 'filter':
-      return (
-        <FilterStyleDialog 
-          elementId={element.id} 
-          open={true} 
-          onClose={onClose}
-        />
-      );
-      
-    case 'kpi':
-      return (
-        <KpiStyleDialog
-          elementId={element.id}
-          open={true}
-          onClose={onClose}
-        />
-      );
-      
-    case 'button':
-      return (
-        <ButtonStyleDialog
-          elementId={element.id}
-          open={true}
-          onClose={onClose}
-        />
-      );
-      
-    case 'textbox':
-      return (
-        <TextboxStyleDialog
-          elementId={element.id}
-          open={true}
-          onClose={onClose}
-        />
-      );
-      
-    case 'image':
-      return (
-        <ImageStyleDialog
-          elementId={element.id}
-          open={true}
-          onClose={onClose}
-        />
-      );
-      
-    case 'shapes':
-      return (
-        <ShapeStyleDialog
-          elementId={element.id}
-          isOpen={true}
-          onClose={onClose}
-        />
-      );
-      
-    case 'header':
-      return (
-        <HeaderStyleDialog 
-          elementId={element.id} 
-          isOpen={true}
-          onClose={onClose}
-        />
-      );
-      
-    case 'chart':
-      return (
-        <ChartStyleDialog
-          elementId={element.id}
-          open={true}
-          onClose={onClose}
-        />
-      );
 
+  const commonProps = {
+    elementId: element.id,
+    open: true,
+    onClose
+  };
+
+  switch (dialogType) {
+    case 'header':
+      return <HeaderStyleDialog {...commonProps} isOpen={true} />;
     case 'bar-chart':
-      return (
-        <BarChartStyleDialog
-          elementId={element.id}
-          open={true}
-          onClose={onClose}
-        />
-      );
-      
-    case 'table':
-      return (
-        <TableStyleDialog
-          elementId={element.id}
-          open={true}
-          onClose={onClose}
-        />
-      );
-      
-    case 'gauge':
-      return (
-        <GaugeStyleDialog
-          elementId={element.id}
-          open={true}
-          onClose={onClose}
-        />
-      );
-      
-    case 'heatmap':
-      return (
-        <HeatmapStyleDialog
-          elementId={element.id}
-          open={true}
-          onClose={onClose}
-        />
-      );
-      
-    case 'quadrant':
-      return (
-        <QuadrantStyleDialog
-          elementId={element.id}
-          open={true}
-          onClose={onClose}
-        />
-      );
-      
-    case 'scatter-plot':
-      return (
-        <ScatterPlotStyleDialog
-          elementId={element.id}
-          open={true}
-          onClose={onClose}
-        />
-      );
-      
-    case 'geomap':
-      return (
-        <GeomapStyleDialog
-          elementId={element.id}
-          open={true}
-          onClose={onClose}
-        />
-      );
-      
+      return <BarChartStyleDialog {...commonProps} />;
     case 'column-chart':
-      return (
-        <ColumnChartStyleDialog
-          elementId={element.id}
-          open={true}
-          onClose={onClose}
-        />
-      );
-      
-    case 'line-chart':
-      return (
-        <LineChartStyleDialog
-          elementId={element.id}
-          open={true}
-          onClose={onClose}
-        />
-      );
-      
-    case 'combo-chart':
-      return (
-        <ComboChartStyleDialog
-          elementId={element.id}
-          open={true}
-          onClose={onClose}
-        />
-      );
-      
+      return <ColumnChartStyleDialog {...commonProps} />;
     case 'pie-chart':
-      return (
-        <PieChartStyleDialog
-          elementId={element.id}
-          open={true}
-          onClose={onClose}
-        />
-      );
-      
+      return <PieChartStyleDialog {...commonProps} />;
+    case 'combo-chart':
+      return <ComboChartStyleDialog {...commonProps} />;
+    case 'line-chart':
+      return <LineChartStyleDialog {...commonProps} />;
+    case 'table':
+      return <TableStyleDialog {...commonProps} />;
+    case 'gauge':
+      return <GaugeStyleDialog {...commonProps} />;
+    case 'heatmap':
+      return <HeatmapStyleDialog {...commonProps} />;
+    case 'quadrant':
+      return <QuadrantStyleDialog {...commonProps} />;
+    case 'scatter-plot':
+      return <ScatterPlotStyleDialog {...commonProps} />;
+    case 'geomap':
+      return <GeomapStyleDialog {...commonProps} />;
     case 'waterfall':
-      return (
-        <WaterfallStyleDialog
-          elementId={element.id}
-          open={true}
-          onClose={onClose}
-        />
-      );
-      
+      return <WaterfallStyleDialog {...commonProps} />;
+    case 'image':
+      return <ImageStyleDialog {...commonProps} />;
+    case 'shapes':
+      return <ShapeStyleDialog {...commonProps} isOpen={true} />;
+    case 'filter':
+      return <FilterStyleDialog {...commonProps} />;
+    case 'button':
+      return <ButtonStyleDialog {...commonProps} isOpen={true} />;
+    case 'kpi':
+      return <KpiStyleDialog {...commonProps} isOpen={true} />;
+    case 'textbox':
+      return <TextboxStyleDialog {...commonProps} isOpen={true} />;
+    case 'area-chart':
+      return <AreaChartStyleDialog {...commonProps} />;
     default:
       return null;
   }

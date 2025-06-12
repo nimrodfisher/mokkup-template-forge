@@ -43,6 +43,9 @@ export function CanvasElement({ element, isSelected }: CanvasElementProps) {
       case 'header':
         setActiveDialog('header');
         break;
+      case 'bar-chart':
+        setActiveDialog('bar-chart');
+        break;
       case 'column-chart':
         setActiveDialog('column-chart');
         break;
