@@ -8,6 +8,7 @@ interface HeaderRendererProps {
 
 export function HeaderRenderer({ properties = {} }: HeaderRendererProps) {
   const variant = properties.variant || 'default';
+  const navigationItems = properties.navigationItems || ['Navigation 1', 'Navigation 2', 'Navigation 3'];
   
   // Determine styles based on variant
   let containerStyles = "w-full h-full flex items-center";
@@ -98,9 +99,9 @@ export function HeaderRenderer({ properties = {} }: HeaderRendererProps) {
           )}
           
           <div className="flex justify-center space-x-6">
-            <div className="text-sm">Navigation 1</div>
-            <div className="text-sm">Navigation 2</div>
-            <div className="text-sm">Navigation 3</div>
+            {navigationItems.slice(0, 3).map((item, index) => (
+              <div key={index} className="text-sm">{item}</div>
+            ))}
           </div>
         </div>
       ) : variant === 'minimal' ? (
@@ -130,8 +131,9 @@ export function HeaderRenderer({ properties = {} }: HeaderRendererProps) {
             
             {properties.showNavigation && (
               <div className="flex space-x-4 text-sm">
-                <button className="hover:underline">Link 1</button>
-                <button className="hover:underline">Link 2</button>
+                {navigationItems.slice(0, 2).map((item, index) => (
+                  <button key={index} className="hover:underline">{item}</button>
+                ))}
               </div>
             )}
           </div>
@@ -168,29 +170,30 @@ export function HeaderRenderer({ properties = {} }: HeaderRendererProps) {
           
           {variant === 'with-metrics' && (
             <div className="flex space-x-6">
-              <div className="flex flex-col items-center">
-                <div className="text-xs text-gray-500">Metric 1</div>
-                <div className="font-bold">123</div>
-              </div>
-              <div className="flex flex-col items-center">
-                <div className="text-xs text-gray-500">Metric 2</div>
-                <div className="font-bold">456</div>
-              </div>
+              {properties.metrics?.map((metric, index) => (
+                <div key={index} className="flex flex-col items-center">
+                  <div className="text-xs text-gray-500">{metric.title}</div>
+                  <div className="font-bold">{metric.value}</div>
+                </div>
+              ))}
             </div>
           )}
           
           {(variant === 'navigation-top' || variant === 'dark-navigation') && (
             <div className={`flex space-x-4 text-sm ${variant === 'dark-navigation' ? 'text-gray-300' : 'text-blue-500'}`}>
-              <div>Navigation 1</div>
-              <div>Navigation 2</div>
-              <div>Navigation 3</div>
+              {navigationItems.slice(0, 3).map((item, index) => (
+                <div key={index}>{item}</div>
+              ))}
             </div>
           )}
           
           {properties.showNavigation && variant !== 'navigation-top' && variant !== 'dark-navigation' && (
             <div className="ml-auto flex space-x-3">
-              <button className="px-3 py-1 bg-gray-200 rounded text-sm hover:bg-gray-300 transition-colors">Link 1</button>
-              <button className="px-3 py-1 bg-gray-200 rounded text-sm hover:bg-gray-300 transition-colors">Link 2</button>
+              {navigationItems.slice(0, 2).map((item, index) => (
+                <button key={index} className="px-3 py-1 bg-gray-200 rounded text-sm hover:bg-gray-300 transition-colors">
+                  {item}
+                </button>
+              ))}
             </div>
           )}
         </div>

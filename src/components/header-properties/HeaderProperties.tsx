@@ -89,6 +89,22 @@ export function HeaderProperties({ element, updateElementProperties, onOpenStyle
     console.log("Navigation items updated:", newItems);
   };
 
+  // Add navigation item
+  const handleAddNavigationItem = () => {
+    const newItems = [...navigationItems, `Navigation ${navigationItems.length + 1}`];
+    setNavigationItems(newItems);
+    updateElementProperties(element.id, { navigationItems: newItems });
+    console.log("Navigation item added:", newItems);
+  };
+
+  // Remove navigation item
+  const handleRemoveNavigationItem = (index: number) => {
+    const newItems = navigationItems.filter((_, i) => i !== index);
+    setNavigationItems(newItems);
+    updateElementProperties(element.id, { navigationItems: newItems });
+    console.log("Navigation item removed:", newItems);
+  };
+
   // Update metric
   const handleMetricChange = (index: number, field: 'title' | 'value', value: string) => {
     const newMetrics = [...metrics];
@@ -206,6 +222,8 @@ export function HeaderProperties({ element, updateElementProperties, onOpenStyle
           navigationItems={navigationItems}
           onNavigationToggle={handleNavigationToggle}
           onNavigationItemChange={handleNavigationItemChange}
+          onAddNavigationItem={handleAddNavigationItem}
+          onRemoveNavigationItem={handleRemoveNavigationItem}
         />
       )}
       
