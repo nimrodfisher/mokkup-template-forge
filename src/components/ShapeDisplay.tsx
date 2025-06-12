@@ -6,7 +6,7 @@ export const ShapeDisplay = ({ element }: { element: Element }) => {
   const variant = properties.shapeVariant || 'triangle';
   const shapeColor = properties.shapeColor || '#9b87f5';
   const textColor = properties.textColor || 'black';
-  const title = properties.title || 'Shape';
+  const title = properties.title || 'Title goes here';
   const showTitle = properties.showTitle !== false;
   const textAlignment = properties.textAlignment || 'center';
   const hasBorder = properties.hasBorder === true;
@@ -18,7 +18,7 @@ export const ShapeDisplay = ({ element }: { element: Element }) => {
     switch (variant) {
       case 'triangle':
         return (
-          <div className="flex flex-col h-full justify-center items-center p-2">
+          <div className="flex flex-col h-full">
             {showTitle && (
               <div 
                 className={`mb-2 text-sm font-medium text-${textAlignment}`}
@@ -32,9 +32,9 @@ export const ShapeDisplay = ({ element }: { element: Element }) => {
                 style={{ 
                   width: 0, 
                   height: 0, 
-                  borderLeft: '25px solid transparent',
-                  borderRight: '25px solid transparent',
-                  borderBottom: `50px solid ${shapeColor}`,
+                  borderLeft: '50px solid transparent',
+                  borderRight: '50px solid transparent',
+                  borderBottom: `100px solid ${shapeColor}`,
                   border: hasBorder ? `1px solid ${borderColor}` : undefined,
                 }}
               />
@@ -44,7 +44,7 @@ export const ShapeDisplay = ({ element }: { element: Element }) => {
         
       case 'rectangle':
         return (
-          <div className="flex flex-col h-full justify-center items-center p-2">
+          <div className="flex flex-col h-full">
             {showTitle && (
               <div 
                 className={`mb-2 text-sm font-medium text-${textAlignment}`}
@@ -55,12 +55,10 @@ export const ShapeDisplay = ({ element }: { element: Element }) => {
             )}
             <div className="flex-1 flex items-center justify-center">
               <div 
-                className="w-16 h-8"
+                className="w-32 h-16"
                 style={{ 
                   backgroundColor: shapeColor,
                   border: borderStyle,
-                  minWidth: '32px',
-                  minHeight: '16px'
                 }}
               />
             </div>
@@ -69,7 +67,7 @@ export const ShapeDisplay = ({ element }: { element: Element }) => {
         
       case 'circle':
         return (
-          <div className="flex flex-col h-full justify-center items-center p-2">
+          <div className="flex flex-col h-full">
             {showTitle && (
               <div 
                 className={`mb-2 text-sm font-medium text-${textAlignment}`}
@@ -82,12 +80,10 @@ export const ShapeDisplay = ({ element }: { element: Element }) => {
               <div 
                 className="rounded-full"
                 style={{ 
-                  width: '40px',
-                  height: '40px',
+                  width: '80px',
+                  height: '80px',
                   backgroundColor: shapeColor,
                   border: borderStyle,
-                  minWidth: '20px',
-                  minHeight: '20px'
                 }}
               />
             </div>
@@ -96,7 +92,7 @@ export const ShapeDisplay = ({ element }: { element: Element }) => {
         
       case 'oval':
         return (
-          <div className="flex flex-col h-full justify-center items-center p-2">
+          <div className="flex flex-col h-full">
             {showTitle && (
               <div 
                 className={`mb-2 text-sm font-medium text-${textAlignment}`}
@@ -109,12 +105,10 @@ export const ShapeDisplay = ({ element }: { element: Element }) => {
               <div 
                 className="rounded-full"
                 style={{ 
-                  width: '60px',
-                  height: '30px',
+                  width: '120px',
+                  height: '60px',
                   backgroundColor: shapeColor,
                   border: borderStyle,
-                  minWidth: '30px',
-                  minHeight: '15px'
                 }}
               />
             </div>
@@ -122,33 +116,12 @@ export const ShapeDisplay = ({ element }: { element: Element }) => {
         );
         
       default:
-        // Fallback for any unknown variant
-        return (
-          <div className="flex flex-col h-full justify-center items-center p-2">
-            <div 
-              className="text-sm font-medium"
-              style={{ color: textColor }}
-            >
-              {title}
-            </div>
-            <div className="flex-1 flex items-center justify-center">
-              <div 
-                className="w-16 h-8"
-                style={{ 
-                  backgroundColor: shapeColor,
-                  border: borderStyle,
-                  minWidth: '32px',
-                  minHeight: '16px'
-                }}
-              />
-            </div>
-          </div>
-        );
+        return null;
     }
   };
   
   return (
-    <div className="w-full h-full bg-white border border-gray-200 rounded">
+    <div className="w-full h-full p-2">
       {renderShape()}
     </div>
   );
