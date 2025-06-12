@@ -10,6 +10,7 @@ import { HeaderLogoSection } from "./HeaderLogoSection";
 import { HeaderDescriptionSection } from "./HeaderDescriptionSection";
 import { HeaderNavigationSection } from "./HeaderNavigationSection";
 import { HeaderMetricsSection } from "./HeaderMetricsSection";
+import { HeaderSecondaryLogoSection } from "./HeaderSecondaryLogoSection";
 
 interface HeaderPropertiesProps {
   element: Element;
@@ -33,6 +34,7 @@ export function HeaderProperties({ element, updateElementProperties, onOpenStyle
     ]
   );
   const [showLogo, setShowLogo] = useState<boolean>(element.properties?.showLogo || false);
+  const [showSecondaryLogo, setShowSecondaryLogo] = useState<boolean>(element.properties?.showSecondaryLogo || false);
   const [description, setDescription] = useState<string>(element.properties?.description || '');
   const [title, setTitle] = useState<string>(element.properties?.title || 'DASHBOARD TITLE');
 
@@ -44,6 +46,7 @@ export function HeaderProperties({ element, updateElementProperties, onOpenStyle
     setShowMetrics(element.properties?.showMetrics || false);
     setMetrics(element.properties?.metrics || [{ title: "Metric 1", value: "123" }, { title: "Metric 2", value: "456" }]);
     setShowLogo(element.properties?.showLogo || false);
+    setShowSecondaryLogo(element.properties?.showSecondaryLogo || false);
     setDescription(element.properties?.description || '');
     setTitle(element.properties?.title || 'DASHBOARD TITLE');
   }, [element]);
@@ -64,6 +67,12 @@ export function HeaderProperties({ element, updateElementProperties, onOpenStyle
   const handleLogoToggle = (checked: boolean) => {
     setShowLogo(checked);
     updateElementProperties(element.id, { showLogo: checked });
+  };
+
+  // Handle secondary logo toggle
+  const handleSecondaryLogoToggle = (checked: boolean) => {
+    setShowSecondaryLogo(checked);
+    updateElementProperties(element.id, { showSecondaryLogo: checked });
   };
 
   // Update navigation toggle
@@ -89,6 +98,20 @@ export function HeaderProperties({ element, updateElementProperties, onOpenStyle
     console.log("Navigation items updated:", newItems);
   };
 
+  // Add navigation item
+  const handleAddNavigationItem = () => {
+    const newItems = [...navigationItems, `Navigation ${navigationItems.length + 1}`];
+    setNavigationItems(newItems);
+    updateElementProperties(element.id, { navigationItems: newItems });
+  };
+
+  // Remove navigation item
+  const handleRemoveNavigationItem = (index: number) => {
+    const newItems = navigationItems.filter((_, i) => i !== index);
+    setNavigationItems(newItems);
+    updateElementProperties(element.id, { navigationItems: newItems });
+  };
+
   // Update metric
   const handleMetricChange = (index: number, field: 'title' | 'value', value: string) => {
     const newMetrics = [...metrics];
@@ -96,6 +119,20 @@ export function HeaderProperties({ element, updateElementProperties, onOpenStyle
     setMetrics(newMetrics);
     updateElementProperties(element.id, { metrics: newMetrics });
     console.log("Metrics updated:", newMetrics);
+  };
+
+  // Add metric
+  const handleAddMetric = () => {
+    const newMetrics = [...metrics, { title: `Metric ${metrics.length + 1}`, value: "0" }];
+    setMetrics(newMetrics);
+    updateElementProperties(element.id, { metrics: newMetrics });
+  };
+
+  // Remove metric
+  const handleRemoveMetric = (index: number) => {
+    const newMetrics = metrics.filter((_, i) => i !== index);
+    setMetrics(newMetrics);
+    updateElementProperties(element.id, { metrics: newMetrics });
   };
 
   // Handle add-ons changes
@@ -116,9 +153,27 @@ export function HeaderProperties({ element, updateElementProperties, onOpenStyle
     }
   };
 
+  // Handle secondary logo upload
+  const handleSecondaryLogoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const secondaryLogoUrl = e.target?.result as string;
+        updateElementProperties(element.id, { secondaryLogoUrl });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   // Remove logo
   const handleLogoRemove = () => {
     updateElementProperties(element.id, { logoUrl: '' });
+  };
+
+  // Remove secondary logo
+  const handleSecondaryLogoRemove = () => {
+    updateElementProperties(element.id, { secondaryLogoUrl: '' });
   };
 
   // Check if current variant supports navigation
@@ -137,6 +192,12 @@ export function HeaderProperties({ element, updateElementProperties, onOpenStyle
   const supportsLogo = () => {
     const variant = element.properties?.variant;
     return variant !== 'minimal';
+  };
+
+  // Check if current variant supports secondary logo (for double-logo variants)
+  const supportsSecondaryLogo = () => {
+    const variant = element.properties?.variant;
+    return variant === 'double-logo-purple';
   };
 
   // Check if current variant supports description
@@ -191,6 +252,17 @@ export function HeaderProperties({ element, updateElementProperties, onOpenStyle
         />
       )}
 
+      {/* Secondary Logo Section - Show for double-logo variants */}
+      {supportsSecondaryLogo() && (
+        <HeaderSecondaryLogoSection
+          showSecondaryLogo={showSecondaryLogo}
+          secondaryLogoUrl={element.properties?.secondaryLogoUrl}
+          onSecondaryLogoToggle={handleSecondaryLogoToggle}
+          onSecondaryLogoUpload={handleSecondaryLogoUpload}
+          onSecondaryLogoRemove={handleSecondaryLogoRemove}
+        />
+      )}
+
       {/* Description Section - Only show for with-description variant */}
       {supportsDescription() && (
         <HeaderDescriptionSection
@@ -206,6 +278,8 @@ export function HeaderProperties({ element, updateElementProperties, onOpenStyle
           navigationItems={navigationItems}
           onNavigationToggle={handleNavigationToggle}
           onNavigationItemChange={handleNavigationItemChange}
+          onAddNavigationItem={handleAddNavigationItem}
+          onRemoveNavigationItem={handleRemoveNavigationItem}
         />
       )}
       
@@ -216,6 +290,8 @@ export function HeaderProperties({ element, updateElementProperties, onOpenStyle
           metrics={metrics}
           onMetricToggle={handleMetricToggle}
           onMetricChange={handleMetricChange}
+          onAddMetric={handleAddMetric}
+          onRemoveMetric={handleRemoveMetric}
         />
       )}
 
