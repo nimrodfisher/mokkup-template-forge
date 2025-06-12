@@ -18,7 +18,7 @@ export const ShapeDisplay = ({ element }: { element: Element }) => {
     switch (variant) {
       case 'triangle':
         return (
-          <div className="flex flex-col h-full">
+          <div className="flex flex-col h-full min-h-[120px]">
             {showTitle && (
               <div 
                 className={`mb-2 text-sm font-medium text-${textAlignment}`}
@@ -32,9 +32,9 @@ export const ShapeDisplay = ({ element }: { element: Element }) => {
                 style={{ 
                   width: 0, 
                   height: 0, 
-                  borderLeft: '50px solid transparent',
-                  borderRight: '50px solid transparent',
-                  borderBottom: `100px solid ${shapeColor}`,
+                  borderLeft: '40px solid transparent',
+                  borderRight: '40px solid transparent',
+                  borderBottom: `80px solid ${shapeColor}`,
                   border: hasBorder ? `1px solid ${borderColor}` : undefined,
                 }}
               />
@@ -44,7 +44,7 @@ export const ShapeDisplay = ({ element }: { element: Element }) => {
         
       case 'rectangle':
         return (
-          <div className="flex flex-col h-full">
+          <div className="flex flex-col h-full min-h-[120px]">
             {showTitle && (
               <div 
                 className={`mb-2 text-sm font-medium text-${textAlignment}`}
@@ -55,7 +55,7 @@ export const ShapeDisplay = ({ element }: { element: Element }) => {
             )}
             <div className="flex-1 flex items-center justify-center">
               <div 
-                className="w-32 h-16"
+                className="w-24 h-12"
                 style={{ 
                   backgroundColor: shapeColor,
                   border: borderStyle,
@@ -67,7 +67,7 @@ export const ShapeDisplay = ({ element }: { element: Element }) => {
         
       case 'circle':
         return (
-          <div className="flex flex-col h-full">
+          <div className="flex flex-col h-full min-h-[120px]">
             {showTitle && (
               <div 
                 className={`mb-2 text-sm font-medium text-${textAlignment}`}
@@ -80,8 +80,8 @@ export const ShapeDisplay = ({ element }: { element: Element }) => {
               <div 
                 className="rounded-full"
                 style={{ 
-                  width: '80px',
-                  height: '80px',
+                  width: '60px',
+                  height: '60px',
                   backgroundColor: shapeColor,
                   border: borderStyle,
                 }}
@@ -92,7 +92,7 @@ export const ShapeDisplay = ({ element }: { element: Element }) => {
         
       case 'oval':
         return (
-          <div className="flex flex-col h-full">
+          <div className="flex flex-col h-full min-h-[120px]">
             {showTitle && (
               <div 
                 className={`mb-2 text-sm font-medium text-${textAlignment}`}
@@ -105,8 +105,8 @@ export const ShapeDisplay = ({ element }: { element: Element }) => {
               <div 
                 className="rounded-full"
                 style={{ 
-                  width: '120px',
-                  height: '60px',
+                  width: '90px',
+                  height: '45px',
                   backgroundColor: shapeColor,
                   border: borderStyle,
                 }}
@@ -116,12 +116,36 @@ export const ShapeDisplay = ({ element }: { element: Element }) => {
         );
         
       default:
-        return null;
+        // Fallback to triangle if variant is undefined
+        return (
+          <div className="flex flex-col h-full min-h-[120px]">
+            {showTitle && (
+              <div 
+                className={`mb-2 text-sm font-medium text-${textAlignment}`}
+                style={{ color: textColor }}
+              >
+                {title}
+              </div>
+            )}
+            <div className="flex-1 flex items-center justify-center">
+              <div 
+                style={{ 
+                  width: 0, 
+                  height: 0, 
+                  borderLeft: '40px solid transparent',
+                  borderRight: '40px solid transparent',
+                  borderBottom: `80px solid ${shapeColor}`,
+                  border: hasBorder ? `1px solid ${borderColor}` : undefined,
+                }}
+              />
+            </div>
+          </div>
+        );
     }
   };
   
   return (
-    <div className="w-full h-full p-2">
+    <div className="w-full h-full p-2 bg-white">
       {renderShape()}
     </div>
   );
