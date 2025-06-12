@@ -1,15 +1,15 @@
 
 import { useState, useEffect } from "react";
 import { Element } from "@/hooks/useWireframe";
-import { Input } from "@/components/ui/input";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { ChevronDown, ChevronUp } from "lucide-react";
 import { HeaderAddOnsSection } from "./HeaderAddOnsSection";
 import { HeaderVariationSection } from "./HeaderVariationSection";
 import { HeaderDesignSection } from "./HeaderDesignSection";
+import { HeaderTitleSection } from "./HeaderTitleSection";
+import { HeaderLogoSection } from "./HeaderLogoSection";
+import { HeaderDescriptionSection } from "./HeaderDescriptionSection";
+import { HeaderNavigationSection } from "./HeaderNavigationSection";
+import { HeaderMetricsSection } from "./HeaderMetricsSection";
 
 interface HeaderPropertiesProps {
   element: Element;
@@ -18,8 +18,6 @@ interface HeaderPropertiesProps {
 }
 
 export function HeaderProperties({ element, updateElementProperties, onOpenStyleDialog }: HeaderPropertiesProps) {
-  const [showNavOptions, setShowNavOptions] = useState(false);
-  const [showMetricOptions, setShowMetricOptions] = useState(false);
   const [showAddOns, setShowAddOns] = useState(false);
 
   // Local state for properties
@@ -34,6 +32,9 @@ export function HeaderProperties({ element, updateElementProperties, onOpenStyle
       { title: "Metric 2", value: "456" }
     ]
   );
+  const [showLogo, setShowLogo] = useState<boolean>(element.properties?.showLogo || false);
+  const [description, setDescription] = useState<string>(element.properties?.description || '');
+  const [title, setTitle] = useState<string>(element.properties?.title || 'DASHBOARD TITLE');
 
   // Update local state when element changes
   useEffect(() => {
@@ -42,16 +43,28 @@ export function HeaderProperties({ element, updateElementProperties, onOpenStyle
     setNavigationItems(element.properties?.navigationItems || ["Navigation 1", "Navigation 2", "Navigation 3"]);
     setShowMetrics(element.properties?.showMetrics || false);
     setMetrics(element.properties?.metrics || [{ title: "Metric 1", value: "123" }, { title: "Metric 2", value: "456" }]);
-    
-    // Auto-expand sections based on template variant
-    const variant = element.properties?.variant;
-    if (variant === 'with-metrics' || variant === 'title-metrics') {
-      setShowMetricOptions(true);
-    }
-    if (variant === 'navigation-top' || variant === 'dark-navigation' || variant === 'centered-navigation-purple') {
-      setShowNavOptions(true);
-    }
+    setShowLogo(element.properties?.showLogo || false);
+    setDescription(element.properties?.description || '');
+    setTitle(element.properties?.title || 'DASHBOARD TITLE');
   }, [element]);
+
+  // Handle title change
+  const handleTitleChange = (value: string) => {
+    setTitle(value);
+    updateElementProperties(element.id, { title: value });
+  };
+
+  // Handle description change
+  const handleDescriptionChange = (value: string) => {
+    setDescription(value);
+    updateElementProperties(element.id, { description: value });
+  };
+
+  // Handle logo toggle
+  const handleLogoToggle = (checked: boolean) => {
+    setShowLogo(checked);
+    updateElementProperties(element.id, { showLogo: checked });
+  };
 
   // Update navigation toggle
   const handleNavigationToggle = (checked: boolean) => {
@@ -90,6 +103,24 @@ export function HeaderProperties({ element, updateElementProperties, onOpenStyle
     updateElementProperties(element.id, { [field]: value });
   };
 
+  // Handle logo upload
+  const handleLogoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const logoUrl = e.target?.result as string;
+        updateElementProperties(element.id, { logoUrl });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  // Remove logo
+  const handleLogoRemove = () => {
+    updateElementProperties(element.id, { logoUrl: '' });
+  };
+
   // Check if current variant supports navigation
   const supportsNavigation = () => {
     const variant = element.properties?.variant;
@@ -102,113 +133,90 @@ export function HeaderProperties({ element, updateElementProperties, onOpenStyle
     return ['with-metrics', 'title-metrics'].includes(variant || '') || variant === 'default';
   };
 
+  // Check if current variant supports logo
+  const supportsLogo = () => {
+    const variant = element.properties?.variant;
+    return variant !== 'minimal';
+  };
+
+  // Check if current variant supports description
+  const supportsDescription = () => {
+    const variant = element.properties?.variant;
+    return variant === 'with-description';
+  };
+
+  // Get variant display name
+  const getVariantDisplayName = () => {
+    const variant = element.properties?.variant;
+    switch (variant) {
+      case 'default': return 'Default Style';
+      case 'with-description': return 'With Description';
+      case 'with-metrics': return 'With Metrics';
+      case 'centered-navigation-purple': return 'Centered Navigation (Purple)';
+      case 'navigation-top': return 'Top Navigation';
+      case 'double-logo-purple': return 'Double Logo (Purple)';
+      case 'dark-navigation': return 'Dark Navigation';
+      case 'gradient': return 'Gradient';
+      case 'minimal': return 'Minimal';
+      case 'colorful-banner': return 'Colorful Banner';
+      case 'title-metrics': return 'Title with Metrics';
+      default: return 'Default Style';
+    }
+  };
+
   return (
     <div className="space-y-5">
+      {/* Template Info Section */}
+      <div className="space-y-2">
+        <div className="font-medium text-sm">Template: {getVariantDisplayName()}</div>
+        <div className="text-xs text-gray-500">Configure template-specific properties below</div>
+      </div>
+      
+      <Separator />
+
+      {/* Title Section - Always show */}
+      <HeaderTitleSection
+        title={title}
+        onTitleChange={handleTitleChange}
+      />
+
+      {/* Logo Section - Show for variants that support it */}
+      {supportsLogo() && (
+        <HeaderLogoSection
+          showLogo={showLogo}
+          logoUrl={element.properties?.logoUrl}
+          onLogoToggle={handleLogoToggle}
+          onLogoUpload={handleLogoUpload}
+          onLogoRemove={handleLogoRemove}
+        />
+      )}
+
+      {/* Description Section - Only show for with-description variant */}
+      {supportsDescription() && (
+        <HeaderDescriptionSection
+          description={description}
+          onDescriptionChange={handleDescriptionChange}
+        />
+      )}
+      
       {/* Navigation Section - Only show for variants that support it */}
       {supportsNavigation() && (
-        <>
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <div className="font-medium text-sm">Navigation</div>
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                onClick={() => setShowNavOptions(!showNavOptions)}
-                className="h-7 w-7 p-0"
-              >
-                {showNavOptions ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-              </Button>
-            </div>
-            
-            <div className="flex items-center justify-between">
-              <Label htmlFor="show-nav" className="text-sm">Show navigation</Label>
-              <Switch 
-                id="show-nav"
-                checked={showNavigation} 
-                onCheckedChange={handleNavigationToggle}
-              />
-            </div>
-            
-            {showNavOptions && showNavigation && (
-              <div className="space-y-2 pt-2">
-                {navigationItems.map((item, index) => (
-                  <div key={index} className="mb-2">
-                    <Label htmlFor={`nav-item-${index}`} className="text-xs text-gray-500 mb-1 block">
-                      Item {index + 1}
-                    </Label>
-                    <Input
-                      id={`nav-item-${index}`}
-                      value={item}
-                      onChange={(e) => handleNavigationItemChange(index, e.target.value)}
-                      className="text-sm h-8"
-                    />
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-          <Separator />
-        </>
+        <HeaderNavigationSection
+          showNavigation={showNavigation}
+          navigationItems={navigationItems}
+          onNavigationToggle={handleNavigationToggle}
+          onNavigationItemChange={handleNavigationItemChange}
+        />
       )}
       
       {/* Metrics Section - Only show for variants that support it */}
       {supportsMetrics() && (
-        <>
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <div className="font-medium text-sm">Metrics</div>
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                onClick={() => setShowMetricOptions(!showMetricOptions)}
-                className="h-7 w-7 p-0"
-              >
-                {showMetricOptions ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-              </Button>
-            </div>
-            
-            <div className="flex items-center justify-between">
-              <Label htmlFor="show-metrics" className="text-sm">Show metrics</Label>
-              <Switch 
-                id="show-metrics"
-                checked={showMetrics} 
-                onCheckedChange={handleMetricToggle}
-              />
-            </div>
-            
-            {showMetricOptions && showMetrics && (
-              <div className="space-y-3 pt-2">
-                {metrics.map((metric, index) => (
-                  <div key={index} className="space-y-2">
-                    <div>
-                      <Label htmlFor={`metric-title-${index}`} className="text-xs text-gray-500 mb-1 block">
-                        Title {index + 1}
-                      </Label>
-                      <Input
-                        id={`metric-title-${index}`}
-                        value={metric.title}
-                        onChange={(e) => handleMetricChange(index, 'title', e.target.value)}
-                        className="text-sm h-8 mb-1"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor={`metric-value-${index}`} className="text-xs text-gray-500 mb-1 block">
-                        Value {index + 1}
-                      </Label>
-                      <Input
-                        id={`metric-value-${index}`}
-                        value={metric.value}
-                        onChange={(e) => handleMetricChange(index, 'value', e.target.value)}
-                        className="text-sm h-8"
-                      />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-          <Separator />
-        </>
+        <HeaderMetricsSection
+          showMetrics={showMetrics}
+          metrics={metrics}
+          onMetricToggle={handleMetricToggle}
+          onMetricChange={handleMetricChange}
+        />
       )}
 
       {/* Add Ons Section */}
