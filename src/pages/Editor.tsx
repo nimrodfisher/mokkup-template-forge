@@ -1,3 +1,4 @@
+
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { Sidebar } from "@/components/sidebar";
@@ -25,6 +26,7 @@ import { GeomapStyleDialog } from "@/components/geomap-style/GeomapStyleDialog";
 import { ColumnChartStyleDialog } from "@/components/column-chart-style/ColumnChartStyleDialog";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { WaterfallStyleDialog } from "@/components/waterfall-style/WaterfallStyleDialog";
+import { BarChartStyleDialog } from "@/components/bar-chart-style/BarChartStyleDialog";
 
 const Editor = () => {
   const params = useParams();
@@ -44,6 +46,7 @@ const Editor = () => {
   const [showShapeStyleDialog, setShowShapeStyleDialog] = useState(false);
   const [showFilterStyleDialog, setShowFilterStyleDialog] = useState(false);
   const [showChartStyleDialog, setShowChartStyleDialog] = useState(false);
+  const [showBarChartStyleDialog, setShowBarChartStyleDialog] = useState(false);
   const [showAreaChartStyleDialog, setShowAreaChartStyleDialog] = useState(false);
   const [showTableStyleDialog, setShowTableStyleDialog] = useState(false);
   const [showGaugeStyleDialog, setShowGaugeStyleDialog] = useState(false);
@@ -88,7 +91,9 @@ const Editor = () => {
       setShowShapeStyleDialog(true);
     } else if (selectedElement?.type === 'filter') {
       setShowFilterStyleDialog(true);
-    } else if (selectedElement?.type === 'bar-chart' || selectedElement?.type === 'column-chart') {
+    } else if (selectedElement?.type === 'bar-chart') {
+      setShowBarChartStyleDialog(true);
+    } else if (selectedElement?.type === 'column-chart') {
       setShowChartStyleDialog(true);
     } else if (selectedElement?.type === 'area-chart') {
       setShowAreaChartStyleDialog(true);
@@ -171,8 +176,17 @@ const Editor = () => {
             />
           )}
           
+          {/* Bar Chart Style Dialog */}
+          {selectedElementId && selectedElement?.type === 'bar-chart' && (
+            <BarChartStyleDialog 
+              elementId={selectedElementId} 
+              open={showBarChartStyleDialog}
+              onClose={() => setShowBarChartStyleDialog(false)}
+            />
+          )}
+
           {/* Chart Style Dialog */}
-          {selectedElementId && (selectedElement?.type === 'bar-chart' || selectedElement?.type === 'column-chart') && (
+          {selectedElementId && selectedElement?.type === 'column-chart' && (
             <ChartStyleDialog 
               elementId={selectedElementId} 
               open={showChartStyleDialog}

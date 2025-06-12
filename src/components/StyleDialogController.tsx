@@ -20,6 +20,7 @@ import { PieChartStyleDialog } from "./pie-chart-style/PieChartStyleDialog";
 import { WaterfallStyleDialog } from "./waterfall-style/WaterfallStyleDialog";
 import { ComboChartStyleDialog } from "./combo-chart-style/ComboChartStyleDialog";
 import { LineChartStyleDialog } from "./line-chart-style/LineChartStyleDialog";
+import { BarChartStyleDialog } from "./bar-chart-style/BarChartStyleDialog";
 
 interface StyleDialogControllerProps {
   element: Element;
@@ -97,6 +98,15 @@ export function StyleDialogController({ element, dialogType, onClose }: StyleDia
     case 'chart':
       return (
         <ChartStyleDialog
+          elementId={element.id}
+          open={true}
+          onClose={onClose}
+        />
+      );
+
+    case 'bar-chart':
+      return (
+        <BarChartStyleDialog
           elementId={element.id}
           open={true}
           onClose={onClose}
