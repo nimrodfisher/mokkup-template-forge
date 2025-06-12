@@ -19,10 +19,11 @@ export function BarChartDataSection({
   setDataOpen 
 }: BarChartDataSectionProps) {
   const chartData = properties.chartData || [
-    { category: 'Jan 22', value: 30, secondary: 20, tertiary: 15 },
-    { category: 'Feb 22', value: 45, secondary: 30, tertiary: 25 },
-    { category: 'Mar 22', value: 35, secondary: 25, tertiary: 20 },
-    { category: 'Apr 22', value: 50, secondary: 35, tertiary: 30 }
+    { name: 'Jan', value: 400, value2: 240, value3: 140 },
+    { name: 'Feb', value: 300, value2: 139, value3: 190 },
+    { name: 'Mar', value: 200, value2: 980, value3: 290 },
+    { name: 'Apr', value: 278, value2: 390, value3: 340 },
+    { name: 'May', value: 189, value2: 480, value3: 420 }
   ];
 
   const updateDataPoint = (index: number, field: string, value: any) => {
@@ -32,7 +33,7 @@ export function BarChartDataSection({
   };
 
   const addDataPoint = () => {
-    const newData = [...chartData, { category: 'New', value: 0, secondary: 0, tertiary: 0 }];
+    const newData = [...chartData, { name: 'New', value: 0, value2: 0, value3: 0 }];
     handleChange('chartData', newData);
   };
 
@@ -71,10 +72,10 @@ export function BarChartDataSection({
               
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <Label className="text-xs">Category</Label>
+                  <Label className="text-xs">Name</Label>
                   <Input
-                    value={item.category}
-                    onChange={(e) => updateDataPoint(index, 'category', e.target.value)}
+                    value={item.name}
+                    onChange={(e) => updateDataPoint(index, 'name', e.target.value)}
                     className="mt-1 h-7 text-xs"
                   />
                 </div>
@@ -92,20 +93,20 @@ export function BarChartDataSection({
               {(properties.chartVariant === 'multi-bar' || properties.chartVariant === 'stacked-bar') && (
                 <div className="grid grid-cols-2 gap-2">
                   <div>
-                    <Label className="text-xs">Secondary</Label>
+                    <Label className="text-xs">Value 2</Label>
                     <Input
                       type="number"
-                      value={item.secondary || 0}
-                      onChange={(e) => updateDataPoint(index, 'secondary', parseInt(e.target.value) || 0)}
+                      value={item.value2 || 0}
+                      onChange={(e) => updateDataPoint(index, 'value2', parseInt(e.target.value) || 0)}
                       className="mt-1 h-7 text-xs"
                     />
                   </div>
                   <div>
-                    <Label className="text-xs">Tertiary</Label>
+                    <Label className="text-xs">Value 3</Label>
                     <Input
                       type="number"
-                      value={item.tertiary || 0}
-                      onChange={(e) => updateDataPoint(index, 'tertiary', parseInt(e.target.value) || 0)}
+                      value={item.value3 || 0}
+                      onChange={(e) => updateDataPoint(index, 'value3', parseInt(e.target.value) || 0)}
                       className="mt-1 h-7 text-xs"
                     />
                   </div>

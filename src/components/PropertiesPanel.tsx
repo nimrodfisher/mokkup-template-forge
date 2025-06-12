@@ -26,13 +26,16 @@ interface PropertiesPanelProps {
 }
 
 export function PropertiesPanel({ onOpenStyleDialog, updateElementProperties }: PropertiesPanelProps) {
-  const { elements, selectedElementId, showProperties, toggleProperties, updateElement, updateLogoImage, updateImage } = useWireframe();
+  const { elements, selectedElementId, showProperties, toggleProperties, updateElement, updateLogoImage, updateImage, updateElementProperties: wireframeUpdateProperties } = useWireframe();
   
   const selectedElement = elements.find(el => el.id === selectedElementId);
   
   if (!selectedElement || !showProperties) {
     return null;
   }
+
+  // Use the wireframe's updateElementProperties if the prop version isn't provided
+  const handleUpdateElementProperties = updateElementProperties || wireframeUpdateProperties;
   
   // Render the appropriate properties component based on the element type
   const renderPropertiesComponent = () => {
@@ -41,7 +44,7 @@ export function PropertiesPanel({ onOpenStyleDialog, updateElementProperties }: 
         return (
           <ShapeProperties
             element={selectedElement}
-            updateElementProperties={updateElementProperties}
+            updateElementProperties={handleUpdateElementProperties}
             toggleProperties={toggleProperties}
             onOpenStyleDialog={onOpenStyleDialog}
           />
@@ -50,7 +53,7 @@ export function PropertiesPanel({ onOpenStyleDialog, updateElementProperties }: 
         return (
           <HeaderProperties
             element={selectedElement}
-            updateElementProperties={updateElementProperties}
+            updateElementProperties={handleUpdateElementProperties}
             toggleProperties={toggleProperties}
             onOpenStyleDialog={onOpenStyleDialog}
             updateLogoImage={updateLogoImage}
@@ -60,7 +63,7 @@ export function PropertiesPanel({ onOpenStyleDialog, updateElementProperties }: 
         return (
           <FilterProperties
             element={selectedElement}
-            updateElementProperties={updateElementProperties}
+            updateElementProperties={handleUpdateElementProperties}
             toggleProperties={toggleProperties}
           />
         );
@@ -68,7 +71,7 @@ export function PropertiesPanel({ onOpenStyleDialog, updateElementProperties }: 
         return (
           <KpiProperties
             element={selectedElement}
-            updateElementProperties={updateElementProperties}
+            updateElementProperties={handleUpdateElementProperties}
             toggleProperties={toggleProperties}
           />
         );
@@ -76,7 +79,7 @@ export function PropertiesPanel({ onOpenStyleDialog, updateElementProperties }: 
         return (
           <ImageProperties
             element={selectedElement}
-            updateElementProperties={updateElementProperties}
+            updateElementProperties={handleUpdateElementProperties}
             toggleProperties={toggleProperties}
             updateImage={updateImage}
           />
@@ -85,7 +88,7 @@ export function PropertiesPanel({ onOpenStyleDialog, updateElementProperties }: 
         return (
           <TextboxProperties
             element={selectedElement}
-            updateElementProperties={updateElementProperties}
+            updateElementProperties={handleUpdateElementProperties}
             toggleProperties={toggleProperties}
             onOpenStyleDialog={onOpenStyleDialog}
           />
@@ -94,7 +97,7 @@ export function PropertiesPanel({ onOpenStyleDialog, updateElementProperties }: 
         return (
           <BarChartProperties
             element={selectedElement}
-            updateElementProperties={updateElementProperties}
+            updateElementProperties={handleUpdateElementProperties}
             onOpenStyleDialog={onOpenStyleDialog}
           />
         );
@@ -102,7 +105,7 @@ export function PropertiesPanel({ onOpenStyleDialog, updateElementProperties }: 
         return (
           <GaugeProperties
             element={selectedElement}
-            updateElementProperties={updateElementProperties}
+            updateElementProperties={handleUpdateElementProperties}
             onOpenStyleDialog={onOpenStyleDialog}
           />
         );
@@ -110,7 +113,7 @@ export function PropertiesPanel({ onOpenStyleDialog, updateElementProperties }: 
         return (
           <HeatmapProperties
             element={selectedElement}
-            updateElementProperties={updateElementProperties}
+            updateElementProperties={handleUpdateElementProperties}
             onOpenStyleDialog={onOpenStyleDialog}
           />
         );
@@ -118,7 +121,7 @@ export function PropertiesPanel({ onOpenStyleDialog, updateElementProperties }: 
         return (
           <QuadrantProperties
             element={selectedElement}
-            updateElementProperties={updateElementProperties}
+            updateElementProperties={handleUpdateElementProperties}
             onOpenStyleDialog={onOpenStyleDialog}
           />
         );
@@ -126,7 +129,7 @@ export function PropertiesPanel({ onOpenStyleDialog, updateElementProperties }: 
         return (
           <ScatterPlotProperties
             element={selectedElement}
-            updateElementProperties={updateElementProperties}
+            updateElementProperties={handleUpdateElementProperties}
             onOpenStyleDialog={onOpenStyleDialog}
           />
         );
@@ -134,7 +137,7 @@ export function PropertiesPanel({ onOpenStyleDialog, updateElementProperties }: 
         return (
           <GeomapProperties
             element={selectedElement}
-            updateElementProperties={updateElementProperties}
+            updateElementProperties={handleUpdateElementProperties}
             onOpenStyleDialog={onOpenStyleDialog}
           />
         );
@@ -142,7 +145,7 @@ export function PropertiesPanel({ onOpenStyleDialog, updateElementProperties }: 
         return (
           <ColumnChartProperties
             element={selectedElement}
-            updateElementProperties={updateElementProperties}
+            updateElementProperties={handleUpdateElementProperties}
             onOpenStyleDialog={onOpenStyleDialog}
           />
         );
@@ -150,7 +153,7 @@ export function PropertiesPanel({ onOpenStyleDialog, updateElementProperties }: 
         return (
           <LineChartProperties
             element={selectedElement}
-            updateElementProperties={updateElementProperties}
+            updateElementProperties={handleUpdateElementProperties}
             onOpenStyleDialog={onOpenStyleDialog}
           />
         );
@@ -158,7 +161,7 @@ export function PropertiesPanel({ onOpenStyleDialog, updateElementProperties }: 
         return (
           <ComboChartProperties
             element={selectedElement}
-            updateElementProperties={updateElementProperties}
+            updateElementProperties={handleUpdateElementProperties}
             onOpenStyleDialog={onOpenStyleDialog}
           />
         );
@@ -166,7 +169,7 @@ export function PropertiesPanel({ onOpenStyleDialog, updateElementProperties }: 
         return (
           <PieChartProperties
             element={selectedElement}
-            updateElementProperties={updateElementProperties}
+            updateElementProperties={handleUpdateElementProperties}
             onOpenStyleDialog={onOpenStyleDialog}
           />
         );
