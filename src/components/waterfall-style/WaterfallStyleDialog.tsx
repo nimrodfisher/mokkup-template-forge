@@ -71,19 +71,17 @@ export function WaterfallStyleDialog({ elementId, open, onClose }: WaterfallStyl
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl w-[90vw] max-h-[85vh] flex flex-col">
-        <DialogHeader className="flex-shrink-0">
+      <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+        <DialogHeader>
           <DialogTitle>Choose Waterfall Style</DialogTitle>
         </DialogHeader>
         
-        <div className="flex-1 overflow-y-auto py-4">
-          <WaterfallTemplates 
-            selectedTemplate={selectedTemplate}
-            onSelectTemplate={handleTemplateSelect}
-          />
-        </div>
+        <WaterfallTemplates 
+          selectedTemplate={selectedTemplate}
+          onSelectTemplate={handleTemplateSelect}
+        />
         
-        <div className="flex justify-end space-x-2 pt-4 border-t flex-shrink-0">
+        <div className="flex justify-end space-x-2 pt-4 border-t">
           <Button variant="outline" onClick={onClose}>
             Close
           </Button>
