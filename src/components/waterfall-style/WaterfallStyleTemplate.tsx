@@ -90,8 +90,8 @@ export function WaterfallStyleTemplate({ variant, isSelected, onClick, title }: 
       }`}
       onClick={onClick}
     >
-      <div className="h-48 mb-3 overflow-hidden bg-white rounded border">
-        <div className="w-full h-full">
+      <div className="h-64 mb-4 overflow-hidden bg-white rounded border">
+        <div className="w-full h-full p-2">
           <WaterfallRenderer properties={getTemplateProperties()} />
         </div>
       </div>

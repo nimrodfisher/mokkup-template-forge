@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { useWireframe } from '@/hooks/useWireframe';
 import { WaterfallTemplates } from './WaterfallTemplates';
@@ -76,25 +76,25 @@ export function WaterfallStyleDialog({ elementId, open, onClose }: WaterfallStyl
   };
 
   return (
-    <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl w-[95vw] max-h-[95vh] flex flex-col overflow-hidden">
-        <DialogHeader className="flex-shrink-0 pb-4 border-b">
-          <DialogTitle>Choose Waterfall Style</DialogTitle>
-        </DialogHeader>
+    <Sheet open={open} onOpenChange={onClose}>
+      <SheetContent side="right" className="w-full sm:max-w-2xl lg:max-w-4xl">
+        <SheetHeader className="pb-6">
+          <SheetTitle>Choose Waterfall Style</SheetTitle>
+        </SheetHeader>
         
-        <div className="flex-1 overflow-y-auto p-2">
+        <div className="flex-1 overflow-y-auto">
           <WaterfallTemplates 
             selectedTemplate={selectedTemplate}
             onSelectTemplate={handleTemplateSelect}
           />
         </div>
         
-        <div className="flex justify-end space-x-2 pt-4 border-t flex-shrink-0">
+        <div className="flex justify-end pt-6 border-t">
           <Button variant="outline" onClick={onClose}>
             Close
           </Button>
         </div>
-      </DialogContent>
-    </Dialog>
+      </SheetContent>
+    </Sheet>
   );
 }
