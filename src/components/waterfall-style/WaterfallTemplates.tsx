@@ -27,16 +27,18 @@ export function WaterfallTemplates({ selectedTemplate, onSelectTemplate }: Water
   ];
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 p-4">
-      {templates.map((template) => (
-        <WaterfallStyleTemplate
-          key={template.id}
-          variant={template.variant}
-          isSelected={selectedTemplate === template.id}
-          onClick={() => onSelectTemplate(template.id)}
-          title={template.title}
-        />
-      ))}
+    <div className="flex justify-center">
+      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 max-w-5xl">
+        {templates.map((template) => (
+          <WaterfallStyleTemplate
+            key={template.id}
+            variant={template.variant}
+            isSelected={selectedTemplate === template.id}
+            onClick={() => onSelectTemplate(template.id)}
+            title={template.title}
+          />
+        ))}
+      </div>
     </div>
   );
 }
