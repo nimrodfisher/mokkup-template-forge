@@ -8,10 +8,15 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 interface WaterfallPropertiesSectionProps {
   properties: any;
   elementId: string;
-  updateElementProperties: (id: string, properties: any) => void;
+  updateElementProperties: (properties: any) => void;
 }
 
 export function WaterfallPropertiesSection({ properties, elementId, updateElementProperties }: WaterfallPropertiesSectionProps) {
+  const handlePropertyChange = (key: string, value: any) => {
+    console.log('WaterfallPropertiesSection updating property:', key, value);
+    updateElementProperties({ [key]: value });
+  };
+
   return (
     <div className="space-y-4">
       <h3 className="text-sm font-medium text-gray-900">Properties</h3>
@@ -22,9 +27,7 @@ export function WaterfallPropertiesSection({ properties, elementId, updateElemen
           <div className="mt-2">
             <Slider
               value={[properties.columnWidth || 50]}
-              onValueChange={(value) => 
-                updateElementProperties(elementId, { columnWidth: value[0] })
-              }
+              onValueChange={(value) => handlePropertyChange('columnWidth', value[0])}
               max={100}
               min={10}
               step={5}
@@ -39,9 +42,7 @@ export function WaterfallPropertiesSection({ properties, elementId, updateElemen
           <Switch
             id="showDataLabels"
             checked={properties.showDataLabels || false}
-            onCheckedChange={(checked) => 
-              updateElementProperties(elementId, { showDataLabels: checked })
-            }
+            onCheckedChange={(checked) => handlePropertyChange('showDataLabels', checked)}
           />
         </div>
 
@@ -51,9 +52,7 @@ export function WaterfallPropertiesSection({ properties, elementId, updateElemen
             <Switch
               id="showLegends"
               checked={properties.showLegends || false}
-              onCheckedChange={(checked) => 
-                updateElementProperties(elementId, { showLegends: checked })
-              }
+              onCheckedChange={(checked) => handlePropertyChange('showLegends', checked)}
             />
           </div>
 
@@ -62,9 +61,7 @@ export function WaterfallPropertiesSection({ properties, elementId, updateElemen
               <Label className="text-sm text-gray-600">Position</Label>
               <Select
                 value={properties.legendPosition || 'top-left'}
-                onValueChange={(value) => 
-                  updateElementProperties(elementId, { legendPosition: value })
-                }
+                onValueChange={(value) => handlePropertyChange('legendPosition', value)}
               >
                 <SelectTrigger className="text-sm mt-1">
                   <SelectValue />

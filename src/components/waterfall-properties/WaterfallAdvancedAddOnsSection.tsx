@@ -10,7 +10,7 @@ import { Trash2, Plus, GripVertical } from 'lucide-react';
 interface WaterfallAdvancedAddOnsSectionProps {
   properties: any;
   elementId: string;
-  updateElementProperties: (id: string, properties: any) => void;
+  updateElementProperties: (properties: any) => void;
 }
 
 export function WaterfallAdvancedAddOnsSection({ properties, elementId, updateElementProperties }: WaterfallAdvancedAddOnsSectionProps) {
@@ -19,42 +19,45 @@ export function WaterfallAdvancedAddOnsSection({ properties, elementId, updateEl
   const waterfallKpis = properties.waterfallKpis || [];
   const waterfallText = properties.waterfallText || [];
 
+  const handlePropertyChange = (key: string, value: any) => {
+    console.log('WaterfallAdvancedAddOnsSection updating property:', key, value);
+    updateElementProperties({ [key]: value });
+  };
+
   const addButton = () => {
     const newButtons = [...waterfallButtons, { title: 'Title1', alignment: 'left' }];
-    updateElementProperties(elementId, { waterfallButtons: newButtons, showButtons: true });
+    handlePropertyChange('waterfallButtons', newButtons);
+    handlePropertyChange('showButtons', true);
   };
 
   const updateButton = (index: number, field: string, value: string) => {
     const newButtons = [...waterfallButtons];
     newButtons[index] = { ...newButtons[index], [field]: value };
-    updateElementProperties(elementId, { waterfallButtons: newButtons });
+    handlePropertyChange('waterfallButtons', newButtons);
   };
 
   const removeButton = (index: number) => {
     const newButtons = waterfallButtons.filter((_: any, i: number) => i !== index);
-    updateElementProperties(elementId, { 
-      waterfallButtons: newButtons,
-      showButtons: newButtons.length > 0
-    });
+    handlePropertyChange('waterfallButtons', newButtons);
+    handlePropertyChange('showButtons', newButtons.length > 0);
   };
 
   const addKpi = () => {
     const newKpis = [...waterfallKpis, { title: 'Metric', value: '123', change: '12%' }];
-    updateElementProperties(elementId, { waterfallKpis: newKpis, showKpis: true });
+    handlePropertyChange('waterfallKpis', newKpis);
+    handlePropertyChange('showKpis', true);
   };
 
   const updateKpi = (index: number, field: string, value: string) => {
     const newKpis = [...waterfallKpis];
     newKpis[index] = { ...newKpis[index], [field]: value };
-    updateElementProperties(elementId, { waterfallKpis: newKpis });
+    handlePropertyChange('waterfallKpis', newKpis);
   };
 
   const removeKpi = (index: number) => {
     const newKpis = waterfallKpis.filter((_: any, i: number) => i !== index);
-    updateElementProperties(elementId, { 
-      waterfallKpis: newKpis,
-      showKpis: newKpis.length > 0
-    });
+    handlePropertyChange('waterfallKpis', newKpis);
+    handlePropertyChange('showKpis', newKpis.length > 0);
   };
 
   return (
@@ -69,9 +72,9 @@ export function WaterfallAdvancedAddOnsSection({ properties, elementId, updateEl
             <Switch
               checked={properties.showButtons || waterfallButtons.length > 0}
               onCheckedChange={(checked) => {
-                updateElementProperties(elementId, { showButtons: checked });
+                handlePropertyChange('showButtons', checked);
                 if (!checked) {
-                  updateElementProperties(elementId, { waterfallButtons: [] });
+                  handlePropertyChange('waterfallButtons', []);
                 }
               }}
             />
@@ -138,9 +141,7 @@ export function WaterfallAdvancedAddOnsSection({ properties, elementId, updateEl
             </div>
             <Switch
               checked={properties.showDropdowns || false}
-              onCheckedChange={(checked) => {
-                updateElementProperties(elementId, { showDropdowns: checked });
-              }}
+              onCheckedChange={(checked) => handlePropertyChange('showDropdowns', checked)}
             />
           </div>
         </div>
@@ -155,9 +156,9 @@ export function WaterfallAdvancedAddOnsSection({ properties, elementId, updateEl
             <Switch
               checked={properties.showKpis || waterfallKpis.length > 0}
               onCheckedChange={(checked) => {
-                updateElementProperties(elementId, { showKpis: checked });
+                handlePropertyChange('showKpis', checked);
                 if (!checked) {
-                  updateElementProperties(elementId, { waterfallKpis: [] });
+                  handlePropertyChange('waterfallKpis', []);
                 }
               }}
             />
@@ -220,9 +221,7 @@ export function WaterfallAdvancedAddOnsSection({ properties, elementId, updateEl
             <Label className="text-sm">Text</Label>
             <Switch
               checked={properties.showText || false}
-              onCheckedChange={(checked) => {
-                updateElementProperties(elementId, { showText: checked });
-              }}
+              onCheckedChange={(checked) => handlePropertyChange('showText', checked)}
             />
           </div>
         </div>

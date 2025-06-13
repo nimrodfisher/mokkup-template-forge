@@ -6,10 +6,15 @@ import { Switch } from '@/components/ui/switch';
 interface WaterfallAppearanceSectionProps {
   properties: any;
   elementId: string;
-  updateElementProperties: (id: string, properties: any) => void;
+  updateElementProperties: (properties: any) => void;
 }
 
 export function WaterfallAppearanceSection({ properties, elementId, updateElementProperties }: WaterfallAppearanceSectionProps) {
+  const handlePropertyChange = (key: string, value: any) => {
+    console.log('WaterfallAppearanceSection updating property:', key, value);
+    updateElementProperties({ [key]: value });
+  };
+
   return (
     <div className="space-y-4">
       <h3 className="text-sm font-medium text-gray-900">Appearance</h3>
@@ -20,9 +25,7 @@ export function WaterfallAppearanceSection({ properties, elementId, updateElemen
           <Switch
             id="showGridLines"
             checked={properties.showGridLines !== false}
-            onCheckedChange={(checked) => 
-              updateElementProperties(elementId, { showGridLines: checked })
-            }
+            onCheckedChange={(checked) => handlePropertyChange('showGridLines', checked)}
           />
         </div>
 
@@ -31,9 +34,7 @@ export function WaterfallAppearanceSection({ properties, elementId, updateElemen
           <Switch
             id="showLabels"
             checked={properties.showLabels !== false}
-            onCheckedChange={(checked) => 
-              updateElementProperties(elementId, { showLabels: checked })
-            }
+            onCheckedChange={(checked) => handlePropertyChange('showLabels', checked)}
           />
         </div>
       </div>

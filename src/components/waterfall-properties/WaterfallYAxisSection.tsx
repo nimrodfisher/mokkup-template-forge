@@ -8,10 +8,15 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 interface WaterfallYAxisSectionProps {
   properties: any;
   elementId: string;
-  updateElementProperties: (id: string, properties: any) => void;
+  updateElementProperties: (properties: any) => void;
 }
 
 export function WaterfallYAxisSection({ properties, elementId, updateElementProperties }: WaterfallYAxisSectionProps) {
+  const handlePropertyChange = (key: string, value: any) => {
+    console.log('WaterfallYAxisSection updating property:', key, value);
+    updateElementProperties({ [key]: value });
+  };
+
   return (
     <div className="space-y-4">
       <h3 className="text-sm font-medium text-gray-900">Y Axis</h3>
@@ -22,9 +27,7 @@ export function WaterfallYAxisSection({ properties, elementId, updateElementProp
           <Switch
             id="showYAxis"
             checked={properties.showYAxis !== false}
-            onCheckedChange={(checked) => 
-              updateElementProperties(elementId, { showYAxis: checked })
-            }
+            onCheckedChange={(checked) => handlePropertyChange('showYAxis', checked)}
           />
         </div>
 
@@ -34,9 +37,7 @@ export function WaterfallYAxisSection({ properties, elementId, updateElementProp
             <Switch
               id="showYAxisTitle"
               checked={properties.showYAxisTitle || false}
-              onCheckedChange={(checked) => 
-                updateElementProperties(elementId, { showYAxisTitle: checked })
-              }
+              onCheckedChange={(checked) => handlePropertyChange('showYAxisTitle', checked)}
             />
           </div>
 
@@ -46,9 +47,7 @@ export function WaterfallYAxisSection({ properties, elementId, updateElementProp
               <Input
                 id="yAxisTitle"
                 value={properties.yAxisTitle || ''}
-                onChange={(e) => 
-                  updateElementProperties(elementId, { yAxisTitle: e.target.value })
-                }
+                onChange={(e) => handlePropertyChange('yAxisTitle', e.target.value)}
                 placeholder="Y Axis Title"
                 className="text-sm mt-1"
               />
@@ -64,9 +63,7 @@ export function WaterfallYAxisSection({ properties, elementId, updateElementProp
                   id="yAxisMin"
                   type="number"
                   value={properties.yAxisMin || 0}
-                  onChange={(e) => 
-                    updateElementProperties(elementId, { yAxisMin: parseInt(e.target.value) || 0 })
-                  }
+                  onChange={(e) => handlePropertyChange('yAxisMin', parseInt(e.target.value) || 0)}
                   className="text-sm"
                 />
               </div>
@@ -76,9 +73,7 @@ export function WaterfallYAxisSection({ properties, elementId, updateElementProp
                   id="yAxisMax"
                   type="number"
                   value={properties.yAxisMax || 600}
-                  onChange={(e) => 
-                    updateElementProperties(elementId, { yAxisMax: parseInt(e.target.value) || 600 })
-                  }
+                  onChange={(e) => handlePropertyChange('yAxisMax', parseInt(e.target.value) || 600)}
                   className="text-sm"
                 />
               </div>
@@ -91,9 +86,7 @@ export function WaterfallYAxisSection({ properties, elementId, updateElementProp
               id="yAxisStepSize"
               type="number"
               value={properties.yAxisStepSize || 10}
-              onChange={(e) => 
-                updateElementProperties(elementId, { yAxisStepSize: parseInt(e.target.value) || 10 })
-              }
+              onChange={(e) => handlePropertyChange('yAxisStepSize', parseInt(e.target.value) || 10)}
               className="text-sm"
             />
           </div>
@@ -103,9 +96,7 @@ export function WaterfallYAxisSection({ properties, elementId, updateElementProp
             <Switch
               id="showYAxisLabels"
               checked={properties.showYAxisLabels !== false}
-              onCheckedChange={(checked) => 
-                updateElementProperties(elementId, { showYAxisLabels: checked })
-              }
+              onCheckedChange={(checked) => handlePropertyChange('showYAxisLabels', checked)}
             />
           </div>
 
@@ -113,9 +104,7 @@ export function WaterfallYAxisSection({ properties, elementId, updateElementProp
             <Label className="text-sm text-gray-600">Label Format</Label>
             <Select
               value={properties.yAxisLabelFormat || 'number'}
-              onValueChange={(value) => 
-                updateElementProperties(elementId, { yAxisLabelFormat: value })
-              }
+              onValueChange={(value) => handlePropertyChange('yAxisLabelFormat', value)}
             >
               <SelectTrigger className="text-sm mt-1">
                 <SelectValue />

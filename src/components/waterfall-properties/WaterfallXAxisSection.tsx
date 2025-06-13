@@ -9,10 +9,15 @@ import { Slider } from '@/components/ui/slider';
 interface WaterfallXAxisSectionProps {
   properties: any;
   elementId: string;
-  updateElementProperties: (id: string, properties: any) => void;
+  updateElementProperties: (properties: any) => void;
 }
 
 export function WaterfallXAxisSection({ properties, elementId, updateElementProperties }: WaterfallXAxisSectionProps) {
+  const handlePropertyChange = (key: string, value: any) => {
+    console.log('WaterfallXAxisSection updating property:', key, value);
+    updateElementProperties({ [key]: value });
+  };
+
   return (
     <div className="space-y-4">
       <h3 className="text-sm font-medium text-gray-900">X Axis</h3>
@@ -23,9 +28,7 @@ export function WaterfallXAxisSection({ properties, elementId, updateElementProp
           <Switch
             id="showXAxis"
             checked={properties.showXAxis !== false}
-            onCheckedChange={(checked) => 
-              updateElementProperties(elementId, { showXAxis: checked })
-            }
+            onCheckedChange={(checked) => handlePropertyChange('showXAxis', checked)}
           />
         </div>
 
@@ -35,9 +38,7 @@ export function WaterfallXAxisSection({ properties, elementId, updateElementProp
             <Switch
               id="showXAxisTitle"
               checked={properties.showXAxisTitle || false}
-              onCheckedChange={(checked) => 
-                updateElementProperties(elementId, { showXAxisTitle: checked })
-              }
+              onCheckedChange={(checked) => handlePropertyChange('showXAxisTitle', checked)}
             />
           </div>
 
@@ -47,9 +48,7 @@ export function WaterfallXAxisSection({ properties, elementId, updateElementProp
               <Input
                 id="xAxisTitle"
                 value={properties.xAxisTitle || ''}
-                onChange={(e) => 
-                  updateElementProperties(elementId, { xAxisTitle: e.target.value })
-                }
+                onChange={(e) => handlePropertyChange('xAxisTitle', e.target.value)}
                 placeholder="X Axis Title"
                 className="text-sm mt-1"
               />
@@ -61,9 +60,7 @@ export function WaterfallXAxisSection({ properties, elementId, updateElementProp
             <div className="mt-2">
               <Slider
                 value={[properties.xAxisLabelRotation || 0]}
-                onValueChange={(value) => 
-                  updateElementProperties(elementId, { xAxisLabelRotation: value[0] })
-                }
+                onValueChange={(value) => handlePropertyChange('xAxisLabelRotation', value[0])}
                 max={90}
                 min={-90}
                 step={15}
@@ -78,9 +75,7 @@ export function WaterfallXAxisSection({ properties, elementId, updateElementProp
             <Switch
               id="showXAxisLabels"
               checked={properties.showXAxisLabels !== false}
-              onCheckedChange={(checked) => 
-                updateElementProperties(elementId, { showXAxisLabels: checked })
-              }
+              onCheckedChange={(checked) => handlePropertyChange('showXAxisLabels', checked)}
             />
           </div>
         </div>
