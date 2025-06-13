@@ -85,13 +85,13 @@ export function WaterfallStyleTemplate({ variant, isSelected, onClick, title }: 
 
   return (
     <div 
-      className={`border-2 rounded-lg p-3 cursor-pointer transition-all hover:shadow-md ${
+      className={`border-2 rounded-lg p-4 cursor-pointer transition-all hover:shadow-md ${
         isSelected ? 'border-blue-500 bg-blue-50' : 'border-gray-200'
       }`}
       onClick={onClick}
     >
-      <div className="h-24 mb-2 overflow-hidden">
-        <div className="transform scale-75 origin-top-left" style={{ width: '133%', height: '133%' }}>
+      <div className="h-40 mb-3 overflow-hidden">
+        <div className="transform scale-90 origin-top-left" style={{ width: '111%', height: '111%' }}>
           <WaterfallRenderer properties={getTemplateProperties()} />
         </div>
       </div>
