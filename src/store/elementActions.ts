@@ -76,16 +76,23 @@ export const createElementSlice: StateCreator<
   },
   
   updateElementProperties: (id, properties) => {
+    console.log('ElementSlice updateElementProperties called with:', { id, properties });
+    
     set(state => ({
-      elements: state.elements.map(el => 
-        el.id === id ? { 
-          ...el, 
-          properties: {
-            ...el.properties,
-            ...properties
-          } 
-        } : el
-      ),
+      elements: state.elements.map(el => {
+        if (el.id === id) {
+          const updatedElement = { 
+            ...el, 
+            properties: {
+              ...el.properties,
+              ...properties
+            } 
+          };
+          console.log('Updated element properties:', updatedElement.properties);
+          return updatedElement;
+        }
+        return el;
+      }),
     }));
   },
   

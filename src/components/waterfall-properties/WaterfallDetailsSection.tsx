@@ -8,10 +8,15 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 interface WaterfallDetailsSectionProps {
   properties: any;
   elementId: string;
-  updateElementProperties: (id: string, properties: any) => void;
+  updateElementProperties: (properties: any) => void;
 }
 
 export function WaterfallDetailsSection({ properties, elementId, updateElementProperties }: WaterfallDetailsSectionProps) {
+  const handlePropertyChange = (key: string, value: any) => {
+    console.log('WaterfallDetailsSection updating property:', key, value);
+    updateElementProperties({ [key]: value });
+  };
+
   return (
     <div className="space-y-4">
       <h3 className="text-sm font-medium text-gray-900">Details</h3>
@@ -22,9 +27,7 @@ export function WaterfallDetailsSection({ properties, elementId, updateElementPr
           <Switch
             id="showTitle"
             checked={properties.showTitle !== false}
-            onCheckedChange={(checked) => 
-              updateElementProperties(elementId, { showTitle: checked })
-            }
+            onCheckedChange={(checked) => handlePropertyChange('showTitle', checked)}
           />
         </div>
 
@@ -34,10 +37,8 @@ export function WaterfallDetailsSection({ properties, elementId, updateElementPr
               <Label htmlFor="waterfallTitle" className="text-sm">Title</Label>
               <Input
                 id="waterfallTitle"
-                value={properties.waterfallTitle || ''}
-                onChange={(e) => 
-                  updateElementProperties(elementId, { waterfallTitle: e.target.value })
-                }
+                value={properties.waterfallTitle || 'Waterfall Chart'}
+                onChange={(e) => handlePropertyChange('waterfallTitle', e.target.value)}
                 placeholder="Waterfall Chart"
               />
             </div>
@@ -46,9 +47,7 @@ export function WaterfallDetailsSection({ properties, elementId, updateElementPr
               <Label className="text-sm">Title Alignment</Label>
               <Select
                 value={properties.titleAlignment || 'left'}
-                onValueChange={(value) => 
-                  updateElementProperties(elementId, { titleAlignment: value })
-                }
+                onValueChange={(value) => handlePropertyChange('titleAlignment', value)}
               >
                 <SelectTrigger className="text-sm mt-1">
                   <SelectValue />
@@ -67,9 +66,7 @@ export function WaterfallDetailsSection({ properties, elementId, updateElementPr
           <Label className="text-sm">Chart Alignment</Label>
           <Select
             value={properties.chartAlignment || 'left'}
-            onValueChange={(value) => 
-              updateElementProperties(elementId, { chartAlignment: value })
-            }
+            onValueChange={(value) => handlePropertyChange('chartAlignment', value)}
           >
             <SelectTrigger className="text-sm mt-1">
               <SelectValue />

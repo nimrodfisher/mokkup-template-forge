@@ -26,7 +26,9 @@ export function WaterfallProperties({ element, updateElementProperties, onOpenSt
 
   const handleUpdateProperties = (newProperties: any) => {
     console.log('Updating waterfall properties:', newProperties);
-    updateElementProperties(element.id, newProperties);
+    // Ensure we're updating with a clean object
+    const cleanProperties = { ...newProperties };
+    updateElementProperties(element.id, cleanProperties);
   };
 
   return (

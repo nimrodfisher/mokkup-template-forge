@@ -8,7 +8,7 @@ import { Trash2, Plus } from 'lucide-react';
 interface WaterfallDataSectionProps {
   properties: any;
   elementId: string;
-  updateElementProperties: (id: string, properties: any) => void;
+  updateElementProperties: (properties: any) => void;
 }
 
 export function WaterfallDataSection({ properties, elementId, updateElementProperties }: WaterfallDataSectionProps) {
@@ -24,17 +24,18 @@ export function WaterfallDataSection({ properties, elementId, updateElementPrope
   const updateDataPoint = (index: number, field: string, value: any) => {
     const newData = [...waterfallData];
     newData[index] = { ...newData[index], [field]: value };
-    updateElementProperties(elementId, { waterfallData: newData });
+    console.log('WaterfallDataSection updating data:', newData);
+    updateElementProperties({ waterfallData: newData });
   };
 
   const addDataPoint = () => {
     const newData = [...waterfallData, { category: 'New', value: 0, isTotal: false }];
-    updateElementProperties(elementId, { waterfallData: newData });
+    updateElementProperties({ waterfallData: newData });
   };
 
   const removeDataPoint = (index: number) => {
     const newData = waterfallData.filter((_: any, i: number) => i !== index);
-    updateElementProperties(elementId, { waterfallData: newData });
+    updateElementProperties({ waterfallData: newData });
   };
 
   return (
