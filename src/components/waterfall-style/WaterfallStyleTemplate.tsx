@@ -90,8 +90,8 @@ export function WaterfallStyleTemplate({ variant, isSelected, onClick, title }: 
       }`}
       onClick={onClick}
     >
-      <div className="h-40 mb-3 overflow-hidden">
-        <div className="transform scale-90 origin-top-left" style={{ width: '111%', height: '111%' }}>
+      <div className="h-48 mb-3 overflow-hidden bg-white rounded border">
+        <div className="w-full h-full">
           <WaterfallRenderer properties={getTemplateProperties()} />
         </div>
       </div>
