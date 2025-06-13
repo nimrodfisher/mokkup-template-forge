@@ -61,23 +61,6 @@ export function WaterfallDetailsSection({ properties, elementId, updateElementPr
             </div>
           </div>
         )}
-
-        <div>
-          <Label className="text-sm">Chart Alignment</Label>
-          <Select
-            value={properties.chartAlignment || 'left'}
-            onValueChange={(value) => handlePropertyChange('chartAlignment', value)}
-          >
-            <SelectTrigger className="text-sm mt-1">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="left">Left</SelectItem>
-              <SelectItem value="center">Center</SelectItem>
-              <SelectItem value="right">Right</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
       </div>
     </div>
   );

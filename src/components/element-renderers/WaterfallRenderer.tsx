@@ -7,7 +7,6 @@ interface WaterfallRendererProps {
     waterfallTitle?: string;
     showTitle?: boolean;
     titleAlignment?: string;
-    chartAlignment?: string;
     waterfallData?: Array<{category: string, value: number, isTotal?: boolean}>;
     waterfallPrimaryColor?: string;
     waterfallSecondaryColor?: string;
@@ -28,16 +27,13 @@ interface WaterfallRendererProps {
     showYAxisLabels?: boolean;
     yAxisLabelFormat?: string;
     columnWidth?: number;
-    showDataLabels?: boolean;
     showLegends?: boolean;
     legendPosition?: string;
     waterfallVariant?: 'basic-waterfall' | 'with-buttons' | 'with-kpis';
     waterfallButtons?: Array<{title: string, alignment: string}>;
     waterfallKpis?: Array<{title: string, value: string, change?: string}>;
     showButtons?: boolean;
-    showDropdowns?: boolean;
     showKpis?: boolean;
-    showText?: boolean;
   };
 }
 
@@ -48,7 +44,6 @@ export function WaterfallRenderer({ properties = {} }: WaterfallRendererProps) {
     waterfallTitle = 'Waterfall Chart',
     showTitle = true,
     titleAlignment = 'left',
-    chartAlignment = 'left',
     waterfallData = [
       { category: 'Jan 22', value: 50, isTotal: false },
       { category: 'Feb 22', value: 130, isTotal: false },
@@ -75,7 +70,6 @@ export function WaterfallRenderer({ properties = {} }: WaterfallRendererProps) {
     showYAxisLabels = true,
     yAxisLabelFormat = 'number',
     columnWidth = 50,
-    showDataLabels = false,
     showLegends = false,
     legendPosition = 'top-left',
     waterfallVariant = 'basic-waterfall',
@@ -110,14 +104,6 @@ export function WaterfallRenderer({ properties = {} }: WaterfallRendererProps) {
       case 'center': return 'text-center';
       case 'right': return 'text-right';
       default: return 'text-left';
-    }
-  };
-
-  const getChartAlignment = () => {
-    switch (chartAlignment) {
-      case 'center': return 'justify-center';
-      case 'right': return 'justify-end';
-      default: return 'justify-start';
     }
   };
 
@@ -166,8 +152,8 @@ export function WaterfallRenderer({ properties = {} }: WaterfallRendererProps) {
         </div>
       )}
 
-      <div className={`flex ${getChartAlignment()}`}>
-        <div className="flex-1 relative" style={{ height: '200px', maxWidth: chartAlignment === 'center' ? '80%' : '100%' }}>
+      <div className="flex justify-start">
+        <div className="flex-1 relative" style={{ height: '200px', maxWidth: '100%' }}>
           {showYAxisTitle && yAxisTitle && (
             <div className="absolute left-0 top-1/2 transform -rotate-90 -translate-y-1/2 -translate-x-6">
               <span className="text-sm text-gray-600 font-medium">{yAxisTitle}</span>
@@ -224,12 +210,6 @@ export function WaterfallRenderer({ properties = {} }: WaterfallRendererProps) {
           {showXAxisTitle && xAxisTitle && (
             <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-6">
               <span className="text-sm text-gray-600 font-medium">{xAxisTitle}</span>
-            </div>
-          )}
-          
-          {showDataLabels && (
-            <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
-              {/* Data labels would be positioned here */}
             </div>
           )}
         </div>

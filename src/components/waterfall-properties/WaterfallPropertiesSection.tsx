@@ -37,15 +37,6 @@ export function WaterfallPropertiesSection({ properties, elementId, updateElemen
           </div>
         </div>
 
-        <div className="flex items-center justify-between">
-          <Label htmlFor="showDataLabels" className="text-sm">Data Labels</Label>
-          <Switch
-            id="showDataLabels"
-            checked={properties.showDataLabels || false}
-            onCheckedChange={(checked) => handlePropertyChange('showDataLabels', checked)}
-          />
-        </div>
-
         <div className="space-y-3">
           <div className="flex items-center justify-between">
             <Label htmlFor="showLegends" className="text-sm">Legends</Label>

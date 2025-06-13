@@ -4,7 +4,6 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Trash2, Plus, GripVertical } from 'lucide-react';
 
 interface WaterfallAdvancedAddOnsSectionProps {
@@ -15,9 +14,7 @@ interface WaterfallAdvancedAddOnsSectionProps {
 
 export function WaterfallAdvancedAddOnsSection({ properties, elementId, updateElementProperties }: WaterfallAdvancedAddOnsSectionProps) {
   const waterfallButtons = properties.waterfallButtons || [];
-  const waterfallDropdowns = properties.waterfallDropdowns || [];
   const waterfallKpis = properties.waterfallKpis || [];
-  const waterfallText = properties.waterfallText || [];
 
   const handlePropertyChange = (key: string, value: any) => {
     console.log('WaterfallAdvancedAddOnsSection updating property:', key, value);
@@ -132,20 +129,6 @@ export function WaterfallAdvancedAddOnsSection({ properties, elementId, updateEl
           )}
         </div>
 
-        {/* Dropdowns Section */}
-        <div className="space-y-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Label className="text-sm">Dropdowns</Label>
-              <div className="h-2 w-2 bg-gray-400 rounded-full"></div>
-            </div>
-            <Switch
-              checked={properties.showDropdowns || false}
-              onCheckedChange={(checked) => handlePropertyChange('showDropdowns', checked)}
-            />
-          </div>
-        </div>
-
         {/* KPIs Section */}
         <div className="space-y-3">
           <div className="flex items-center justify-between">
@@ -213,17 +196,6 @@ export function WaterfallAdvancedAddOnsSection({ properties, elementId, updateEl
               </Button>
             </div>
           )}
-        </div>
-
-        {/* Text Section */}
-        <div className="space-y-3">
-          <div className="flex items-center justify-between">
-            <Label className="text-sm">Text</Label>
-            <Switch
-              checked={properties.showText || false}
-              onCheckedChange={(checked) => handlePropertyChange('showText', checked)}
-            />
-          </div>
         </div>
       </div>
     </div>
