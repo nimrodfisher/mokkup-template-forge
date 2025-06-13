@@ -12,12 +12,10 @@ interface WaterfallStyleTemplateProps {
 export function WaterfallStyleTemplate({ variant, isSelected, onClick, title }: WaterfallStyleTemplateProps) {
   const getTemplateProperties = () => {
     const baseData = [
-      { category: 'Jan 22', value: 50, isTotal: false },
-      { category: 'Feb 22', value: 130, isTotal: false },
-      { category: 'Mar 22', value: 80, isTotal: false },
-      { category: 'Apr 22', value: 150, isTotal: false },
-      { category: 'May 22', value: 120, isTotal: false },
-      { category: 'Total', value: 530, isTotal: true }
+      { category: 'Jan', value: 50, isTotal: false },
+      { category: 'Feb', value: 80, isTotal: false },
+      { category: 'Mar', value: 60, isTotal: false },
+      { category: 'Total', value: 190, isTotal: true }
     ];
 
     const baseProperties = {
@@ -26,6 +24,10 @@ export function WaterfallStyleTemplate({ variant, isSelected, onClick, title }: 
       showTitle: true,
       showGridLines: true,
       showLabels: true,
+      showXAxis: true,
+      showYAxis: true,
+      showXAxisLabels: true,
+      showYAxisLabels: true,
     };
 
     switch (variant) {
@@ -36,6 +38,8 @@ export function WaterfallStyleTemplate({ variant, isSelected, onClick, title }: 
           waterfallPrimaryColor: '#4F46E5',
           waterfallSecondaryColor: '#818CF8',
           waterfallTotalColor: '#10B981',
+          showButtons: false,
+          showKpis: false,
         };
       case 'with-buttons':
         return {
@@ -44,6 +48,8 @@ export function WaterfallStyleTemplate({ variant, isSelected, onClick, title }: 
           waterfallPrimaryColor: '#059669',
           waterfallSecondaryColor: '#34D399',
           waterfallTotalColor: '#10B981',
+          showButtons: true,
+          showKpis: false,
           waterfallButtons: [
             { title: 'Title 1', alignment: 'left' },
             { title: 'Title 2', alignment: 'right' }
@@ -57,6 +63,8 @@ export function WaterfallStyleTemplate({ variant, isSelected, onClick, title }: 
           waterfallSecondaryColor: '#A78BFA',
           waterfallTotalColor: '#10B981',
           showGridLines: false,
+          showButtons: false,
+          showKpis: true,
           waterfallKpis: [
             { title: 'Metric 1', value: '1234', change: '12%' },
             { title: 'Metric 2', value: '1234', change: '12%' }
@@ -69,6 +77,8 @@ export function WaterfallStyleTemplate({ variant, isSelected, onClick, title }: 
           waterfallPrimaryColor: '#4F46E5',
           waterfallSecondaryColor: '#818CF8',
           waterfallTotalColor: '#10B981',
+          showButtons: false,
+          showKpis: false,
         };
     }
   };
@@ -80,10 +90,12 @@ export function WaterfallStyleTemplate({ variant, isSelected, onClick, title }: 
       }`}
       onClick={onClick}
     >
-      <div className="h-32 mb-2">
-        <WaterfallRenderer properties={getTemplateProperties()} />
+      <div className="h-24 mb-2 overflow-hidden">
+        <div className="transform scale-75 origin-top-left" style={{ width: '133%', height: '133%' }}>
+          <WaterfallRenderer properties={getTemplateProperties()} />
+        </div>
       </div>
-      <div className="text-sm font-medium text-gray-700">{title}</div>
+      <div className="text-sm font-medium text-gray-700 text-center">{title}</div>
     </div>
   );
 }
