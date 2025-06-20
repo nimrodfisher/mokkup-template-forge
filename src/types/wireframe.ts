@@ -62,6 +62,9 @@ export type DonutChartVariant =
 export type HistogramVariant =
   'default' | 'with-buttons' | 'with-kpis';
 
+export type FunnelChartVariant =
+  'default' | 'with-buttons' | 'with-kpis';
+
 export interface Element {
   id: string;
   type: ElementType;
@@ -306,6 +309,14 @@ export interface Element {
     histogramButtons?: Array<{title: string, alignment: string}>;
     histogramKpis?: Array<{title: string, value: string, change?: string}>;
     binCount?: number;
+    // Funnel Chart properties
+    funnelChartVariant?: FunnelChartVariant;
+    funnelChartTitle?: string;
+    funnelChartData?: Array<{name: string, value: number, color?: string}>;
+    funnelPrimaryColor?: string;
+    funnelSecondaryColor?: string;
+    funnelChartButtons?: Array<{title: string, alignment: string}>;
+    funnelChartKpis?: Array<{title: string, value: string, change?: string}>;
     // Add-ons - consolidated under one section
     showButtons?: boolean;
     showDropdowns?: boolean;

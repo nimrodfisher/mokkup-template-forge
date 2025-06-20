@@ -329,6 +329,23 @@ export function getDefaultPropertiesForType(type: ElementType): Element['propert
         showTitle: false,
         title: 'Shape'
       };
+    case 'funnel-chart':
+      return {
+        funnelChartTitle: 'Funnel Chart',
+        funnelChartVariant: 'default',
+        showTitle: true,
+        showLabels: true,
+        showValues: true,
+        funnelPrimaryColor: '#8884d8',
+        backgroundColor: '#ffffff',
+        funnelChartData: [
+          { name: 'Awareness', value: 1000, color: '#8884d8' },
+          { name: 'Interest', value: 800, color: '#82ca9d' },
+          { name: 'Consideration', value: 600, color: '#ffc658' },
+          { name: 'Intent', value: 400, color: '#ff7c7c' },
+          { name: 'Purchase', value: 200, color: '#8dd1e1' }
+        ]
+      };
     default:
       return {};
   }

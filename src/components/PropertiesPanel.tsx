@@ -1,4 +1,3 @@
-
 import { Element } from "@/types/wireframe";
 import { useWireframe } from "@/hooks/useWireframe";
 import { useState, useRef } from "react";
@@ -21,6 +20,7 @@ import { BarChartProperties } from "./bar-chart-properties/BarChartProperties";
 import { WaterfallProperties } from "./waterfall-properties/WaterfallProperties";
 import { TreemapProperties } from "./treemap-properties/TreemapProperties";
 import { HistogramProperties } from "./histogram-properties/HistogramProperties";
+import { FunnelChartProperties } from "./funnel-chart-properties/FunnelChartProperties";
 
 interface PropertiesPanelProps {
   onOpenStyleDialog?: () => void;
@@ -190,6 +190,14 @@ export function PropertiesPanel({ onOpenStyleDialog, updateElementProperties }: 
       case 'pie-chart':
         return (
           <PieChartProperties
+            element={selectedElement}
+            updateElementProperties={handleUpdateElementProperties}
+            onOpenStyleDialog={onOpenStyleDialog}
+          />
+        );
+      case 'funnel-chart':
+        return (
+          <FunnelChartProperties
             element={selectedElement}
             updateElementProperties={handleUpdateElementProperties}
             onOpenStyleDialog={onOpenStyleDialog}

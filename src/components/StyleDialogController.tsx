@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Element } from '@/types/wireframe';
 import { HeaderStyleDialog } from './header-style/HeaderStyleDialog';
@@ -22,6 +21,7 @@ import { ButtonStyleDialog } from './ButtonStyleDialog';
 import { KpiStyleDialog } from './KpiStyleDialog';
 import { TextboxStyleDialog } from './TextboxStyleDialog';
 import { AreaChartStyleDialog } from './AreaChartStyleDialog';
+import { FunnelChartStyleDialog } from './funnel-chart-style/FunnelChartStyleDialog';
 
 interface StyleDialogControllerProps {
   element: Element;
@@ -81,6 +81,8 @@ export function StyleDialogController({ element, dialogType, onClose }: StyleDia
       return <TextboxStyleDialog {...commonProps} />;
     case 'area-chart':
       return <AreaChartStyleDialog {...commonProps} />;
+    case 'funnel-chart':
+      return <FunnelChartStyleDialog {...commonProps} />;
     default:
       return null;
   }

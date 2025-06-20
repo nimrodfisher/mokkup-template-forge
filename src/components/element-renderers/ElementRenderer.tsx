@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Element } from "@/types/wireframe";
 import { ButtonRenderer } from "./ButtonRenderer";
@@ -21,6 +20,7 @@ import { WaterfallRenderer } from "./WaterfallRenderer";
 import { TreemapRenderer } from "./TreemapRenderer";
 import { HistogramRenderer } from "./HistogramRenderer";
 import { DefaultRenderer } from "./DefaultRenderer";
+import { FunnelChartRenderer } from "./FunnelChartRenderer";
 
 interface ElementRendererProps {
   element: Element;
@@ -69,6 +69,8 @@ export function ElementRenderer({ element, isEditable = false }: ElementRenderer
       return <TreemapRenderer properties={properties} />;
     case 'histogram':
       return <HistogramRenderer properties={properties} />;
+    case 'funnel-chart':
+      return <FunnelChartRenderer properties={properties} />;
     default:
       return <DefaultRenderer type={type} element={element} isEditable={isEditable} />;
   }

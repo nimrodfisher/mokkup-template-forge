@@ -1,4 +1,3 @@
-
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { Sidebar } from "@/components/sidebar";
@@ -28,6 +27,7 @@ import { WaterfallStyleDialog } from "@/components/waterfall-style/WaterfallStyl
 import { TreemapStyleDialog } from "@/components/treemap-style/TreemapStyleDialog";
 import { HistogramStyleDialog } from "@/components/histogram-style/HistogramStyleDialog";
 import { BarChartStyleDialog } from "@/components/bar-chart-style/BarChartStyleDialog";
+import { FunnelChartStyleDialog } from "@/components/funnel-chart-style/FunnelChartStyleDialog";
 
 const Editor = () => {
   const params = useParams();
@@ -58,6 +58,7 @@ const Editor = () => {
   const [showTreemapStyleDialog, setShowTreemapStyleDialog] = useState(false);
   const [showHistogramStyleDialog, setShowHistogramStyleDialog] = useState(false);
   const [showSaveDialog, setShowSaveDialog] = useState(false);
+  const [showFunnelChartStyleDialog, setShowFunnelChartStyleDialog] = useState(false);
   
   useEffect(() => {
     // Fetch all templates when the component mounts
@@ -115,6 +116,8 @@ const Editor = () => {
       setShowTreemapStyleDialog(true);
     } else if (selectedElement?.type === 'histogram') {
       setShowHistogramStyleDialog(true);
+    } else if (selectedElement?.type === 'funnel-chart') {
+      setShowFunnelChartStyleDialog(true);
     }
   };
 
@@ -276,6 +279,15 @@ const Editor = () => {
               elementId={selectedElementId} 
               open={showHistogramStyleDialog}
               onClose={() => setShowHistogramStyleDialog(false)}
+            />
+          )}
+
+          {/* Funnel Chart Style Dialog */}
+          {selectedElementId && selectedElement?.type === 'funnel-chart' && (
+            <FunnelChartStyleDialog 
+              elementId={selectedElementId} 
+              open={showFunnelChartStyleDialog}
+              onClose={() => setShowFunnelChartStyleDialog(false)}
             />
           )}
 
