@@ -29,13 +29,12 @@ export function TreemapRenderer({ properties }: TreemapRendererProps) {
     
     // Calculate text size based on cell dimensions
     const cellArea = width * height;
-    const baseFontSize = Math.max(10, Math.min(16, Math.sqrt(cellArea) / 8));
+    const baseFontSize = Math.max(12, Math.min(18, Math.sqrt(cellArea) / 6));
     const nameSize = baseFontSize;
     const valueSize = baseFontSize - 2;
     
-    // Determine if we should use light or dark text based on background color
+    // Determine background color
     const bgColor = colors[Math.floor(index % colors.length)] || treemapPrimaryColor;
-    const textColor = '#FFFFFF'; // Always use white for better contrast
     
     return (
       <g>
@@ -51,35 +50,37 @@ export function TreemapRenderer({ properties }: TreemapRendererProps) {
             strokeOpacity: 1,
           }}
         />
-        {showLabels && width > 40 && height > 30 && (
+        {showLabels && width > 50 && height > 35 && (
           <text
             x={x + width / 2}
-            y={y + height / 2 - (showValues ? 6 : 0)}
+            y={y + height / 2 - (showValues ? 8 : 0)}
             textAnchor="middle"
             dominantBaseline="middle"
-            fill={textColor}
+            fill="#FFFFFF"
             fontSize={nameSize}
-            fontWeight="600"
+            fontWeight="700"
             style={{
-              textShadow: '1px 1px 2px rgba(0,0,0,0.5)',
-              pointerEvents: 'none'
+              textShadow: '2px 2px 4px rgba(0,0,0,0.8), -1px -1px 2px rgba(0,0,0,0.5)',
+              pointerEvents: 'none',
+              filter: 'drop-shadow(1px 1px 2px rgba(0,0,0,0.9))'
             }}
           >
             {name}
           </text>
         )}
-        {showValues && width > 40 && height > 40 && (
+        {showValues && width > 50 && height > 50 && (
           <text
             x={x + width / 2}
-            y={y + height / 2 + (showLabels ? 12 : 0)}
+            y={y + height / 2 + (showLabels ? 14 : 0)}
             textAnchor="middle"
             dominantBaseline="middle"
-            fill={textColor}
+            fill="#FFFFFF"
             fontSize={valueSize}
-            fontWeight="500"
+            fontWeight="600"
             style={{
-              textShadow: '1px 1px 2px rgba(0,0,0,0.5)',
-              pointerEvents: 'none'
+              textShadow: '2px 2px 4px rgba(0,0,0,0.8), -1px -1px 2px rgba(0,0,0,0.5)',
+              pointerEvents: 'none',
+              filter: 'drop-shadow(1px 1px 2px rgba(0,0,0,0.9))'
             }}
           >
             {value}
