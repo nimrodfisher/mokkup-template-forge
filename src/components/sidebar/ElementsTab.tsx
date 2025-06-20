@@ -27,9 +27,7 @@ export function ElementsTab() {
     { type: 'histogram', label: 'Histogram', category: 'charts' },
     { type: 'gauge', label: 'Gauge', category: 'charts' },
     { type: 'scatter-plot', label: 'Scatter Plot', category: 'charts' },
-    { type: 'bubble-chart', label: 'Bubble Chart', category: 'charts' },
     { type: 'waterfall', label: 'Waterfall', category: 'charts' },
-    { type: 'sankey', label: 'Sankey', category: 'charts' },
     { type: 'quadrant-chart', label: 'Quadrant Chart', category: 'charts' },
     
     // Table elements

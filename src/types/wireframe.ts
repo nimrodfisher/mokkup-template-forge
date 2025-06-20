@@ -3,7 +3,7 @@ export type ElementType =
   'area-chart' | 'combo-chart' | 'pie-chart' | 'gauge-chart' |
   'simple-table' | 'hierarchy-table' | 'treemap' | 'heatmap' |
   'funnel-chart' | 'image' | 'textbox' | 'histogram' | 'gauge' | 'scatter-plot' |
-  'bubble-chart' | 'waterfall' | 'shapes' | 'sankey' | 'quadrant-chart';
+  'waterfall' | 'shapes' | 'quadrant-chart';
 
 export type FilterVariant = 
   'dropdown' | 'checkbox' | 'radio' | 'date' | 'daterange' | 'slider' | 'search';

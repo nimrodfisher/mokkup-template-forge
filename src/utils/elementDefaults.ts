@@ -23,6 +23,7 @@ export function getDefaultSizeForType(type: ElementType): { width: number; heigh
     case 'waterfall':
     case 'treemap':
     case 'histogram':
+    case 'funnel-chart':
       return { width: 400, height: 300 };
     case 'simple-table':
       return { width: 500, height: 300 };
