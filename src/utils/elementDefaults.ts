@@ -1,4 +1,3 @@
-
 import { ElementType, Element } from '@/types/wireframe';
 
 export function getDefaultSizeForType(type: ElementType): { width: number; height: number } {
@@ -170,7 +169,7 @@ export function getDefaultPropertiesForType(type: ElementType): Element['propert
     case 'gauge-chart':
       return {
         gaugeStyle: 'default',
-        gaugeTitle: 'Gauge Chart',
+        chartTitle: 'Gauge Chart',
         showTitle: true,
         gaugeValue: 75,
         gaugeMin: 0,
