@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { FunnelChart, Funnel, LabelList, Cell, ResponsiveContainer, Tooltip } from 'recharts';
+import { TrendingUp, TrendingDown } from 'lucide-react';
 
 interface FunnelWithKpisRendererProps {
   chartData: Array<{ name: string; value: number; color: string }>;
@@ -19,17 +20,54 @@ export function FunnelWithKpisRenderer({
 }: FunnelWithKpisRendererProps) {
   console.log('FunnelWithKpisRenderer props:', { chartData, showLabels, showValues, funnelKpis });
 
+  const CustomTooltip = ({ active, payload, label }: any) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="bg-white border border-gray-200 rounded-lg shadow-lg p-3">
+          <p className="text-sm font-medium text-gray-900">{payload[0].payload.name}</p>
+          <p className="text-sm text-gray-600">
+            Value: <span className="font-medium">{payload[0].value.toLocaleString()}</span>
+          </p>
+        </div>
+      );
+    }
+    return null;
+  };
+
+  const getChangeColor = (change: string) => {
+    if (change.startsWith('+') || (!change.startsWith('-') && !change.startsWith('0'))) {
+      return 'text-green-600';
+    }
+    if (change.startsWith('-')) {
+      return 'text-red-600';
+    }
+    return 'text-gray-600';
+  };
+
+  const getChangeIcon = (change: string) => {
+    if (change.startsWith('+') || (!change.startsWith('-') && !change.startsWith('0'))) {
+      return <TrendingUp className="h-3 w-3" />;
+    }
+    if (change.startsWith('-')) {
+      return <TrendingDown className="h-3 w-3" />;
+    }
+    return null;
+  };
+
   return (
     <div className="h-full flex flex-col">
       {/* KPIs Section */}
       {funnelKpis.length > 0 && (
-        <div className="grid grid-cols-2 gap-4 mb-4">
+        <div className="grid grid-cols-2 gap-3 mb-4 p-2">
           {funnelKpis.map((kpi, index) => (
-            <div key={index} className="bg-gray-50 p-3 rounded-lg">
-              <div className="text-sm text-gray-600 mb-1">{kpi.title}</div>
-              <div className="text-lg font-semibold text-gray-900">{kpi.value}</div>
+            <div key={index} className="bg-gray-50 border border-gray-200 rounded-lg p-3">
+              <div className="text-xs text-gray-500 mb-1 font-medium">{kpi.title}</div>
+              <div className="text-lg font-bold text-gray-900 mb-1">{kpi.value}</div>
               {kpi.change && (
-                <div className="text-sm text-green-600">{kpi.change}</div>
+                <div className={`text-xs flex items-center gap-1 ${getChangeColor(kpi.change)}`}>
+                  {getChangeIcon(kpi.change)}
+                  <span>{kpi.change}</span>
+                </div>
               )}
             </div>
           ))}
@@ -39,39 +77,42 @@ export function FunnelWithKpisRenderer({
       {/* Chart Section */}
       <div className="flex-1">
         <ResponsiveContainer width="100%" height="100%">
-          <FunnelChart>
-            <Tooltip 
-              formatter={(value: any) => [value, 'Value']}
-              labelFormatter={(label) => `Stage: ${label}`}
-            />
+          <FunnelChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
+            <Tooltip content={<CustomTooltip />} />
             <Funnel
               dataKey="value"
               data={chartData}
               isAnimationActive={true}
+              animationDuration={800}
             >
               {showLabels && (
                 <LabelList 
                   position="center" 
-                  fill="#fff" 
+                  fill="#ffffff" 
                   stroke="none"
-                  fontSize={12}
+                  fontSize={14}
+                  fontWeight="600"
                   formatter={(value: any, entry: any) => {
-                    console.log('Label formatter called with:', { value, entry });
-                    
-                    if (!entry || !entry.payload) {
-                      return '';
-                    }
+                    if (!entry || !entry.payload) return '';
                     
                     const payload = entry.payload;
+                    const name = payload.name || '';
+                    const formattedValue = value ? value.toLocaleString() : '';
+                    
                     if (showValues) {
-                      return `${payload.name || ''}: ${value || ''}`;
+                      return `${name}\n${formattedValue}`;
                     }
-                    return payload.name || '';
+                    return name;
                   }}
                 />
               )}
               {chartData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={entry.color} />
+                <Cell 
+                  key={`cell-${index}`} 
+                  fill={entry.color}
+                  stroke="#ffffff"
+                  strokeWidth={2}
+                />
               ))}
             </Funnel>
           </FunnelChart>

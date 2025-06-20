@@ -5,6 +5,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Trash2, Plus } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 interface FunnelChartDataSectionProps {
   properties: Element['properties'];
@@ -14,11 +15,11 @@ interface FunnelChartDataSectionProps {
 export function FunnelChartDataSection({ properties, updateProperties }: FunnelChartDataSectionProps) {
   const {
     funnelChartData = [
-      { name: 'Awareness', value: 1000, color: '#8884d8' },
-      { name: 'Interest', value: 800, color: '#82ca9d' },
-      { name: 'Consideration', value: 600, color: '#ffc658' },
-      { name: 'Intent', value: 400, color: '#ff7c7c' },
-      { name: 'Purchase', value: 200, color: '#8dd1e1' }
+      { name: 'Data A', value: 91537, color: '#4F46E5' },
+      { name: 'Data B', value: 83298, color: '#7C3AED' },
+      { name: 'Data C', value: 51998, color: '#8B5CF6' },
+      { name: 'Data D', value: 38474, color: '#A78BFA' },
+      { name: 'Data E', value: 26660, color: '#C4B5FD' }
     ],
     funnelButtons = [],
     funnelKpis = []
@@ -76,140 +77,174 @@ export function FunnelChartDataSection({ properties, updateProperties }: FunnelC
     <div className="space-y-4">
       <h4 className="text-sm font-medium text-gray-700">Data</h4>
       
-      {/* Funnel Data */}
-      <div className="space-y-3">
-        <div className="flex items-center justify-between">
-          <Label className="text-sm text-gray-600">Funnel Stages</Label>
-          <Button
-            onClick={addDataItem}
-            size="sm"
-            variant="outline"
-            className="h-7 px-2"
-          >
-            <Plus className="h-3 w-3" />
-          </Button>
-        </div>
+      <Tabs defaultValue="data" className="w-full">
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="data">Data</TabsTrigger>
+          <TabsTrigger value="customize">Customize</TabsTrigger>
+        </TabsList>
         
-        {funnelChartData.map((item, index) => (
-          <div key={index} className="grid grid-cols-4 gap-2 items-center">
-            <Input
-              value={item.name}
-              onChange={(e) => updateDataItem(index, 'name', e.target.value)}
-              placeholder="Stage name"
-              className="h-8 text-xs"
-            />
-            <Input
-              type="number"
-              value={item.value}
-              onChange={(e) => updateDataItem(index, 'value', parseInt(e.target.value) || 0)}
-              placeholder="Value"
-              className="h-8 text-xs"
-            />
-            <Input
-              type="color"
-              value={item.color}
-              onChange={(e) => updateDataItem(index, 'color', e.target.value)}
-              className="h-8 w-full p-1"
-            />
-            <Button
-              onClick={() => removeDataItem(index)}
-              size="sm"
-              variant="ghost"
-              className="h-7 w-7 p-0"
-            >
-              <Trash2 className="h-3 w-3" />
-            </Button>
+        <TabsContent value="data" className="space-y-3 mt-4">
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <Label className="text-sm text-gray-600">Edit Data</Label>
+              <Button
+                onClick={addDataItem}
+                size="sm"
+                variant="outline"
+                className="h-7 px-2"
+              >
+                <Plus className="h-3 w-3" />
+              </Button>
+            </div>
+            
+            <div className="space-y-2 max-h-60 overflow-y-auto">
+              {funnelChartData.map((item, index) => (
+                <div key={index} className="border rounded-lg p-3 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <Label className="text-xs font-medium">{item.name}</Label>
+                    <Button
+                      onClick={() => removeDataItem(index)}
+                      size="sm"
+                      variant="ghost"
+                      className="h-6 w-6 p-0"
+                    >
+                      <Trash2 className="h-3 w-3" />
+                    </Button>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div>
+                      <Label className="text-xs text-gray-500">Name</Label>
+                      <Input
+                        value={item.name}
+                        onChange={(e) => updateDataItem(index, 'name', e.target.value)}
+                        placeholder="Stage name"
+                        className="h-7 text-xs"
+                      />
+                    </div>
+                    <div>
+                      <Label className="text-xs text-gray-500">Value</Label>
+                      <Input
+                        type="number"
+                        value={item.value}
+                        onChange={(e) => updateDataItem(index, 'value', parseInt(e.target.value) || 0)}
+                        placeholder="Value"
+                        className="h-7 text-xs"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <Label className="text-xs text-gray-500">Color</Label>
+                    <div className="flex items-center gap-2">
+                      <Input
+                        type="color"
+                        value={item.color}
+                        onChange={(e) => updateDataItem(index, 'color', e.target.value)}
+                        className="h-7 w-12 p-1"
+                      />
+                      <Input
+                        value={item.color}
+                        onChange={(e) => updateDataItem(index, 'color', e.target.value)}
+                        placeholder="#8884d8"
+                        className="h-7 text-xs flex-1"
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
-        ))}
-      </div>
+        </TabsContent>
+        
+        <TabsContent value="customize" className="space-y-3 mt-4">
+          {/* Buttons Section */}
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <Label className="text-sm text-gray-600">Buttons</Label>
+              <Button
+                onClick={addButton}
+                size="sm"
+                variant="outline"
+                className="h-7 px-2"
+              >
+                <Plus className="h-3 w-3" />
+              </Button>
+            </div>
+            
+            {funnelButtons.map((button, index) => (
+              <div key={index} className="grid grid-cols-3 gap-2 items-center">
+                <Input
+                  value={button.title}
+                  onChange={(e) => updateButton(index, 'title', e.target.value)}
+                  placeholder="Button title"
+                  className="h-8 text-xs"
+                />
+                <select
+                  value={button.alignment}
+                  onChange={(e) => updateButton(index, 'alignment', e.target.value)}
+                  className="h-8 text-xs border border-gray-300 rounded px-2"
+                >
+                  <option value="left">Left</option>
+                  <option value="right">Right</option>
+                </select>
+                <Button
+                  onClick={() => removeButton(index)}
+                  size="sm"
+                  variant="ghost"
+                  className="h-7 w-7 p-0"
+                >
+                  <Trash2 className="h-3 w-3" />
+                </Button>
+              </div>
+            ))}
+          </div>
 
-      {/* Buttons Data */}
-      <div className="space-y-3">
-        <div className="flex items-center justify-between">
-          <Label className="text-sm text-gray-600">Buttons</Label>
-          <Button
-            onClick={addButton}
-            size="sm"
-            variant="outline"
-            className="h-7 px-2"
-          >
-            <Plus className="h-3 w-3" />
-          </Button>
-        </div>
-        
-        {funnelButtons.map((button, index) => (
-          <div key={index} className="grid grid-cols-3 gap-2 items-center">
-            <Input
-              value={button.title}
-              onChange={(e) => updateButton(index, 'title', e.target.value)}
-              placeholder="Button title"
-              className="h-8 text-xs"
-            />
-            <select
-              value={button.alignment}
-              onChange={(e) => updateButton(index, 'alignment', e.target.value)}
-              className="h-8 text-xs border border-gray-300 rounded px-2"
-            >
-              <option value="left">Left</option>
-              <option value="right">Right</option>
-            </select>
-            <Button
-              onClick={() => removeButton(index)}
-              size="sm"
-              variant="ghost"
-              className="h-7 w-7 p-0"
-            >
-              <Trash2 className="h-3 w-3" />
-            </Button>
+          {/* KPIs Section */}
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <Label className="text-sm text-gray-600">KPIs</Label>
+              <Button
+                onClick={addKpi}
+                size="sm"
+                variant="outline"
+                className="h-7 px-2"
+              >
+                <Plus className="h-3 w-3" />
+              </Button>
+            </div>
+            
+            {funnelKpis.map((kpi, index) => (
+              <div key={index} className="grid grid-cols-4 gap-2 items-center">
+                <Input
+                  value={kpi.title}
+                  onChange={(e) => updateKpi(index, 'title', e.target.value)}
+                  placeholder="KPI title"
+                  className="h-8 text-xs"
+                />
+                <Input
+                  value={kpi.value}
+                  onChange={(e) => updateKpi(index, 'value', e.target.value)}
+                  placeholder="Value"
+                  className="h-8 text-xs"
+                />
+                <Input
+                  value={kpi.change}
+                  onChange={(e) => updateKpi(index, 'change', e.target.value)}
+                  placeholder="Change"
+                  className="h-8 text-xs"
+                />
+                <Button
+                  onClick={() => removeKpi(index)}
+                  size="sm"
+                  variant="ghost"
+                  className="h-7 w-7 p-0"
+                >
+                  <Trash2 className="h-3 w-3" />
+                </Button>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
-
-      {/* KPIs Data */}
-      <div className="space-y-3">
-        <div className="flex items-center justify-between">
-          <Label className="text-sm text-gray-600">KPIs</Label>
-          <Button
-            onClick={addKpi}
-            size="sm"
-            variant="outline"
-            className="h-7 px-2"
-          >
-            <Plus className="h-3 w-3" />
-          </Button>
-        </div>
-        
-        {funnelKpis.map((kpi, index) => (
-          <div key={index} className="grid grid-cols-4 gap-2 items-center">
-            <Input
-              value={kpi.title}
-              onChange={(e) => updateKpi(index, 'title', e.target.value)}
-              placeholder="KPI title"
-              className="h-8 text-xs"
-            />
-            <Input
-              value={kpi.value}
-              onChange={(e) => updateKpi(index, 'value', e.target.value)}
-              placeholder="Value"
-              className="h-8 text-xs"
-            />
-            <Input
-              value={kpi.change}
-              onChange={(e) => updateKpi(index, 'change', e.target.value)}
-              placeholder="Change"
-              className="h-8 text-xs"
-            />
-            <Button
-              onClick={() => removeKpi(index)}
-              size="sm"
-              variant="ghost"
-              className="h-7 w-7 p-0"
-            >
-              <Trash2 className="h-3 w-3" />
-            </Button>
-          </div>
-        ))}
-      </div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
