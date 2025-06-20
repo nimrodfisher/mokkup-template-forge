@@ -72,6 +72,19 @@ export function FunnelWithButtonsRenderer({
     return null;
   };
 
+  const renderCustomLabel = (entry: any) => {
+    if (!entry || !entry.payload) return '';
+    
+    const name = entry.payload.name || '';
+    const value = entry.payload.value || entry.value || 0;
+    const formattedValue = value.toLocaleString();
+    
+    if (showValues) {
+      return `${name}: ${formattedValue}`;
+    }
+    return name;
+  };
+
   return (
     <div className="h-full flex flex-col">
       {/* Buttons Section */}
@@ -114,20 +127,9 @@ export function FunnelWithButtonsRenderer({
                   position="center" 
                   fill="#ffffff" 
                   stroke="none"
-                  fontSize={14}
-                  fontWeight="600"
-                  formatter={(value: any, entry: any) => {
-                    if (!entry || !entry.payload) return '';
-                    
-                    const payload = entry.payload;
-                    const name = payload.name || '';
-                    const formattedValue = value ? value.toLocaleString() : '';
-                    
-                    if (showValues) {
-                      return `${name}\n${formattedValue}`;
-                    }
-                    return name;
-                  }}
+                  fontSize={12}
+                  fontWeight="500"
+                  content={renderCustomLabel}
                 />
               )}
               {chartData.map((entry, index) => (

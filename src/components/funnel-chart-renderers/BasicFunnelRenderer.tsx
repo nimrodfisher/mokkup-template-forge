@@ -31,6 +31,19 @@ export function BasicFunnelRenderer({
     return null;
   };
 
+  const renderCustomLabel = (entry: any) => {
+    if (!entry || !entry.payload) return '';
+    
+    const name = entry.payload.name || '';
+    const value = entry.payload.value || entry.value || 0;
+    const formattedValue = value.toLocaleString();
+    
+    if (showValues) {
+      return `${name}: ${formattedValue}`;
+    }
+    return name;
+  };
+
   return (
     <ResponsiveContainer width="100%" height="100%">
       <FunnelChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
@@ -46,20 +59,9 @@ export function BasicFunnelRenderer({
               position="center" 
               fill="#ffffff" 
               stroke="none"
-              fontSize={14}
-              fontWeight="600"
-              formatter={(value: any, entry: any) => {
-                if (!entry || !entry.payload) return '';
-                
-                const payload = entry.payload;
-                const name = payload.name || '';
-                const formattedValue = value ? value.toLocaleString() : '';
-                
-                if (showValues) {
-                  return `${name}\n${formattedValue}`;
-                }
-                return name;
-              }}
+              fontSize={12}
+              fontWeight="500"
+              content={renderCustomLabel}
             />
           )}
           {chartData.map((entry, index) => (
