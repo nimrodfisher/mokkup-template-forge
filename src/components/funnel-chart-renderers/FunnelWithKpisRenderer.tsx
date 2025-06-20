@@ -7,7 +7,7 @@ interface FunnelWithKpisRendererProps {
   showLabels: boolean;
   showValues: boolean;
   funnelPrimaryColor: string;
-  funnelKpis?: Array<{ title: string; value: string; change: string }>;
+  funnelKpis?: Array<{ title: string; value: string; change?: string }>;
 }
 
 export function FunnelWithKpisRenderer({ 
@@ -26,7 +26,9 @@ export function FunnelWithKpisRenderer({
             <div key={index} className="bg-gray-50 p-3 rounded-lg">
               <div className="text-sm text-gray-600 mb-1">{kpi.title}</div>
               <div className="text-lg font-semibold text-gray-900">{kpi.value}</div>
-              <div className="text-sm text-green-600">{kpi.change}</div>
+              {kpi.change && (
+                <div className="text-sm text-green-600">{kpi.change}</div>
+              )}
             </div>
           ))}
         </div>
