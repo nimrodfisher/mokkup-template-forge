@@ -1,7 +1,9 @@
 
 import React from 'react';
 import { Element } from '@/types/wireframe';
-import { FunnelChart, Funnel, LabelList, Cell, ResponsiveContainer, Tooltip } from 'recharts';
+import { BasicFunnelRenderer } from '../funnel-chart-renderers/BasicFunnelRenderer';
+import { FunnelWithButtonsRenderer } from '../funnel-chart-renderers/FunnelWithButtonsRenderer';
+import { FunnelWithKpisRenderer } from '../funnel-chart-renderers/FunnelWithKpisRenderer';
 
 interface FunnelChartRendererProps {
   properties: Element['properties'];
@@ -21,7 +23,12 @@ export function FunnelChartRenderer({ properties }: FunnelChartRendererProps) {
     funnelPrimaryColor = '#8884d8',
     showLabels = true,
     showValues = true,
-    funnelChartVariant = 'default'
+    funnelChartVariant = 'default',
+    showButtons = false,
+    showKpis = false,
+    funnelButtons = [],
+    funnelKpis = [],
+    backgroundColor = '#ffffff'
   } = properties || {};
 
   const chartData = funnelChartData?.map((item, index) => ({
@@ -29,8 +36,39 @@ export function FunnelChartRenderer({ properties }: FunnelChartRendererProps) {
     color: item.color || funnelPrimaryColor
   })) || [];
 
+  const renderChart = () => {
+    const commonProps = {
+      chartData,
+      showLabels,
+      showValues,
+      funnelPrimaryColor
+    };
+
+    switch (funnelChartVariant) {
+      case 'with-buttons':
+        return (
+          <FunnelWithButtonsRenderer 
+            {...commonProps}
+            funnelButtons={funnelButtons}
+          />
+        );
+      case 'with-kpis':
+        return (
+          <FunnelWithKpisRenderer 
+            {...commonProps}
+            funnelKpis={funnelKpis}
+          />
+        );
+      default:
+        return <BasicFunnelRenderer {...commonProps} />;
+    }
+  };
+
   return (
-    <div className="w-full h-full flex flex-col bg-white rounded-lg border border-gray-200 p-4">
+    <div 
+      className="w-full h-full flex flex-col rounded-lg border border-gray-200 p-4"
+      style={{ backgroundColor }}
+    >
       {showTitle && (
         <div className="mb-4">
           <h3 className="text-lg font-semibold text-gray-800">{funnelChartTitle}</h3>
@@ -38,42 +76,7 @@ export function FunnelChartRenderer({ properties }: FunnelChartRendererProps) {
       )}
       
       <div className="flex-1">
-        <ResponsiveContainer width="100%" height="100%">
-          <FunnelChart>
-            <Tooltip 
-              formatter={(value: any) => [value, 'Value']}
-              labelFormatter={(label) => `Stage: ${label}`}
-            />
-            <Funnel
-              dataKey="value"
-              data={chartData}
-              isAnimationActive={true}
-            >
-              {showLabels && (
-                <LabelList 
-                  position="center" 
-                  fill="#fff" 
-                  stroke="none"
-                  fontSize={12}
-                  formatter={(value: any, entry: any) => {
-                    // Add safety check for entry
-                    if (!entry || typeof entry !== 'object') {
-                      return '';
-                    }
-                    
-                    if (showValues) {
-                      return `${entry.name || ''}: ${value || ''}`;
-                    }
-                    return entry.name || '';
-                  }}
-                />
-              )}
-              {chartData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={entry.color} />
-              ))}
-            </Funnel>
-          </FunnelChart>
-        </ResponsiveContainer>
+        {renderChart()}
       </div>
     </div>
   );
