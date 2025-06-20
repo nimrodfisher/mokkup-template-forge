@@ -18,8 +18,13 @@ export function TreemapDetailsSection({ element, updateElementProperties, onOpen
   const {
     treemapTitle = 'Treemap Chart',
     showTitle = true,
-    textAlignment = 'left',
+    textAlignment = 'center',
   } = properties;
+
+  const handleAlignmentChange = (alignment: 'left' | 'center' | 'right') => {
+    console.log('Setting text alignment to:', alignment);
+    updateElementProperties(element.id, { textAlignment: alignment });
+  };
 
   return (
     <div className="space-y-4">
@@ -72,7 +77,7 @@ export function TreemapDetailsSection({ element, updateElementProperties, onOpen
                 key={align}
                 variant={textAlignment === align ? 'default' : 'outline'}
                 size="sm"
-                onClick={() => updateElementProperties(element.id, { textAlignment: align })}
+                onClick={() => handleAlignmentChange(align)}
                 className="flex-1"
               >
                 {align.charAt(0).toUpperCase() + align.slice(1)}

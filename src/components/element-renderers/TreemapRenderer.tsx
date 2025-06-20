@@ -18,8 +18,21 @@ export function TreemapRenderer({ properties }: TreemapRendererProps) {
     showKpis = false,
     treemapButtons = [],
     treemapKpis = [],
-    backgroundColor = 'transparent'
+    backgroundColor = 'transparent',
+    textAlignment = 'center'
   } = properties;
+
+  const getTitleAlignment = () => {
+    switch (textAlignment) {
+      case 'left':
+        return 'text-left';
+      case 'right':
+        return 'text-right';
+      case 'center':
+      default:
+        return 'text-center';
+    }
+  };
 
   const CustomContent = (props: any) => {
     const { root, depth, x, y, width, height, index, colors, name, value } = props;
@@ -93,7 +106,7 @@ export function TreemapRenderer({ properties }: TreemapRendererProps) {
     <div className="w-full h-full" style={{ backgroundColor }}>
       <div className="p-4">
         {showTitle && (
-          <h3 className="text-lg font-semibold text-gray-800 mb-4 text-center">
+          <h3 className={`text-lg font-semibold text-gray-800 mb-4 ${getTitleAlignment()}`}>
             {treemapTitle}
           </h3>
         )}
