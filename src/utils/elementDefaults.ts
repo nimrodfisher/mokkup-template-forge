@@ -26,16 +26,12 @@ export function getDefaultSizeForType(type: ElementType): { width: number; heigh
       return { width: 400, height: 300 };
     case 'simple-table':
       return { width: 500, height: 300 };
-    case 'geomap':
-      return { width: 500, height: 400 };
     case 'image':
       return { width: 200, height: 200 };
     case 'textbox':
       return { width: 300, height: 100 };
     case 'shapes':
       return { width: 100, height: 100 };
-    case 'delete':
-      return { width: 50, height: 50 };
     default:
       return { width: 200, height: 100 };
   }
@@ -227,22 +223,6 @@ export function getDefaultPropertiesForType(type: ElementType): Element['propert
           { name: 'Point 2', x: 60, y: 70 },
           { name: 'Point 3', x: 20, y: 80 },
           { name: 'Point 4', x: 80, y: 30 }
-        ]
-      };
-    case 'geomap':
-      return {
-        geomapTitle: 'Geomap',
-        geomapStyle: 'world',
-        showTitle: true,
-        geomapRegion: 'world',
-        geomapPrimaryColor: '#3B82F6',
-        geomapSecondaryColor: '#E5E7EB',
-        showTooltips: true,
-        showZoomControls: true,
-        geomapData: [
-          { region: 'United States', value: 100 },
-          { region: 'Canada', value: 80 },
-          { region: 'Mexico', value: 60 }
         ]
       };
     case 'waterfall':

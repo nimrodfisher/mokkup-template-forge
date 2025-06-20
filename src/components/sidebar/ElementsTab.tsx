@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { ElementType } from "@/hooks/useWireframe";
 import { SidebarCategoryFilter } from "./SidebarCategoryFilter";
@@ -37,12 +36,8 @@ export function ElementsTab() {
     { type: 'simple-table', label: 'Simple Table', category: 'tables' },
     
     // Other visualizations
-    { type: 'geomap', label: 'Geomap', category: 'other' },
     { type: 'treemap', label: 'Treemap', category: 'other' },
     { type: 'heatmap', label: 'Heatmap', category: 'other' },
-    
-    // Tools
-    { type: 'delete', label: 'Delete Tool', category: 'tools' },
   ];
   
   // Filter components based on category

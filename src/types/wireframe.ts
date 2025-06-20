@@ -1,9 +1,9 @@
 export type ElementType = 
   'header' | 'button' | 'filter' | 'kpi' | 'column-chart' | 'bar-chart' | 'line-chart' | 
   'area-chart' | 'combo-chart' | 'pie-chart' | 'gauge-chart' |
-  'simple-table' | 'hierarchy-table' | 'geomap' | 'treemap' | 'heatmap' |
+  'simple-table' | 'hierarchy-table' | 'treemap' | 'heatmap' |
   'funnel-chart' | 'image' | 'textbox' | 'histogram' | 'gauge' | 'scatter-plot' |
-  'bubble-chart' | 'waterfall' | 'shapes' | 'sankey' | 'quadrant-chart' | 'delete';
+  'bubble-chart' | 'waterfall' | 'shapes' | 'sankey' | 'quadrant-chart';
 
 export type FilterVariant = 
   'dropdown' | 'checkbox' | 'radio' | 'date' | 'daterange' | 'slider' | 'search';

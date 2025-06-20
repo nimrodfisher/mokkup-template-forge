@@ -151,16 +151,6 @@ function ComponentIcon({ type }: { type: ElementType }) {
           <path d="M6 16l3-3 2 2 5-5 3 3" stroke="currentColor" strokeWidth="1.5" />
         </svg>
       );
-    case 'delete':
-      return (
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M3 6h18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-          <path d="M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2" stroke="currentColor" strokeWidth="1.5" />
-          <path d="M19 6v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V6" stroke="currentColor" strokeWidth="1.5" />
-          <path d="M10 11v6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-          <path d="M14 11v6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-        </svg>
-      );
     default:
       return (
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
