@@ -78,12 +78,12 @@ export function TreemapStyleTemplate({ variant, isSelected, onClick, title }: Tr
 
   return (
     <div 
-      className={`border-2 rounded-lg p-3 cursor-pointer transition-all hover:shadow-md w-full max-w-sm mx-auto ${
+      className={`border-2 rounded-lg p-4 cursor-pointer transition-all hover:shadow-md w-full ${
         isSelected ? 'border-blue-500 bg-blue-50' : 'border-gray-200'
       }`}
       onClick={onClick}
     >
-      <div className="h-40 mb-3 overflow-hidden bg-white rounded border">
+      <div className="h-48 mb-3 overflow-hidden bg-white rounded border">
         <div className="w-full h-full">
           <TreemapRenderer properties={getTemplateProperties()} />
         </div>

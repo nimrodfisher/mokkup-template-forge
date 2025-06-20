@@ -74,12 +74,12 @@ export function TreemapStyleDialog({ elementId, open, onClose }: TreemapStyleDia
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl w-[95vw] max-h-[95vh] flex flex-col overflow-hidden">
+      <DialogContent className="max-w-6xl w-[90vw] max-h-[90vh] flex flex-col overflow-hidden">
         <DialogHeader className="flex-shrink-0 pb-4 border-b">
           <DialogTitle>Choose Treemap Style</DialogTitle>
         </DialogHeader>
         
-        <div className="flex-1 overflow-y-auto p-2">
+        <div className="flex-1 overflow-y-auto py-4">
           <TreemapTemplates 
             selectedTemplate={selectedTemplate}
             onSelectTemplate={handleTemplateSelect}

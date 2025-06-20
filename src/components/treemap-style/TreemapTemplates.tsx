@@ -27,8 +27,8 @@ export function TreemapTemplates({ selectedTemplate, onSelectTemplate }: Treemap
   ];
 
   return (
-    <div className="w-full">
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 max-w-full">
+    <div className="w-full px-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 max-w-none">
         {templates.map((template) => (
           <TreemapStyleTemplate
             key={template.id}
