@@ -79,6 +79,9 @@ export function CanvasElement({ element, isSelected }: CanvasElementProps) {
       case 'waterfall':
         setActiveDialog('waterfall');
         break;
+      case 'treemap':
+        setActiveDialog('treemap');
+        break;
     }
   };
   

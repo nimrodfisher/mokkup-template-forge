@@ -54,6 +54,9 @@ export type GeomapVariant =
 export type WaterfallVariant =
   'basic-waterfall' | 'with-buttons' | 'with-kpis';
 
+export type TreemapVariant =
+  'default' | 'with-buttons' | 'with-kpis';
+
 export type DonutChartVariant =
   'default' | 'with-legend' | 'with-buttons' | 'with-kpis';
 
@@ -283,6 +286,14 @@ export interface Element {
     waterfallTotalColor?: string;
     waterfallButtons?: Array<{title: string, alignment: string}>;
     waterfallKpis?: Array<{title: string, value: string, change?: string}>;
+    // Treemap properties
+    treemapVariant?: TreemapVariant;
+    treemapTitle?: string;
+    treemapData?: Array<{name: string, value: number, color?: string}>;
+    treemapPrimaryColor?: string;
+    treemapSecondaryColor?: string;
+    treemapButtons?: Array<{title: string, alignment: string}>;
+    treemapKpis?: Array<{title: string, value: string, change?: string}>;
     // Add-ons - consolidated under one section
     showButtons?: boolean;
     showDropdowns?: boolean;

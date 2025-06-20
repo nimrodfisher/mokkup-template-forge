@@ -1,3 +1,4 @@
+
 import { ElementType } from '@/types/wireframe';
 
 export function getDefaultSizeForType(type: ElementType): { width: number; height: number } {
@@ -21,12 +22,12 @@ export function getDefaultSizeForType(type: ElementType): { width: number; heigh
     case 'quadrant-chart':
     case 'scatter-plot':
     case 'waterfall':
+    case 'treemap':
       return { width: 400, height: 300 };
     case 'simple-table':
     case 'hierarchy-table':
       return { width: 400, height: 200 };
     case 'geomap':
-    case 'treemap':
       return { width: 400, height: 300 };
     case 'funnel-chart':
     case 'histogram':
@@ -325,6 +326,26 @@ export function getDefaultPropertiesForType(type: ElementType): any {
         ],
         waterfallButtons: [],
         waterfallKpis: []
+      };
+    case 'treemap':
+      return {
+        backgroundColor: 'transparent',
+        treemapTitle: 'Treemap Chart',
+        showTitle: true,
+        treemapVariant: 'default',
+        treemapPrimaryColor: '#4F46E5',
+        treemapSecondaryColor: '#818CF8',
+        showLabels: true,
+        showValues: true,
+        treemapData: [
+          { name: 'Category A', value: 400, color: '#4F46E5' },
+          { name: 'Category B', value: 300, color: '#7C3AED' },
+          { name: 'Category C', value: 200, color: '#059669' },
+          { name: 'Category D', value: 150, color: '#DC2626' },
+          { name: 'Category E', value: 100, color: '#EA580C' }
+        ],
+        treemapButtons: [],
+        treemapKpis: []
       };
     default:
       return {};

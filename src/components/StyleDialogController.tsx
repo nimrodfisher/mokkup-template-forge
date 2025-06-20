@@ -14,6 +14,7 @@ import { QuadrantStyleDialog } from './quadrant-style/QuadrantStyleDialog';
 import { ScatterPlotStyleDialog } from './scatter-plot-style/ScatterPlotStyleDialog';
 import { GeomapStyleDialog } from './geomap-style/GeomapStyleDialog';
 import { WaterfallStyleDialog } from './waterfall-style/WaterfallStyleDialog';
+import { TreemapStyleDialog } from './treemap-style/TreemapStyleDialog';
 import { ImageStyleDialog } from './ImageStyleDialog';
 import { ShapeStyleDialog } from './ShapeStyleDialog';
 import { FilterStyleDialog } from './FilterStyleDialog';
@@ -64,6 +65,8 @@ export function StyleDialogController({ element, dialogType, onClose }: StyleDia
       return <GeomapStyleDialog {...commonProps} />;
     case 'waterfall':
       return <WaterfallStyleDialog {...commonProps} />;
+    case 'treemap':
+      return <TreemapStyleDialog {...commonProps} />;
     case 'image':
       return <ImageStyleDialog {...commonProps} />;
     case 'shapes':

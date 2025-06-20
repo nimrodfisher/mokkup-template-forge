@@ -20,6 +20,7 @@ import { ComboChartProperties } from "./combo-chart-properties/ComboChartPropert
 import { LineChartProperties } from "./line-chart-properties/LineChartProperties";
 import { BarChartProperties } from "./bar-chart-properties/BarChartProperties";
 import { WaterfallProperties } from "./waterfall-properties/WaterfallProperties";
+import { TreemapProperties } from "./treemap-properties/TreemapProperties";
 
 interface PropertiesPanelProps {
   onOpenStyleDialog?: () => void;
@@ -109,6 +110,14 @@ export function PropertiesPanel({ onOpenStyleDialog, updateElementProperties }: 
         console.log('Rendering WaterfallProperties for element:', selectedElement.id);
         return (
           <WaterfallProperties
+            element={selectedElement}
+            updateElementProperties={handleUpdateElementProperties}
+            onOpenStyleDialog={onOpenStyleDialog}
+          />
+        );
+      case 'treemap':
+        return (
+          <TreemapProperties
             element={selectedElement}
             updateElementProperties={handleUpdateElementProperties}
             onOpenStyleDialog={onOpenStyleDialog}

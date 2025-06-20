@@ -26,6 +26,7 @@ import { GeomapStyleDialog } from "@/components/geomap-style/GeomapStyleDialog";
 import { ColumnChartStyleDialog } from "@/components/column-chart-style/ColumnChartStyleDialog";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { WaterfallStyleDialog } from "@/components/waterfall-style/WaterfallStyleDialog";
+import { TreemapStyleDialog } from "@/components/treemap-style/TreemapStyleDialog";
 import { BarChartStyleDialog } from "@/components/bar-chart-style/BarChartStyleDialog";
 
 const Editor = () => {
@@ -55,6 +56,7 @@ const Editor = () => {
   const [showScatterPlotStyleDialog, setShowScatterPlotStyleDialog] = useState(false);
   const [showGeomapStyleDialog, setShowGeomapStyleDialog] = useState(false);
   const [showWaterfallStyleDialog, setShowWaterfallStyleDialog] = useState(false);
+  const [showTreemapStyleDialog, setShowTreemapStyleDialog] = useState(false);
   const [showSaveDialog, setShowSaveDialog] = useState(false);
   
   useEffect(() => {
@@ -111,6 +113,8 @@ const Editor = () => {
       setShowGeomapStyleDialog(true);
     } else if (selectedElement?.type === 'waterfall') {
       setShowWaterfallStyleDialog(true);
+    } else if (selectedElement?.type === 'treemap') {
+      setShowTreemapStyleDialog(true);
     }
   };
 
@@ -263,6 +267,15 @@ const Editor = () => {
               elementId={selectedElementId} 
               open={showWaterfallStyleDialog}
               onClose={() => setShowWaterfallStyleDialog(false)}
+            />
+          )}
+
+          {/* Treemap Style Dialog */}
+          {selectedElementId && selectedElement?.type === 'treemap' && (
+            <TreemapStyleDialog 
+              elementId={selectedElementId} 
+              open={showTreemapStyleDialog}
+              onClose={() => setShowTreemapStyleDialog(false)}
             />
           )}
 
