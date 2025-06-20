@@ -31,6 +31,16 @@ export function FunnelChartRenderer({ properties }: FunnelChartRendererProps) {
     backgroundColor = '#ffffff'
   } = properties || {};
 
+  console.log('FunnelChartRenderer props:', {
+    funnelChartVariant,
+    showButtons,
+    showKpis,
+    funnelButtons,
+    funnelKpis,
+    showLabels,
+    showValues
+  });
+
   const chartData = funnelChartData?.map((item, index) => ({
     ...item,
     color: item.color || funnelPrimaryColor
@@ -44,24 +54,29 @@ export function FunnelChartRenderer({ properties }: FunnelChartRendererProps) {
       funnelPrimaryColor
     };
 
-    switch (funnelChartVariant) {
-      case 'with-buttons':
-        return (
-          <FunnelWithButtonsRenderer 
-            {...commonProps}
-            funnelButtons={funnelButtons}
-          />
-        );
-      case 'with-kpis':
-        return (
-          <FunnelWithKpisRenderer 
-            {...commonProps}
-            funnelKpis={funnelKpis}
-          />
-        );
-      default:
-        return <BasicFunnelRenderer {...commonProps} />;
+    // Determine which renderer to use based on showButtons and showKpis flags
+    if (showButtons && funnelButtons && funnelButtons.length > 0) {
+      console.log('Rendering FunnelWithButtonsRenderer');
+      return (
+        <FunnelWithButtonsRenderer 
+          {...commonProps}
+          funnelButtons={funnelButtons}
+        />
+      );
     }
+
+    if (showKpis && funnelKpis && funnelKpis.length > 0) {
+      console.log('Rendering FunnelWithKpisRenderer');
+      return (
+        <FunnelWithKpisRenderer 
+          {...commonProps}
+          funnelKpis={funnelKpis}
+        />
+      );
+    }
+
+    console.log('Rendering BasicFunnelRenderer');
+    return <BasicFunnelRenderer {...commonProps} />;
   };
 
   return (

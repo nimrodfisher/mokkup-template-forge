@@ -18,6 +18,13 @@ export function FunnelWithButtonsRenderer({
   funnelPrimaryColor,
   funnelButtons = []
 }: FunnelWithButtonsRendererProps) {
+  console.log('FunnelWithButtonsRenderer props:', { chartData, showLabels, showValues, funnelButtons });
+
+  const handleButtonClick = (buttonTitle: string) => {
+    console.log(`Button clicked: ${buttonTitle}`);
+    // Add your button functionality here
+  };
+
   return (
     <div className="h-full flex flex-col">
       {/* Buttons Section */}
@@ -29,6 +36,7 @@ export function FunnelWithButtonsRenderer({
               variant="outline"
               size="sm"
               className={`${button.alignment === 'right' ? 'ml-auto' : ''}`}
+              onClick={() => handleButtonClick(button.title)}
             >
               {button.title}
             </Button>
@@ -56,14 +64,17 @@ export function FunnelWithButtonsRenderer({
                   stroke="none"
                   fontSize={12}
                   formatter={(value: any, entry: any) => {
-                    if (!entry || typeof entry !== 'object') {
+                    console.log('Label formatter called with:', { value, entry });
+                    
+                    if (!entry || !entry.payload) {
                       return '';
                     }
                     
+                    const payload = entry.payload;
                     if (showValues) {
-                      return `${entry.name || ''}: ${value || ''}`;
+                      return `${payload.name || ''}: ${value || ''}`;
                     }
-                    return entry.name || '';
+                    return payload.name || '';
                   }}
                 />
               )}

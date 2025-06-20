@@ -17,6 +17,8 @@ export function FunnelWithKpisRenderer({
   funnelPrimaryColor,
   funnelKpis = []
 }: FunnelWithKpisRendererProps) {
+  console.log('FunnelWithKpisRenderer props:', { chartData, showLabels, showValues, funnelKpis });
+
   return (
     <div className="h-full flex flex-col">
       {/* KPIs Section */}
@@ -54,14 +56,17 @@ export function FunnelWithKpisRenderer({
                   stroke="none"
                   fontSize={12}
                   formatter={(value: any, entry: any) => {
-                    if (!entry || typeof entry !== 'object') {
+                    console.log('Label formatter called with:', { value, entry });
+                    
+                    if (!entry || !entry.payload) {
                       return '';
                     }
                     
+                    const payload = entry.payload;
                     if (showValues) {
-                      return `${entry.name || ''}: ${value || ''}`;
+                      return `${payload.name || ''}: ${value || ''}`;
                     }
-                    return entry.name || '';
+                    return payload.name || '';
                   }}
                 />
               )}

@@ -15,6 +15,8 @@ export function BasicFunnelRenderer({
   showValues, 
   funnelPrimaryColor 
 }: BasicFunnelRendererProps) {
+  console.log('BasicFunnelRenderer props:', { chartData, showLabels, showValues });
+
   return (
     <ResponsiveContainer width="100%" height="100%">
       <FunnelChart>
@@ -34,14 +36,17 @@ export function BasicFunnelRenderer({
               stroke="none"
               fontSize={12}
               formatter={(value: any, entry: any) => {
-                if (!entry || typeof entry !== 'object') {
+                console.log('Label formatter called with:', { value, entry });
+                
+                if (!entry || !entry.payload) {
                   return '';
                 }
                 
+                const payload = entry.payload;
                 if (showValues) {
-                  return `${entry.name || ''}: ${value || ''}`;
+                  return `${payload.name || ''}: ${value || ''}`;
                 }
-                return entry.name || '';
+                return payload.name || '';
               }}
             />
           )}
