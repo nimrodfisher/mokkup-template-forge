@@ -22,7 +22,6 @@ import { GaugeStyleDialog } from "@/components/GaugeStyleDialog";
 import { HeatmapStyleDialog } from "@/components/heatmap-style/HeatmapStyleDialog";
 import { QuadrantStyleDialog } from "@/components/quadrant-style/QuadrantStyleDialog";
 import { ScatterPlotStyleDialog } from "@/components/scatter-plot-style/ScatterPlotStyleDialog";
-import { GeomapStyleDialog } from "@/components/geomap-style/GeomapStyleDialog";
 import { ColumnChartStyleDialog } from "@/components/column-chart-style/ColumnChartStyleDialog";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { WaterfallStyleDialog } from "@/components/waterfall-style/WaterfallStyleDialog";
@@ -55,7 +54,6 @@ const Editor = () => {
   const [showHeatmapStyleDialog, setShowHeatmapStyleDialog] = useState(false);
   const [showQuadrantStyleDialog, setShowQuadrantStyleDialog] = useState(false);
   const [showScatterPlotStyleDialog, setShowScatterPlotStyleDialog] = useState(false);
-  const [showGeomapStyleDialog, setShowGeomapStyleDialog] = useState(false);
   const [showWaterfallStyleDialog, setShowWaterfallStyleDialog] = useState(false);
   const [showTreemapStyleDialog, setShowTreemapStyleDialog] = useState(false);
   const [showHistogramStyleDialog, setShowHistogramStyleDialog] = useState(false);
@@ -111,8 +109,6 @@ const Editor = () => {
       setShowQuadrantStyleDialog(true);
     } else if (selectedElement?.type === 'scatter-plot') {
       setShowScatterPlotStyleDialog(true);
-    } else if (selectedElement?.type === 'geomap') {
-      setShowGeomapStyleDialog(true);
     } else if (selectedElement?.type === 'waterfall') {
       setShowWaterfallStyleDialog(true);
     } else if (selectedElement?.type === 'treemap') {
@@ -253,15 +249,6 @@ const Editor = () => {
               elementId={selectedElementId} 
               open={showScatterPlotStyleDialog}
               onClose={() => setShowScatterPlotStyleDialog(false)}
-            />
-          )}
-
-          {/* Geomap Style Dialog */}
-          {selectedElementId && selectedElement?.type === 'geomap' && (
-            <GeomapStyleDialog 
-              elementId={selectedElementId} 
-              open={showGeomapStyleDialog}
-              onClose={() => setShowGeomapStyleDialog(false)}
             />
           )}
 

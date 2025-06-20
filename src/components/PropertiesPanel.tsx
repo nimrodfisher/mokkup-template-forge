@@ -13,7 +13,6 @@ import { GaugeProperties } from "./gauge-properties/GaugeProperties";
 import { HeatmapProperties } from "./heatmap-properties/HeatmapProperties";
 import { QuadrantProperties } from "./quadrant-properties/QuadrantProperties";
 import { ScatterPlotProperties } from "./scatter-plot-properties/ScatterPlotProperties";
-import { GeomapProperties } from "./geomap-properties/GeomapProperties";
 import { ColumnChartProperties } from "./column-chart-properties/ColumnChartProperties";
 import { PieChartProperties } from "./pie-chart-properties/PieChartProperties";
 import { ComboChartProperties } from "./combo-chart-properties/ComboChartProperties";
@@ -159,14 +158,6 @@ export function PropertiesPanel({ onOpenStyleDialog, updateElementProperties }: 
       case 'scatter-plot':
         return (
           <ScatterPlotProperties
-            element={selectedElement}
-            updateElementProperties={handleUpdateElementProperties}
-            onOpenStyleDialog={onOpenStyleDialog}
-          />
-        );
-      case 'geomap':
-        return (
-          <GeomapProperties
             element={selectedElement}
             updateElementProperties={handleUpdateElementProperties}
             onOpenStyleDialog={onOpenStyleDialog}

@@ -12,7 +12,6 @@ import { GaugeStyleDialog } from './GaugeStyleDialog';
 import { HeatmapStyleDialog } from './heatmap-style/HeatmapStyleDialog';
 import { QuadrantStyleDialog } from './quadrant-style/QuadrantStyleDialog';
 import { ScatterPlotStyleDialog } from './scatter-plot-style/ScatterPlotStyleDialog';
-import { GeomapStyleDialog } from './geomap-style/GeomapStyleDialog';
 import { WaterfallStyleDialog } from './waterfall-style/WaterfallStyleDialog';
 import { TreemapStyleDialog } from './treemap-style/TreemapStyleDialog';
 import { HistogramStyleDialog } from './histogram-style/HistogramStyleDialog';
@@ -62,8 +61,6 @@ export function StyleDialogController({ element, dialogType, onClose }: StyleDia
       return <QuadrantStyleDialog {...commonProps} />;
     case 'scatter-plot':
       return <ScatterPlotStyleDialog {...commonProps} />;
-    case 'geomap':
-      return <GeomapStyleDialog {...commonProps} />;
     case 'waterfall':
       return <WaterfallStyleDialog {...commonProps} />;
     case 'treemap':
