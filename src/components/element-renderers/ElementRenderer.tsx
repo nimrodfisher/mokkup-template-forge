@@ -20,6 +20,7 @@ import { ScatterPlotRenderer } from "./ScatterPlotRenderer";
 import { GeomapRenderer } from "./GeomapRenderer";
 import { WaterfallRenderer } from "./WaterfallRenderer";
 import { TreemapRenderer } from "./TreemapRenderer";
+import { HistogramRenderer } from "./HistogramRenderer";
 import { DefaultRenderer } from "./DefaultRenderer";
 import { DeleteRenderer } from "./DeleteRenderer";
 
@@ -70,6 +71,8 @@ export function ElementRenderer({ element, isEditable = false }: ElementRenderer
       return <WaterfallRenderer properties={properties} />;
     case 'treemap':
       return <TreemapRenderer properties={properties} />;
+    case 'histogram':
+      return <HistogramRenderer properties={properties} />;
     case 'delete':
       return <DeleteRenderer />;
     default:

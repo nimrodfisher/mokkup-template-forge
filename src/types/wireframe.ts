@@ -59,6 +59,9 @@ export type TreemapVariant =
 export type DonutChartVariant =
   'default' | 'with-legend' | 'with-buttons' | 'with-kpis';
 
+export type HistogramVariant =
+  'default' | 'with-buttons' | 'with-kpis';
+
 export interface Element {
   id: string;
   type: ElementType;
@@ -294,6 +297,15 @@ export interface Element {
     treemapSecondaryColor?: string;
     treemapButtons?: Array<{title: string, alignment: string}>;
     treemapKpis?: Array<{title: string, value: string, change?: string}>;
+    // Histogram properties
+    histogramVariant?: HistogramVariant;
+    histogramTitle?: string;
+    histogramData?: Array<{range: string, frequency: number}>;
+    histogramPrimaryColor?: string;
+    histogramSecondaryColor?: string;
+    histogramButtons?: Array<{title: string, alignment: string}>;
+    histogramKpis?: Array<{title: string, value: string, change?: string}>;
+    binCount?: number;
     // Add-ons - consolidated under one section
     showButtons?: boolean;
     showDropdowns?: boolean;

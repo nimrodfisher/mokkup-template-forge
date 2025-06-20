@@ -21,6 +21,7 @@ import { LineChartProperties } from "./line-chart-properties/LineChartProperties
 import { BarChartProperties } from "./bar-chart-properties/BarChartProperties";
 import { WaterfallProperties } from "./waterfall-properties/WaterfallProperties";
 import { TreemapProperties } from "./treemap-properties/TreemapProperties";
+import { HistogramProperties } from "./histogram-properties/HistogramProperties";
 
 interface PropertiesPanelProps {
   onOpenStyleDialog?: () => void;
@@ -118,6 +119,14 @@ export function PropertiesPanel({ onOpenStyleDialog, updateElementProperties }: 
       case 'treemap':
         return (
           <TreemapProperties
+            element={selectedElement}
+            updateElementProperties={handleUpdateElementProperties}
+            onOpenStyleDialog={onOpenStyleDialog}
+          />
+        );
+      case 'histogram':
+        return (
+          <HistogramProperties
             element={selectedElement}
             updateElementProperties={handleUpdateElementProperties}
             onOpenStyleDialog={onOpenStyleDialog}

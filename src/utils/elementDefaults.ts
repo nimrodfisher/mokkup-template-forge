@@ -1,5 +1,5 @@
 
-import { ElementType } from '@/types/wireframe';
+import { ElementType, Element } from '@/types/wireframe';
 
 export function getDefaultSizeForType(type: ElementType): { width: number; height: number } {
   switch (type) {
@@ -23,20 +23,14 @@ export function getDefaultSizeForType(type: ElementType): { width: number; heigh
     case 'scatter-plot':
     case 'waterfall':
     case 'treemap':
+    case 'histogram':
       return { width: 400, height: 300 };
     case 'simple-table':
-    case 'hierarchy-table':
-      return { width: 400, height: 200 };
+      return { width: 500, height: 300 };
     case 'geomap':
-      return { width: 400, height: 300 };
-    case 'funnel-chart':
-    case 'histogram':
-    case 'gauge':
-    case 'bubble-chart':
-    case 'sankey':
-      return { width: 300, height: 200 };
+      return { width: 500, height: 400 };
     case 'image':
-      return { width: 200, height: 150 };
+      return { width: 200, height: 200 };
     case 'textbox':
       return { width: 300, height: 100 };
     case 'shapes':
@@ -48,304 +42,313 @@ export function getDefaultSizeForType(type: ElementType): { width: number; heigh
   }
 }
 
-export function getDefaultPropertiesForType(type: ElementType): any {
+export function getDefaultPropertiesForType(type: ElementType): Element['properties'] {
   switch (type) {
     case 'header':
       return {
-        backgroundColor: '#ffffff',
-        textColor: 'black',
-        title: 'DASHBOARD TITLE',
-        showLogo: true,
-        showNavigation: false,
-        navigationItems: ["Navigation 1", "Navigation 2", "Navigation 3"],
+        title: 'Header Title',
         variant: 'default',
-        description: 'Dashboard description goes here',
-        showMetrics: false,
-        metrics: [
-          { title: "Metric 1", value: "123" },
-          { title: "Metric 2", value: "456" }
-        ]
-      };
-    case 'filter':
-      return {
         backgroundColor: '#ffffff',
-        textColor: 'black',
-        filterTitle: 'Filter Title',
-        filterVariant: 'dropdown',
-        filterValues: ['All', 'Value 1', 'Value 2'],
-        filterAlignment: 'left',
-      };
-    case 'kpi':
-      return {
-        backgroundColor: '#ffffff',
-        textColor: 'black',
-        kpiVariant: 'basic',
-        kpiTitle: 'Metric Title',
-        kpiValue: '25.2K',
-        kpiPreviousValue: '11.6K',
-        kpiChangePercentage: '+10%',
-        kpiAlignment: 'left',
-        showKpiTitle: true,
-        showPreviousValue: true,
-        showChangePercentage: true,
-        indicatorColor: '#8B5CF6',
+        textColor: '#000000',
+        showLogo: true,
+        showNavigation: true,
+        navigationItems: ['Home', 'About', 'Contact']
       };
     case 'button':
       return {
-        backgroundColor: '#3B82F6',
-        textColor: 'white',
         buttonText: 'Button',
         buttonVariant: 'default',
         buttonSize: 'md',
-        buttonIcon: false,
+        backgroundColor: '#3B82F6',
+        textColor: '#FFFFFF'
       };
-    case 'textbox':
+    case 'filter':
       return {
-        backgroundColor: 'transparent',
-        textColor: 'black',
-        textboxTitle: 'Title goes here',
-        textboxContent: 'Edit text in left pane...',
-        showTextboxTitle: true,
-        textAlignment: 'left',
-        fontSize: 'md',
-        fontWeight: 'normal',
+        filterTitle: 'Filter',
+        filterVariant: 'dropdown',
+        filterValues: ['Option 1', 'Option 2', 'Option 3'],
+        filterAlignment: 'left'
       };
-    case 'image':
+    case 'kpi':
       return {
-        backgroundColor: 'transparent',
-        imageUrl: '',
-        imageAlt: 'Image description',
-        imageFit: 'contain',
-        borderRadius: 'md',
-        hasBorder: false,
-        borderColor: '#e5e7eb',
-        hasShadow: false,
-        shadowSize: 'md',
-      };
-    case 'shapes':
-      return {
-        backgroundColor: 'transparent',
-        textColor: 'black',
-        title: 'Title goes here',
-        showTitle: true,
-        shapeVariant: 'triangle',
-        shapeColor: '#9b87f5',
-        textAlignment: 'center',
-        hasBorder: false,
-        borderColor: '#e5e7eb',
-      };
-    case 'bar-chart':
-      return {
-        backgroundColor: 'transparent',
-        chartTitle: 'Title goes here',
-        chartVariant: 'bar',
-        barColor: '#4F46E5',
-        secondaryBarColor: '#818CF8',
-        tertiaryBarColor: '#C7D2FE',
-        showLegend: true,
-        showGridLines: true,
-        showLabels: true,
-        chartHeight: 200,
-        chartData: [
-          { category: 'Jan', value: 65 },
-          { category: 'Feb', value: 78 },
-          { category: 'Mar', value: 52 },
-          { category: 'Apr', value: 84 },
-          { category: 'May', value: 71 },
-          { category: 'Jun', value: 93 }
-        ],
-        chartButtons: [],
-        chartKpis: []
+        kpiVariant: 'basic',
+        kpiTitle: 'KPI Title',
+        kpiValue: '1,234',
+        kpiPreviousValue: '1,000',
+        kpiChangePercentage: '+23.4%',
+        kpiAlignment: 'center',
+        showKpiTitle: true,
+        showPreviousValue: true,
+        showChangePercentage: true
       };
     case 'column-chart':
       return {
-        backgroundColor: 'transparent',
-        chartTitle: 'Title goes here',
+        chartTitle: 'Column Chart',
         chartVariant: 'default',
-        barColor: '#4F46E5',
-        secondaryBarColor: '#818CF8',
-        tertiaryBarColor: '#C7D2FE',
-        showLegend: true,
-        showGridLines: true,
+        showTitle: true,
         showLabels: true,
-        chartHeight: 200,
+        showValues: true,
+        showGridLines: true,
+        barColor: '#3B82F6',
         chartData: [
-          { category: 'Jan', value: 65 },
-          { category: 'Feb', value: 78 },
-          { category: 'Mar', value: 52 },
-          { category: 'Apr', value: 84 },
-          { category: 'May', value: 71 },
-          { category: 'Jun', value: 93 }
-        ],
-        chartButtons: [],
-        chartKpis: []
+          { category: 'Jan', value: 400 },
+          { category: 'Feb', value: 300 },
+          { category: 'Mar', value: 200 },
+          { category: 'Apr', value: 278 },
+          { category: 'May', value: 189 }
+        ]
       };
-    case 'area-chart':
+    case 'bar-chart':
       return {
-        backgroundColor: 'transparent',
-        chartTitle: 'Title goes here',
-        chartVariant: 'basic-area',
-        barColor: '#9b87f5',
-        secondaryBarColor: '#D6BCFA',
-        showLegend: true,
-        showGridLines: true,
+        chartTitle: 'Bar Chart',
+        chartVariant: 'bar',
+        showTitle: true,
         showLabels: true,
-        chartHeight: 200,
+        showValues: true,
+        showGridLines: true,
+        barColor: '#3B82F6',
+        chartData: [
+          { category: 'Category A', value: 400 },
+          { category: 'Category B', value: 300 },
+          { category: 'Category C', value: 200 },
+          { category: 'Category D', value: 278 },
+          { category: 'Category E', value: 189 }
+        ]
+      };
+    case 'line-chart':
+      return {
+        chartTitle: 'Line Chart',
+        chartVariant: 'basic-line',
+        showTitle: true,
+        showLabels: true,
+        showValues: true,
+        showGridLines: true,
+        lineColor: '#3B82F6',
+        lineStyle: 'solid',
+        lineWidth: 2,
+        showMarkers: true,
+        chartData: [
+          { category: 'Jan', value: 400 },
+          { category: 'Feb', value: 300 },
+          { category: 'Mar', value: 200 },
+          { category: 'Apr', value: 278 },
+          { category: 'May', value: 189 }
+        ]
+      };
+    case 'combo-chart':
+      return {
+        chartTitle: 'Combo Chart',
+        chartVariant: 'basic-combo',
+        showTitle: true,
+        showLabels: true,
+        showValues: true,
+        showGridLines: true,
+        barColor: '#3B82F6',
+        lineColor: '#EF4444',
+        chartData: [
+          { category: 'Jan', value: 400, line: 240 },
+          { category: 'Feb', value: 300, line: 139 },
+          { category: 'Mar', value: 200, line: 980 },
+          { category: 'Apr', value: 278, line: 390 },
+          { category: 'May', value: 189, line: 480 }
+        ]
       };
     case 'pie-chart':
       return {
-        backgroundColor: 'transparent',
-        pieChartTitle: 'Title goes here',
+        pieChartTitle: 'Pie Chart',
         pieChartVariant: 'default',
         showTitle: true,
-        showPieLegend: false,
         showPieLabels: true,
-        showPercentages: true,
-        pieInnerRadius: 0,
-        pieOuterRadius: 80,
-        chartHeight: 300,
+        showPieLegend: true,
         pieChartData: [
-          { name: 'Text A', value: 30, color: '#4F46E5' },
-          { name: 'Text B', value: 25, color: '#7C3AED' },
-          { name: 'Text C', value: 20, color: '#06B6D4' },
-          { name: 'Text D', value: 20, color: '#8B5CF6' },
-          { name: 'Text E', value: 5, color: '#EC4899' }
-        ],
-        pieChartButtons: [],
-        pieChartKpis: [],
-        pieColors: ['#4F46E5', '#7C3AED', '#06B6D4', '#8B5CF6', '#EC4899']
+          { name: 'Category A', value: 400, color: '#0088FE' },
+          { name: 'Category B', value: 300, color: '#00C49F' },
+          { name: 'Category C', value: 300, color: '#FFBB28' },
+          { name: 'Category D', value: 200, color: '#FF8042' }
+        ]
       };
     case 'gauge-chart':
       return {
-        backgroundColor: 'transparent',
-        chartTitle: 'Title goes here',
-        showTitle: true,
         gaugeStyle: 'default',
-        gaugeValue: 40,
+        gaugeTitle: 'Gauge Chart',
+        showTitle: true,
+        gaugeValue: 75,
         gaugeMin: 0,
         gaugeMax: 100,
-        gaugeMaxDisplay: 100,
-        gaugeTarget: 50,
-        gaugeUnits: 'K',
+        gaugeTarget: 80,
+        gaugeUnits: '%',
         showGaugeNeedle: true,
         showGaugeTarget: true,
         showGaugeLabels: true,
-        textAlignment: 'center',
-        gaugePrimaryColor: '#4F46E5',
-        gaugeSecondaryColor: '#E5E7EB',
+        gaugePrimaryColor: '#3B82F6',
+        gaugeSecondaryColor: '#E5E7EB'
       };
     case 'heatmap':
       return {
-        backgroundColor: 'transparent',
-        heatmapTitle: 'Title goes here',
-        showTitle: true,
-        textAlignment: 'left',
+        heatmapTitle: 'Heatmap',
         heatmapStyle: 'default',
-        heatmapPrimaryColor: '#3B82F6',
-        heatmapSecondaryColor: '#EFF6FF',
+        showTitle: true,
         heatmapRows: 5,
-        heatmapColumns: 5,
+        heatmapColumns: 7,
+        heatmapPrimaryColor: '#3B82F6',
+        heatmapSecondaryColor: '#E5E7EB',
         showDataLabels: true,
-        heatmapOrientation: 'horizontal',
-        showLegends: false,
-        showButtons: false,
-        showKpis: false,
-        heatmapData: [
-          { label: 'Data A', value: 86 },
-          { label: 'Data B', value: 56 },
-          { label: 'Data C', value: 21 },
-          { label: 'Data D', value: 18 },
-          { label: 'Data E', value: 67 }
-        ],
-        heatmapButtons: [],
-        heatmapKpis: []
+        heatmapData: Array.from({ length: 35 }, (_, i) => ({
+          label: `Day ${i + 1}`,
+          value: Math.floor(Math.random() * 100)
+        }))
+      };
+    case 'quadrant-chart':
+      return {
+        quadrantTitle: 'Quadrant Chart',
+        quadrantStyle: 'default',
+        showTitle: true,
+        quadrantPrimaryColor: '#3B82F6',
+        quadrantSecondaryColor: '#E5E7EB',
+        xAxisLabel: 'X Axis',
+        yAxisLabel: 'Y Axis',
+        quadrantData: [
+          { name: 'Item 1', x: 30, y: 40 },
+          { name: 'Item 2', x: 60, y: 70 },
+          { name: 'Item 3', x: 20, y: 80 },
+          { name: 'Item 4', x: 80, y: 30 }
+        ]
+      };
+    case 'scatter-plot':
+      return {
+        scatterPlotTitle: 'Scatter Plot',
+        scatterPlotStyle: 'default',
+        showTitle: true,
+        scatterPlotPrimaryColor: '#3B82F6',
+        scatterPlotSecondaryColor: '#E5E7EB',
+        scatterXAxisLabel: 'X Axis',
+        scatterYAxisLabel: 'Y Axis',
+        scatterPlotData: [
+          { name: 'Point 1', x: 30, y: 40 },
+          { name: 'Point 2', x: 60, y: 70 },
+          { name: 'Point 3', x: 20, y: 80 },
+          { name: 'Point 4', x: 80, y: 30 }
+        ]
       };
     case 'geomap':
       return {
-        backgroundColor: 'transparent',
-        geomapTitle: 'Geographic Data',
+        geomapTitle: 'Geomap',
+        geomapStyle: 'world',
         showTitle: true,
-        textAlignment: 'left',
-        geomapStyle: 'default',
-        geomapPrimaryColor: '#3B82F6',
-        geomapSecondaryColor: '#EFF6FF',
         geomapRegion: 'world',
+        geomapPrimaryColor: '#3B82F6',
+        geomapSecondaryColor: '#E5E7EB',
         showTooltips: true,
         showZoomControls: true,
-        mapProjection: 'mercator',
         geomapData: [
-          { region: 'North America', value: 75, coordinates: [-100, 45] },
-          { region: 'Europe', value: 65, coordinates: [10, 50] },
-          { region: 'Asia', value: 85, coordinates: [100, 35] },
-          { region: 'South America', value: 45, coordinates: [-60, -15] },
-          { region: 'Africa', value: 55, coordinates: [20, 0] }
+          { region: 'United States', value: 100 },
+          { region: 'Canada', value: 80 },
+          { region: 'Mexico', value: 60 }
         ]
-      };
-    case 'delete':
-      return {
-        backgroundColor: '#EF4444',
-        textColor: 'white',
-      };
-    case 'simple-table':
-      return {
-        tableTitle: 'Table Title',
-        tableHeaders: ['Header 1', 'Header 2', 'Header 3'],
-        tableData: [
-          ['Data 1', 'Data 2', 'Data 3'],
-          ['Data 4', 'Data 5', 'Data 6'],
-          ['Data 7', 'Data 8', 'Data 9'],
-        ],
-        numRows: 3,
-        numColumns: 3,
-        showTableBorder: true,
-        headerBackground: '#f3f4f6',
-        headerTextColor: '#111827',
-        cellBackground: '#ffffff',
-        cellTextColor: '#374151',
-        alternateRowColor: false,
-        alternateRowBackground: '#f9fafb',
       };
     case 'waterfall':
       return {
-        backgroundColor: 'transparent',
         waterfallTitle: 'Waterfall Chart',
-        showTitle: true,
         waterfallVariant: 'basic-waterfall',
-        waterfallPrimaryColor: '#4F46E5',
-        waterfallSecondaryColor: '#818CF8',
-        waterfallTotalColor: '#10B981',
-        showGridLines: true,
+        showTitle: true,
         showLabels: true,
+        showValues: true,
+        waterfallPrimaryColor: '#3B82F6',
+        waterfallSecondaryColor: '#EF4444',
+        waterfallTotalColor: '#10B981',
         waterfallData: [
-          { category: 'Jan 22', value: 50, isTotal: false },
-          { category: 'Feb 22', value: 130, isTotal: false },
-          { category: 'Mar 22', value: 80, isTotal: false },
-          { category: 'Apr 22', value: 150, isTotal: false },
-          { category: 'May 22', value: 120, isTotal: false },
-          { category: 'Total', value: 530, isTotal: true }
-        ],
-        waterfallButtons: [],
-        waterfallKpis: []
+          { category: 'Starting Value', value: 100 },
+          { category: 'Increase 1', value: 20 },
+          { category: 'Decrease 1', value: -10 },
+          { category: 'Increase 2', value: 15 },
+          { category: 'Total', value: 125, isTotal: true }
+        ]
       };
     case 'treemap':
       return {
-        backgroundColor: 'transparent',
         treemapTitle: 'Treemap Chart',
-        showTitle: true,
         treemapVariant: 'default',
-        treemapPrimaryColor: '#4F46E5',
-        treemapSecondaryColor: '#818CF8',
+        showTitle: true,
         showLabels: true,
         showValues: true,
+        treemapPrimaryColor: '#4F46E5',
         treemapData: [
           { name: 'Category A', value: 400, color: '#4F46E5' },
           { name: 'Category B', value: 300, color: '#7C3AED' },
           { name: 'Category C', value: 200, color: '#059669' },
           { name: 'Category D', value: 150, color: '#DC2626' },
           { name: 'Category E', value: 100, color: '#EA580C' }
-        ],
-        treemapButtons: [],
-        treemapKpis: []
+        ]
+      };
+    case 'histogram':
+      return {
+        histogramTitle: 'Histogram Chart',
+        histogramVariant: 'default',
+        showTitle: true,
+        showLabels: true,
+        showValues: true,
+        showGridLines: true,
+        histogramPrimaryColor: '#4F46E5',
+        binCount: 8,
+        histogramData: [
+          { range: '0-10', frequency: 5 },
+          { range: '10-20', frequency: 8 },
+          { range: '20-30', frequency: 12 },
+          { range: '30-40', frequency: 15 },
+          { range: '40-50', frequency: 10 },
+          { range: '50-60', frequency: 7 },
+          { range: '60-70', frequency: 4 },
+          { range: '70-80', frequency: 2 }
+        ]
+      };
+    case 'simple-table':
+      return {
+        tableTitle: 'Data Table',
+        showTitle: true,
+        numRows: 5,
+        numColumns: 4,
+        showTableBorder: true,
+        headerBackground: '#F3F4F6',
+        headerTextColor: '#374151',
+        cellBackground: '#FFFFFF',
+        cellTextColor: '#374151',
+        tableHeaders: ['Header 1', 'Header 2', 'Header 3', 'Header 4'],
+        tableData: [
+          ['Row 1 Col 1', 'Row 1 Col 2', 'Row 1 Col 3', 'Row 1 Col 4'],
+          ['Row 2 Col 1', 'Row 2 Col 2', 'Row 2 Col 3', 'Row 2 Col 4'],
+          ['Row 3 Col 1', 'Row 3 Col 2', 'Row 3 Col 3', 'Row 3 Col 4'],
+          ['Row 4 Col 1', 'Row 4 Col 2', 'Row 4 Col 3', 'Row 4 Col 4'],
+          ['Row 5 Col 1', 'Row 5 Col 2', 'Row 5 Col 3', 'Row 5 Col 4']
+        ]
+      };
+    case 'image':
+      return {
+        imageUrl: '/placeholder.svg',
+        imageAlt: 'Placeholder image',
+        imageFit: 'contain',
+        hasBorder: false,
+        hasShadow: false
+      };
+    case 'textbox':
+      return {
+        textboxContent: 'Enter your text here...',
+        textboxTitle: 'Text Box',
+        showTextboxTitle: true,
+        textAlignment: 'left',
+        fontSize: 'md',
+        fontWeight: 'normal',
+        fontFamily: 'inter',
+        backgroundColor: 'transparent',
+        textColor: '#000000'
+      };
+    case 'shapes':
+      return {
+        shapeVariant: 'rectangle',
+        shapeColor: '#3B82F6',
+        shapeWidth: 100,
+        shapeHeight: 100,
+        showTitle: false,
+        title: 'Shape'
       };
     default:
       return {};

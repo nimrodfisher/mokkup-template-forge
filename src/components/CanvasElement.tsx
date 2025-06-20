@@ -82,6 +82,9 @@ export function CanvasElement({ element, isSelected }: CanvasElementProps) {
       case 'treemap':
         setActiveDialog('treemap');
         break;
+      case 'histogram':
+        setActiveDialog('histogram');
+        break;
     }
   };
   

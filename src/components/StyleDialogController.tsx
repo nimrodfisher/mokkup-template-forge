@@ -15,6 +15,7 @@ import { ScatterPlotStyleDialog } from './scatter-plot-style/ScatterPlotStyleDia
 import { GeomapStyleDialog } from './geomap-style/GeomapStyleDialog';
 import { WaterfallStyleDialog } from './waterfall-style/WaterfallStyleDialog';
 import { TreemapStyleDialog } from './treemap-style/TreemapStyleDialog';
+import { HistogramStyleDialog } from './histogram-style/HistogramStyleDialog';
 import { ImageStyleDialog } from './ImageStyleDialog';
 import { ShapeStyleDialog } from './ShapeStyleDialog';
 import { FilterStyleDialog } from './FilterStyleDialog';
@@ -67,6 +68,8 @@ export function StyleDialogController({ element, dialogType, onClose }: StyleDia
       return <WaterfallStyleDialog {...commonProps} />;
     case 'treemap':
       return <TreemapStyleDialog {...commonProps} />;
+    case 'histogram':
+      return <HistogramStyleDialog {...commonProps} />;
     case 'image':
       return <ImageStyleDialog {...commonProps} />;
     case 'shapes':

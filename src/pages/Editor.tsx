@@ -27,6 +27,7 @@ import { ColumnChartStyleDialog } from "@/components/column-chart-style/ColumnCh
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { WaterfallStyleDialog } from "@/components/waterfall-style/WaterfallStyleDialog";
 import { TreemapStyleDialog } from "@/components/treemap-style/TreemapStyleDialog";
+import { HistogramStyleDialog } from "@/components/histogram-style/HistogramStyleDialog";
 import { BarChartStyleDialog } from "@/components/bar-chart-style/BarChartStyleDialog";
 
 const Editor = () => {
@@ -57,6 +58,7 @@ const Editor = () => {
   const [showGeomapStyleDialog, setShowGeomapStyleDialog] = useState(false);
   const [showWaterfallStyleDialog, setShowWaterfallStyleDialog] = useState(false);
   const [showTreemapStyleDialog, setShowTreemapStyleDialog] = useState(false);
+  const [showHistogramStyleDialog, setShowHistogramStyleDialog] = useState(false);
   const [showSaveDialog, setShowSaveDialog] = useState(false);
   
   useEffect(() => {
@@ -115,6 +117,8 @@ const Editor = () => {
       setShowWaterfallStyleDialog(true);
     } else if (selectedElement?.type === 'treemap') {
       setShowTreemapStyleDialog(true);
+    } else if (selectedElement?.type === 'histogram') {
+      setShowHistogramStyleDialog(true);
     }
   };
 
@@ -276,6 +280,15 @@ const Editor = () => {
               elementId={selectedElementId} 
               open={showTreemapStyleDialog}
               onClose={() => setShowTreemapStyleDialog(false)}
+            />
+          )}
+
+          {/* Histogram Style Dialog */}
+          {selectedElementId && selectedElement?.type === 'histogram' && (
+            <HistogramStyleDialog 
+              elementId={selectedElementId} 
+              open={showHistogramStyleDialog}
+              onClose={() => setShowHistogramStyleDialog(false)}
             />
           )}
 
