@@ -1,4 +1,3 @@
-
 export type ElementType = 
   'header' | 'button' | 'filter' | 'kpi' | 'column-chart' | 'bar-chart' | 'line-chart' | 
   'area-chart' | 'combo-chart' | 'pie-chart' | 'gauge-chart' |
@@ -160,6 +159,7 @@ export interface Element {
     showLegend?: boolean;
     showGridLines?: boolean;
     showLabels?: boolean;
+    showValues?: boolean;
     // Combo Chart specific properties
     chartBackground?: string;
     plotBackground?: string;

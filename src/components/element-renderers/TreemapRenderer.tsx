@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { TreemapChart, ResponsiveContainer, Treemap, Cell, Tooltip } from 'recharts';
+import { ResponsiveContainer, Treemap, Cell, Tooltip } from 'recharts';
 
 interface TreemapRendererProps {
   properties: any;
@@ -89,14 +89,14 @@ export function TreemapRenderer({ properties }: TreemapRendererProps) {
         
         <div className="h-48">
           <ResponsiveContainer width="100%" height="100%">
-            <TreemapChart data={treemapData}>
-              <Treemap
-                dataKey="value"
-                aspectRatio={4/3}
-                stroke="#fff"
-                fill={treemapPrimaryColor}
-                content={<CustomContent colors={treemapData.map(item => item.color || treemapPrimaryColor)} />}
-              />
+            <Treemap
+              data={treemapData}
+              dataKey="value"
+              aspectRatio={4/3}
+              stroke="#fff"
+              fill={treemapPrimaryColor}
+              content={<CustomContent colors={treemapData.map(item => item.color || treemapPrimaryColor)} />}
+            >
               <Tooltip 
                 formatter={(value: any, name: any) => [value, name]}
                 labelStyle={{ color: '#333' }}
@@ -106,7 +106,7 @@ export function TreemapRenderer({ properties }: TreemapRendererProps) {
                   borderRadius: '4px'
                 }}
               />
-            </TreemapChart>
+            </Treemap>
           </ResponsiveContainer>
         </div>
         

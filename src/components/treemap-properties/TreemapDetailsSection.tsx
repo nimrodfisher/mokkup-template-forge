@@ -67,7 +67,7 @@ export function TreemapDetailsSection({ element, updateElementProperties, onOpen
         <div>
           <Label className="text-sm">Alignment</Label>
           <div className="flex gap-1 mt-1">
-            {['left', 'center', 'right'].map((align) => (
+            {(['left', 'center', 'right'] as const).map((align) => (
               <Button
                 key={align}
                 variant={textAlignment === align ? 'default' : 'outline'}
