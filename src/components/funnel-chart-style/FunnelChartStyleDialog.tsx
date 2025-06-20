@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { useWireframe } from '@/hooks/useWireframe';
+import type { FunnelChartVariant } from '@/types/wireframe';
 import { FunnelChartTemplates } from './FunnelChartTemplates';
 import { X } from 'lucide-react';
 
@@ -14,7 +15,7 @@ interface FunnelChartStyleDialogProps {
 
 export function FunnelChartStyleDialog({ elementId, open, onClose }: FunnelChartStyleDialogProps) {
   const { updateElementProperties } = useWireframe();
-  const [selectedTemplate, setSelectedTemplate] = useState<string>('default');
+  const [selectedTemplate, setSelectedTemplate] = useState<FunnelChartVariant>('default');
 
   const handleApplyStyle = () => {
     updateElementProperties(elementId, {

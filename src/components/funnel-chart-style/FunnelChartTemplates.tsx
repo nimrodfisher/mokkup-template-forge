@@ -1,16 +1,17 @@
 
 import React from 'react';
+import type { FunnelChartVariant } from '@/types/wireframe';
 import { FunnelChartStyleTemplate } from './FunnelChartStyleTemplate';
 
 interface FunnelChartTemplatesProps {
-  selectedTemplate: string;
-  onSelectTemplate: (template: string) => void;
+  selectedTemplate: FunnelChartVariant;
+  onSelectTemplate: (template: FunnelChartVariant) => void;
 }
 
 export function FunnelChartTemplates({ selectedTemplate, onSelectTemplate }: FunnelChartTemplatesProps) {
   const templates = [
     {
-      id: 'default',
+      id: 'default' as FunnelChartVariant,
       name: 'Default',
       data: [
         { name: 'Awareness', value: 1000, color: '#8884d8' },
@@ -21,7 +22,7 @@ export function FunnelChartTemplates({ selectedTemplate, onSelectTemplate }: Fun
       ]
     },
     {
-      id: 'with-buttons',
+      id: 'with-buttons' as FunnelChartVariant,
       name: 'With Buttons',
       data: [
         { name: 'Visitors', value: 10000, color: '#3b82f6' },
@@ -31,7 +32,7 @@ export function FunnelChartTemplates({ selectedTemplate, onSelectTemplate }: Fun
       ]
     },
     {
-      id: 'with-kpis',
+      id: 'with-kpis' as FunnelChartVariant,
       name: 'With KPIs',
       data: [
         { name: 'Impressions', value: 50000, color: '#8b5cf6' },

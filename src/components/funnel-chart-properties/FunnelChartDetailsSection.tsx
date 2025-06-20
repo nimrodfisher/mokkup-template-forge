@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { Element } from '@/types/wireframe';
+import type { FunnelChartVariant } from '@/types/wireframe';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
@@ -49,7 +50,7 @@ export function FunnelChartDetailsSection({ properties, updateProperties }: Funn
           <Label htmlFor="chart-variant" className="text-sm text-gray-600">Variation</Label>
           <Select
             value={funnelChartVariant}
-            onValueChange={(value) => updateProperties({ funnelChartVariant: value })}
+            onValueChange={(value: FunnelChartVariant) => updateProperties({ funnelChartVariant: value })}
           >
             <SelectTrigger className="mt-1">
               <SelectValue placeholder="Select variation" />
