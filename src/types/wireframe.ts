@@ -315,8 +315,9 @@ export interface Element {
     funnelChartData?: Array<{name: string, value: number, color?: string}>;
     funnelPrimaryColor?: string;
     funnelSecondaryColor?: string;
-    funnelChartButtons?: Array<{title: string, alignment: string}>;
-    funnelChartKpis?: Array<{title: string, value: string, change?: string}>;
+    funnelButtons?: Array<{title: string, alignment: string}>;
+    funnelKpis?: Array<{title: string, value: string, change?: string}>;
+    
     // Add-ons - consolidated under one section
     showButtons?: boolean;
     showDropdowns?: boolean;
