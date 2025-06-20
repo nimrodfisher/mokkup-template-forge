@@ -42,7 +42,13 @@ export function FunnelChartStyleTemplate({ template, isSelected, onSelect }: Fun
                 fill="#fff" 
                 stroke="none"
                 fontSize={10}
-                formatter={(value: any, entry: any) => entry.name}
+                formatter={(value: any, entry: any) => {
+                  // Add safety check for entry
+                  if (!entry || typeof entry !== 'object') {
+                    return '';
+                  }
+                  return entry.name || '';
+                }}
               />
               {template.data.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={entry.color} />
