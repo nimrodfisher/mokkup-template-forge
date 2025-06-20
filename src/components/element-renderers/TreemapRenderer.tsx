@@ -24,6 +24,19 @@ export function TreemapRenderer({ properties }: TreemapRendererProps) {
   const CustomContent = (props: any) => {
     const { root, depth, x, y, width, height, index, colors, name, value } = props;
     
+    // Only render content for leaf nodes (depth === 1)
+    if (depth !== 1) return null;
+    
+    // Calculate text size based on cell dimensions
+    const cellArea = width * height;
+    const baseFontSize = Math.max(10, Math.min(16, Math.sqrt(cellArea) / 8));
+    const nameSize = baseFontSize;
+    const valueSize = baseFontSize - 2;
+    
+    // Determine if we should use light or dark text based on background color
+    const bgColor = colors[Math.floor(index % colors.length)] || treemapPrimaryColor;
+    const textColor = '#FFFFFF'; // Always use white for better contrast
+    
     return (
       <g>
         <rect
@@ -32,31 +45,42 @@ export function TreemapRenderer({ properties }: TreemapRendererProps) {
           width={width}
           height={height}
           style={{
-            fill: depth < 2 ? colors[Math.floor(index % colors.length)] : treemapPrimaryColor,
+            fill: bgColor,
             stroke: '#fff',
-            strokeWidth: 2 / (depth + 1e-10),
-            strokeOpacity: 1 / (depth + 1e-10),
+            strokeWidth: 2,
+            strokeOpacity: 1,
           }}
         />
-        {depth === 1 && showLabels && (
+        {showLabels && width > 40 && height > 30 && (
           <text
             x={x + width / 2}
-            y={y + height / 2 - (showValues ? 8 : 0)}
+            y={y + height / 2 - (showValues ? 6 : 0)}
             textAnchor="middle"
-            fill="#fff"
-            fontSize={12}
-            fontWeight="bold"
+            dominantBaseline="middle"
+            fill={textColor}
+            fontSize={nameSize}
+            fontWeight="600"
+            style={{
+              textShadow: '1px 1px 2px rgba(0,0,0,0.5)',
+              pointerEvents: 'none'
+            }}
           >
             {name}
           </text>
         )}
-        {depth === 1 && showValues && (
+        {showValues && width > 40 && height > 40 && (
           <text
             x={x + width / 2}
-            y={y + height / 2 + 8}
+            y={y + height / 2 + (showLabels ? 12 : 0)}
             textAnchor="middle"
-            fill="#fff"
-            fontSize={10}
+            dominantBaseline="middle"
+            fill={textColor}
+            fontSize={valueSize}
+            fontWeight="500"
+            style={{
+              textShadow: '1px 1px 2px rgba(0,0,0,0.5)',
+              pointerEvents: 'none'
+            }}
           >
             {value}
           </text>
