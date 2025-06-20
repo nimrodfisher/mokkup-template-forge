@@ -56,10 +56,15 @@ export function FunnelChartRenderer({ properties }: FunnelChartRendererProps) {
                   stroke="none"
                   fontSize={12}
                   formatter={(value: any, entry: any) => {
-                    if (showValues) {
-                      return `${entry.name}: ${value}`;
+                    // Add safety check for entry
+                    if (!entry || typeof entry !== 'object') {
+                      return '';
                     }
-                    return entry.name;
+                    
+                    if (showValues) {
+                      return `${entry.name || ''}: ${value || ''}`;
+                    }
+                    return entry.name || '';
                   }}
                 />
               )}
