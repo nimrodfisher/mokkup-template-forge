@@ -9,7 +9,6 @@ export interface Project {
   name: string;
   description?: string;
   owner_id: string;
-  user_id: string;
   screens: any[];
   elements: any[];
   is_public: boolean;
@@ -80,7 +79,6 @@ export function useProjects() {
         name,
         description: description || null,
         owner_id: user.id,
-        user_id: user.id,
         screens: [{ id: crypto.randomUUID(), name: 'Screen1', isActive: true }],
         elements: [],
         is_public: false
