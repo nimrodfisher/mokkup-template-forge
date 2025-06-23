@@ -9,6 +9,7 @@ export interface Project {
   name: string;
   description?: string;
   owner_id: string;
+  user_id: string;
   screens: any[];
   elements: any[];
   is_public: boolean;
@@ -19,7 +20,7 @@ export interface Project {
     last_name?: string;
     email: string;
   };
-  collaborators?: Array<{
+  project_collaborators?: Array<{
     id: string;
     role: string;
     profiles: {
@@ -57,7 +58,15 @@ export function useProjects() {
 
       if (error) throw error;
 
-      setProjects(data || []);
+      // Transform the data to match our interface
+      const transformedProjects = (data || []).map(project => ({
+        ...project,
+        screens: Array.isArray(project.screens) ? project.screens : [],
+        elements: Array.isArray(project.elements) ? project.elements : [],
+        project_collaborators: project.project_collaborators || []
+      }));
+
+      setProjects(transformedProjects);
     } catch (error) {
       console.error('Error fetching projects:', error);
       toast.error('Failed to fetch projects');
@@ -74,6 +83,7 @@ export function useProjects() {
         name,
         description,
         owner_id: user.id,
+        user_id: user.id,
         screens: [{ id: crypto.randomUUID(), name: 'Screen1', isActive: true }],
         elements: [],
       };

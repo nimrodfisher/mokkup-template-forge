@@ -30,8 +30,8 @@ export default function Editor() {
     selectedElementId,
     showProperties,
     toggleProperties,
-    // Load project data into the wireframe store
-    loadTemplate,
+    updateElementProperties,
+    loadProjectFromDatabase,
   } = useWireframe();
 
   useEffect(() => {
@@ -93,7 +93,7 @@ export default function Editor() {
       
       // Load project data into wireframe store
       if (data.screens && data.elements) {
-        loadTemplate(projectId);
+        await loadProjectFromDatabase(projectId);
       }
     } catch (error) {
       console.error('Error loading project:', error);
@@ -113,6 +113,7 @@ export default function Editor() {
       const newProject = {
         name: 'Untitled Project',
         owner_id: user.id,
+        user_id: user.id,
         screens: [{ id: crypto.randomUUID(), name: 'Screen1', isActive: true }],
         elements: [],
       };
@@ -176,7 +177,7 @@ export default function Editor() {
 
   return (
     <div className="h-screen flex flex-col bg-gray-50">
-      <Navbar projectName={project?.name} />
+      <Navbar />
       
       <div className="flex-1 flex overflow-hidden">
         <Sidebar />
@@ -185,19 +186,19 @@ export default function Editor() {
           <ScreenTabs />
           <div className="flex-1 flex overflow-hidden">
             <div className="flex-1 overflow-hidden">
-              <Canvas readOnly={!hasPermission} />
+              <Canvas />
             </div>
             {showProperties && (
               <div className="w-80 border-l bg-white overflow-y-auto">
-                <PropertiesPanel />
+                <PropertiesPanel updateElementProperties={updateElementProperties} />
               </div>
             )}
           </div>
         </div>
       </div>
 
-      <SaveTemplateDialog />
-      <StyleDialogController />
+      <SaveTemplateDialog open={false} onOpenChange={() => {}} />
+      <StyleDialogController element={null} dialogType="" open={false} onOpenChange={() => {}} />
       
       {!hasPermission && (
         <div className="fixed bottom-4 right-4 bg-yellow-100 border border-yellow-400 rounded-lg p-3">

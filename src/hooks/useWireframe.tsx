@@ -47,8 +47,8 @@ export const useWireframe = create<ProjectWireframeState>()(
           if (error) throw error;
           
           if (data) {
-            const screens = data.screens || [{ id: crypto.randomUUID(), name: 'Screen1', isActive: true }];
-            const elements = data.elements || [];
+            const screens = Array.isArray(data.screens) ? data.screens : [{ id: crypto.randomUUID(), name: 'Screen1', isActive: true }];
+            const elements = Array.isArray(data.elements) ? data.elements : [];
             
             a[0]({
               screens,

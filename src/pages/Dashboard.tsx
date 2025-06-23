@@ -45,7 +45,7 @@ export default function Dashboard() {
     if (project.owner_id === user?.id) return 'Owner';
     
     const collaboration = project.project_collaborators?.find(
-      (collab: any) => collab.profiles.email === user?.email
+      (collab: any) => collab.profiles?.email === user?.email
     );
     return collaboration?.role || 'Viewer';
   };
