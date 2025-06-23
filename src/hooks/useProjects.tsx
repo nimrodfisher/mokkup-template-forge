@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
@@ -20,15 +19,6 @@ export interface Project {
     last_name?: string;
     email: string;
   };
-  project_collaborators?: Array<{
-    id: string;
-    role: string;
-    profiles: {
-      first_name?: string;
-      last_name?: string;
-      email: string;
-    };
-  }>;
 }
 
 export function useProjects() {
@@ -42,7 +32,6 @@ export function useProjects() {
     try {
       setLoading(true);
       
-      // Simplified query to avoid relationship issues
       const { data, error } = await supabase
         .from('projects')
         .select(`
@@ -57,8 +46,7 @@ export function useProjects() {
       const transformedProjects = (data || []).map(project => ({
         ...project,
         screens: Array.isArray(project.screens) ? project.screens : [],
-        elements: Array.isArray(project.elements) ? project.elements : [],
-        project_collaborators: [] // We'll fetch this separately if needed
+        elements: Array.isArray(project.elements) ? project.elements : []
       }));
 
       setProjects(transformedProjects);
@@ -71,17 +59,25 @@ export function useProjects() {
   };
 
   const createProject = async (name: string, description?: string) => {
-    if (!user) throw new Error('User not authenticated');
+    if (!user) {
+      toast.error('User not authenticated');
+      throw new Error('User not authenticated');
+    }
 
     try {
+      console.log('Creating project with user:', user.id);
+      
       const newProject = {
         name,
-        description,
+        description: description || null,
         owner_id: user.id,
         user_id: user.id,
         screens: [{ id: crypto.randomUUID(), name: 'Screen1', isActive: true }],
         elements: [],
+        is_public: false
       };
+
+      console.log('Project data to insert:', newProject);
 
       const { data, error } = await supabase
         .from('projects')
@@ -89,14 +85,18 @@ export function useProjects() {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Supabase error:', error);
+        throw error;
+      }
 
+      console.log('Project created successfully:', data);
       await fetchProjects();
       toast.success('Project created successfully!');
       return data;
     } catch (error) {
       console.error('Error creating project:', error);
-      toast.error('Failed to create project');
+      toast.error('Failed to create project. Please try again.');
       throw error;
     }
   };

@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -19,19 +18,34 @@ export default function Dashboard() {
   const { projects, loading, createProject, deleteProject } = useProjects();
   const navigate = useNavigate();
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
 
   const handleCreateProject = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (isCreating) return;
+
     const formData = new FormData(e.currentTarget);
     const name = formData.get('name') as string;
     const description = formData.get('description') as string;
 
+    if (!name?.trim()) {
+      return;
+    }
+
     try {
-      const newProject = await createProject(name, description);
+      setIsCreating(true);
+      console.log('Starting project creation...');
+      
+      const newProject = await createProject(name.trim(), description?.trim());
+      
+      console.log('Project created, navigating to editor...');
       setIsCreateDialogOpen(false);
       navigate(`/editor/${newProject.id}`);
     } catch (error) {
-      // Error handled in hook
+      console.error('Failed to create project:', error);
+      // Error is already handled in the hook with toast
+    } finally {
+      setIsCreating(false);
     }
   };
 
@@ -74,7 +88,7 @@ export default function Dashboard() {
           
           <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
             <DialogTrigger asChild>
-              <Button className="gap-2">
+              <Button className="gap-2" disabled={isCreating}>
                 <Plus className="h-4 w-4" />
                 New Project
               </Button>
@@ -91,6 +105,7 @@ export default function Dashboard() {
                     name="name"
                     placeholder="Enter project name"
                     required
+                    disabled={isCreating}
                   />
                 </div>
                 <div className="space-y-2">
@@ -100,13 +115,28 @@ export default function Dashboard() {
                     name="description"
                     placeholder="Describe your project"
                     rows={3}
+                    disabled={isCreating}
                   />
                 </div>
                 <div className="flex gap-2 justify-end">
-                  <Button type="button" variant="outline" onClick={() => setIsCreateDialogOpen(false)}>
+                  <Button 
+                    type="button" 
+                    variant="outline" 
+                    onClick={() => setIsCreateDialogOpen(false)}
+                    disabled={isCreating}
+                  >
                     Cancel
                   </Button>
-                  <Button type="submit">Create Project</Button>
+                  <Button type="submit" disabled={isCreating}>
+                    {isCreating ? (
+                      <>
+                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                        Creating...
+                      </>
+                    ) : (
+                      'Create Project'
+                    )}
+                  </Button>
                 </div>
               </form>
             </DialogContent>
