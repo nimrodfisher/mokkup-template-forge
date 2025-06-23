@@ -6,6 +6,7 @@ import { createElementSlice } from '@/store/elementActions';
 import { createScreenSlice } from '@/store/screenActions';
 import { createTemplateSlice } from '@/store/templateActions';
 import { supabase } from '@/integrations/supabase/client';
+import { Screen, Element } from '@/types/wireframe';
 
 // Re-export types for convenience
 export type { ElementType, FilterVariant, KpiVariant, ButtonVariant, ButtonSize, 
@@ -33,7 +34,7 @@ export const useWireframe = create<ProjectWireframeState>()(
       
       // Project management actions
       setCurrentProject: (projectId) => {
-        a[0]({ currentProjectId: projectId });
+        a[1]({ currentProjectId: projectId });
       },
       
       loadProjectFromDatabase: async (projectId: string) => {
@@ -47,10 +48,15 @@ export const useWireframe = create<ProjectWireframeState>()(
           if (error) throw error;
           
           if (data) {
-            const screens = Array.isArray(data.screens) ? data.screens : [{ id: crypto.randomUUID(), name: 'Screen1', isActive: true }];
-            const elements = Array.isArray(data.elements) ? data.elements : [];
+            // Type cast with proper validation
+            const screens: Screen[] = Array.isArray(data.screens) 
+              ? data.screens as Screen[]
+              : [{ id: crypto.randomUUID(), name: 'Screen1', isActive: true }];
+            const elements: Element[] = Array.isArray(data.elements) 
+              ? data.elements as Element[]
+              : [];
             
-            a[0]({
+            a[1]({
               screens,
               elements,
               currentProjectId: projectId,

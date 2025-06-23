@@ -198,7 +198,7 @@ export default function Editor() {
       </div>
 
       <SaveTemplateDialog open={false} onOpenChange={() => {}} />
-      <StyleDialogController element={null} dialogType="" open={false} onOpenChange={() => {}} />
+      <StyleDialogController element={null} dialogType={null} onClose={() => {}} />
       
       {!hasPermission && (
         <div className="fixed bottom-4 right-4 bg-yellow-100 border border-yellow-400 rounded-lg p-3">
