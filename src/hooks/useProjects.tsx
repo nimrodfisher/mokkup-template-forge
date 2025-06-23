@@ -28,7 +28,11 @@ export function useProjects() {
   const { user } = useAuth();
 
   const fetchProjects = async () => {
-    if (!user) return;
+    if (!user) {
+      setProjects([]);
+      setLoading(false);
+      return;
+    }
 
     try {
       setLoading(true);
@@ -57,6 +61,7 @@ export function useProjects() {
     } catch (error) {
       console.error('Error fetching projects:', error);
       toast.error('Failed to fetch projects');
+      setProjects([]);
     } finally {
       setLoading(false);
     }
