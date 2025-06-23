@@ -1,7 +1,8 @@
 
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useWireframe } from "@/hooks/useWireframe";
+import { useAuth } from "@/contexts/AuthContext";
+import { useProjects } from "@/hooks/useProjects";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -12,51 +13,37 @@ import {
 } from "@/components/ui/card";
 import { format } from "date-fns";
 import { toast } from "sonner";
-import { ArrowRight, Loader2 } from "lucide-react";
+import { ArrowRight, Loader2, LogOut } from "lucide-react";
 import { CanvasElement } from "@/components/CanvasElement";
 
 const TemplateGallery = () => {
-  const { templates, deleteTemplate, fetchTemplates } = useWireframe();
+  const { user, signOut } = useAuth();
+  const { projects, loading, deleteProject } = useProjects();
   const navigate = useNavigate();
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  
-  useEffect(() => {
-    const loadTemplates = async () => {
-      try {
-        setIsLoading(true);
-        await fetchTemplates();
-      } catch (error) {
-        console.error("Error fetching templates:", error);
-        toast.error("Failed to fetch templates");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    
-    loadTemplates();
-  }, [fetchTemplates]);
   
   const handleDelete = async (id: string) => {
-    try {
-      await deleteTemplate(id);
-      toast.success("Template deleted successfully!");
-    } catch (error) {
-      console.error("Error deleting template:", error);
-      toast.error("Failed to delete template");
+    if (confirm('Are you sure you want to delete this project?')) {
+      try {
+        await deleteProject(id);
+        toast.success("Project deleted successfully!");
+      } catch (error) {
+        console.error("Error deleting project:", error);
+        toast.error("Failed to delete project");
+      }
     }
   };
   
-  // Function to get elements for a specific template
-  const getTemplateElements = (template) => {
-    if (!template.elements || !template.screens) return [];
+  // Function to get elements for a specific project
+  const getProjectElements = (project: any) => {
+    if (!project.elements || !project.screens) return [];
     
     // Get the first screen's ID
-    const firstScreenId = template.screens[0]?.id;
+    const firstScreenId = project.screens[0]?.id;
     if (!firstScreenId) return [];
     
     // Return elements for the first screen
-    return template.elements.filter(element => element.screenId === firstScreenId);
+    return project.elements.filter((element: any) => element.screenId === firstScreenId);
   };
   
   return (
@@ -64,7 +51,12 @@ const TemplateGallery = () => {
       <header className="bg-white border-b">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <Link to="/" className="font-bold text-xl text-blue-600">Alignify</Link>
-          <div>
+          <div className="flex items-center gap-4">
+            <Link to="/dashboard" className="text-gray-600 hover:text-gray-900">Dashboard</Link>
+            <Button variant="ghost" size="sm" onClick={signOut}>
+              <LogOut className="h-4 w-4 mr-2" />
+              Sign Out
+            </Button>
             <Link to="/editor">
               <Button className="gap-2">
                 Create New <ArrowRight className="h-4 w-4" />
@@ -75,14 +67,14 @@ const TemplateGallery = () => {
       </header>
       
       <main className="flex-1 container mx-auto px-4 py-8">
-        <h1 className="text-2xl font-bold mb-6">Your Templates</h1>
+        <h1 className="text-2xl font-bold mb-6">Your Project Templates</h1>
         
-        {isLoading ? (
+        {loading ? (
           <div className="flex justify-center items-center py-12">
             <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
-            <span className="ml-2 text-lg">Loading templates...</span>
+            <span className="ml-2 text-lg">Loading projects...</span>
           </div>
-        ) : templates.length === 0 ? (
+        ) : projects.length === 0 ? (
           <div className="text-center py-12">
             <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-4">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -90,36 +82,36 @@ const TemplateGallery = () => {
                   stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </div>
-            <h3 className="text-lg font-medium mb-2">No templates yet</h3>
-            <p className="text-gray-500 mb-4">Create your first wireframe template to get started</p>
+            <h3 className="text-lg font-medium mb-2">No projects yet</h3>
+            <p className="text-gray-500 mb-4">Create your first wireframe project to get started</p>
             <Link to="/editor">
-              <Button>Create Template</Button>
+              <Button>Create Project</Button>
             </Link>
           </div>
         ) : (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {templates.map((template) => {
-              const templateElements = getTemplateElements(template);
+            {projects.map((project) => {
+              const projectElements = getProjectElements(project);
               return (
                 <Card 
-                  key={template.id}
+                  key={project.id}
                   className={`hover:shadow-md transition-shadow ${
-                    selectedId === template.id ? 'ring-2 ring-blue-500' : ''
+                    selectedId === project.id ? 'ring-2 ring-blue-500' : ''
                   }`}
-                  onClick={() => setSelectedId(template.id)}
+                  onClick={() => setSelectedId(project.id)}
                 >
                   <CardHeader className="pb-2">
-                    <CardTitle>{template.name}</CardTitle>
+                    <CardTitle>{project.name}</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="aspect-video bg-white rounded-md border overflow-hidden">
-                      {templateElements.length === 0 ? (
+                    <div className="aspect-video bg-white rounded-md border overflow-hidden relative">
+                      {projectElements.length === 0 ? (
                         <div className="absolute inset-0 flex items-center justify-center">
-                          <span className="text-sm font-medium text-gray-500">Empty template</span>
+                          <span className="text-sm font-medium text-gray-500">Empty project</span>
                         </div>
                       ) : (
                         <div className="relative w-full h-full" style={{ transform: "scale(0.33)", transformOrigin: "top left", width: "300%", height: "300%" }}>
-                          {templateElements.map(element => (
+                          {projectElements.map((element: any) => (
                             <CanvasElement
                               key={element.id}
                               element={element}
@@ -132,7 +124,7 @@ const TemplateGallery = () => {
                   </CardContent>
                   <CardFooter className="flex justify-between">
                     <div className="text-xs text-gray-500">
-                      Updated {format(new Date(template.updatedAt), 'MMM d, yyyy')}
+                      Updated {format(new Date(project.updated_at), 'MMM d, yyyy')}
                     </div>
                     <div className="flex gap-2">
                       <Button 
@@ -140,14 +132,14 @@ const TemplateGallery = () => {
                         size="sm"
                         onClick={(e) => {
                           e.stopPropagation();
-                          handleDelete(template.id);
+                          handleDelete(project.id);
                         }}
                       >
                         Delete
                       </Button>
                       <Button 
                         size="sm"
-                        onClick={() => navigate(`/editor/${template.id}`)}
+                        onClick={() => navigate(`/editor/${project.id}`)}
                       >
                         Edit
                       </Button>

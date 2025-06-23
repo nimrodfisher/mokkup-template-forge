@@ -1,27 +1,61 @@
 
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Index from "./pages/Index";
-import Editor from "./pages/Editor";
-import TemplateGallery from "./pages/TemplateGallery";
-import NotFound from "./pages/NotFound";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { Toaster } from "@/components/ui/sonner";
+import { AuthProvider } from "@/contexts/AuthContext";
+import { AuthGuard } from "@/components/auth/AuthGuard";
+import Index from "@/pages/Index";
+import Auth from "@/pages/Auth";
+import Dashboard from "@/pages/Dashboard";
+import ProjectShare from "@/pages/ProjectShare";
+import Editor from "@/pages/Editor";
+import TemplateGallery from "@/pages/TemplateGallery";
+import NotFound from "@/pages/NotFound";
 
-const queryClient = new QueryClient();
-
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <Sonner />
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Index />} />
-        <Route path="/editor" element={<Editor />} />
-        <Route path="/editor/:templateId" element={<Editor />} />
-        <Route path="/templates" element={<TemplateGallery />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </BrowserRouter>
-  </QueryClientProvider>
-);
+function App() {
+  return (
+    <Router>
+      <AuthProvider>
+        <Routes>
+          <Route path="/" element={<Index />} />
+          <Route path="/auth" element={<Auth />} />
+          <Route 
+            path="/dashboard" 
+            element={
+              <AuthGuard>
+                <Dashboard />
+              </AuthGuard>
+            } 
+          />
+          <Route 
+            path="/project/:id/share" 
+            element={
+              <AuthGuard>
+                <ProjectShare />
+              </AuthGuard>
+            } 
+          />
+          <Route 
+            path="/editor/:projectId?" 
+            element={
+              <AuthGuard>
+                <Editor />
+              </AuthGuard>
+            } 
+          />
+          <Route 
+            path="/templates" 
+            element={
+              <AuthGuard>
+                <TemplateGallery />
+              </AuthGuard>
+            } 
+          />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+        <Toaster />
+      </AuthProvider>
+    </Router>
+  );
+}
 
 export default App;

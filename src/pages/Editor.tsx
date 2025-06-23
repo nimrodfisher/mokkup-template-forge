@@ -1,305 +1,211 @@
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
-import { Sidebar } from "@/components/sidebar";
-import { Canvas } from "@/components/Canvas";
-import { Navbar } from "@/components/Navbar";
-import { useWireframe } from "@/hooks/useWireframe";
+
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { ScreenTabs } from "@/components/ScreenTabs";
+import { useParams, useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
+import { useProjects } from "@/hooks/useProjects";
+import { useWireframe } from "@/hooks/useWireframe";
+import { supabase } from "@/integrations/supabase/client";
+import { Canvas } from "@/components/Canvas";
+import { Sidebar } from "@/components/sidebar";
 import { PropertiesPanel } from "@/components/PropertiesPanel";
-import { toast } from "sonner";
-import { HeaderStyleDialog } from "@/components/header-style/HeaderStyleDialog";
-import { ImageStyleDialog } from "@/components/ImageStyleDialog";
-import { ShapeStyleDialog } from "@/components/ShapeStyleDialog";
-import { FilterStyleDialog } from "@/components/FilterStyleDialog";
+import { Navbar } from "@/components/Navbar";
+import { ScreenTabs } from "@/components/ScreenTabs";
 import { SaveTemplateDialog } from "@/components/SaveTemplateDialog";
-import { ChartStyleDialog } from "@/components/ChartStyleDialog";
-import { AreaChartStyleDialog } from "@/components/AreaChartStyleDialog";
-import { TableStyleDialog } from "@/components/table-style/TableStyleDialog";
-import { GaugeStyleDialog } from "@/components/GaugeStyleDialog";
-import { HeatmapStyleDialog } from "@/components/heatmap-style/HeatmapStyleDialog";
-import { QuadrantStyleDialog } from "@/components/quadrant-style/QuadrantStyleDialog";
-import { ScatterPlotStyleDialog } from "@/components/scatter-plot-style/ScatterPlotStyleDialog";
-import { ColumnChartStyleDialog } from "@/components/column-chart-style/ColumnChartStyleDialog";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { WaterfallStyleDialog } from "@/components/waterfall-style/WaterfallStyleDialog";
-import { TreemapStyleDialog } from "@/components/treemap-style/TreemapStyleDialog";
-import { HistogramStyleDialog } from "@/components/histogram-style/HistogramStyleDialog";
-import { BarChartStyleDialog } from "@/components/bar-chart-style/BarChartStyleDialog";
-import { FunnelChartStyleDialog } from "@/components/funnel-chart-style/FunnelChartStyleDialog";
+import { StyleDialogController } from "@/components/StyleDialogController";
+import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
-const Editor = () => {
-  const params = useParams();
-  const templateId = params?.templateId;
+export default function Editor() {
+  const { projectId } = useParams();
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const { updateProject } = useProjects();
+  const [project, setProject] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [hasPermission, setHasPermission] = useState(false);
   
-  const { 
-    loadTemplate, 
-    showProperties, 
-    selectedElementId, 
-    elements, 
-    updateElementProperties, 
-    fetchTemplates 
+  const {
+    screens,
+    elements,
+    selectedElementId,
+    showProperties,
+    toggleProperties,
+    // Load project data into the wireframe store
+    loadTemplate,
   } = useWireframe();
-  
-  const [showHeaderStyleDialog, setShowHeaderStyleDialog] = useState(false);
-  const [showImageStyleDialog, setShowImageStyleDialog] = useState(false);
-  const [showShapeStyleDialog, setShowShapeStyleDialog] = useState(false);
-  const [showFilterStyleDialog, setShowFilterStyleDialog] = useState(false);
-  const [showChartStyleDialog, setShowChartStyleDialog] = useState(false);
-  const [showBarChartStyleDialog, setShowBarChartStyleDialog] = useState(false);
-  const [showAreaChartStyleDialog, setShowAreaChartStyleDialog] = useState(false);
-  const [showTableStyleDialog, setShowTableStyleDialog] = useState(false);
-  const [showGaugeStyleDialog, setShowGaugeStyleDialog] = useState(false);
-  const [showHeatmapStyleDialog, setShowHeatmapStyleDialog] = useState(false);
-  const [showQuadrantStyleDialog, setShowQuadrantStyleDialog] = useState(false);
-  const [showScatterPlotStyleDialog, setShowScatterPlotStyleDialog] = useState(false);
-  const [showWaterfallStyleDialog, setShowWaterfallStyleDialog] = useState(false);
-  const [showTreemapStyleDialog, setShowTreemapStyleDialog] = useState(false);
-  const [showHistogramStyleDialog, setShowHistogramStyleDialog] = useState(false);
-  const [showSaveDialog, setShowSaveDialog] = useState(false);
-  const [showFunnelChartStyleDialog, setShowFunnelChartStyleDialog] = useState(false);
-  
+
   useEffect(() => {
-    // Fetch all templates when the component mounts
-    fetchTemplates().catch(error => {
-      console.error("Error fetching templates:", error);
-    });
-  }, [fetchTemplates]);
-  
-  useEffect(() => {
-    if (templateId) {
-      loadTemplate(templateId).then(() => {
-        toast.success("Template loaded successfully!");
-      }).catch(error => {
-        console.error("Error loading template:", error);
-        toast.error("Failed to load template");
-      });
+    if (projectId) {
+      loadProject();
+    } else {
+      // No project ID, create a new project
+      createNewProject();
     }
-  }, [templateId, loadTemplate]);
-  
-  // Get the selected element
-  const selectedElement = selectedElementId 
-    ? elements.find(element => element.id === selectedElementId) 
-    : null;
-  
-  // Show style dialog based on the element type
-  const handleOpenStyleDialog = () => {
-    if (selectedElement?.type === 'header') {
-      console.log("Opening header style dialog");
-      setShowHeaderStyleDialog(true);
-    } else if (selectedElement?.type === 'image') {
-      setShowImageStyleDialog(true);
-    } else if (selectedElement?.type === 'shapes') {
-      setShowShapeStyleDialog(true);
-    } else if (selectedElement?.type === 'filter') {
-      setShowFilterStyleDialog(true);
-    } else if (selectedElement?.type === 'bar-chart') {
-      setShowBarChartStyleDialog(true);
-    } else if (selectedElement?.type === 'column-chart') {
-      setShowChartStyleDialog(true);
-    } else if (selectedElement?.type === 'area-chart') {
-      setShowAreaChartStyleDialog(true);
-    } else if (selectedElement?.type === 'simple-table') {
-      setShowTableStyleDialog(true);
-    } else if (selectedElement?.type === 'gauge-chart') {
-      setShowGaugeStyleDialog(true);
-    } else if (selectedElement?.type === 'heatmap') {
-      setShowHeatmapStyleDialog(true);
-    } else if (selectedElement?.type === 'quadrant-chart') {
-      setShowQuadrantStyleDialog(true);
-    } else if (selectedElement?.type === 'scatter-plot') {
-      setShowScatterPlotStyleDialog(true);
-    } else if (selectedElement?.type === 'waterfall') {
-      setShowWaterfallStyleDialog(true);
-    } else if (selectedElement?.type === 'treemap') {
-      setShowTreemapStyleDialog(true);
-    } else if (selectedElement?.type === 'histogram') {
-      setShowHistogramStyleDialog(true);
-    } else if (selectedElement?.type === 'funnel-chart') {
-      setShowFunnelChartStyleDialog(true);
+  }, [projectId, user]);
+
+  const loadProject = async () => {
+    if (!projectId || !user) return;
+
+    try {
+      setLoading(true);
+      
+      // Fetch project with collaborator info
+      const { data, error } = await supabase
+        .from('projects')
+        .select(`
+          *,
+          project_collaborators (
+            role,
+            user_id
+          )
+        `)
+        .eq('id', projectId)
+        .single();
+
+      if (error) {
+        if (error.code === 'PGRST116') {
+          toast.error('Project not found');
+          navigate('/dashboard');
+        } else {
+          throw error;
+        }
+        return;
+      }
+
+      // Check permissions
+      const isOwner = data.owner_id === user.id;
+      const collaboration = data.project_collaborators?.find(
+        (collab: any) => collab.user_id === user.id
+      );
+      const hasAccess = isOwner || collaboration || data.is_public;
+
+      if (!hasAccess) {
+        toast.error('You do not have permission to access this project');
+        navigate('/dashboard');
+        return;
+      }
+
+      // Check if user can edit
+      const canEdit = isOwner || (collaboration && ['editor', 'admin'].includes(collaboration.role));
+      setHasPermission(canEdit);
+
+      setProject(data);
+      
+      // Load project data into wireframe store
+      if (data.screens && data.elements) {
+        loadTemplate(projectId);
+      }
+    } catch (error) {
+      console.error('Error loading project:', error);
+      toast.error('Failed to load project');
+      navigate('/dashboard');
+    } finally {
+      setLoading(false);
     }
   };
 
-  // Function to handle save action
-  const handleSaveAction = () => {
-    setShowSaveDialog(true);
+  const createNewProject = async () => {
+    if (!user) return;
+
+    try {
+      setLoading(true);
+      
+      const newProject = {
+        name: 'Untitled Project',
+        owner_id: user.id,
+        screens: [{ id: crypto.randomUUID(), name: 'Screen1', isActive: true }],
+        elements: [],
+      };
+
+      const { data, error } = await supabase
+        .from('projects')
+        .insert(newProject)
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      setProject(data);
+      setHasPermission(true);
+      
+      // Update URL without triggering navigation
+      window.history.replaceState(null, '', `/editor/${data.id}`);
+      
+      toast.success('New project created!');
+    } catch (error) {
+      console.error('Error creating project:', error);
+      toast.error('Failed to create project');
+      navigate('/dashboard');
+    } finally {
+      setLoading(false);
+    }
   };
-  
+
+  // Auto-save project periodically
+  useEffect(() => {
+    if (!project || !hasPermission) return;
+
+    const saveProject = async () => {
+      try {
+        await updateProject(project.id, {
+          screens,
+          elements,
+        });
+      } catch (error) {
+        console.error('Auto-save failed:', error);
+      }
+    };
+
+    const interval = setInterval(saveProject, 30000); // Auto-save every 30 seconds
+    
+    // Save on unmount
+    return () => {
+      clearInterval(interval);
+      saveProject();
+    };
+  }, [project, screens, elements, hasPermission, updateProject]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
+        <span className="ml-2">Loading project...</span>
+      </div>
+    );
+  }
+
   return (
-    <TooltipProvider>
-      <DndProvider backend={HTML5Backend}>
-        <div className="flex flex-col h-screen bg-white">
-          <Navbar onSave={handleSaveAction} />
+    <div className="h-screen flex flex-col bg-gray-50">
+      <Navbar projectName={project?.name} />
+      
+      <div className="flex-1 flex overflow-hidden">
+        <Sidebar />
+        
+        <div className="flex-1 flex flex-col">
+          <ScreenTabs />
           <div className="flex-1 flex overflow-hidden">
-            <Sidebar />
-            <div className="flex-1 flex flex-col overflow-hidden">
-              <ScreenTabs />
-              <div className="flex-1 flex overflow-hidden">
-                <Canvas />
-                {showProperties && selectedElementId && 
-                  <PropertiesPanel 
-                    onOpenStyleDialog={handleOpenStyleDialog} 
-                    updateElementProperties={updateElementProperties}
-                  />
-                }
-              </div>
+            <div className="flex-1 overflow-hidden">
+              <Canvas readOnly={!hasPermission} />
             </div>
+            {showProperties && (
+              <div className="w-80 border-l bg-white overflow-y-auto">
+                <PropertiesPanel />
+              </div>
+            )}
           </div>
-          
-          {/* Header Style Dialog */}
-          {selectedElementId && selectedElement?.type === 'header' && (
-            <HeaderStyleDialog 
-              elementId={selectedElementId} 
-              isOpen={showHeaderStyleDialog}
-              onClose={() => setShowHeaderStyleDialog(false)}
-            />
-          )}
-          
-          {/* Image Style Dialog */}
-          {selectedElementId && selectedElement?.type === 'image' && (
-            <ImageStyleDialog 
-              elementId={selectedElementId} 
-              open={showImageStyleDialog}
-              onClose={() => setShowImageStyleDialog(false)}
-            />
-          )}
-          
-          {/* Shape Style Dialog */}
-          {selectedElementId && selectedElement?.type === 'shapes' && (
-            <ShapeStyleDialog 
-              elementId={selectedElementId} 
-              isOpen={showShapeStyleDialog}
-              onClose={() => setShowShapeStyleDialog(false)}
-            />
-          )}
-          
-          {/* Filter Style Dialog */}
-          {selectedElementId && selectedElement?.type === 'filter' && (
-            <FilterStyleDialog 
-              elementId={selectedElementId} 
-              open={showFilterStyleDialog}
-              onClose={() => setShowFilterStyleDialog(false)}
-            />
-          )}
-          
-          {/* Bar Chart Style Dialog */}
-          {selectedElementId && selectedElement?.type === 'bar-chart' && (
-            <BarChartStyleDialog 
-              elementId={selectedElementId} 
-              open={showBarChartStyleDialog}
-              onClose={() => setShowBarChartStyleDialog(false)}
-            />
-          )}
-
-          {/* Chart Style Dialog */}
-          {selectedElementId && selectedElement?.type === 'column-chart' && (
-            <ChartStyleDialog 
-              elementId={selectedElementId} 
-              open={showChartStyleDialog}
-              onClose={() => setShowChartStyleDialog(false)}
-            />
-          )}
-
-          {/* Area Chart Style Dialog */}
-          {selectedElementId && selectedElement?.type === 'area-chart' && (
-            <AreaChartStyleDialog 
-              elementId={selectedElementId} 
-              open={showAreaChartStyleDialog}
-              onClose={() => setShowAreaChartStyleDialog(false)}
-            />
-          )}
-          
-          {/* Table Style Dialog */}
-          {selectedElementId && selectedElement?.type === 'simple-table' && (
-            <TableStyleDialog 
-              elementId={selectedElementId} 
-              open={showTableStyleDialog}
-              onClose={() => setShowTableStyleDialog(false)}
-            />
-          )}
-          
-          {/* Gauge Style Dialog */}
-          {selectedElementId && selectedElement?.type === 'gauge-chart' && (
-            <GaugeStyleDialog 
-              elementId={selectedElementId} 
-              open={showGaugeStyleDialog}
-              onClose={() => setShowGaugeStyleDialog(false)}
-            />
-          )}
-          
-          {/* Heatmap Style Dialog */}
-          {selectedElementId && selectedElement?.type === 'heatmap' && (
-            <HeatmapStyleDialog 
-              elementId={selectedElementId} 
-              open={showHeatmapStyleDialog}
-              onClose={() => setShowHeatmapStyleDialog(false)}
-            />
-          )}
-
-          {/* Quadrant Style Dialog */}
-          {selectedElementId && selectedElement?.type === 'quadrant-chart' && (
-            <QuadrantStyleDialog 
-              elementId={selectedElementId} 
-              open={showQuadrantStyleDialog}
-              onClose={() => setShowQuadrantStyleDialog(false)}
-            />
-          )}
-
-          {/* Scatter Plot Style Dialog */}
-          {selectedElementId && selectedElement?.type === 'scatter-plot' && (
-            <ScatterPlotStyleDialog 
-              elementId={selectedElementId} 
-              open={showScatterPlotStyleDialog}
-              onClose={() => setShowScatterPlotStyleDialog(false)}
-            />
-          )}
-
-          {/* Waterfall Style Dialog */}
-          {selectedElementId && selectedElement?.type === 'waterfall' && (
-            <WaterfallStyleDialog 
-              elementId={selectedElementId} 
-              open={showWaterfallStyleDialog}
-              onClose={() => setShowWaterfallStyleDialog(false)}
-            />
-          )}
-
-          {/* Treemap Style Dialog */}
-          {selectedElementId && selectedElement?.type === 'treemap' && (
-            <TreemapStyleDialog 
-              elementId={selectedElementId} 
-              open={showTreemapStyleDialog}
-              onClose={() => setShowTreemapStyleDialog(false)}
-            />
-          )}
-
-          {/* Histogram Style Dialog */}
-          {selectedElementId && selectedElement?.type === 'histogram' && (
-            <HistogramStyleDialog 
-              elementId={selectedElementId} 
-              open={showHistogramStyleDialog}
-              onClose={() => setShowHistogramStyleDialog(false)}
-            />
-          )}
-
-          {/* Funnel Chart Style Dialog */}
-          {selectedElementId && selectedElement?.type === 'funnel-chart' && (
-            <FunnelChartStyleDialog 
-              elementId={selectedElementId} 
-              open={showFunnelChartStyleDialog}
-              onClose={() => setShowFunnelChartStyleDialog(false)}
-            />
-          )}
-
-          {/* Save Template Dialog */}
-          <SaveTemplateDialog 
-            open={showSaveDialog}
-            onOpenChange={setShowSaveDialog}
-          />
         </div>
-      </DndProvider>
-    </TooltipProvider>
-  );
-};
+      </div>
 
-export default Editor;
+      <SaveTemplateDialog />
+      <StyleDialogController />
+      
+      {!hasPermission && (
+        <div className="fixed bottom-4 right-4 bg-yellow-100 border border-yellow-400 rounded-lg p-3">
+          <p className="text-sm text-yellow-800">
+            You have view-only access to this project
+          </p>
+        </div>
+      )}
+    </div>
+  );
+}

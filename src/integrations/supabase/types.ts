@@ -60,6 +60,85 @@ export type Database = {
         }
         Relationships: []
       }
+      profiles: {
+        Row: {
+          company_name: string | null
+          created_at: string | null
+          email: string
+          first_name: string | null
+          id: string
+          last_name: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          company_name?: string | null
+          created_at?: string | null
+          email: string
+          first_name?: string | null
+          id: string
+          last_name?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          company_name?: string | null
+          created_at?: string | null
+          email?: string
+          first_name?: string | null
+          id?: string
+          last_name?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      project_collaborators: {
+        Row: {
+          id: string
+          invited_at: string | null
+          invited_by: string | null
+          project_id: string
+          role: string | null
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          invited_at?: string | null
+          invited_by?: string | null
+          project_id: string
+          role?: string | null
+          user_id: string
+        }
+        Update: {
+          id?: string
+          invited_at?: string | null
+          invited_by?: string | null
+          project_id?: string
+          role?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "project_collaborators_invited_by_fkey"
+            columns: ["invited_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "project_collaborators_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "project_collaborators_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       project_users: {
         Row: {
           created_at: string | null
@@ -91,28 +170,47 @@ export type Database = {
         Row: {
           created_at: string | null
           description: string | null
+          elements: Json | null
           id: string
-          project_name: string
+          is_public: boolean | null
+          name: string
+          owner_id: string | null
+          screens: Json | null
           updated_at: string | null
           user_id: string
         }
         Insert: {
           created_at?: string | null
           description?: string | null
+          elements?: Json | null
           id?: string
-          project_name: string
+          is_public?: boolean | null
+          name: string
+          owner_id?: string | null
+          screens?: Json | null
           updated_at?: string | null
           user_id: string
         }
         Update: {
           created_at?: string | null
           description?: string | null
+          elements?: Json | null
           id?: string
-          project_name?: string
+          is_public?: boolean | null
+          name?: string
+          owner_id?: string | null
+          screens?: Json | null
           updated_at?: string | null
           user_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "projects_owner_id_fkey"
+            columns: ["owner_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "projects_user_id_fkey"
             columns: ["user_id"]
