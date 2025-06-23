@@ -9,7 +9,6 @@ export function useAutoSave(
 ) {
   const { screens, elements } = useWireframe();
   const lastSaveRef = useRef<string>('');
-  const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     if (!project || !hasPermission) return;
@@ -22,12 +21,7 @@ export function useAutoSave(
       return;
     }
 
-    // Clear any existing timeout
-    if (saveTimeoutRef.current) {
-      clearTimeout(saveTimeoutRef.current);
-    }
-
-    // Debounce the save operation
+    // Save immediately when state changes
     const saveProject = async () => {
       try {
         // Double-check that we still need to save
@@ -50,8 +44,8 @@ export function useAutoSave(
       }
     };
 
-    // Set a debounced save
-    saveTimeoutRef.current = setTimeout(saveProject, 2000); // Debounce for 2 seconds
+    // Save immediately
+    saveProject();
     
     // Also set up the interval for periodic saves (only if state has changed)
     const interval = setInterval(() => {
@@ -63,9 +57,6 @@ export function useAutoSave(
     
     // Save on unmount only if there are unsaved changes
     return () => {
-      if (saveTimeoutRef.current) {
-        clearTimeout(saveTimeoutRef.current);
-      }
       clearInterval(interval);
       
       const finalStateHash = JSON.stringify({ screens, elements });
