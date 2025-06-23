@@ -24,10 +24,10 @@ interface ProjectWireframeState extends WireframeState {
 // Combine all slices into one store with project management
 export const useWireframe = create<ProjectWireframeState>()(
   persist(
-    (set, get) => ({
-      ...createElementSlice(set, get),
-      ...createScreenSlice(set, get),
-      ...createTemplateSlice(set, get),
+    (set, get, store) => ({
+      ...createElementSlice(set, get, store),
+      ...createScreenSlice(set, get, store),
+      ...createTemplateSlice(set, get, store),
       
       // Project management state
       currentProjectId: null,
@@ -76,8 +76,8 @@ export const useWireframe = create<ProjectWireframeState>()(
           const { error } = await supabase
             .from('projects')
             .update({
-              screens: state.screens,
-              elements: state.elements,
+              screens: state.screens as any,
+              elements: state.elements as any,
               updated_at: new Date().toISOString()
             })
             .eq('id', projectId);
