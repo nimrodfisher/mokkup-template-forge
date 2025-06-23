@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -82,29 +81,40 @@ export default function ProjectShare() {
       return;
     }
 
+    // Prevent inviting yourself
+    if (inviteEmail.trim().toLowerCase() === user?.email?.toLowerCase()) {
+      toast.error('You cannot invite yourself to the project');
+      return;
+    }
+
     try {
       setIsInviting(true);
       console.log('Inviting user:', { email: inviteEmail, role: inviteRole, projectId: id });
       
-      // First check if user exists
+      // First check if user exists - use maybeSingle() instead of single()
       const { data: userProfile, error: userError } = await supabase
         .from('profiles')
         .select('id, email')
         .eq('email', inviteEmail.trim())
-        .single();
+        .maybeSingle();
 
-      if (userError || !userProfile) {
+      if (userError) {
+        console.error('Error checking user:', userError);
+        throw userError;
+      }
+
+      if (!userProfile) {
         toast.error('User not found. Please make sure they have signed up first.');
         return;
       }
 
-      // Check if user is already a collaborator
+      // Check if user is already a collaborator - use maybeSingle() here too
       const { data: existingCollab } = await supabase
         .from('project_collaborators')
         .select('id')
         .eq('project_id', id)
         .eq('user_id', userProfile.id)
-        .single();
+        .maybeSingle();
 
       if (existingCollab) {
         toast.error('User is already a collaborator on this project');
@@ -219,6 +229,9 @@ export default function ProjectShare() {
                       required
                       disabled={isInviting}
                     />
+                    <p className="text-xs text-gray-500">
+                      Note: The user must already have an account to be invited.
+                    </p>
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="role">Role</Label>
