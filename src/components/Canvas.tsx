@@ -18,7 +18,7 @@ export function Canvas() {
     activeScreen && element.screenId === activeScreen.id
   );
   
-  // Use useDrop without creating a new DndProvider
+  // Single drop zone for the canvas
   const [{ isOver }, drop] = useDrop(() => ({
     accept: 'COMPONENT',
     drop: (item: { type: ElementType }, monitor) => {
@@ -26,7 +26,6 @@ export function Canvas() {
       if (canvasRect && activeScreen) {
         const clientOffset = monitor.getClientOffset();
         if (clientOffset) {
-          // Handle normal element addition
           addElement(
             item.type,
             {
@@ -50,7 +49,7 @@ export function Canvas() {
     collect: (monitor) => ({
       isOver: !!monitor.isOver(),
     }),
-  }));
+  }), [activeScreen, addElement]);
   
   return (
     <div 

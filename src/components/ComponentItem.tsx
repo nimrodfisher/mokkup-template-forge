@@ -1,5 +1,4 @@
-
-import { ElementType, useWireframe } from "@/hooks/useWireframe";
+import { ElementType } from "@/hooks/useWireframe";
 import { useDrag } from "react-dnd";
 
 interface ComponentItemProps {
@@ -8,14 +7,13 @@ interface ComponentItemProps {
 }
 
 export function ComponentItem({ label, type }: ComponentItemProps) {
-  // Use useDrag without creating a new DndProvider
   const [{ isDragging }, drag] = useDrag(() => ({
     type: 'COMPONENT',
     item: { type },
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging(),
     }),
-  }));
+  }), [type]);
 
   return (
     <div
