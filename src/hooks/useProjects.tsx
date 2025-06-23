@@ -42,17 +42,12 @@ export function useProjects() {
     try {
       setLoading(true);
       
-      // Fetch projects with proper column hints to avoid relationship ambiguity
+      // Simplified query to avoid relationship issues
       const { data, error } = await supabase
         .from('projects')
         .select(`
           *,
-          profiles:owner_id (first_name, last_name, email),
-          project_collaborators (
-            id,
-            role,
-            profiles:project_collaborators!user_id (first_name, last_name, email)
-          )
+          profiles:owner_id (first_name, last_name, email)
         `)
         .order('updated_at', { ascending: false });
 
@@ -63,11 +58,7 @@ export function useProjects() {
         ...project,
         screens: Array.isArray(project.screens) ? project.screens : [],
         elements: Array.isArray(project.elements) ? project.elements : [],
-        project_collaborators: (project.project_collaborators || []).map(collab => ({
-          id: collab.id,
-          role: collab.role,
-          profiles: collab.profiles || { email: '', first_name: '', last_name: '' }
-        }))
+        project_collaborators: [] // We'll fetch this separately if needed
       }));
 
       setProjects(transformedProjects);

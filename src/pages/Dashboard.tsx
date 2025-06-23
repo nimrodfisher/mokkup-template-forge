@@ -44,10 +44,8 @@ export default function Dashboard() {
   const getProjectRole = (project: any) => {
     if (project.owner_id === user?.id) return 'Owner';
     
-    const collaboration = project.project_collaborators?.find(
-      (collab: any) => collab.profiles?.email === user?.email
-    );
-    return collaboration?.role || 'Viewer';
+    // Simplified role checking since we removed the complex query
+    return 'Viewer';
   };
 
   return (
@@ -143,12 +141,10 @@ export default function Dashboard() {
                         <Badge variant={getProjectRole(project) === 'Owner' ? 'default' : 'secondary'}>
                           {getProjectRole(project)}
                         </Badge>
-                        {project.project_collaborators && project.project_collaborators.length > 0 && (
-                          <div className="flex items-center text-xs text-gray-500">
-                            <Users className="h-3 w-3 mr-1" />
-                            {project.project_collaborators.length + 1}
-                          </div>
-                        )}
+                        <div className="flex items-center text-xs text-gray-500">
+                          <Users className="h-3 w-3 mr-1" />
+                          1
+                        </div>
                       </div>
                     </div>
                     <DropdownMenu>

@@ -24,17 +24,17 @@ interface ProjectWireframeState extends WireframeState {
 // Combine all slices into one store with project management
 export const useWireframe = create<ProjectWireframeState>()(
   persist(
-    (...a) => ({
-      ...createElementSlice(...a),
-      ...createScreenSlice(...a),
-      ...createTemplateSlice(...a),
+    (set, get) => ({
+      ...createElementSlice(set, get),
+      ...createScreenSlice(set, get),
+      ...createTemplateSlice(set, get),
       
       // Project management state
       currentProjectId: null,
       
       // Project management actions
       setCurrentProject: (projectId) => {
-        a[1]({ currentProjectId: projectId });
+        set({ currentProjectId: projectId });
       },
       
       loadProjectFromDatabase: async (projectId: string) => {
@@ -48,15 +48,15 @@ export const useWireframe = create<ProjectWireframeState>()(
           if (error) throw error;
           
           if (data) {
-            // Type cast with proper validation
+            // Type cast with proper validation using unknown first
             const screens: Screen[] = Array.isArray(data.screens) 
-              ? data.screens as Screen[]
+              ? (data.screens as unknown) as Screen[]
               : [{ id: crypto.randomUUID(), name: 'Screen1', isActive: true }];
             const elements: Element[] = Array.isArray(data.elements) 
-              ? data.elements as Element[]
+              ? (data.elements as unknown) as Element[]
               : [];
             
-            a[1]({
+            set({
               screens,
               elements,
               currentProjectId: projectId,
@@ -71,7 +71,7 @@ export const useWireframe = create<ProjectWireframeState>()(
       
       saveProjectToDatabase: async (projectId: string) => {
         try {
-          const state = a[0]();
+          const state = get();
           
           const { error } = await supabase
             .from('projects')
