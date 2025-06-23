@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
@@ -85,9 +86,10 @@ export function useProjects() {
 
       console.log('Project data to insert:', newProject);
 
+      // Cast to any to work around the temporary type mismatch
       const { data, error } = await supabase
         .from('projects')
-        .insert(newProject)
+        .insert(newProject as any)
         .select()
         .single();
 

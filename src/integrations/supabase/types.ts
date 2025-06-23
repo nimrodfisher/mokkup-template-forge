@@ -177,7 +177,6 @@ export type Database = {
           owner_id: string | null
           screens: Json | null
           updated_at: string | null
-          user_id: string
         }
         Insert: {
           created_at?: string | null
@@ -189,7 +188,6 @@ export type Database = {
           owner_id?: string | null
           screens?: Json | null
           updated_at?: string | null
-          user_id: string
         }
         Update: {
           created_at?: string | null
@@ -201,7 +199,6 @@ export type Database = {
           owner_id?: string | null
           screens?: Json | null
           updated_at?: string | null
-          user_id?: string
         }
         Relationships: [
           {
@@ -209,13 +206,6 @@ export type Database = {
             columns: ["owner_id"]
             isOneToOne: false
             referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "projects_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
             referencedColumns: ["id"]
           },
         ]
