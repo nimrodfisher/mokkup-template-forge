@@ -22,23 +22,25 @@ export function Navbar({ onSave }: NavbarProps) {
   };
   
   return (
-    <div className="h-14 border-b flex items-center justify-between px-4 bg-white">
+    <div className="h-14 border-b flex items-center justify-between px-4" style={{ backgroundColor: 'rgb(155, 135, 245)' }}>
       <div className="flex items-center gap-4">
-        <Link to="/" className="font-bold text-lg text-blue-600">Alignify</Link>
-        <div className="h-6 w-px bg-gray-300" />
-        <Link to="/templates" className="text-sm text-gray-600 hover:text-gray-900">Templates</Link>
+        <Link to="/" className="font-bold text-lg text-white">Alignify</Link>
+        <div className="h-6 w-px bg-white/30" />
+        <Link to="/templates" className="text-sm text-white/80 hover:text-white">Templates</Link>
       </div>
       
       <div className="flex items-center gap-2">
         <Button 
           variant="outline" 
           onClick={handleSave}
+          className="border-white/30 text-white hover:bg-white/20 hover:text-white"
         >
           Save
         </Button>
         
         <Button 
           onClick={() => createNewTemplate()}
+          className="bg-white/20 hover:bg-white/30 text-white border-none"
         >
           New Template
         </Button>
