@@ -91,11 +91,13 @@ export default function ProjectShare() {
       setIsInviting(true);
       console.log('Inviting user:', { email: inviteEmail, role: inviteRole, projectId: id });
       
-      // First check if user exists - use maybeSingle() instead of single()
+      const emailToSearch = inviteEmail.trim().toLowerCase();
+      
+      // First check if user exists - use case-insensitive search
       const { data: userProfile, error: userError } = await supabase
         .from('profiles')
         .select('id, email')
-        .eq('email', inviteEmail.trim())
+        .ilike('email', emailToSearch)
         .maybeSingle();
 
       if (userError) {
@@ -103,12 +105,14 @@ export default function ProjectShare() {
         throw userError;
       }
 
+      console.log('User profile search result:', userProfile);
+
       if (!userProfile) {
         toast.error('User not found. Please make sure they have signed up first.');
         return;
       }
 
-      // Check if user is already a collaborator - use maybeSingle() here too
+      // Check if user is already a collaborator
       const { data: existingCollab } = await supabase
         .from('project_collaborators')
         .select('id')
