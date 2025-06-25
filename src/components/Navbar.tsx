@@ -22,7 +22,7 @@ export function Navbar({ onSave }: NavbarProps) {
   };
   
   return (
-    <div className="h-14 border-b flex items-center justify-between px-4" style={{ backgroundColor: 'rgb(155, 135, 245)' }}>
+    <div className="h-14 border-b flex items-center justify-between px-4" style={{ backgroundColor: 'rgb(155 135 245 / var(--tw-bg-opacity, 1))' }}>
       <div className="flex items-center gap-4">
         <Link to="/" className="font-bold text-lg text-white">Alignify</Link>
         <div className="h-6 w-px bg-white/30" />
@@ -33,14 +33,14 @@ export function Navbar({ onSave }: NavbarProps) {
         <Button 
           variant="outline" 
           onClick={handleSave}
-          className="border-white/30 text-white hover:bg-white/20 hover:text-white"
+          className="border-white/30 text-black hover:bg-white/20 hover:text-black bg-white"
         >
           Save
         </Button>
         
         <Button 
           onClick={() => createNewTemplate()}
-          className="bg-white/20 hover:bg-white/30 text-white border-none"
+          className="bg-white hover:bg-white/90 text-black border-none"
         >
           New Template
         </Button>
