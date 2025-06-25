@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -62,137 +61,172 @@ export default function Auth() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
-      <Card className="w-full max-w-md bg-gray-800 border-gray-700">
-        <CardHeader className="text-center pb-8">
-          <CardTitle className="text-2xl font-semibold text-white mb-2">
-            {isSignUp ? 'Create Account' : 'Welcome Back'}
-          </CardTitle>
-          <CardDescription className="text-gray-400">
-            {isSignUp ? 'Sign up to get started' : 'Bring your data product ideas to life'}
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          {!isSignUp ? (
-            <form onSubmit={handleSignIn} className="space-y-6">
-              <div className="space-y-2">
-                <Label htmlFor="signin-email" className="text-gray-300 text-sm">Email address</Label>
-                <Input
-                  id="signin-email"
-                  name="email"
-                  type="email"
-                  placeholder="Enter your email"
-                  required
-                  className="bg-gray-700 border-gray-600 text-white placeholder:text-gray-400 focus:border-purple-500 focus:ring-purple-500"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="signin-password" className="text-gray-300 text-sm">Your Password</Label>
-                <Input
-                  id="signin-password"
-                  name="password"
-                  type="password"
-                  placeholder="Enter your password"
-                  required
-                  className="bg-gray-700 border-gray-600 text-white placeholder:text-gray-400 focus:border-purple-500 focus:ring-purple-500"
-                />
-              </div>
-              <Button 
-                type="submit" 
-                className="w-full bg-purple-600 hover:bg-purple-700 text-white font-medium py-3" 
-                disabled={isLoading}
+    <div className="min-h-screen bg-gray-900">
+      {/* Header */}
+      <header className="bg-gray-900 border-b border-gray-800">
+        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+          <Link to="/" className="font-bold text-xl text-purple-400">Alignify</Link>
+          <div className="flex items-center gap-6">
+            <nav className="hidden md:flex items-center gap-6">
+              <Link to="/" className="text-gray-300 hover:text-white transition-colors">Home</Link>
+              <Link to="/templates" className="text-gray-300 hover:text-white transition-colors">Features</Link>
+              <Link to="/templates" className="text-gray-300 hover:text-white transition-colors">FAQ</Link>
+            </nav>
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => setIsSignUp(false)}
+                className={`text-sm transition-colors ${!isSignUp ? 'text-white' : 'text-gray-300 hover:text-white'}`}
               >
-                {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Sign in
-              </Button>
-              <p className="text-center text-gray-400 text-sm">
-                Don't have an account?{' '}
-                <button
-                  type="button"
-                  onClick={() => setIsSignUp(true)}
-                  className="text-purple-400 hover:text-purple-300 font-medium"
-                >
-                  Sign up
-                </button>
-              </p>
-            </form>
-          ) : (
-            <form onSubmit={handleSignUp} className="space-y-6">
-              <div className="grid grid-cols-2 gap-4">
+                Login
+              </button>
+              <button
+                onClick={() => setIsSignUp(true)}
+                className={`px-4 py-2 rounded text-sm font-medium transition-colors ${
+                  isSignUp 
+                    ? 'bg-purple-600 text-white' 
+                    : 'bg-transparent border border-purple-600 text-purple-400 hover:bg-purple-600 hover:text-white'
+                }`}
+              >
+                Join the Beta
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* Auth Form */}
+      <div className="flex items-center justify-center p-4 pt-20">
+        <Card className="w-full max-w-md bg-gray-800 border-gray-700">
+          <CardHeader className="text-center pb-8">
+            <CardTitle className="text-2xl font-semibold text-white mb-2">
+              {isSignUp ? 'Create Account' : 'Welcome Back'}
+            </CardTitle>
+            <CardDescription className="text-gray-400">
+              {isSignUp ? 'Sign up to get started' : 'Bring your data product ideas to life'}
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {!isSignUp ? (
+              <form onSubmit={handleSignIn} className="space-y-6">
                 <div className="space-y-2">
-                  <Label htmlFor="firstName" className="text-gray-300 text-sm">First Name</Label>
+                  <Label htmlFor="signin-email" className="text-gray-300 text-sm">Email address</Label>
                   <Input
-                    id="firstName"
-                    name="firstName"
-                    placeholder="John"
+                    id="signin-email"
+                    name="email"
+                    type="email"
+                    placeholder="Enter your email"
                     required
                     className="bg-gray-700 border-gray-600 text-white placeholder:text-gray-400 focus:border-purple-500 focus:ring-purple-500"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="lastName" className="text-gray-300 text-sm">Last Name</Label>
+                  <Label htmlFor="signin-password" className="text-gray-300 text-sm">Your Password</Label>
                   <Input
-                    id="lastName"
-                    name="lastName"
-                    placeholder="Doe"
+                    id="signin-password"
+                    name="password"
+                    type="password"
+                    placeholder="Enter your password"
                     required
                     className="bg-gray-700 border-gray-600 text-white placeholder:text-gray-400 focus:border-purple-500 focus:ring-purple-500"
                   />
                 </div>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="companyName" className="text-gray-300 text-sm">Company Name</Label>
-                <Input
-                  id="companyName"
-                  name="companyName"
-                  placeholder="Acme Inc."
-                  className="bg-gray-700 border-gray-600 text-white placeholder:text-gray-400 focus:border-purple-500 focus:ring-purple-500"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="signup-email" className="text-gray-300 text-sm">Email address</Label>
-                <Input
-                  id="signup-email"
-                  name="email"
-                  type="email"
-                  placeholder="john@company.com"
-                  required
-                  className="bg-gray-700 border-gray-600 text-white placeholder:text-gray-400 focus:border-purple-500 focus:ring-purple-500"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="signup-password" className="text-gray-300 text-sm">Your Password</Label>
-                <Input
-                  id="signup-password"
-                  name="password"
-                  type="password"
-                  placeholder="Create a password"
-                  required
-                  className="bg-gray-700 border-gray-600 text-white placeholder:text-gray-400 focus:border-purple-500 focus:ring-purple-500"
-                />
-              </div>
-              <Button 
-                type="submit" 
-                className="w-full bg-purple-600 hover:bg-purple-700 text-white font-medium py-3" 
-                disabled={isLoading}
-              >
-                {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Create Account
-              </Button>
-              <p className="text-center text-gray-400 text-sm">
-                Already have an account?{' '}
-                <button
-                  type="button"
-                  onClick={() => setIsSignUp(false)}
-                  className="text-purple-400 hover:text-purple-300 font-medium"
+                <Button 
+                  type="submit" 
+                  className="w-full bg-purple-600 hover:bg-purple-700 text-white font-medium py-3" 
+                  disabled={isLoading}
                 >
+                  {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                   Sign in
-                </button>
-              </p>
-            </form>
-          )}
-        </CardContent>
-      </Card>
+                </Button>
+                <p className="text-center text-gray-400 text-sm">
+                  Don't have an account?{' '}
+                  <button
+                    type="button"
+                    onClick={() => setIsSignUp(true)}
+                    className="text-purple-400 hover:text-purple-300 font-medium"
+                  >
+                    Sign up
+                  </button>
+                </p>
+              </form>
+            ) : (
+              <form onSubmit={handleSignUp} className="space-y-6">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="firstName" className="text-gray-300 text-sm">First Name</Label>
+                    <Input
+                      id="firstName"
+                      name="firstName"
+                      placeholder="John"
+                      required
+                      className="bg-gray-700 border-gray-600 text-white placeholder:text-gray-400 focus:border-purple-500 focus:ring-purple-500"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="lastName" className="text-gray-300 text-sm">Last Name</Label>
+                    <Input
+                      id="lastName"
+                      name="lastName"
+                      placeholder="Doe"
+                      required
+                      className="bg-gray-700 border-gray-600 text-white placeholder:text-gray-400 focus:border-purple-500 focus:ring-purple-500"
+                    />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="companyName" className="text-gray-300 text-sm">Company Name</Label>
+                  <Input
+                    id="companyName"
+                    name="companyName"
+                    placeholder="Acme Inc."
+                    className="bg-gray-700 border-gray-600 text-white placeholder:text-gray-400 focus:border-purple-500 focus:ring-purple-500"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="signup-email" className="text-gray-300 text-sm">Email address</Label>
+                  <Input
+                    id="signup-email"
+                    name="email"
+                    type="email"
+                    placeholder="john@company.com"
+                    required
+                    className="bg-gray-700 border-gray-600 text-white placeholder:text-gray-400 focus:border-purple-500 focus:ring-purple-500"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="signup-password" className="text-gray-300 text-sm">Your Password</Label>
+                  <Input
+                    id="signup-password"
+                    name="password"
+                    type="password"
+                    placeholder="Create a password"
+                    required
+                    className="bg-gray-700 border-gray-600 text-white placeholder:text-gray-400 focus:border-purple-500 focus:ring-purple-500"
+                  />
+                </div>
+                <Button 
+                  type="submit" 
+                  className="w-full bg-purple-600 hover:bg-purple-700 text-white font-medium py-3" 
+                  disabled={isLoading}
+                >
+                  {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  Create Account
+                </Button>
+                <p className="text-center text-gray-400 text-sm">
+                  Already have an account?{' '}
+                  <button
+                    type="button"
+                    onClick={() => setIsSignUp(false)}
+                    className="text-purple-400 hover:text-purple-300 font-medium"
+                  >
+                    Sign in
+                  </button>
+                </p>
+              </form>
+            )}
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }
