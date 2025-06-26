@@ -19,8 +19,7 @@ interface ButtonPropertiesProps {
 export function ButtonProperties({ 
   element, 
   updateElementProperties, 
-  toggleProperties,
-  onOpenStyleDialog 
+  toggleProperties
 }: ButtonPropertiesProps) {
   const properties = element.properties || {};
   
@@ -128,19 +127,6 @@ export function ButtonProperties({
       </div>
 
       <Separator />
-
-      {/* Style Dialog Button */}
-      {onOpenStyleDialog && (
-        <div className="pt-2">
-          <Button 
-            onClick={onOpenStyleDialog}
-            variant="outline" 
-            className="w-full"
-          >
-            Advanced Styling
-          </Button>
-        </div>
-      )}
 
       {/* Preview Section */}
       <div className="space-y-2 pt-2">

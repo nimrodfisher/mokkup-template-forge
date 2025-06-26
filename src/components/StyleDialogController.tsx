@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Element } from '@/types/wireframe';
 import { HeaderStyleDialog } from './header-style/HeaderStyleDialog';
@@ -17,7 +18,6 @@ import { HistogramStyleDialog } from './histogram-style/HistogramStyleDialog';
 import { ImageStyleDialog } from './ImageStyleDialog';
 import { ShapeStyleDialog } from './ShapeStyleDialog';
 import { FilterStyleDialog } from './FilterStyleDialog';
-import { ButtonStyleDialog } from './ButtonStyleDialog';
 import { KpiStyleDialog } from './KpiStyleDialog';
 import { TextboxStyleDialog } from './TextboxStyleDialog';
 import { AreaChartStyleDialog } from './AreaChartStyleDialog';
@@ -73,8 +73,6 @@ export function StyleDialogController({ element, dialogType, onClose }: StyleDia
       return <ShapeStyleDialog {...commonProps} isOpen={true} />;
     case 'filter':
       return <FilterStyleDialog {...commonProps} />;
-    case 'button':
-      return <ButtonStyleDialog {...commonProps} />;
     case 'kpi':
       return <KpiStyleDialog {...commonProps} />;
     case 'textbox':
