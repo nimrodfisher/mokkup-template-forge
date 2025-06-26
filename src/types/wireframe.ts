@@ -187,7 +187,7 @@ export interface Element {
     animationDuration?: number;
     customTooltip?: boolean;
     tooltipFormat?: string;
-    labelPosition?: 'top' | 'middle' | 'bottom' | 'inside' | 'outside';
+    labelPosition?: 'top' | 'middle' | 'bottom' | 'inside' | 'outside' | 'left' | 'right';
     enableZoom?: boolean;
     enablePan?: boolean;
     enableExport?: boolean;
@@ -331,6 +331,8 @@ export interface Element {
     funnelSecondaryColor?: string;
     funnelButtons?: Array<{title: string, alignment: string}>;
     funnelKpis?: Array<{title: string, value: string, change?: string}>;
+    funnelDropdowns?: Array<{title: string, values: string[], editText?: string}>;
+    funnelTexts?: Array<{title: string, content: string}>;
     
     // Add-ons - consolidated under one section
     showButtons?: boolean;

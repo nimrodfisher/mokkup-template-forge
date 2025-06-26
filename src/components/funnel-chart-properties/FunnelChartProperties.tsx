@@ -5,8 +5,10 @@ import { FunnelChartDetailsSection } from './FunnelChartDetailsSection';
 import { FunnelChartDataSection } from './FunnelChartDataSection';
 import { FunnelChartAppearanceSection } from './FunnelChartAppearanceSection';
 import { FunnelChartAddOnsSection } from './FunnelChartAddOnsSection';
+import { FunnelChartPropertiesSection } from './FunnelChartPropertiesSection';
 import { Button } from '@/components/ui/button';
 import { ChevronDown } from '@/components/properties/ChevronDown';
+import { Separator } from '@/components/ui/separator';
 
 interface FunnelChartPropertiesProps {
   element: Element;
@@ -29,13 +31,16 @@ export function FunnelChartProperties({
       </div>
 
       {onOpenStyleDialog && (
-        <Button 
-          onClick={onOpenStyleDialog}
-          className="w-full mb-4"
-          variant="outline"
-        >
-          Choose Style
-        </Button>
+        <>
+          <Button 
+            onClick={onOpenStyleDialog}
+            className="w-full mb-4"
+            variant="outline"
+          >
+            Choose Style
+          </Button>
+          <Separator />
+        </>
       )}
 
       <FunnelChartDetailsSection 
@@ -43,15 +48,28 @@ export function FunnelChartProperties({
         updateProperties={(updates) => updateElementProperties(element.id, updates)}
       />
 
+      <Separator />
+
       <FunnelChartDataSection 
         properties={properties}
         updateProperties={(updates) => updateElementProperties(element.id, updates)}
       />
 
+      <Separator />
+
+      <FunnelChartPropertiesSection 
+        properties={properties}
+        updateProperties={(updates) => updateElementProperties(element.id, updates)}
+      />
+
+      <Separator />
+
       <FunnelChartAppearanceSection 
         properties={properties}
         updateProperties={(updates) => updateElementProperties(element.id, updates)}
       />
+
+      <Separator />
 
       <FunnelChartAddOnsSection 
         properties={properties}

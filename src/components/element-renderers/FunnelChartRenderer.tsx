@@ -26,19 +26,29 @@ export function FunnelChartRenderer({ properties }: FunnelChartRendererProps) {
     funnelChartVariant = 'default',
     showButtons = false,
     showKpis = false,
+    showDropdowns = false,
+    showText = false,
     funnelButtons = [],
     funnelKpis = [],
-    backgroundColor = '#ffffff'
+    funnelDropdowns = [],
+    funnelTexts = [],
+    backgroundColor = '#ffffff',
+    labelPosition = 'inside'
   } = properties || {};
 
   console.log('FunnelChartRenderer props:', {
     funnelChartVariant,
     showButtons,
     showKpis,
+    showDropdowns,
+    showText,
     funnelButtons,
     funnelKpis,
+    funnelDropdowns,
+    funnelTexts,
     showLabels,
-    showValues
+    showValues,
+    labelPosition
   });
 
   const chartData = funnelChartData?.map((item, index) => ({
@@ -51,26 +61,33 @@ export function FunnelChartRenderer({ properties }: FunnelChartRendererProps) {
       chartData,
       showLabels,
       showValues,
-      funnelPrimaryColor
+      funnelPrimaryColor,
+      labelPosition
     };
 
-    // Determine which renderer to use based on showButtons and showKpis flags
-    if (showButtons && funnelButtons && funnelButtons.length > 0) {
+    // Determine which renderer to use based on add-ons
+    if ((showButtons && funnelButtons && funnelButtons.length > 0) || 
+        (showDropdowns && funnelDropdowns && funnelDropdowns.length > 0)) {
       console.log('Rendering FunnelWithButtonsRenderer');
       return (
         <FunnelWithButtonsRenderer 
           {...commonProps}
           funnelButtons={funnelButtons}
+          funnelDropdowns={funnelDropdowns}
+          showDropdowns={showDropdowns}
         />
       );
     }
 
-    if (showKpis && funnelKpis && funnelKpis.length > 0) {
+    if ((showKpis && funnelKpis && funnelKpis.length > 0) || 
+        (showText && funnelTexts && funnelTexts.length > 0)) {
       console.log('Rendering FunnelWithKpisRenderer');
       return (
         <FunnelWithKpisRenderer 
           {...commonProps}
           funnelKpis={funnelKpis}
+          funnelTexts={funnelTexts}
+          showText={showText}
         />
       );
     }
