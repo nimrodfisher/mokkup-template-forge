@@ -8,6 +8,7 @@ import { KpiProperties } from "./properties/KpiProperties";
 import { ImageProperties } from "./properties/ImageProperties";
 import { DefaultProperties } from "./properties/DefaultProperties";
 import { TextboxProperties } from "./properties/TextboxProperties";
+import { ButtonProperties } from "./button-properties/ButtonProperties";
 import { GaugeProperties } from "./gauge-properties/GaugeProperties";
 import { HeatmapProperties } from "./heatmap-properties/HeatmapProperties";
 import { QuadrantProperties } from "./quadrant-properties/QuadrantProperties";
@@ -45,6 +46,15 @@ export function PropertiesPanel({ onOpenStyleDialog, updateElementProperties }: 
   // Render the appropriate properties component based on the element type
   const renderPropertiesComponent = () => {
     switch (selectedElement.type) {
+      case 'button':
+        return (
+          <ButtonProperties
+            element={selectedElement}
+            updateElementProperties={handleUpdateElementProperties}
+            toggleProperties={toggleProperties}
+            onOpenStyleDialog={onOpenStyleDialog}
+          />
+        );
       case 'shapes':
         return (
           <ShapeProperties

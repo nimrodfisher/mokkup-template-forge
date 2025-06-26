@@ -24,10 +24,29 @@ export function ButtonRenderer({ properties = {} }: ButtonRendererProps) {
   const size = (properties.buttonSize as keyof typeof sizeClasses) || 'md';
   const variant = (properties.buttonVariant as keyof typeof variantClasses) || 'default';
   
+  // Custom styles based on properties
+  const customStyles: React.CSSProperties = {};
+  
+  if (properties.backgroundColor) {
+    customStyles.backgroundColor = properties.backgroundColor;
+  }
+  
+  if (properties.textColor) {
+    customStyles.color = properties.textColor;
+  }
+  
+  // For outline variant, apply border color if background color is set
+  if (variant === 'outline' && properties.backgroundColor) {
+    customStyles.borderColor = properties.backgroundColor;
+  }
+  
   return (
     <div className="w-full h-full flex items-center justify-center">
       <button 
-        className={`rounded transition-colors ${sizeClasses[size]} ${variantClasses[variant]} flex items-center justify-center`}
+        className={`rounded transition-colors ${sizeClasses[size]} ${
+          properties.backgroundColor || properties.textColor ? '' : variantClasses[variant]
+        } flex items-center justify-center`}
+        style={customStyles}
       >
         {properties.buttonIcon && (
           <svg className="mr-1 w-4 h-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
