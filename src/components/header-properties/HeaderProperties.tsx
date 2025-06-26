@@ -1,8 +1,5 @@
-
-
 import { useState, useEffect } from "react";
 import { Element } from "@/hooks/useWireframe";
-import { Separator } from "@/components/ui/separator";
 import { HeaderAddOnsSection } from "./HeaderAddOnsSection";
 import { HeaderVariationSection } from "./HeaderVariationSection";
 import { HeaderDesignSection } from "./HeaderDesignSection";
@@ -15,6 +12,7 @@ import { HeaderIconSection } from "./HeaderIconSection";
 import { HeaderTextSection } from "./HeaderTextSection";
 import { HeaderDropdownsSection } from "./HeaderDropdownsSection";
 import { HeaderPropertiesSection } from "./HeaderPropertiesSection";
+import { HeaderConfigurationSection } from "./HeaderConfigurationSection";
 
 interface HeaderPropertiesProps {
   element: Element;
@@ -23,8 +21,6 @@ interface HeaderPropertiesProps {
 }
 
 export function HeaderProperties({ element, updateElementProperties, onOpenStyleDialog }: HeaderPropertiesProps) {
-  const [showAddOns, setShowAddOns] = useState(false);
-
   // Local state for properties
   const [showNavigation, setShowNavigation] = useState<boolean>(element.properties?.showNavigation || false);
   const [navigationItems, setNavigationItems] = useState<string[]>(
@@ -282,13 +278,8 @@ export function HeaderProperties({ element, updateElementProperties, onOpenStyle
 
   return (
     <div className="space-y-5">
-      {/* Template Info Section */}
-      <div className="space-y-2">
-        <div className="font-medium text-sm">Template: {getVariantDisplayName()}</div>
-        <div className="text-xs text-gray-500">Configure template-specific properties below</div>
-      </div>
-      
-      <Separator />
+      {/* Template Configuration Section */}
+      <HeaderConfigurationSection variant={element.properties?.variant} />
 
       {/* Title Section - Always show */}
       <HeaderTitleSection
@@ -378,8 +369,8 @@ export function HeaderProperties({ element, updateElementProperties, onOpenStyle
       <HeaderAddOnsSection
         properties={element.properties || {}}
         handleChange={handleAddOnsChange}
-        addOnsOpen={showAddOns}
-        setAddOnsOpen={setShowAddOns}
+        addOnsOpen={false}
+        setAddOnsOpen={() => {}}
       />
 
       <Separator />
@@ -398,4 +389,3 @@ export function HeaderProperties({ element, updateElementProperties, onOpenStyle
     </div>
   );
 }
-
