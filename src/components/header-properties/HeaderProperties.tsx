@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Element } from "@/hooks/useWireframe";
+import { Separator } from "@/components/ui/separator";
 import { HeaderAddOnsSection } from "./HeaderAddOnsSection";
 import { HeaderVariationSection } from "./HeaderVariationSection";
 import { HeaderDesignSection } from "./HeaderDesignSection";
@@ -13,6 +14,8 @@ import { HeaderTextSection } from "./HeaderTextSection";
 import { HeaderDropdownsSection } from "./HeaderDropdownsSection";
 import { HeaderPropertiesSection } from "./HeaderPropertiesSection";
 import { HeaderConfigurationSection } from "./HeaderConfigurationSection";
+import { HeaderDetailsSection } from "./HeaderDetailsSection";
+import { HeaderStyleSection } from "./HeaderStyleSection";
 
 interface HeaderPropertiesProps {
   element: Element;
@@ -281,22 +284,23 @@ export function HeaderProperties({ element, updateElementProperties, onOpenStyle
       {/* Template Configuration Section */}
       <HeaderConfigurationSection variant={element.properties?.variant} />
 
-      {/* Title Section - Always show */}
-      <HeaderTitleSection
-        title={title}
-        onTitleChange={handleTitleChange}
+      {/* Header Style Section */}
+      <HeaderStyleSection 
+        variant={element.properties?.variant}
+        onOpenStyleDialog={onOpenStyleDialog}
       />
 
-      {/* Logo Section - Show for variants that support it */}
-      {supportsLogo() && (
-        <HeaderLogoSection
-          showLogo={showLogo}
-          logoUrl={element.properties?.logoUrl}
-          onLogoToggle={handleLogoToggle}
-          onLogoUpload={handleLogoUpload}
-          onLogoRemove={handleLogoRemove}
-        />
-      )}
+      {/* Header Details Section */}
+      <HeaderDetailsSection
+        title={title}
+        showLogo={showLogo}
+        logoUrl={element.properties?.logoUrl}
+        variant={element.properties?.variant}
+        onTitleChange={handleTitleChange}
+        onLogoToggle={handleLogoToggle}
+        onLogoUpload={handleLogoUpload}
+        onLogoRemove={handleLogoRemove}
+      />
 
       {/* Properties Section */}
       <HeaderPropertiesSection
