@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Element } from "@/hooks/useWireframe";
 import { Separator } from "@/components/ui/separator";
@@ -10,6 +9,9 @@ import { HeaderLogoSection } from "./HeaderLogoSection";
 import { HeaderDescriptionSection } from "./HeaderDescriptionSection";
 import { HeaderNavigationSection } from "./HeaderNavigationSection";
 import { HeaderMetricsSection } from "./HeaderMetricsSection";
+import { HeaderIconSection } from "./HeaderIconSection";
+import { HeaderTextSection } from "./HeaderTextSection";
+import { HeaderDropdownsSection } from "./HeaderDropdownsSection";
 
 interface HeaderPropertiesProps {
   element: Element;
@@ -35,6 +37,18 @@ export function HeaderProperties({ element, updateElementProperties, onOpenStyle
   const [showLogo, setShowLogo] = useState<boolean>(element.properties?.showLogo || false);
   const [description, setDescription] = useState<string>(element.properties?.description || '');
   const [title, setTitle] = useState<string>(element.properties?.title || 'DASHBOARD TITLE');
+  
+  // New state for additional features
+  const [showIcon, setShowIcon] = useState<boolean>(element.properties?.showIcon || false);
+  const [showText, setShowText] = useState<boolean>(element.properties?.showText || false);
+  const [textContent, setTextContent] = useState<string>(element.properties?.textContent || 'Some dummy description text');
+  const [textAlignment, setTextAlignment] = useState<string>(element.properties?.textAlignment || 'left');
+  const [fontWeight, setFontWeight] = useState<string>(element.properties?.fontWeight || 'normal');
+  const [showHighlightedText, setShowHighlightedText] = useState<boolean>(element.properties?.showHighlightedText || false);
+  const [showDropdowns, setShowDropdowns] = useState<boolean>(element.properties?.showDropdowns || false);
+  const [dropdowns, setDropdowns] = useState<Array<{title: string, values: string[], editText?: string}>>(
+    element.properties?.headerDropdowns || [{ title: 'Dropdown 1', values: ['Metric 1', 'Metric 2'] }]
+  );
 
   // Update local state when element changes
   useEffect(() => {
@@ -46,6 +60,14 @@ export function HeaderProperties({ element, updateElementProperties, onOpenStyle
     setShowLogo(element.properties?.showLogo || false);
     setDescription(element.properties?.description || '');
     setTitle(element.properties?.title || 'DASHBOARD TITLE');
+    setShowIcon(element.properties?.showIcon || false);
+    setShowText(element.properties?.showText || false);
+    setTextContent(element.properties?.textContent || 'Some dummy description text');
+    setTextAlignment(element.properties?.textAlignment || 'left');
+    setFontWeight(element.properties?.fontWeight || 'normal');
+    setShowHighlightedText(element.properties?.showHighlightedText || false);
+    setShowDropdowns(element.properties?.showDropdowns || false);
+    setDropdowns(element.properties?.headerDropdowns || [{ title: 'Dropdown 1', values: ['Metric 1', 'Metric 2'] }]);
   }, [element]);
 
   // Handle title change
@@ -112,6 +134,75 @@ export function HeaderProperties({ element, updateElementProperties, onOpenStyle
     setMetrics(newMetrics);
     updateElementProperties(element.id, { metrics: newMetrics });
     console.log("Metrics updated:", newMetrics);
+  };
+
+  // New handlers for additional features
+  const handleIconToggle = (checked: boolean) => {
+    setShowIcon(checked);
+    updateElementProperties(element.id, { showIcon: checked });
+  };
+
+  const handleTextToggle = (checked: boolean) => {
+    setShowText(checked);
+    updateElementProperties(element.id, { showText: checked });
+  };
+
+  const handleTextContentChange = (value: string) => {
+    setTextContent(value);
+    updateElementProperties(element.id, { textContent: value });
+  };
+
+  const handleTextAlignmentChange = (alignment: string) => {
+    setTextAlignment(alignment);
+    updateElementProperties(element.id, { textAlignment: alignment });
+  };
+
+  const handleFontWeightChange = (weight: string) => {
+    setFontWeight(weight);
+    updateElementProperties(element.id, { fontWeight: weight });
+  };
+
+  const handleHighlightedTextToggle = (checked: boolean) => {
+    setShowHighlightedText(checked);
+    updateElementProperties(element.id, { showHighlightedText: checked });
+  };
+
+  const handleDropdownsToggle = (checked: boolean) => {
+    setShowDropdowns(checked);
+    updateElementProperties(element.id, { showDropdowns: checked });
+  };
+
+  const handleDropdownChange = (index: number, field: string, value: string) => {
+    const newDropdowns = [...dropdowns];
+    newDropdowns[index] = { ...newDropdowns[index], [field]: value };
+    setDropdowns(newDropdowns);
+    updateElementProperties(element.id, { headerDropdowns: newDropdowns });
+  };
+
+  const handleAddDropdownValue = (dropdownIndex: number, value: string) => {
+    const newDropdowns = [...dropdowns];
+    newDropdowns[dropdownIndex].values = [...(newDropdowns[dropdownIndex].values || []), value];
+    setDropdowns(newDropdowns);
+    updateElementProperties(element.id, { headerDropdowns: newDropdowns });
+  };
+
+  const handleRemoveDropdownValue = (dropdownIndex: number, valueIndex: number) => {
+    const newDropdowns = [...dropdowns];
+    newDropdowns[dropdownIndex].values = newDropdowns[dropdownIndex].values.filter((_, i) => i !== valueIndex);
+    setDropdowns(newDropdowns);
+    updateElementProperties(element.id, { headerDropdowns: newDropdowns });
+  };
+
+  const handleAddDropdown = () => {
+    const newDropdowns = [...dropdowns, { title: `Dropdown ${dropdowns.length + 1}`, values: [] }];
+    setDropdowns(newDropdowns);
+    updateElementProperties(element.id, { headerDropdowns: newDropdowns });
+  };
+
+  const handleRemoveDropdown = (index: number) => {
+    const newDropdowns = dropdowns.filter((_, i) => i !== index);
+    setDropdowns(newDropdowns);
+    updateElementProperties(element.id, { headerDropdowns: newDropdowns });
   };
 
   // Handle add-ons changes
@@ -207,6 +298,12 @@ export function HeaderProperties({ element, updateElementProperties, onOpenStyle
         />
       )}
 
+      {/* Icon Section */}
+      <HeaderIconSection
+        showIcon={showIcon}
+        onIconToggle={handleIconToggle}
+      />
+
       {/* Description Section - Only show for with-description variant */}
       {supportsDescription() && (
         <HeaderDescriptionSection
@@ -227,6 +324,20 @@ export function HeaderProperties({ element, updateElementProperties, onOpenStyle
         />
       )}
       
+      {/* Text Section */}
+      <HeaderTextSection
+        showText={showText}
+        textContent={textContent}
+        textAlignment={textAlignment}
+        fontWeight={fontWeight}
+        showHighlightedText={showHighlightedText}
+        onTextToggle={handleTextToggle}
+        onTextContentChange={handleTextContentChange}
+        onTextAlignmentChange={handleTextAlignmentChange}
+        onFontWeightChange={handleFontWeightChange}
+        onHighlightedTextToggle={handleHighlightedTextToggle}
+      />
+
       {/* Metrics Section - Only show for variants that support it */}
       {supportsMetrics() && (
         <HeaderMetricsSection
@@ -236,6 +347,18 @@ export function HeaderProperties({ element, updateElementProperties, onOpenStyle
           onMetricChange={handleMetricChange}
         />
       )}
+
+      {/* Dropdowns Section */}
+      <HeaderDropdownsSection
+        showDropdowns={showDropdowns}
+        dropdowns={dropdowns}
+        onDropdownsToggle={handleDropdownsToggle}
+        onDropdownChange={handleDropdownChange}
+        onAddDropdownValue={handleAddDropdownValue}
+        onRemoveDropdownValue={handleRemoveDropdownValue}
+        onAddDropdown={handleAddDropdown}
+        onRemoveDropdown={handleRemoveDropdown}
+      />
 
       {/* Add Ons Section */}
       <HeaderAddOnsSection
