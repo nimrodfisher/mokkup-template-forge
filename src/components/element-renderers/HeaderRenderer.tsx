@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Element } from "@/types/wireframe";
 
@@ -9,6 +8,16 @@ interface HeaderRendererProps {
 export function HeaderRenderer({ properties = {} }: HeaderRendererProps) {
   const variant = properties.variant || 'default';
   const navigationItems = properties.navigationItems || ['Navigation 1', 'Navigation 2', 'Navigation 3'];
+  const navigationButtons = properties.navigationButtons || [
+    { title: 'Navigation 1', active: true },
+    { title: 'Navigation 2', active: false },
+    { title: 'Navigation 3', active: false }
+  ];
+  const showNavigationButtons = properties.showNavigationButtons;
+  const showDoubleLogos = properties.showDoubleLogos;
+  const titleAlignment = properties.titleAlignment || 'left';
+  const titleSize = properties.titleSize || 'md';
+  const titleWeight = properties.titleWeight || 'bold';
   
   // Determine styles based on variant
   let containerStyles = "w-full h-full flex items-center";
@@ -44,6 +53,74 @@ export function HeaderRenderer({ properties = {} }: HeaderRendererProps) {
       contentLayout = "flex items-center";
   }
   
+  // Get title styles based on properties
+  const getTitleStyles = () => {
+    let styles = "font-bold";
+    
+    // Size mapping
+    const sizeMap = {
+      'sm': 'text-sm',
+      'md': 'text-lg',
+      'lg': 'text-xl',
+      'xl': 'text-2xl'
+    };
+    
+    // Weight mapping
+    const weightMap = {
+      'normal': 'font-normal',
+      'medium': 'font-medium',
+      'semibold': 'font-semibold',
+      'bold': 'font-bold'
+    };
+    
+    // Alignment mapping
+    const alignmentMap = {
+      'left': 'text-left',
+      'center': 'text-center',
+      'right': 'text-right'
+    };
+    
+    styles = `${sizeMap[titleSize]} ${weightMap[titleWeight]} ${alignmentMap[titleAlignment]}`;
+    
+    return styles;
+  };
+
+  const renderLogo = (logoUrl?: string, altText = "Logo") => {
+    if (logoUrl) {
+      return (
+        <img 
+          src={logoUrl} 
+          alt={altText} 
+          className="h-full max-h-12 object-contain"
+        />
+      );
+    }
+    return (
+      <div className="h-10 w-10 bg-gray-200 text-gray-400 flex items-center justify-center text-xs">
+        Logo
+      </div>
+    );
+  };
+
+  const renderNavigationButtons = () => {
+    if (!showNavigationButtons) return null;
+    
+    return (
+      <div className="flex space-x-2">
+        {navigationButtons.map((button, index) => (
+          <button 
+            key={index} 
+            className={`px-3 py-1 rounded text-sm ${
+              button.active ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'
+            }`}
+          >
+            {button.title}
+          </button>
+        ))}
+      </div>
+    );
+  };
+  
   return (
     <div 
       className={containerStyles}
@@ -55,7 +132,7 @@ export function HeaderRenderer({ properties = {} }: HeaderRendererProps) {
       {variant === 'centered-navigation-purple' ? (
         <div className="flex flex-col items-center">
           {properties.title && (
-            <div className="font-bold text-lg mb-2">{properties.title}</div>
+            <div className={getTitleStyles() + " mb-2"}>{properties.title}</div>
           )}
           
           <div className="flex justify-center space-x-6">
@@ -64,60 +141,57 @@ export function HeaderRenderer({ properties = {} }: HeaderRendererProps) {
             ))}
           </div>
         </div>
-      ) : variant === 'navigation-buttons' ? (
+      ) : variant === 'double-logo-purple' ? (
+        <div className="flex items-center justify-between w-full">
+          {showDoubleLogos ? (
+            <>
+              <div className="mr-3">
+                {renderLogo(properties.logoUrl, "Primary Logo")}
+              </div>
+              
+              <div className={getTitleStyles()}>{properties.title || 'DASHBOARD TITLE'}</div>
+              
+              <div className="ml-3">
+                {renderLogo(properties.secondaryLogoUrl, "Secondary Logo")}
+              </div>
+            </>
+          ) : (
+            <div className="flex items-center justify-between w-full">
+              <div className="flex items-center">
+                {properties.showLogo && (
+                  <div className="mr-3">
+                    {renderLogo(properties.logoUrl)}
+                  </div>
+                )}
+                <div className={getTitleStyles()}>{properties.title || 'DASHBOARD TITLE'}</div>
+              </div>
+              {renderNavigationButtons()}
+            </div>
+          )}
+        </div>
+      ) : variant === 'navigation-buttons' || showNavigationButtons ? (
         <div className="flex items-center justify-between w-full">
           <div className="flex items-center">
             {properties.showLogo && (
               <div className="mr-3">
-                {properties.logoUrl ? (
-                  <img 
-                    src={properties.logoUrl} 
-                    alt="Logo" 
-                    className="h-full max-h-12 object-contain"
-                  />
-                ) : (
-                  <div className="h-10 w-10 bg-gray-200 text-gray-400 flex items-center justify-center">
-                    Logo
-                  </div>
-                )}
+                {renderLogo(properties.logoUrl)}
               </div>
             )}
             
-            <div className="font-bold text-lg">{properties.title || 'DASHBOARD TITLE'}</div>
+            <div className={getTitleStyles()}>{properties.title || 'DASHBOARD TITLE'}</div>
           </div>
           
-          <div className="flex space-x-2">
-            {navigationItems.slice(0, 3).map((item, index) => (
-              <button 
-                key={index} 
-                className={`px-3 py-1 rounded text-sm ${
-                  index === 0 ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'
-                }`}
-              >
-                {item}
-              </button>
-            ))}
-          </div>
+          {renderNavigationButtons()}
         </div>
       ) : variant === 'minimal-title' ? (
         <div className="flex items-center">
           {properties.showLogo && (
             <div className="mr-3">
-              {properties.logoUrl ? (
-                <img 
-                  src={properties.logoUrl} 
-                  alt="Logo" 
-                  className="h-full max-h-12 object-contain"
-                />
-              ) : (
-                <div className="h-10 w-10 bg-gray-200 text-gray-400 flex items-center justify-center">
-                  Logo
-                </div>
-              )}
+              {renderLogo(properties.logoUrl)}
             </div>
           )}
           
-          <div className="font-bold text-lg flex items-center">
+          <div className={getTitleStyles() + " flex items-center"}>
             {properties.showIcon && <span className="mr-2">📊</span>}
             {properties.title || 'DASHBOARD TITLE'}
           </div>
@@ -127,22 +201,12 @@ export function HeaderRenderer({ properties = {} }: HeaderRendererProps) {
           <div className="flex items-center">
             {properties.showLogo && (
               <div className="mr-3">
-                {properties.logoUrl ? (
-                  <img 
-                    src={properties.logoUrl} 
-                    alt="Logo" 
-                    className="h-full max-h-12 object-contain"
-                  />
-                ) : (
-                  <div className="h-10 w-10 bg-gray-200 text-gray-400 flex items-center justify-center">
-                    Logo
-                  </div>
-                )}
+                {renderLogo(properties.logoUrl)}
               </div>
             )}
             
             <div>
-              <div className="font-bold text-lg">{properties.title || 'DASHBOARD TITLE'}</div>
+              <div className={getTitleStyles()}>{properties.title || 'DASHBOARD TITLE'}</div>
               {properties.description && (
                 <div className="text-sm text-gray-600 mt-1">{properties.description}</div>
               )}
@@ -158,21 +222,11 @@ export function HeaderRenderer({ properties = {} }: HeaderRendererProps) {
           <div className="flex items-center">
             {properties.showLogo && (
               <div className="mr-3">
-                {properties.logoUrl ? (
-                  <img 
-                    src={properties.logoUrl} 
-                    alt="Logo" 
-                    className="h-full max-h-12 object-contain"
-                  />
-                ) : (
-                  <div className="h-10 w-10 bg-gray-200 text-gray-400 flex items-center justify-center">
-                    Logo
-                  </div>
-                )}
+                {renderLogo(properties.logoUrl)}
               </div>
             )}
             
-            <div className="font-bold text-lg">{properties.title || 'DASHBOARD TITLE'}</div>
+            <div className={getTitleStyles()}>{properties.title || 'DASHBOARD TITLE'}</div>
           </div>
           
           <div className="flex space-x-6">
@@ -189,21 +243,11 @@ export function HeaderRenderer({ properties = {} }: HeaderRendererProps) {
           <div className="flex items-center">
             {properties.showLogo && (
               <div className="mr-3">
-                {properties.logoUrl ? (
-                  <img 
-                    src={properties.logoUrl} 
-                    alt="Logo" 
-                    className="h-full max-h-12 object-contain"
-                  />
-                ) : (
-                  <div className="h-10 w-10 bg-gray-200 text-gray-400 flex items-center justify-center">
-                    Logo
-                  </div>
-                )}
+                {renderLogo(properties.logoUrl)}
               </div>
             )}
             
-            <div className="font-bold text-lg">{properties.title || 'DASHBOARD TITLE'}</div>
+            <div className={getTitleStyles()}>{properties.title || 'DASHBOARD TITLE'}</div>
           </div>
         </div>
       )}

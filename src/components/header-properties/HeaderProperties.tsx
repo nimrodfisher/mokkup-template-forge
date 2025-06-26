@@ -16,6 +16,9 @@ import { HeaderPropertiesSection } from "./HeaderPropertiesSection";
 import { HeaderConfigurationSection } from "./HeaderConfigurationSection";
 import { HeaderDetailsSection } from "./HeaderDetailsSection";
 import { HeaderStyleSection } from "./HeaderStyleSection";
+import { HeaderNavigationButtonsSection } from "./HeaderNavigationButtonsSection";
+import { HeaderDoubleLogoSection } from "./HeaderDoubleLogoSection";
+import { HeaderDashboardTitleSection } from "./HeaderDashboardTitleSection";
 
 interface HeaderPropertiesProps {
   element: Element;
@@ -56,6 +59,26 @@ export function HeaderProperties({ element, updateElementProperties, onOpenStyle
     element.properties?.headerDropdowns || [{ title: 'Dropdown 1', values: ['Metric 1', 'Metric 2'] }]
   );
 
+  // New state for enhanced features
+  const [showNavigationButtons, setShowNavigationButtons] = useState<boolean>(element.properties?.showNavigationButtons || false);
+  const [navigationButtons, setNavigationButtons] = useState<Array<{title: string, active?: boolean}>>(
+    element.properties?.navigationButtons || [
+      { title: 'Navigation 1', active: true },
+      { title: 'Navigation 2', active: false },
+      { title: 'Navigation 3', active: false }
+    ]
+  );
+  const [showDoubleLogos, setShowDoubleLogos] = useState<boolean>(element.properties?.showDoubleLogos || false);
+  const [titleAlignment, setTitleAlignment] = useState<'left' | 'center' | 'right'>(
+    (element.properties?.titleAlignment as 'left' | 'center' | 'right') || 'left'
+  );
+  const [titleSize, setTitleSize] = useState<'sm' | 'md' | 'lg' | 'xl'>(
+    (element.properties?.titleSize as 'sm' | 'md' | 'lg' | 'xl') || 'md'
+  );
+  const [titleWeight, setTitleWeight] = useState<'normal' | 'medium' | 'semibold' | 'bold'>(
+    (element.properties?.titleWeight as 'normal' | 'medium' | 'semibold' | 'bold') || 'bold'
+  );
+
   // Update local state when element changes
   useEffect(() => {
     console.log("HeaderProperties: Element updated", element.properties);
@@ -74,6 +97,16 @@ export function HeaderProperties({ element, updateElementProperties, onOpenStyle
     setShowHighlightedText(element.properties?.showHighlightedText || false);
     setShowDropdowns(element.properties?.showDropdowns || false);
     setDropdowns(element.properties?.headerDropdowns || [{ title: 'Dropdown 1', values: ['Metric 1', 'Metric 2'] }]);
+    setShowNavigationButtons(element.properties?.showNavigationButtons || false);
+    setNavigationButtons(element.properties?.navigationButtons || [
+      { title: 'Navigation 1', active: true },
+      { title: 'Navigation 2', active: false },
+      { title: 'Navigation 3', active: false }
+    ]);
+    setShowDoubleLogos(element.properties?.showDoubleLogos || false);
+    setTitleAlignment((element.properties?.titleAlignment as 'left' | 'center' | 'right') || 'left');
+    setTitleSize((element.properties?.titleSize as 'sm' | 'md' | 'lg' | 'xl') || 'md');
+    setTitleWeight((element.properties?.titleWeight as 'normal' | 'medium' | 'semibold' | 'bold') || 'bold');
   }, [element]);
 
   // Handle title change
@@ -213,6 +246,77 @@ export function HeaderProperties({ element, updateElementProperties, onOpenStyle
     updateElementProperties(element.id, { headerDropdowns: newDropdowns });
   };
 
+  // New handlers for enhanced features
+  const handleNavigationButtonsToggle = (checked: boolean) => {
+    setShowNavigationButtons(checked);
+    updateElementProperties(element.id, { showNavigationButtons: checked });
+  };
+
+  const handleNavigationButtonChange = (index: number, field: string, value: any) => {
+    const newButtons = [...navigationButtons];
+    if (field === 'active' && value) {
+      // Only one button can be active at a time
+      newButtons.forEach((btn, i) => {
+        btn.active = i === index;
+      });
+    } else {
+      newButtons[index] = { ...newButtons[index], [field]: value };
+    }
+    setNavigationButtons(newButtons);
+    updateElementProperties(element.id, { navigationButtons: newButtons });
+  };
+
+  const handleAddNavigationButton = () => {
+    const newButtons = [...navigationButtons, { title: `Navigation ${navigationButtons.length + 1}`, active: false }];
+    setNavigationButtons(newButtons);
+    updateElementProperties(element.id, { navigationButtons: newButtons });
+  };
+
+  const handleRemoveNavigationButton = (index: number) => {
+    const newButtons = navigationButtons.filter((_, i) => i !== index);
+    setNavigationButtons(newButtons);
+    updateElementProperties(element.id, { navigationButtons: newButtons });
+  };
+
+  const handleDoubleLogosToggle = (checked: boolean) => {
+    setShowDoubleLogos(checked);
+    updateElementProperties(element.id, { showDoubleLogos: checked });
+  };
+
+  const handlePrimaryLogoUpload = (logoUrl: string) => {
+    updateElementProperties(element.id, { logoUrl });
+  };
+
+  const handleSecondaryLogoUpload = (logoUrl: string) => {
+    updateElementProperties(element.id, { secondaryLogoUrl: logoUrl });
+  };
+
+  const handlePrimaryLogoRemove = () => {
+    updateElementProperties(element.id, { logoUrl: '' });
+  };
+
+  const handleSecondaryLogoRemove = () => {
+    updateElementProperties(element.id, { secondaryLogoUrl: '' });
+  };
+
+  const handleTitleAlignmentChange = (alignment: string) => {
+    const validAlignment = alignment as 'left' | 'center' | 'right';
+    setTitleAlignment(validAlignment);
+    updateElementProperties(element.id, { titleAlignment: validAlignment });
+  };
+
+  const handleTitleSizeChange = (size: string) => {
+    const validSize = size as 'sm' | 'md' | 'lg' | 'xl';
+    setTitleSize(validSize);
+    updateElementProperties(element.id, { titleSize: validSize });
+  };
+
+  const handleTitleWeightChange = (weight: string) => {
+    const validWeight = weight as 'normal' | 'medium' | 'semibold' | 'bold';
+    setTitleWeight(validWeight);
+    updateElementProperties(element.id, { titleWeight: validWeight });
+  };
+
   // Handle add-ons changes
   const handleAddOnsChange = (field: string, value: any) => {
     updateElementProperties(element.id, { [field]: value });
@@ -290,6 +394,20 @@ export function HeaderProperties({ element, updateElementProperties, onOpenStyle
         onOpenStyleDialog={onOpenStyleDialog}
       />
 
+      {/* Dashboard Title Section */}
+      <HeaderDashboardTitleSection
+        showTitle={title !== ''}
+        title={title}
+        titleAlignment={titleAlignment}
+        titleSize={titleSize}
+        titleWeight={titleWeight}
+        onTitleToggle={(checked) => handleTitleChange(checked ? 'DASHBOARD TITLE' : '')}
+        onTitleChange={handleTitleChange}
+        onTitleAlignmentChange={handleTitleAlignmentChange}
+        onTitleSizeChange={handleTitleSizeChange}
+        onTitleWeightChange={handleTitleWeightChange}
+      />
+
       {/* Header Details Section */}
       <HeaderDetailsSection
         title={title}
@@ -300,6 +418,29 @@ export function HeaderProperties({ element, updateElementProperties, onOpenStyle
         onLogoToggle={handleLogoToggle}
         onLogoUpload={handleLogoUpload}
         onLogoRemove={handleLogoRemove}
+      />
+
+      {/* Double Logo Section */}
+      <HeaderDoubleLogoSection
+        showDoubleLogos={showDoubleLogos}
+        primaryLogoUrl={element.properties?.logoUrl}
+        secondaryLogoUrl={element.properties?.secondaryLogoUrl}
+        variant={element.properties?.variant}
+        onDoubleLogosToggle={handleDoubleLogosToggle}
+        onPrimaryLogoUpload={handlePrimaryLogoUpload}
+        onSecondaryLogoUpload={handleSecondaryLogoUpload}
+        onPrimaryLogoRemove={handlePrimaryLogoRemove}
+        onSecondaryLogoRemove={handleSecondaryLogoRemove}
+      />
+
+      {/* Navigation Buttons Section */}
+      <HeaderNavigationButtonsSection
+        showNavigationButtons={showNavigationButtons}
+        navigationButtons={navigationButtons}
+        onNavigationButtonsToggle={handleNavigationButtonsToggle}
+        onNavigationButtonChange={handleNavigationButtonChange}
+        onAddNavigationButton={handleAddNavigationButton}
+        onRemoveNavigationButton={handleRemoveNavigationButton}
       />
 
       {/* Properties Section */}

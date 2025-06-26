@@ -96,6 +96,15 @@ export interface Element {
     showIcon?: boolean;
     textContent?: string;
     showHighlightedText?: boolean;
+    
+    // Enhanced Header Properties
+    showNavigationButtons?: boolean;
+    navigationButtons?: Array<{title: string, active?: boolean}>;
+    showDoubleLogos?: boolean;
+    titleAlignment?: 'left' | 'center' | 'right';
+    titleSize?: 'sm' | 'md' | 'lg' | 'xl';
+    titleWeight?: 'normal' | 'medium' | 'semibold' | 'bold';
+    
     // Filter properties
     filterTitle?: string;
     filterVariant?: FilterVariant;
