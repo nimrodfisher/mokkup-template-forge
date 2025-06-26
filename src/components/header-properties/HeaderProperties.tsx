@@ -1,4 +1,5 @@
 
+
 import { useState, useEffect } from "react";
 import { Element } from "@/hooks/useWireframe";
 import { Separator } from "@/components/ui/separator";
@@ -13,6 +14,7 @@ import { HeaderMetricsSection } from "./HeaderMetricsSection";
 import { HeaderIconSection } from "./HeaderIconSection";
 import { HeaderTextSection } from "./HeaderTextSection";
 import { HeaderDropdownsSection } from "./HeaderDropdownsSection";
+import { HeaderPropertiesSection } from "./HeaderPropertiesSection";
 
 interface HeaderPropertiesProps {
   element: Element;
@@ -305,10 +307,15 @@ export function HeaderProperties({ element, updateElementProperties, onOpenStyle
         />
       )}
 
-      {/* Icon Section */}
-      <HeaderIconSection
+      {/* Properties Section */}
+      <HeaderPropertiesSection
+        properties={element.properties || {}}
         showIcon={showIcon}
+        showNavigation={showNavigation}
         onIconToggle={handleIconToggle}
+        onNavigationToggle={handleNavigationToggle}
+        updateElementProperties={updateElementProperties}
+        elementId={element.id}
       />
 
       {/* Description Section - Only show for with-description variant */}
@@ -391,3 +398,4 @@ export function HeaderProperties({ element, updateElementProperties, onOpenStyle
     </div>
   );
 }
+
