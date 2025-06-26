@@ -1,4 +1,3 @@
-
 export type ElementType = 
   'header' | 'button' | 'filter' | 'kpi' | 'column-chart' | 'bar-chart' | 'line-chart' | 
   'area-chart' | 'combo-chart' | 'pie-chart' | 'gauge-chart' |
@@ -21,7 +20,8 @@ export type ButtonSize =
 export type HeaderVariant =
   'default' | 'with-metrics' | 'with-description' | 'centered-navigation-purple' | 
   'navigation-top' | 'double-logo-purple' | 'dark-navigation' | 'gradient' | 
-  'minimal' | 'colorful-banner' | 'title-metrics';
+  'minimal' | 'colorful-banner' | 'title-metrics' | 'navigation-buttons' | 
+  'minimal-title' | 'simple-header';
 
 export type ShapeVariant =
   'triangle' | 'rectangle' | 'circle' | 'oval';

@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useWireframe } from "@/hooks/useWireframe";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
@@ -7,6 +6,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { X, Check } from "lucide-react";
 import { toast } from "sonner";
+import { headerTemplateDisplays } from "../header-properties/HeaderTemplates";
 
 interface HeaderStyleDialogProps {
   elementId: string;
@@ -42,72 +42,37 @@ export function HeaderStyleDialog({ elementId, isOpen, onClose }: HeaderStyleDia
     {
       id: 'default',
       label: 'Default Style',
-      preview: (
-        <div className="bg-gray-50 border rounded-md p-4 mt-1">
-          <div className="flex items-center">
-            <div className="w-16 h-6 bg-gray-200 text-[8px] flex items-center justify-center rounded">Upload Logo</div>
-            <div className="font-bold ml-4 text-xs">DASHBOARD TITLE</div>
-          </div>
-        </div>
-      )
-    },
-    {
-      id: 'with-metrics',
-      label: 'With Metrics',
-      preview: (
-        <div className="bg-gray-50 border rounded-md p-4 mt-1">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <div className="w-16 h-6 bg-gray-200 text-[8px] flex items-center justify-center rounded">Upload Logo</div>
-              <div className="font-bold ml-4 text-xs">DASHBOARD TITLE</div>
-            </div>
-            <div className="flex space-x-4">
-              <div className="text-[8px]">
-                <div>Title 1</div>
-                <div className="text-gray-400">Metric 1</div>
-              </div>
-              <div className="text-[8px]">
-                <div>Title 2</div>
-                <div className="text-gray-400">Metric 1</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )
-    },
-    {
-      id: 'with-description',
-      label: 'With Description',
-      preview: (
-        <div className="bg-gray-50 border rounded-md p-4 mt-1">
-          <div className="flex flex-col">
-            <div className="flex items-center">
-              <div className="w-16 h-6 bg-gray-200 text-[8px] flex items-center justify-center rounded">Upload Logo</div>
-              <div className="font-bold ml-4 text-xs">DASHBOARD TITLE</div>
-            </div>
-            <div className="text-[8px] mt-2 text-gray-500">
-              Some dummy description text<br />
-              Some dummy description text
-            </div>
-          </div>
-        </div>
-      )
+      preview: headerTemplateDisplays.find(t => t.id === 'default')?.preview
     },
     {
       id: 'centered-navigation-purple',
       label: 'Centered Navigation (Purple)',
-      preview: (
-        <div className="bg-[#9b87f5] rounded-md p-4 mt-1 text-white">
-          <div className="flex flex-col items-center">
-            <div className="font-bold text-xs text-center mt-1">DASHBOARD TITLE</div>
-            <div className="flex justify-center space-x-6 mt-1">
-              <div className="text-[8px]">Navigation 1</div>
-              <div className="text-[8px]">Navigation 2</div>
-              <div className="text-[8px]">Navigation 3</div>
-            </div>
-          </div>
-        </div>
-      )
+      preview: headerTemplateDisplays.find(t => t.id === 'centered-navigation-purple')?.preview
+    },
+    {
+      id: 'navigation-buttons',
+      label: 'Navigation Buttons',
+      preview: headerTemplateDisplays.find(t => t.id === 'navigation-buttons')?.preview
+    },
+    {
+      id: 'minimal-title',
+      label: 'Minimal Title',
+      preview: headerTemplateDisplays.find(t => t.id === 'minimal-title')?.preview
+    },
+    {
+      id: 'with-description',
+      label: 'With Description',
+      preview: headerTemplateDisplays.find(t => t.id === 'with-description')?.preview
+    },
+    {
+      id: 'with-metrics',
+      label: 'With Metrics',
+      preview: headerTemplateDisplays.find(t => t.id === 'with-metrics')?.preview
+    },
+    {
+      id: 'simple-header',
+      label: 'Simple Header',
+      preview: headerTemplateDisplays.find(t => t.id === 'simple-header')?.preview
     },
     {
       id: 'navigation-top',
