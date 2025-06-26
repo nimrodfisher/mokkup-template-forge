@@ -21,25 +21,22 @@ export function ButtonPreviewSection({ properties }: ButtonPreviewSectionProps) 
       className += 'px-4 py-2 text-sm ';
     }
     
-    // Only apply custom colors if they exist AND are different from defaults
-    const hasCustomBackgroundColor = properties?.backgroundColor && properties.backgroundColor !== '#3b82f6';
-    const hasCustomTextColor = properties?.textColor && properties.textColor !== '#ffffff';
-    
-    if (hasCustomBackgroundColor || hasCustomTextColor) {
-      if (hasCustomBackgroundColor) {
+    // Handle custom colors vs variant colors
+    if (properties?.backgroundColor || properties?.textColor) {
+      if (properties?.backgroundColor) {
         style.backgroundColor = properties.backgroundColor;
+        className += 'hover:opacity-90 ';
       }
-      if (hasCustomTextColor) {
+      if (properties?.textColor) {
         style.color = properties.textColor;
       }
       // Special handling for outline variant
-      if (properties?.buttonVariant === 'outline' && hasCustomBackgroundColor) {
+      if (properties?.buttonVariant === 'outline' && properties?.backgroundColor) {
         style.borderColor = properties.backgroundColor;
         style.color = properties.backgroundColor;
         style.backgroundColor = 'transparent';
         className += 'border ';
       }
-      className += 'hover:opacity-90 ';
     } else {
       // Use variant styles
       switch (properties?.buttonVariant) {
@@ -71,7 +68,7 @@ export function ButtonPreviewSection({ properties }: ButtonPreviewSectionProps) 
       <div className="p-4 border rounded-md bg-gray-50 flex items-center justify-center">
         <button 
           className={previewClassName}
-          style={Object.keys(previewStyle).length > 0 ? previewStyle : undefined}
+          style={previewStyle}
         >
           {properties?.buttonIcon && (
             <svg className="mr-1 w-4 h-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

@@ -1,15 +1,9 @@
 
 import React from 'react';
 import { Element } from '@/types/wireframe';
-import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
 import { X } from 'lucide-react';
 import { ButtonTextSection } from './ButtonTextSection';
-import { ButtonVariantSection } from './ButtonVariantSection';
-import { ButtonSizeSection } from './ButtonSizeSection';
-import { ButtonIconSection } from './ButtonIconSection';
-import { ButtonColorSection } from './ButtonColorSection';
-import { ButtonPreviewSection } from './ButtonPreviewSection';
 
 interface ButtonPropertiesProps {
   element: Element;
@@ -42,39 +36,6 @@ export function ButtonProperties({
       </div>
 
       <ButtonTextSection properties={properties} onPropertyChange={handlePropertyChange} />
-      
-      <Separator />
-      
-      <ButtonVariantSection properties={properties} onPropertyChange={handlePropertyChange} />
-      
-      <Separator />
-      
-      <ButtonSizeSection properties={properties} onPropertyChange={handlePropertyChange} />
-      
-      <Separator />
-      
-      <ButtonIconSection properties={properties} onPropertyChange={handlePropertyChange} />
-      
-      <Separator />
-      
-      <ButtonColorSection properties={properties} onPropertyChange={handlePropertyChange} />
-      
-      <Separator />
-
-      {/* Style Dialog Button */}
-      {onOpenStyleDialog && (
-        <div className="pt-2">
-          <Button 
-            onClick={onOpenStyleDialog}
-            variant="outline" 
-            className="w-full"
-          >
-            Advanced Styling
-          </Button>
-        </div>
-      )}
-
-      <ButtonPreviewSection properties={properties} />
     </div>
   );
 }
