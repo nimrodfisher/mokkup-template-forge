@@ -3,17 +3,13 @@ import React from 'react';
 import { FunnelChart, Funnel, LabelList, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import { Button } from '@/components/ui/button';
 import { Download, Filter, RefreshCw } from 'lucide-react';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface FunnelWithButtonsRendererProps {
   chartData: Array<{ name: string; value: number; color: string }>;
   showLabels: boolean;
   showValues: boolean;
   funnelPrimaryColor: string;
-  labelPosition: 'left' | 'right' | 'inside' | 'outside' | 'top' | 'bottom' | 'middle';
   funnelButtons?: Array<{ title: string; alignment: string }>;
-  funnelDropdowns?: Array<{ title: string; values: string[]; editText?: string }>;
-  showDropdowns?: boolean;
 }
 
 export function FunnelWithButtonsRenderer({ 
@@ -21,12 +17,9 @@ export function FunnelWithButtonsRenderer({
   showLabels, 
   showValues, 
   funnelPrimaryColor,
-  labelPosition,
-  funnelButtons = [],
-  funnelDropdowns = [],
-  showDropdowns = false
+  funnelButtons = []
 }: FunnelWithButtonsRendererProps) {
-  console.log('FunnelWithButtonsRenderer props:', { chartData, showLabels, showValues, funnelButtons, funnelDropdowns, showDropdowns });
+  console.log('FunnelWithButtonsRenderer props:', { chartData, showLabels, showValues, funnelButtons });
 
   const handleButtonClick = (buttonTitle: string) => {
     console.log(`Button clicked: ${buttonTitle}`);
@@ -49,10 +42,6 @@ export function FunnelWithButtonsRenderer({
       default:
         console.log(`Custom action for: ${buttonTitle}`);
     }
-  };
-
-  const handleDropdownChange = (dropdownTitle: string, value: string) => {
-    console.log(`Dropdown ${dropdownTitle} changed to: ${value}`);
   };
 
   const getButtonIcon = (title: string) => {
@@ -98,14 +87,13 @@ export function FunnelWithButtonsRenderer({
 
   return (
     <div className="h-full flex flex-col">
-      {/* Buttons and Dropdowns Section */}
-      {(funnelButtons.length > 0 || (showDropdowns && funnelDropdowns.length > 0)) && (
-        <div className="flex flex-wrap gap-2 mb-4 p-2 items-center">
-          {/* Buttons */}
+      {/* Buttons Section */}
+      {funnelButtons.length > 0 && (
+        <div className="flex flex-wrap gap-2 mb-4 p-2">
           {funnelButtons.map((button, index) => {
             const isRightAligned = button.alignment === 'right';
             return (
-              <div key={`button-${index}`} className={`flex ${isRightAligned ? 'ml-auto' : ''}`}>
+              <div key={index} className={`flex ${isRightAligned ? 'ml-auto' : ''}`}>
                 <Button
                   variant="outline"
                   size="sm"
@@ -120,25 +108,6 @@ export function FunnelWithButtonsRenderer({
               </div>
             );
           })}
-          
-          {/* Dropdowns */}
-          {showDropdowns && funnelDropdowns.map((dropdown, index) => (
-            <div key={`dropdown-${index}`} className="flex items-center gap-2">
-              <span className="text-sm text-gray-600">{dropdown.title}:</span>
-              <Select onValueChange={(value) => handleDropdownChange(dropdown.title, value)}>
-                <SelectTrigger className="h-8 w-32">
-                  <SelectValue placeholder={dropdown.editText || "Select..."} />
-                </SelectTrigger>
-                <SelectContent>
-                  {dropdown.values.map((value, valueIndex) => (
-                    <SelectItem key={valueIndex} value={value}>
-                      {value}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          ))}
         </div>
       )}
       

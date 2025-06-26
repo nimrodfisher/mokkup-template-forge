@@ -8,10 +8,7 @@ interface FunnelWithKpisRendererProps {
   showLabels: boolean;
   showValues: boolean;
   funnelPrimaryColor: string;
-  labelPosition: 'left' | 'right' | 'inside' | 'outside' | 'top' | 'bottom' | 'middle';
   funnelKpis?: Array<{ title: string; value: string; change?: string }>;
-  funnelTexts?: Array<{ title: string; content: string }>;
-  showText?: boolean;
 }
 
 export function FunnelWithKpisRenderer({ 
@@ -19,12 +16,9 @@ export function FunnelWithKpisRenderer({
   showLabels, 
   showValues, 
   funnelPrimaryColor,
-  labelPosition,
-  funnelKpis = [],
-  funnelTexts = [],
-  showText = false
+  funnelKpis = []
 }: FunnelWithKpisRendererProps) {
-  console.log('FunnelWithKpisRenderer props:', { chartData, showLabels, showValues, funnelKpis, funnelTexts, showText });
+  console.log('FunnelWithKpisRenderer props:', { chartData, showLabels, showValues, funnelKpis });
 
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
@@ -75,38 +69,21 @@ export function FunnelWithKpisRenderer({
 
   return (
     <div className="h-full flex flex-col">
-      {/* KPIs and Text Section */}
-      {(funnelKpis.length > 0 || (showText && funnelTexts.length > 0)) && (
-        <div className="mb-4 p-2 space-y-3">
-          {/* KPIs */}
-          {funnelKpis.length > 0 && (
-            <div className="grid grid-cols-2 gap-3">
-              {funnelKpis.map((kpi, index) => (
-                <div key={`kpi-${index}`} className="bg-gray-50 border border-gray-200 rounded-lg p-3">
-                  <div className="text-xs text-gray-500 mb-1 font-medium">{kpi.title}</div>
-                  <div className="text-lg font-bold text-gray-900 mb-1">{kpi.value}</div>
-                  {kpi.change && (
-                    <div className={`text-xs flex items-center gap-1 ${getChangeColor(kpi.change)}`}>
-                      {getChangeIcon(kpi.change)}
-                      <span>{kpi.change}</span>
-                    </div>
-                  )}
+      {/* KPIs Section */}
+      {funnelKpis.length > 0 && (
+        <div className="grid grid-cols-2 gap-3 mb-4 p-2">
+          {funnelKpis.map((kpi, index) => (
+            <div key={index} className="bg-gray-50 border border-gray-200 rounded-lg p-3">
+              <div className="text-xs text-gray-500 mb-1 font-medium">{kpi.title}</div>
+              <div className="text-lg font-bold text-gray-900 mb-1">{kpi.value}</div>
+              {kpi.change && (
+                <div className={`text-xs flex items-center gap-1 ${getChangeColor(kpi.change)}`}>
+                  {getChangeIcon(kpi.change)}
+                  <span>{kpi.change}</span>
                 </div>
-              ))}
+              )}
             </div>
-          )}
-          
-          {/* Text Elements */}
-          {showText && funnelTexts.length > 0 && (
-            <div className="space-y-2">
-              {funnelTexts.map((text, index) => (
-                <div key={`text-${index}`} className="bg-blue-50 border border-blue-200 rounded-lg p-3">
-                  <div className="text-sm font-medium text-blue-900 mb-1">{text.title}</div>
-                  <div className="text-sm text-blue-700">{text.content}</div>
-                </div>
-              ))}
-            </div>
-          )}
+          ))}
         </div>
       )}
       
