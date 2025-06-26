@@ -1,12 +1,11 @@
-
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
-import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Loader2, Mail, Linkedin } from 'lucide-react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Loader2 } from 'lucide-react';
 
 export default function Auth() {
   const [isLoading, setIsLoading] = useState(false);
@@ -61,118 +60,85 @@ export default function Auth() {
     setIsLoading(false);
   };
 
-  const handleGoogleSignIn = async () => {
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: `${window.location.origin}/`
-      }
-    });
-    if (error) {
-      console.error('Google sign in error:', error);
-    }
-  };
-
-  const handleLinkedInSignIn = async () => {
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'linkedin_oidc',
-      options: {
-        redirectTo: `${window.location.origin}/`
-      }
-    });
-    if (error) {
-      console.error('LinkedIn sign in error:', error);
-    }
-  };
-
   return (
-    <div className="min-h-screen" style={{ background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)' }}>
+    <div className="min-h-screen bg-gray-900">
       {/* Header */}
-      <header className="p-6">
-        <Link to="/" className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-purple-500 rounded-lg flex items-center justify-center">
-            <div className="w-4 h-4 bg-white rounded-sm"></div>
+      <header className="bg-gray-900 border-b border-gray-800">
+        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+          <Link to="/" className="font-bold text-xl text-purple-400">Alignify</Link>
+          <div className="flex items-center gap-6">
+            <nav className="hidden md:flex items-center gap-6">
+              <Link to="/" className="text-gray-300 hover:text-white transition-colors">Home</Link>
+              <Link to="/templates" className="text-gray-300 hover:text-white transition-colors">Features</Link>
+              <Link to="/templates" className="text-gray-300 hover:text-white transition-colors">FAQ</Link>
+            </nav>
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => setIsSignUp(false)}
+                className={`text-sm transition-colors ${!isSignUp ? 'text-white' : 'text-gray-300 hover:text-white'}`}
+              >
+                Login
+              </button>
+              <button
+                onClick={() => setIsSignUp(true)}
+                className={`px-4 py-2 rounded text-sm font-medium transition-colors ${
+                  isSignUp 
+                    ? 'bg-purple-600 text-white' 
+                    : 'bg-transparent border border-purple-600 text-purple-400 hover:bg-purple-600 hover:text-white'
+                }`}
+              >
+                Join the Beta
+              </button>
+            </div>
           </div>
-          <span className="font-bold text-xl text-white">Alignify</span>
-        </Link>
+        </div>
       </header>
 
       {/* Auth Form */}
-      <div className="flex items-center justify-center px-4 pt-20">
-        <div className="w-full max-w-md">
-          <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-white mb-2">
-              {isSignUp ? 'SIGN UP' : 'SIGN IN'}
-            </h1>
-            <p className="text-gray-300">
-              {isSignUp ? 'Sign up with email address' : 'Sign in with email address'}
-            </p>
-          </div>
-
-          {!isSignUp ? (
-            <form onSubmit={handleSignIn} className="space-y-6">
-              <div className="space-y-4">
-                <div className="relative">
-                  <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+      <div className="flex items-center justify-center p-4 pt-20">
+        <Card className="w-full max-w-md bg-gray-800 border-gray-700">
+          <CardHeader className="text-center pb-8">
+            <CardTitle className="text-2xl font-semibold text-white mb-2">
+              {isSignUp ? 'Create Account' : 'Welcome Back'}
+            </CardTitle>
+            <CardDescription className="text-gray-400">
+              {isSignUp ? 'Sign up to get started' : 'Bring your data product ideas to life'}
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {!isSignUp ? (
+              <form onSubmit={handleSignIn} className="space-y-6">
+                <div className="space-y-2">
+                  <Label htmlFor="signin-email" className="text-gray-300 text-sm">Email address</Label>
                   <Input
+                    id="signin-email"
                     name="email"
                     type="email"
-                    placeholder="Yourname@gmail.com"
+                    placeholder="Enter your email"
                     required
-                    className="pl-12 h-14 bg-gray-800/50 border-2 border-purple-500/30 rounded-full text-white placeholder:text-gray-400 focus:border-purple-400 focus:ring-0"
+                    className="bg-gray-700 border-gray-600 text-white placeholder:text-gray-400 focus:border-purple-500 focus:ring-purple-500"
                   />
                 </div>
-                <div className="relative">
-                  <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">🔒</div>
+                <div className="space-y-2">
+                  <Label htmlFor="signin-password" className="text-gray-300 text-sm">Your Password</Label>
                   <Input
+                    id="signin-password"
                     name="password"
                     type="password"
-                    placeholder="Password (min 8 characters)"
+                    placeholder="Enter your password"
                     required
-                    className="pl-12 h-14 bg-gray-800/50 border-2 border-purple-500/30 rounded-full text-white placeholder:text-gray-400 focus:border-purple-400 focus:ring-0"
+                    className="bg-gray-700 border-gray-600 text-white placeholder:text-gray-400 focus:border-purple-500 focus:ring-purple-500"
                   />
                 </div>
-              </div>
-              
-              <Button 
-                type="submit" 
-                className="w-full h-14 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-full text-lg" 
-                disabled={isLoading}
-              >
-                {isLoading && <Loader2 className="mr-2 h-5 w-5 animate-spin" />}
-                SignIn
-              </Button>
-              
-              <div className="text-center">
-                <p className="text-gray-400 text-sm mb-4">or continue with →</p>
-                <div className="space-y-3">
-                  <Button
-                    type="button"
-                    onClick={handleGoogleSignIn}
-                    className="w-full h-12 bg-gray-800/50 hover:bg-gray-700/50 border-2 border-purple-500/30 rounded-full text-white font-medium"
-                  >
-                    <span className="mr-3">🌐</span>
-                    Google
-                  </Button>
-                  <Button
-                    type="button"
-                    onClick={handleLinkedInSignIn}
-                    className="w-full h-12 bg-gray-800/50 hover:bg-gray-700/50 border-2 border-purple-500/30 rounded-full text-white font-medium"
-                  >
-                    <Linkedin className="mr-3 h-4 w-4" />
-                    LinkedIn
-                  </Button>
-                </div>
-              </div>
-
-              <div className="text-center space-y-2">
-                <button
-                  type="button"
-                  className="text-purple-400 hover:text-purple-300 text-sm"
+                <Button 
+                  type="submit" 
+                  className="w-full bg-purple-600 hover:bg-purple-700 text-white font-medium py-3" 
+                  disabled={isLoading}
                 >
-                  Forgot Password?
-                </button>
-                <p className="text-gray-400 text-sm">
+                  {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  Sign in
+                </Button>
+                <p className="text-center text-gray-400 text-sm">
                   Don't have an account?{' '}
                   <button
                     type="button"
@@ -182,88 +148,71 @@ export default function Auth() {
                     Sign up
                   </button>
                 </p>
-              </div>
-            </form>
-          ) : (
-            <form onSubmit={handleSignUp} className="space-y-6">
-              <div className="space-y-4">
-                <div className="grid grid-cols-2 gap-3">
+              </form>
+            ) : (
+              <form onSubmit={handleSignUp} className="space-y-6">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="firstName" className="text-gray-300 text-sm">First Name</Label>
+                    <Input
+                      id="firstName"
+                      name="firstName"
+                      placeholder="John"
+                      required
+                      className="bg-gray-700 border-gray-600 text-white placeholder:text-gray-400 focus:border-purple-500 focus:ring-purple-500"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="lastName" className="text-gray-300 text-sm">Last Name</Label>
+                    <Input
+                      id="lastName"
+                      name="lastName"
+                      placeholder="Doe"
+                      required
+                      className="bg-gray-700 border-gray-600 text-white placeholder:text-gray-400 focus:border-purple-500 focus:ring-purple-500"
+                    />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="companyName" className="text-gray-300 text-sm">Company Name</Label>
                   <Input
-                    name="firstName"
-                    placeholder="First Name"
-                    required
-                    className="h-12 bg-gray-800/50 border-2 border-purple-500/30 rounded-full text-white placeholder:text-gray-400 focus:border-purple-400 focus:ring-0"
-                  />
-                  <Input
-                    name="lastName"
-                    placeholder="Last Name"
-                    required
-                    className="h-12 bg-gray-800/50 border-2 border-purple-500/30 rounded-full text-white placeholder:text-gray-400 focus:border-purple-400 focus:ring-0"
+                    id="companyName"
+                    name="companyName"
+                    placeholder="Acme Inc."
+                    className="bg-gray-700 border-gray-600 text-white placeholder:text-gray-400 focus:border-purple-500 focus:ring-purple-500"
                   />
                 </div>
-                <Input
-                  name="companyName"
-                  placeholder="Company Name (Optional)"
-                  className="h-12 bg-gray-800/50 border-2 border-purple-500/30 rounded-full text-white placeholder:text-gray-400 focus:border-purple-400 focus:ring-0"
-                />
-                <div className="relative">
-                  <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <div className="space-y-2">
+                  <Label htmlFor="signup-email" className="text-gray-300 text-sm">Email address</Label>
                   <Input
+                    id="signup-email"
                     name="email"
                     type="email"
-                    placeholder="Yourname@gmail.com"
+                    placeholder="john@company.com"
                     required
-                    className="pl-12 h-14 bg-gray-800/50 border-2 border-purple-500/30 rounded-full text-white placeholder:text-gray-400 focus:border-purple-400 focus:ring-0"
+                    className="bg-gray-700 border-gray-600 text-white placeholder:text-gray-400 focus:border-purple-500 focus:ring-purple-500"
                   />
                 </div>
-                <div className="relative">
-                  <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">🔒</div>
+                <div className="space-y-2">
+                  <Label htmlFor="signup-password" className="text-gray-300 text-sm">Your Password</Label>
                   <Input
+                    id="signup-password"
                     name="password"
                     type="password"
-                    placeholder="Password (min 8 character)"
+                    placeholder="Create a password"
                     required
-                    className="pl-12 h-14 bg-gray-800/50 border-2 border-purple-500/30 rounded-full text-white placeholder:text-gray-400 focus:border-purple-400 focus:ring-0"
+                    className="bg-gray-700 border-gray-600 text-white placeholder:text-gray-400 focus:border-purple-500 focus:ring-purple-500"
                   />
                 </div>
-              </div>
-              
-              <Button 
-                type="submit" 
-                className="w-full h-14 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-full text-lg" 
-                disabled={isLoading}
-              >
-                {isLoading && <Loader2 className="mr-2 h-5 w-5 animate-spin" />}
-                Continue
-              </Button>
-              
-              <div className="text-center">
-                <p className="text-gray-400 text-sm mb-4">or continue with →</p>
-                <div className="space-y-3">
-                  <Button
-                    type="button"
-                    onClick={handleGoogleSignIn}
-                    className="w-full h-12 bg-gray-800/50 hover:bg-gray-700/50 border-2 border-purple-500/30 rounded-full text-white font-medium"
-                  >
-                    <span className="mr-3">🌐</span>
-                    Google
-                  </Button>
-                  <Button
-                    type="button"
-                    onClick={handleLinkedInSignIn}
-                    className="w-full h-12 bg-gray-800/50 hover:bg-gray-700/50 border-2 border-purple-500/30 rounded-full text-white font-medium"
-                  >
-                    <Linkedin className="mr-3 h-4 w-4" />
-                    LinkedIn
-                  </Button>
-                </div>
-              </div>
-
-              <div className="text-center">
-                <p className="text-xs text-gray-400 mb-4">
-                  By registering, you agree to our <span className="text-purple-400">Terms</span> and <span className="text-purple-400">Privacy Policy</span>
-                </p>
-                <p className="text-gray-400 text-sm">
+                <Button 
+                  type="submit" 
+                  className="w-full bg-purple-600 hover:bg-purple-700 text-white font-medium py-3" 
+                  disabled={isLoading}
+                >
+                  {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  Create Account
+                </Button>
+                <p className="text-center text-gray-400 text-sm">
                   Already have an account?{' '}
                   <button
                     type="button"
@@ -273,10 +222,10 @@ export default function Auth() {
                     Sign in
                   </button>
                 </p>
-              </div>
-            </form>
-          )}
-        </div>
+              </form>
+            )}
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
