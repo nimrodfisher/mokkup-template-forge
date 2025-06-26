@@ -8,7 +8,7 @@ interface FunnelWithKpisRendererProps {
   showLabels: boolean;
   showValues: boolean;
   funnelPrimaryColor: string;
-  labelPosition: 'left' | 'right' | 'inside' | 'outside' | 'top' | 'bottom';
+  labelPosition: 'left' | 'right' | 'inside' | 'outside' | 'top' | 'bottom' | 'middle';
   funnelKpis?: Array<{ title: string; value: string; change?: string }>;
   funnelTexts?: Array<{ title: string; content: string }>;
   showText?: boolean;

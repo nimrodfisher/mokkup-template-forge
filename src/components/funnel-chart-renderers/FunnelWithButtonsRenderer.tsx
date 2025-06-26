@@ -10,7 +10,7 @@ interface FunnelWithButtonsRendererProps {
   showLabels: boolean;
   showValues: boolean;
   funnelPrimaryColor: string;
-  labelPosition: 'left' | 'right' | 'inside' | 'outside' | 'top' | 'bottom';
+  labelPosition: 'left' | 'right' | 'inside' | 'outside' | 'top' | 'bottom' | 'middle';
   funnelButtons?: Array<{ title: string; alignment: string }>;
   funnelDropdowns?: Array<{ title: string; values: string[]; editText?: string }>;
   showDropdowns?: boolean;

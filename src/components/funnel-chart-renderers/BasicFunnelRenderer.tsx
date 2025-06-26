@@ -7,13 +7,15 @@ interface BasicFunnelRendererProps {
   showLabels: boolean;
   showValues: boolean;
   funnelPrimaryColor: string;
+  labelPosition?: 'left' | 'right' | 'inside' | 'outside' | 'top' | 'bottom' | 'middle';
 }
 
 export function BasicFunnelRenderer({ 
   chartData, 
   showLabels, 
   showValues, 
-  funnelPrimaryColor 
+  funnelPrimaryColor,
+  labelPosition = 'inside'
 }: BasicFunnelRendererProps) {
   console.log('BasicFunnelRenderer props:', { chartData, showLabels, showValues });
 
