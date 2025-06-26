@@ -26,13 +26,10 @@ export function ButtonRenderer({ properties = {} }: ButtonRendererProps) {
   
   // Build custom styles
   const customStyles: React.CSSProperties = {};
-  let customClasses = '';
   
-  // Handle custom colors
+  // Handle custom colors - only apply if they exist
   if (properties.backgroundColor) {
     customStyles.backgroundColor = properties.backgroundColor;
-    // Remove hover effects when using custom colors
-    customClasses += ' hover:opacity-90';
   }
   
   if (properties.textColor) {
@@ -46,17 +43,17 @@ export function ButtonRenderer({ properties = {} }: ButtonRendererProps) {
     customStyles.backgroundColor = 'transparent';
   }
   
-  // Determine which classes to use
-  const shouldUseVariantClasses = !properties.backgroundColor && !properties.textColor;
+  // Determine which classes to use - only use custom styling if both colors are set
+  const hasCustomColors = properties.backgroundColor || properties.textColor;
   const buttonClasses = `rounded transition-colors ${sizeClasses[size]} ${
-    shouldUseVariantClasses ? variantClasses[variant] : customClasses
+    hasCustomColors ? 'hover:opacity-90' : variantClasses[variant]
   } flex items-center justify-center`;
   
   return (
     <div className="w-full h-full flex items-center justify-center">
       <button 
         className={buttonClasses}
-        style={customStyles}
+        style={Object.keys(customStyles).length > 0 ? customStyles : undefined}
       >
         {properties.buttonIcon && (
           <svg className="mr-1 w-4 h-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

@@ -22,10 +22,11 @@ export function ButtonPreviewSection({ properties }: ButtonPreviewSectionProps) 
     }
     
     // Handle custom colors vs variant colors
-    if (properties?.backgroundColor || properties?.textColor) {
+    const hasCustomColors = properties?.backgroundColor || properties?.textColor;
+    
+    if (hasCustomColors) {
       if (properties?.backgroundColor) {
         style.backgroundColor = properties.backgroundColor;
-        className += 'hover:opacity-90 ';
       }
       if (properties?.textColor) {
         style.color = properties.textColor;
@@ -37,6 +38,7 @@ export function ButtonPreviewSection({ properties }: ButtonPreviewSectionProps) 
         style.backgroundColor = 'transparent';
         className += 'border ';
       }
+      className += 'hover:opacity-90 ';
     } else {
       // Use variant styles
       switch (properties?.buttonVariant) {
@@ -68,7 +70,7 @@ export function ButtonPreviewSection({ properties }: ButtonPreviewSectionProps) 
       <div className="p-4 border rounded-md bg-gray-50 flex items-center justify-center">
         <button 
           className={previewClassName}
-          style={previewStyle}
+          style={Object.keys(previewStyle).length > 0 ? previewStyle : undefined}
         >
           {properties?.buttonIcon && (
             <svg className="mr-1 w-4 h-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
