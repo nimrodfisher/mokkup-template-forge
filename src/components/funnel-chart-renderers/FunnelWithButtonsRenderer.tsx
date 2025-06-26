@@ -10,6 +10,8 @@ interface FunnelWithButtonsRendererProps {
   showValues: boolean;
   funnelPrimaryColor: string;
   funnelButtons?: Array<{ title: string; alignment: string }>;
+  funnelDropdowns?: Array<{ title: string; values: string[]; editText?: string }>;
+  showDropdowns?: boolean;
 }
 
 export function FunnelWithButtonsRenderer({ 
@@ -17,9 +19,11 @@ export function FunnelWithButtonsRenderer({
   showLabels, 
   showValues, 
   funnelPrimaryColor,
-  funnelButtons = []
+  funnelButtons = [],
+  funnelDropdowns = [],
+  showDropdowns = false
 }: FunnelWithButtonsRendererProps) {
-  console.log('FunnelWithButtonsRenderer props:', { chartData, showLabels, showValues, funnelButtons });
+  console.log('FunnelWithButtonsRenderer props:', { chartData, showLabels, showValues, funnelButtons, funnelDropdowns, showDropdowns });
 
   const handleButtonClick = (buttonTitle: string) => {
     console.log(`Button clicked: ${buttonTitle}`);
@@ -73,16 +77,28 @@ export function FunnelWithButtonsRenderer({
   };
 
   const renderCustomLabel = (entry: any) => {
-    if (!entry || !entry.payload) return '';
+    console.log('Rendering label for entry:', entry);
+    
+    if (!entry || !entry.payload) {
+      console.log('No entry or payload found');
+      return '';
+    }
     
     const name = entry.payload.name || '';
     const value = entry.payload.value || entry.value || 0;
     const formattedValue = value.toLocaleString();
     
-    if (showValues) {
+    console.log('Label data:', { name, value, formattedValue, showLabels, showValues });
+    
+    if (showLabels && showValues) {
       return `${name}: ${formattedValue}`;
+    } else if (showLabels) {
+      return name;
+    } else if (showValues) {
+      return formattedValue;
     }
-    return name;
+    
+    return '';
   };
 
   return (
@@ -122,13 +138,13 @@ export function FunnelWithButtonsRenderer({
               isAnimationActive={true}
               animationDuration={800}
             >
-              {showLabels && (
+              {(showLabels || showValues) && (
                 <LabelList 
                   position="center" 
                   fill="#ffffff" 
                   stroke="none"
-                  fontSize={12}
-                  fontWeight="500"
+                  fontSize={14}
+                  fontWeight="600"
                   content={renderCustomLabel}
                 />
               )}

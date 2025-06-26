@@ -9,6 +9,7 @@ import { PieChartProperties } from "./pie-chart-properties/PieChartProperties";
 import { WaterfallProperties } from "./waterfall-properties/WaterfallProperties";
 import { ComboChartProperties } from "./combo-chart-properties/ComboChartProperties";
 import { BarChartProperties } from "./bar-chart-properties/BarChartProperties";
+import { FunnelChartProperties } from "./funnel-chart-properties/FunnelChartProperties";
 
 interface ElementPropertiesSelectorProps {
   updateElementProperties: (id: string, properties: Partial<Element['properties']>) => void;
@@ -86,6 +87,14 @@ export function ElementPropertiesSelector({ updateElementProperties, onOpenStyle
     case 'waterfall':
       return (
         <WaterfallProperties
+          element={selectedElement}
+          updateElementProperties={updateElementProperties}
+          onOpenStyleDialog={onOpenStyleDialog}
+        />
+      );
+    case 'funnel-chart':
+      return (
+        <FunnelChartProperties
           element={selectedElement}
           updateElementProperties={updateElementProperties}
           onOpenStyleDialog={onOpenStyleDialog}

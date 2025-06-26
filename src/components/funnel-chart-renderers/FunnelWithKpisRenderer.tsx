@@ -9,6 +9,8 @@ interface FunnelWithKpisRendererProps {
   showValues: boolean;
   funnelPrimaryColor: string;
   funnelKpis?: Array<{ title: string; value: string; change?: string }>;
+  funnelTexts?: Array<{ title: string; content: string }>;
+  showText?: boolean;
 }
 
 export function FunnelWithKpisRenderer({ 
@@ -16,9 +18,11 @@ export function FunnelWithKpisRenderer({
   showLabels, 
   showValues, 
   funnelPrimaryColor,
-  funnelKpis = []
+  funnelKpis = [],
+  funnelTexts = [],
+  showText = false
 }: FunnelWithKpisRendererProps) {
-  console.log('FunnelWithKpisRenderer props:', { chartData, showLabels, showValues, funnelKpis });
+  console.log('FunnelWithKpisRenderer props:', { chartData, showLabels, showValues, funnelKpis, funnelTexts, showText });
 
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
@@ -35,16 +39,28 @@ export function FunnelWithKpisRenderer({
   };
 
   const renderCustomLabel = (entry: any) => {
-    if (!entry || !entry.payload) return '';
+    console.log('Rendering label for entry:', entry);
+    
+    if (!entry || !entry.payload) {
+      console.log('No entry or payload found');
+      return '';
+    }
     
     const name = entry.payload.name || '';
     const value = entry.payload.value || entry.value || 0;
     const formattedValue = value.toLocaleString();
     
-    if (showValues) {
+    console.log('Label data:', { name, value, formattedValue, showLabels, showValues });
+    
+    if (showLabels && showValues) {
       return `${name}: ${formattedValue}`;
+    } else if (showLabels) {
+      return name;
+    } else if (showValues) {
+      return formattedValue;
     }
-    return name;
+    
+    return '';
   };
 
   const getChangeColor = (change: string) => {
@@ -86,6 +102,18 @@ export function FunnelWithKpisRenderer({
           ))}
         </div>
       )}
+
+      {/* Text Section */}
+      {showText && funnelTexts.length > 0 && (
+        <div className="mb-4 p-2">
+          {funnelTexts.map((text, index) => (
+            <div key={index} className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-2">
+              <div className="text-sm font-medium text-blue-900 mb-1">{text.title}</div>
+              <div className="text-sm text-blue-700">{text.content}</div>
+            </div>
+          ))}
+        </div>
+      )}
       
       {/* Chart Section */}
       <div className="flex-1">
@@ -98,13 +126,13 @@ export function FunnelWithKpisRenderer({
               isAnimationActive={true}
               animationDuration={800}
             >
-              {showLabels && (
+              {(showLabels || showValues) && (
                 <LabelList 
                   position="center" 
                   fill="#ffffff" 
                   stroke="none"
-                  fontSize={12}
-                  fontWeight="500"
+                  fontSize={14}
+                  fontWeight="600"
                   content={renderCustomLabel}
                 />
               )}
