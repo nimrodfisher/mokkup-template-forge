@@ -21,18 +21,19 @@ export function ButtonPreviewSection({ properties }: ButtonPreviewSectionProps) 
       className += 'px-4 py-2 text-sm ';
     }
     
-    // Handle custom colors vs variant colors
-    const hasCustomColors = properties?.backgroundColor || properties?.textColor;
+    // Only apply custom colors if they exist AND are different from defaults
+    const hasCustomBackgroundColor = properties?.backgroundColor && properties.backgroundColor !== '#3b82f6';
+    const hasCustomTextColor = properties?.textColor && properties.textColor !== '#ffffff';
     
-    if (hasCustomColors) {
-      if (properties?.backgroundColor) {
+    if (hasCustomBackgroundColor || hasCustomTextColor) {
+      if (hasCustomBackgroundColor) {
         style.backgroundColor = properties.backgroundColor;
       }
-      if (properties?.textColor) {
+      if (hasCustomTextColor) {
         style.color = properties.textColor;
       }
       // Special handling for outline variant
-      if (properties?.buttonVariant === 'outline' && properties?.backgroundColor) {
+      if (properties?.buttonVariant === 'outline' && hasCustomBackgroundColor) {
         style.borderColor = properties.backgroundColor;
         style.color = properties.backgroundColor;
         style.backgroundColor = 'transparent';

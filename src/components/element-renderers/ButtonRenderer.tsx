@@ -27,24 +27,27 @@ export function ButtonRenderer({ properties = {} }: ButtonRendererProps) {
   // Build custom styles
   const customStyles: React.CSSProperties = {};
   
-  // Handle custom colors - only apply if they exist
-  if (properties.backgroundColor) {
+  // Only apply custom colors if they exist AND are different from defaults
+  const hasCustomBackgroundColor = properties.backgroundColor && properties.backgroundColor !== '#3b82f6';
+  const hasCustomTextColor = properties.textColor && properties.textColor !== '#ffffff';
+  
+  if (hasCustomBackgroundColor) {
     customStyles.backgroundColor = properties.backgroundColor;
   }
   
-  if (properties.textColor) {
+  if (hasCustomTextColor) {
     customStyles.color = properties.textColor;
   }
   
   // For outline variant with custom background color
-  if (variant === 'outline' && properties.backgroundColor) {
+  if (variant === 'outline' && hasCustomBackgroundColor) {
     customStyles.borderColor = properties.backgroundColor;
     customStyles.color = properties.backgroundColor;
     customStyles.backgroundColor = 'transparent';
   }
   
-  // Determine which classes to use - only use custom styling if both colors are set
-  const hasCustomColors = properties.backgroundColor || properties.textColor;
+  // Determine which classes to use - only use custom styling if custom colors are set
+  const hasCustomColors = hasCustomBackgroundColor || hasCustomTextColor;
   const buttonClasses = `rounded transition-colors ${sizeClasses[size]} ${
     hasCustomColors ? 'hover:opacity-90' : variantClasses[variant]
   } flex items-center justify-center`;
