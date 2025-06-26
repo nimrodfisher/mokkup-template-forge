@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Element } from "@/hooks/useWireframe";
 import { Separator } from "@/components/ui/separator";
@@ -42,8 +43,12 @@ export function HeaderProperties({ element, updateElementProperties, onOpenStyle
   const [showIcon, setShowIcon] = useState<boolean>(element.properties?.showIcon || false);
   const [showText, setShowText] = useState<boolean>(element.properties?.showText || false);
   const [textContent, setTextContent] = useState<string>(element.properties?.textContent || 'Some dummy description text');
-  const [textAlignment, setTextAlignment] = useState<string>(element.properties?.textAlignment || 'left');
-  const [fontWeight, setFontWeight] = useState<string>(element.properties?.fontWeight || 'normal');
+  const [textAlignment, setTextAlignment] = useState<'left' | 'center' | 'right' | 'justify'>(
+    (element.properties?.textAlignment as 'left' | 'center' | 'right' | 'justify') || 'left'
+  );
+  const [fontWeight, setFontWeight] = useState<'light' | 'normal' | 'medium' | 'semibold' | 'bold' | 'extrabold'>(
+    (element.properties?.fontWeight as 'light' | 'normal' | 'medium' | 'semibold' | 'bold' | 'extrabold') || 'normal'
+  );
   const [showHighlightedText, setShowHighlightedText] = useState<boolean>(element.properties?.showHighlightedText || false);
   const [showDropdowns, setShowDropdowns] = useState<boolean>(element.properties?.showDropdowns || false);
   const [dropdowns, setDropdowns] = useState<Array<{title: string, values: string[], editText?: string}>>(
@@ -63,8 +68,8 @@ export function HeaderProperties({ element, updateElementProperties, onOpenStyle
     setShowIcon(element.properties?.showIcon || false);
     setShowText(element.properties?.showText || false);
     setTextContent(element.properties?.textContent || 'Some dummy description text');
-    setTextAlignment(element.properties?.textAlignment || 'left');
-    setFontWeight(element.properties?.fontWeight || 'normal');
+    setTextAlignment((element.properties?.textAlignment as 'left' | 'center' | 'right' | 'justify') || 'left');
+    setFontWeight((element.properties?.fontWeight as 'light' | 'normal' | 'medium' | 'semibold' | 'bold' | 'extrabold') || 'normal');
     setShowHighlightedText(element.properties?.showHighlightedText || false);
     setShowDropdowns(element.properties?.showDropdowns || false);
     setDropdowns(element.properties?.headerDropdowns || [{ title: 'Dropdown 1', values: ['Metric 1', 'Metric 2'] }]);
@@ -153,13 +158,15 @@ export function HeaderProperties({ element, updateElementProperties, onOpenStyle
   };
 
   const handleTextAlignmentChange = (alignment: string) => {
-    setTextAlignment(alignment);
-    updateElementProperties(element.id, { textAlignment: alignment });
+    const validAlignment = alignment as 'left' | 'center' | 'right' | 'justify';
+    setTextAlignment(validAlignment);
+    updateElementProperties(element.id, { textAlignment: validAlignment });
   };
 
   const handleFontWeightChange = (weight: string) => {
-    setFontWeight(weight);
-    updateElementProperties(element.id, { fontWeight: weight });
+    const validWeight = weight as 'light' | 'normal' | 'medium' | 'semibold' | 'bold' | 'extrabold';
+    setFontWeight(validWeight);
+    updateElementProperties(element.id, { fontWeight: validWeight });
   };
 
   const handleHighlightedTextToggle = (checked: boolean) => {

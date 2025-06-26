@@ -1,3 +1,4 @@
+
 export type ElementType = 
   'header' | 'button' | 'filter' | 'kpi' | 'column-chart' | 'bar-chart' | 'line-chart' | 
   'area-chart' | 'combo-chart' | 'pie-chart' | 'gauge-chart' |
@@ -91,6 +92,10 @@ export interface Element {
     enableStylize?: boolean;
     stylizeOption?: 'horizontal' | 'vertical' | 'centered';
     headerDropdowns?: Array<{title: string, values: string[], editText?: string}>;
+    // New header properties for icons and text
+    showIcon?: boolean;
+    textContent?: string;
+    showHighlightedText?: boolean;
     // Filter properties
     filterTitle?: string;
     filterVariant?: FilterVariant;
