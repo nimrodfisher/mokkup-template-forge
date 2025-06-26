@@ -5,7 +5,6 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
 import { X } from 'lucide-react';
@@ -50,39 +49,6 @@ export function ButtonProperties({
           placeholder="Enter button text"
           className="h-8"
         />
-      </div>
-
-      <Separator />
-
-      {/* Button Variant */}
-      <div className="space-y-3">
-        <Label className="text-sm font-medium">Button Style</Label>
-        <RadioGroup
-          value={properties.buttonVariant || 'default'}
-          onValueChange={(value) => handlePropertyChange('buttonVariant', value)}
-          className="grid grid-cols-1 gap-2"
-        >
-          <div className="flex items-center space-x-2">
-            <RadioGroupItem value="default" id="variant-default" />
-            <Label htmlFor="variant-default" className="text-sm">Default</Label>
-          </div>
-          <div className="flex items-center space-x-2">
-            <RadioGroupItem value="primary" id="variant-primary" />
-            <Label htmlFor="variant-primary" className="text-sm">Primary</Label>
-          </div>
-          <div className="flex items-center space-x-2">
-            <RadioGroupItem value="secondary" id="variant-secondary" />
-            <Label htmlFor="variant-secondary" className="text-sm">Secondary</Label>
-          </div>
-          <div className="flex items-center space-x-2">
-            <RadioGroupItem value="outline" id="variant-outline" />
-            <Label htmlFor="variant-outline" className="text-sm">Outline</Label>
-          </div>
-          <div className="flex items-center space-x-2">
-            <RadioGroupItem value="ghost" id="variant-ghost" />
-            <Label htmlFor="variant-ghost" className="text-sm">Ghost</Label>
-          </div>
-        </RadioGroup>
       </div>
 
       <Separator />
@@ -187,15 +153,8 @@ export function ButtonProperties({
               'px-4 py-2 text-sm'
             }`}
             style={{
-              backgroundColor: properties.backgroundColor || (
-                properties.buttonVariant === 'primary' ? '#7c3aed' :
-                properties.buttonVariant === 'secondary' ? '#6b7280' :
-                properties.buttonVariant === 'outline' ? 'transparent' :
-                properties.buttonVariant === 'ghost' ? 'transparent' :
-                '#3b82f6'
-              ),
-              color: properties.textColor || '#ffffff',
-              border: properties.buttonVariant === 'outline' ? '1px solid #d1d5db' : 'none'
+              backgroundColor: properties.backgroundColor || '#3b82f6',
+              color: properties.textColor || '#ffffff'
             }}
           >
             {properties.buttonIcon && (
