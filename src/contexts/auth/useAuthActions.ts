@@ -71,7 +71,7 @@ export function useAuthActions() {
         password,
         options: {
           data: sanitizedUserData,
-          emailRedirectTo: `${window.location.origin}/`
+          emailRedirectTo: `${window.location.origin}/dashboard`
         }
       });
       
@@ -151,7 +151,7 @@ export function useAuthActions() {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/`
+          redirectTo: `${window.location.origin}/dashboard`
         }
       });
       
@@ -174,7 +174,7 @@ export function useAuthActions() {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'linkedin_oidc',
         options: {
-          redirectTo: `${window.location.origin}/`
+          redirectTo: `${window.location.origin}/dashboard`
         }
       });
       
