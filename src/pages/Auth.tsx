@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -5,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Users } from 'lucide-react';
 
 export default function Auth() {
   const [isLoading, setIsLoading] = useState(false);
@@ -61,42 +62,36 @@ export default function Auth() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-950 via-purple-900 to-pink-900">
       {/* Header */}
-      <header className="bg-gray-900 border-b border-gray-800">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <Link to="/" className="font-bold text-xl text-purple-400">Alignify</Link>
-          <div className="flex items-center gap-6">
-            <nav className="hidden md:flex items-center gap-6">
-              <Link to="/" className="text-gray-300 hover:text-white transition-colors">Home</Link>
-              <Link to="/templates" className="text-gray-300 hover:text-white transition-colors">Features</Link>
-              <Link to="/templates" className="text-gray-300 hover:text-white transition-colors">FAQ</Link>
-            </nav>
-            <div className="flex items-center gap-4">
-              <button
-                onClick={() => setIsSignUp(false)}
-                className={`text-sm transition-colors ${!isSignUp ? 'text-white' : 'text-gray-300 hover:text-white'}`}
-              >
-                Login
-              </button>
-              <button
-                onClick={() => setIsSignUp(true)}
-                className={`px-4 py-2 rounded text-sm font-medium transition-colors ${
-                  isSignUp 
-                    ? 'bg-purple-600 text-white' 
-                    : 'bg-transparent border border-purple-600 text-purple-400 hover:bg-purple-600 hover:text-white'
-                }`}
-              >
-                Join the Beta
-              </button>
+      <header className="bg-gradient-to-r from-purple-900/80 to-indigo-900/80 backdrop-blur-sm border-b border-white/10">
+        <div className="container mx-auto px-6 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center shadow-lg">
+              <span className="text-white font-bold">A</span>
             </div>
+            <span className="font-bold text-xl text-white">Alignify</span>
+          </div>
+          
+          <nav className="hidden md:flex items-center gap-8">
+            <Link to="/" className="text-gray-300 hover:text-white transition-colors text-sm">Home</Link>
+            <Link to="/templates" className="text-gray-300 hover:text-white transition-colors text-sm">Features</Link>
+            <Link to="#faq" className="text-gray-300 hover:text-white transition-colors text-sm">FAQ</Link>
+            <Link to="/auth" className="text-gray-300 hover:text-white transition-colors text-sm">Login</Link>
+          </nav>
+          
+          <div className="flex items-center gap-3">
+            <Button className="bg-white/10 text-white border border-white/20 hover:bg-white/20 backdrop-blur-sm shadow-lg text-sm px-6">
+              <Users className="w-4 h-4 mr-2" />
+              Join Beta
+            </Button>
           </div>
         </div>
       </header>
 
       {/* Auth Form */}
       <div className="flex items-center justify-center p-4 pt-20">
-        <Card className="w-full max-w-md bg-gray-800 border-gray-700">
+        <Card className="w-full max-w-md bg-gray-800/90 backdrop-blur-xl border-gray-700/50 shadow-2xl">
           <CardHeader className="text-center pb-8">
             <CardTitle className="text-2xl font-semibold text-white mb-2">
               {isSignUp ? 'Create Account' : 'Welcome Back'}
@@ -116,7 +111,7 @@ export default function Auth() {
                     type="email"
                     placeholder="Enter your email"
                     required
-                    className="bg-gray-700 border-gray-600 text-white placeholder:text-gray-400 focus:border-purple-500 focus:ring-purple-500"
+                    className="bg-gray-700/50 border-gray-600 text-white placeholder:text-gray-400 focus:border-purple-500 focus:ring-purple-500"
                   />
                 </div>
                 <div className="space-y-2">
@@ -127,12 +122,12 @@ export default function Auth() {
                     type="password"
                     placeholder="Enter your password"
                     required
-                    className="bg-gray-700 border-gray-600 text-white placeholder:text-gray-400 focus:border-purple-500 focus:ring-purple-500"
+                    className="bg-gray-700/50 border-gray-600 text-white placeholder:text-gray-400 focus:border-purple-500 focus:ring-purple-500"
                   />
                 </div>
                 <Button 
                   type="submit" 
-                  className="w-full bg-purple-600 hover:bg-purple-700 text-white font-medium py-3" 
+                  className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-medium py-3 shadow-lg" 
                   disabled={isLoading}
                 >
                   {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
@@ -159,7 +154,7 @@ export default function Auth() {
                       name="firstName"
                       placeholder="John"
                       required
-                      className="bg-gray-700 border-gray-600 text-white placeholder:text-gray-400 focus:border-purple-500 focus:ring-purple-500"
+                      className="bg-gray-700/50 border-gray-600 text-white placeholder:text-gray-400 focus:border-purple-500 focus:ring-purple-500"
                     />
                   </div>
                   <div className="space-y-2">
@@ -169,7 +164,7 @@ export default function Auth() {
                       name="lastName"
                       placeholder="Doe"
                       required
-                      className="bg-gray-700 border-gray-600 text-white placeholder:text-gray-400 focus:border-purple-500 focus:ring-purple-500"
+                      className="bg-gray-700/50 border-gray-600 text-white placeholder:text-gray-400 focus:border-purple-500 focus:ring-purple-500"
                     />
                   </div>
                 </div>
@@ -179,7 +174,7 @@ export default function Auth() {
                     id="companyName"
                     name="companyName"
                     placeholder="Acme Inc."
-                    className="bg-gray-700 border-gray-600 text-white placeholder:text-gray-400 focus:border-purple-500 focus:ring-purple-500"
+                    className="bg-gray-700/50 border-gray-600 text-white placeholder:text-gray-400 focus:border-purple-500 focus:ring-purple-500"
                   />
                 </div>
                 <div className="space-y-2">
@@ -190,7 +185,7 @@ export default function Auth() {
                     type="email"
                     placeholder="john@company.com"
                     required
-                    className="bg-gray-700 border-gray-600 text-white placeholder:text-gray-400 focus:border-purple-500 focus:ring-purple-500"
+                    className="bg-gray-700/50 border-gray-600 text-white placeholder:text-gray-400 focus:border-purple-500 focus:ring-purple-500"
                   />
                 </div>
                 <div className="space-y-2">
@@ -201,12 +196,12 @@ export default function Auth() {
                     type="password"
                     placeholder="Create a password"
                     required
-                    className="bg-gray-700 border-gray-600 text-white placeholder:text-gray-400 focus:border-purple-500 focus:ring-purple-500"
+                    className="bg-gray-700/50 border-gray-600 text-white placeholder:text-gray-400 focus:border-purple-500 focus:ring-purple-500"
                   />
                 </div>
                 <Button 
                   type="submit" 
-                  className="w-full bg-purple-600 hover:bg-purple-700 text-white font-medium py-3" 
+                  className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-medium py-3 shadow-lg" 
                   disabled={isLoading}
                 >
                   {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
