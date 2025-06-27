@@ -15,11 +15,97 @@ export function ImageDownloadDialog({ open, onOpenChange }: ImageDownloadDialogP
   const [selectedScreen, setSelectedScreen] = useState<'all' | 'current'>('current');
   const [selectedFormat, setSelectedFormat] = useState<'PNG' | 'JPEG' | 'PDF'>('PNG');
   const [exportCount] = useState(1);
+  const [isExporting, setIsExporting] = useState(false);
 
-  const handleExport = () => {
-    // Here you would implement the actual export functionality
-    toast.success(`Exporting ${selectedScreen} screen(s) as ${selectedFormat}`);
-    onOpenChange(false);
+  const captureElement = async (element: HTMLElement, format: string): Promise<string> => {
+    // Use html2canvas to capture the element
+    const html2canvas = (await import('html2canvas')).default;
+    
+    const canvas = await html2canvas(element, {
+      backgroundColor: '#ffffff',
+      scale: 2, // Higher resolution
+      useCORS: true,
+      allowTaint: true,
+      scrollX: 0,
+      scrollY: 0,
+    });
+
+    if (format === 'JPEG') {
+      return canvas.toDataURL('image/jpeg', 0.9);
+    } else {
+      return canvas.toDataURL('image/png');
+    }
+  };
+
+  const generatePDF = async (imageDataUrl: string) => {
+    const jsPDF = (await import('jspdf')).jsPDF;
+    const pdf = new jsPDF();
+    
+    // Get image dimensions
+    const img = new Image();
+    img.src = imageDataUrl;
+    
+    return new Promise<string>((resolve) => {
+      img.onload = () => {
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = (img.height * pdfWidth) / img.width;
+        
+        pdf.addImage(imageDataUrl, 'PNG', 0, 0, pdfWidth, pdfHeight);
+        const pdfDataUrl = pdf.output('datauristring');
+        resolve(pdfDataUrl);
+      };
+    });
+  };
+
+  const downloadFile = (dataUrl: string, filename: string) => {
+    const link = document.createElement('a');
+    link.download = filename;
+    link.href = dataUrl;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const handleExport = async () => {
+    setIsExporting(true);
+    
+    try {
+      // Find the main canvas or content area to capture
+      const canvasElement = document.querySelector('.canvas-container') || 
+                           document.querySelector('[data-testid="canvas"]') ||
+                           document.querySelector('.wireframe-canvas') ||
+                           document.querySelector('main') ||
+                           document.body;
+
+      if (!canvasElement || !(canvasElement instanceof HTMLElement)) {
+        toast.error('Could not find content to export');
+        return;
+      }
+
+      let dataUrl: string;
+      const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
+      
+      if (selectedFormat === 'PDF') {
+        // First capture as PNG, then convert to PDF
+        const pngDataUrl = await captureElement(canvasElement, 'PNG');
+        dataUrl = await generatePDF(pngDataUrl);
+        downloadFile(dataUrl, `alignify-export-${timestamp}.pdf`);
+      } else {
+        // Direct image export
+        dataUrl = await captureElement(canvasElement, selectedFormat);
+        const extension = selectedFormat.toLowerCase();
+        downloadFile(dataUrl, `alignify-export-${timestamp}.${extension}`);
+      }
+
+      toast.success(`Successfully exported ${selectedScreen} screen as ${selectedFormat}`);
+      onOpenChange(false);
+      
+    } catch (error) {
+      console.error('Export failed:', error);
+      toast.error('Export failed. Please try again.');
+    } finally {
+      setIsExporting(false);
+    }
   };
 
   return (
@@ -101,8 +187,12 @@ export function ImageDownloadDialog({ open, onOpenChange }: ImageDownloadDialogP
             </Button>
           </div>
           
-          <Button onClick={handleExport} className="w-full">
-            Export
+          <Button 
+            onClick={handleExport} 
+            className="w-full"
+            disabled={isExporting}
+          >
+            {isExporting ? 'Exporting...' : 'Export'}
           </Button>
         </div>
       </DialogContent>
