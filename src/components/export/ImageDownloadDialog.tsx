@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -27,10 +28,6 @@ export function ImageDownloadDialog({ open, onOpenChange }: ImageDownloadDialogP
       allowTaint: true,
       scrollX: 0,
       scrollY: 0,
-      width: element.scrollWidth,
-      height: element.scrollHeight,
-      x: 0,
-      y: 0,
     });
 
     if (format === 'JPEG') {
@@ -73,81 +70,34 @@ export function ImageDownloadDialog({ open, onOpenChange }: ImageDownloadDialogP
     setIsExporting(true);
     
     try {
-      // Find the specific canvas/template area to capture (more specific selectors)
-      const canvasElement = document.querySelector('.canvas-content') || 
+      // Find the main canvas or content area to capture
+      const canvasElement = document.querySelector('.canvas-container') || 
+                           document.querySelector('[data-testid="canvas"]') ||
                            document.querySelector('.wireframe-canvas') ||
-                           document.querySelector('[data-canvas="true"]') ||
-                           document.querySelector('.template-area') ||
-                           document.querySelector('#canvas') ||
-                           document.querySelector('.canvas-container > div:first-child') ||
-                           document.querySelector('main > div:not(.sidebar)');
+                           document.querySelector('main') ||
+                           document.body;
 
       if (!canvasElement || !(canvasElement instanceof HTMLElement)) {
-        // Fallback: try to find the main content area excluding sidebar
-        const mainContent = document.querySelector('main');
-        const sidebar = document.querySelector('.sidebar, [data-sidebar], .w-64, .w-80');
-        
-        if (mainContent && sidebar) {
-          // Create a temporary container with just the canvas content
-          const tempContainer = document.createElement('div');
-          const mainRect = mainContent.getBoundingClientRect();
-          const sidebarRect = sidebar.getBoundingClientRect();
-          
-          // Clone main content but exclude sidebar area
-          const clonedMain = mainContent.cloneNode(true) as HTMLElement;
-          tempContainer.appendChild(clonedMain);
-          
-          // Style the temp container to match the canvas area
-          tempContainer.style.position = 'absolute';
-          tempContainer.style.left = `${sidebarRect.width}px`;
-          tempContainer.style.top = '0';
-          tempContainer.style.width = `${mainRect.width - sidebarRect.width}px`;
-          tempContainer.style.height = `${mainRect.height}px`;
-          tempContainer.style.overflow = 'hidden';
-          tempContainer.style.zIndex = '-9999';
-          
-          document.body.appendChild(tempContainer);
-          
-          try {
-            const dataUrl = await captureElement(tempContainer, selectedFormat);
-            const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
-            
-            if (selectedFormat === 'PDF') {
-              const pdfDataUrl = await generatePDF(dataUrl);
-              downloadFile(pdfDataUrl, `alignify-template-${timestamp}.pdf`);
-            } else {
-              const extension = selectedFormat.toLowerCase();
-              downloadFile(dataUrl, `alignify-template-${timestamp}.${extension}`);
-            }
-            
-            document.body.removeChild(tempContainer);
-          } catch (error) {
-            document.body.removeChild(tempContainer);
-            throw error;
-          }
-        } else {
-          toast.error('Could not find template area to export. Please make sure you are in the editor.');
-          return;
-        }
-      } else {
-        // Direct capture of found canvas element
-        let dataUrl: string;
-        const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
-        
-        if (selectedFormat === 'PDF') {
-          // First capture as PNG, then convert to PDF
-          const pngDataUrl = await captureElement(canvasElement, 'PNG');
-          dataUrl = await generatePDF(pngDataUrl);
-          downloadFile(dataUrl, `alignify-template-${timestamp}.pdf`);
-        } else {
-          // Direct image export
-          dataUrl = await captureElement(canvasElement, selectedFormat);
-          const extension = selectedFormat.toLowerCase();
-          downloadFile(dataUrl, `alignify-template-${timestamp}.${extension}`);
-        }
+        toast.error('Could not find content to export');
+        return;
       }
 
-      toast.success(`Successfully exported template as ${selectedFormat}`);
+      let dataUrl: string;
+      const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
+      
+      if (selectedFormat === 'PDF') {
+        // First capture as PNG, then convert to PDF
+        const pngDataUrl = await captureElement(canvasElement, 'PNG');
+        dataUrl = await generatePDF(pngDataUrl);
+        downloadFile(dataUrl, `alignify-export-${timestamp}.pdf`);
+      } else {
+        // Direct image export
+        dataUrl = await captureElement(canvasElement, selectedFormat);
+        const extension = selectedFormat.toLowerCase();
+        downloadFile(dataUrl, `alignify-export-${timestamp}.${extension}`);
+      }
+
+      toast.success(`Successfully exported ${selectedScreen} screen as ${selectedFormat}`);
       onOpenChange(false);
       
     } catch (error) {
