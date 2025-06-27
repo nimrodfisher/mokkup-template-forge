@@ -2,6 +2,7 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useWireframe } from "@/hooks/useWireframe";
+import { useAuth } from "@/contexts/AuthContext";
 import { useState } from "react";
 import { SaveTemplateDialog } from "./SaveTemplateDialog";
 
@@ -12,6 +13,7 @@ interface NavbarProps {
 export function Navbar({ onSave }: NavbarProps) {
   const [saveDialogOpen, setSaveDialogOpen] = useState(false);
   const { activeTemplateId, createNewTemplate } = useWireframe();
+  const { user } = useAuth();
   
   const handleSave = () => {
     if (onSave) {
@@ -27,6 +29,9 @@ export function Navbar({ onSave }: NavbarProps) {
         <Link to="/" className="font-bold text-lg text-white">Alignify</Link>
         <div className="h-6 w-px bg-white/30" />
         <Link to="/templates" className="text-sm text-white/80 hover:text-white">Templates</Link>
+        {!user && (
+          <Link to="/auth" className="text-sm text-white/80 hover:text-white">Login</Link>
+        )}
       </div>
       
       <div className="flex items-center gap-2">

@@ -35,7 +35,9 @@ const Index = () => {
             <Link to="/" className="text-gray-300 hover:text-white transition-colors text-sm">Home</Link>
             <Link to="/templates" className="text-gray-300 hover:text-white transition-colors text-sm">Features</Link>
             <Link to="#faq" className="text-gray-300 hover:text-white transition-colors text-sm">FAQ</Link>
-            <Link to="/auth" className="text-gray-300 hover:text-white transition-colors text-sm">Login</Link>
+            {!user && (
+              <Link to="/auth" className="text-gray-300 hover:text-white transition-colors text-sm">Login</Link>
+            )}
           </nav>
           <div className="flex items-center gap-3">
             {user ? (
