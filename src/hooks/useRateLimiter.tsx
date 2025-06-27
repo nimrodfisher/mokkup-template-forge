@@ -1,67 +1,60 @@
 
 import { useState, useCallback } from 'react';
 
-interface RateLimiterOptions {
+interface RateLimiterConfig {
   maxAttempts: number;
   windowMs: number;
-  blockDurationMs?: number;
 }
 
-export function useRateLimiter(options: RateLimiterOptions) {
-  const [attempts, setAttempts] = useState<number[]>([]);
-  const [isBlocked, setIsBlocked] = useState(false);
-  const [blockUntil, setBlockUntil] = useState<number | null>(null);
+interface AttemptRecord {
+  count: number;
+  resetTime: number;
+}
 
-  const checkRateLimit = useCallback(() => {
+export function useRateLimiter(config: RateLimiterConfig) {
+  const [attempts, setAttempts] = useState<Map<string, AttemptRecord>>(new Map());
+
+  const isAllowed = useCallback((key: string): boolean => {
     const now = Date.now();
+    const record = attempts.get(key);
     
-    // Check if currently blocked
-    if (blockUntil && now < blockUntil) {
-      return false;
+    if (!record || now > record.resetTime) {
+      // Reset or first attempt
+      setAttempts(prev => new Map(prev).set(key, {
+        count: 1,
+        resetTime: now + config.windowMs
+      }));
+      return true;
     }
     
-    if (blockUntil && now >= blockUntil) {
-      setIsBlocked(false);
-      setBlockUntil(null);
-      setAttempts([]);
+    if (record.count >= config.maxAttempts) {
+      return false; // Rate limited
     }
-
-    // Filter attempts within the time window
-    const recentAttempts = attempts.filter(
-      attemptTime => now - attemptTime < options.windowMs
-    );
-
-    // Check if limit exceeded
-    if (recentAttempts.length >= options.maxAttempts) {
-      setIsBlocked(true);
-      const blockDuration = options.blockDurationMs || options.windowMs * 2;
-      setBlockUntil(now + blockDuration);
-      return false;
-    }
-
-    // Add current attempt
-    const newAttempts = [...recentAttempts, now];
-    setAttempts(newAttempts);
+    
+    // Increment attempt count
+    setAttempts(prev => new Map(prev).set(key, {
+      ...record,
+      count: record.count + 1
+    }));
     
     return true;
-  }, [attempts, blockUntil, options]);
+  }, [attempts, config]);
 
-  const getRemainingTime = useCallback(() => {
-    if (!blockUntil) return 0;
-    return Math.max(0, blockUntil - Date.now());
-  }, [blockUntil]);
+  const getRemainingTime = useCallback((key: string): number => {
+    const record = attempts.get(key);
+    if (!record) return 0;
+    
+    const now = Date.now();
+    return Math.max(0, record.resetTime - now);
+  }, [attempts]);
 
-  const reset = useCallback(() => {
-    setAttempts([]);
-    setIsBlocked(false);
-    setBlockUntil(null);
+  const reset = useCallback((key: string) => {
+    setAttempts(prev => {
+      const newMap = new Map(prev);
+      newMap.delete(key);
+      return newMap;
+    });
   }, []);
 
-  return {
-    checkRateLimit,
-    isBlocked,
-    getRemainingTime,
-    reset,
-    attemptsRemaining: Math.max(0, options.maxAttempts - attempts.length)
-  };
+  return { isAllowed, getRemainingTime, reset };
 }
