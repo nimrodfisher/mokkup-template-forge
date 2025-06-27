@@ -6,73 +6,151 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Loader2, Users } from 'lucide-react';
+import { Loader2, Users, AlertCircle } from 'lucide-react';
+import { toast } from 'sonner';
 
 export default function Auth() {
   const [isLoading, setIsLoading] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
   const [socialLoading, setSocialLoading] = useState<string | null>(null);
-  const { user, signIn, signUp, signInWithGoogle, signInWithLinkedIn } = useAuth();
+  const [error, setError] = useState<string | null>(null);
+  const { user, signIn, signUp, signInWithGoogle, signInWithLinkedIn, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
-  const from = location.state?.from?.pathname || '/editor';
+  const from = location.state?.from?.pathname || '/';
 
   useEffect(() => {
-    if (user) {
+    if (user && !authLoading) {
+      console.log('User authenticated, redirecting to:', from);
       navigate(from, { replace: true });
     }
-  }, [user, navigate, from]);
+  }, [user, navigate, from, authLoading]);
 
   const handleSignIn = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
+    setError(null);
     
-    const formData = new FormData(e.currentTarget);
-    const email = formData.get('email') as string;
-    const password = formData.get('password') as string;
+    try {
+      const formData = new FormData(e.currentTarget);
+      const email = formData.get('email') as string;
+      const password = formData.get('password') as string;
 
-    const { error } = await signIn(email, password);
-    if (!error) {
-      navigate(from, { replace: true });
+      if (!email || !password) {
+        setError('Please fill in all fields');
+        return;
+      }
+
+      console.log('Attempting sign in with:', email);
+      const { error } = await signIn(email, password);
+      
+      if (error) {
+        console.error('Sign in error:', error);
+        setError(error.message);
+      } else {
+        console.log('Sign in successful');
+      }
+    } catch (err) {
+      console.error('Sign in catch error:', err);
+      setError('An unexpected error occurred');
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
   const handleSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
+    setError(null);
     
-    const formData = new FormData(e.currentTarget);
-    const email = formData.get('email') as string;
-    const password = formData.get('password') as string;
-    const firstName = formData.get('firstName') as string;
-    const lastName = formData.get('lastName') as string;
-    const companyName = formData.get('companyName') as string;
+    try {
+      const formData = new FormData(e.currentTarget);
+      const email = formData.get('email') as string;
+      const password = formData.get('password') as string;
+      const firstName = formData.get('firstName') as string;
+      const lastName = formData.get('lastName') as string;
+      const companyName = formData.get('companyName') as string;
 
-    const { error } = await signUp(email, password, {
-      first_name: firstName,
-      last_name: lastName,
-      company_name: companyName,
-    });
-    
-    if (!error) {
-      setIsSignUp(false);
+      if (!email || !password || !firstName || !lastName) {
+        setError('Please fill in all required fields');
+        return;
+      }
+
+      console.log('Attempting sign up with:', email);
+      const { error } = await signUp(email, password, {
+        first_name: firstName,
+        last_name: lastName,
+        company_name: companyName,
+      });
+      
+      if (error) {
+        console.error('Sign up error:', error);
+        setError(error.message);
+      } else {
+        console.log('Sign up successful');
+        setIsSignUp(false);
+      }
+    } catch (err) {
+      console.error('Sign up catch error:', err);
+      setError('An unexpected error occurred');
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
   const handleGoogleSignIn = async () => {
     setSocialLoading('google');
-    await signInWithGoogle();
-    setSocialLoading(null);
+    setError(null);
+    
+    try {
+      console.log('Starting Google authentication...');
+      const { error } = await signInWithGoogle();
+      
+      if (error) {
+        console.error('Google sign in error:', error);
+        setError(error.message);
+        setSocialLoading(null);
+      }
+      // Don't clear loading here - let the auth state change handle it
+    } catch (err) {
+      console.error('Google sign in catch error:', err);
+      setError('Failed to sign in with Google');
+      setSocialLoading(null);
+    }
   };
 
   const handleLinkedInSignIn = async () => {
     setSocialLoading('linkedin');
-    await signInWithLinkedIn();
-    setSocialLoading(null);
+    setError(null);
+    
+    try {
+      console.log('Starting LinkedIn authentication...');
+      const { error } = await signInWithLinkedIn();
+      
+      if (error) {
+        console.error('LinkedIn sign in error:', error);
+        setError(error.message);
+        setSocialLoading(null);
+      }
+      // Don't clear loading here - let the auth state change handle it
+    } catch (err) {
+      console.error('LinkedIn sign in catch error:', err);
+      setError('Failed to sign in with LinkedIn');
+      setSocialLoading(null);
+    }
   };
+
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-indigo-950 via-purple-900 to-pink-900 flex items-center justify-center">
+        <div className="flex items-center gap-2 text-white">
+          <Loader2 className="w-6 h-6 animate-spin" />
+          <span>Loading...</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-950 via-purple-900 to-pink-900">
@@ -114,11 +192,19 @@ export default function Auth() {
             </CardDescription>
           </CardHeader>
           <CardContent>
+            {/* Error Display */}
+            {error && (
+              <div className="mb-4 p-3 bg-red-500/10 border border-red-500/20 rounded-lg flex items-center gap-2 text-red-400 text-sm">
+                <AlertCircle className="w-4 h-4" />
+                {error}
+              </div>
+            )}
+
             {/* Social Login Buttons */}
             <div className="space-y-3 mb-6">
               <Button
                 onClick={handleGoogleSignIn}
-                disabled={socialLoading === 'google'}
+                disabled={socialLoading === 'google' || isLoading}
                 className="w-full bg-white hover:bg-gray-50 text-gray-900 border border-gray-300 font-medium py-3"
               >
                 {socialLoading === 'google' ? (
@@ -136,7 +222,7 @@ export default function Auth() {
               
               <Button
                 onClick={handleLinkedInSignIn}
-                disabled={socialLoading === 'linkedin'}
+                disabled={socialLoading === 'linkedin' || isLoading}
                 className="w-full bg-[#0077B5] hover:bg-[#005582] text-white font-medium py-3"
               >
                 {socialLoading === 'linkedin' ? (
@@ -186,7 +272,7 @@ export default function Auth() {
                 <Button 
                   type="submit" 
                   className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-medium py-3 shadow-lg" 
-                  disabled={isLoading}
+                  disabled={isLoading || socialLoading !== null}
                 >
                   {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                   Sign in
@@ -195,7 +281,10 @@ export default function Auth() {
                   Don't have an account?{' '}
                   <button
                     type="button"
-                    onClick={() => setIsSignUp(true)}
+                    onClick={() => {
+                      setIsSignUp(true);
+                      setError(null);
+                    }}
                     className="text-purple-400 hover:text-purple-300 font-medium"
                   >
                     Sign up
@@ -206,7 +295,7 @@ export default function Auth() {
               <form onSubmit={handleSignUp} className="space-y-6 mt-6">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="firstName" className="text-gray-300 text-sm">First Name</Label>
+                    <Label htmlFor="firstName" className="text-gray-300 text-sm">First Name *</Label>
                     <Input
                       id="firstName"
                       name="firstName"
@@ -216,7 +305,7 @@ export default function Auth() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="lastName" className="text-gray-300 text-sm">Last Name</Label>
+                    <Label htmlFor="lastName" className="text-gray-300 text-sm">Last Name *</Label>
                     <Input
                       id="lastName"
                       name="lastName"
@@ -236,7 +325,7 @@ export default function Auth() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="signup-email" className="text-gray-300 text-sm">Email address</Label>
+                  <Label htmlFor="signup-email" className="text-gray-300 text-sm">Email address *</Label>
                   <Input
                     id="signup-email"
                     name="email"
@@ -247,7 +336,7 @@ export default function Auth() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="signup-password" className="text-gray-300 text-sm">Your Password</Label>
+                  <Label htmlFor="signup-password" className="text-gray-300 text-sm">Your Password *</Label>
                   <Input
                     id="signup-password"
                     name="password"
@@ -260,7 +349,7 @@ export default function Auth() {
                 <Button 
                   type="submit" 
                   className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-medium py-3 shadow-lg" 
-                  disabled={isLoading}
+                  disabled={isLoading || socialLoading !== null}
                 >
                   {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                   Create Account
@@ -269,7 +358,10 @@ export default function Auth() {
                   Already have an account?{' '}
                   <button
                     type="button"
-                    onClick={() => setIsSignUp(false)}
+                    onClick={() => {
+                      setIsSignUp(false);
+                      setError(null);
+                    }}
                     className="text-purple-400 hover:text-purple-300 font-medium"
                   >
                     Sign in

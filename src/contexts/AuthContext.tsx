@@ -34,15 +34,39 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
+      async (event, session) => {
+        console.log('Auth state changed:', event, session);
         setSession(session);
         setUser(session?.user ?? null);
         setLoading(false);
+        
+        if (event === 'SIGNED_IN' && session?.user) {
+          // Check if profile exists, if not create it
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', session.user.id)
+            .single();
+            
+          if (!profile) {
+            await supabase
+              .from('profiles')
+              .insert({
+                id: session.user.id,
+                email: session.user.email,
+                first_name: session.user.user_metadata?.first_name || session.user.user_metadata?.given_name,
+                last_name: session.user.user_metadata?.last_name || session.user.user_metadata?.family_name,
+                company_name: session.user.user_metadata?.company_name,
+                avatar_url: session.user.user_metadata?.avatar_url
+              });
+          }
+        }
       }
     );
 
     // Check for existing session
     supabase.auth.getSession().then(({ data: { session } }) => {
+      console.log('Initial session:', session);
       setSession(session);
       setUser(session?.user ?? null);
       setLoading(false);
@@ -53,18 +77,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signUp = async (email: string, password: string, userData?: any) => {
     try {
-      const redirectUrl = `${window.location.origin}/`;
-      
+      setLoading(true);
       const { error } = await supabase.auth.signUp({
         email,
         password,
         options: {
-          emailRedirectTo: redirectUrl,
           data: userData
         }
       });
       
       if (error) {
+        console.error('SignUp error:', error);
         toast.error(error.message);
       } else {
         toast.success('Check your email to confirm your account!');
@@ -72,20 +95,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       
       return { error };
     } catch (error) {
+      console.error('SignUp catch error:', error);
       const err = error as Error;
       toast.error(err.message);
       return { error: err };
+    } finally {
+      setLoading(false);
     }
   };
 
   const signIn = async (email: string, password: string) => {
     try {
+      setLoading(true);
       const { error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
       
       if (error) {
+        console.error('SignIn error:', error);
         toast.error(error.message);
       } else {
         toast.success('Welcome back!');
@@ -93,27 +121,33 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       
       return { error };
     } catch (error) {
+      console.error('SignIn catch error:', error);
       const err = error as Error;
       toast.error(err.message);
       return { error: err };
+    } finally {
+      setLoading(false);
     }
   };
 
   const signInWithGoogle = async () => {
     try {
+      console.log('Starting Google sign in...');
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/`
+          redirectTo: window.location.origin
         }
       });
       
       if (error) {
+        console.error('Google sign in error:', error);
         toast.error(error.message);
       }
       
       return { error };
     } catch (error) {
+      console.error('Google sign in catch error:', error);
       const err = error as Error;
       toast.error(err.message);
       return { error: err };
@@ -122,19 +156,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signInWithLinkedIn = async () => {
     try {
+      console.log('Starting LinkedIn sign in...');
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'linkedin_oidc',
         options: {
-          redirectTo: `${window.location.origin}/`
+          redirectTo: window.location.origin
         }
       });
       
       if (error) {
+        console.error('LinkedIn sign in error:', error);
         toast.error(error.message);
       }
       
       return { error };
     } catch (error) {
+      console.error('LinkedIn sign in catch error:', error);
       const err = error as Error;
       toast.error(err.message);
       return { error: err };
@@ -143,15 +180,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signOut = async () => {
     try {
+      setLoading(true);
       const { error } = await supabase.auth.signOut();
       if (error) {
+        console.error('Sign out error:', error);
         toast.error(error.message);
       } else {
         toast.success('Signed out successfully');
       }
     } catch (error) {
+      console.error('Sign out catch error:', error);
       const err = error as Error;
       toast.error(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -165,6 +207,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         .eq('id', user.id);
       
       if (error) {
+        console.error('Update profile error:', error);
         toast.error(error.message);
       } else {
         toast.success('Profile updated successfully');
@@ -172,6 +215,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       
       return { error };
     } catch (error) {
+      console.error('Update profile catch error:', error);
       const err = error as Error;
       toast.error(err.message);
       return { error: err };
