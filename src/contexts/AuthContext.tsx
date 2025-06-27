@@ -10,6 +10,8 @@ interface AuthContextType {
   loading: boolean;
   signUp: (email: string, password: string, userData?: any) => Promise<{ error: any }>;
   signIn: (email: string, password: string) => Promise<{ error: any }>;
+  signInWithGoogle: () => Promise<{ error: any }>;
+  signInWithLinkedIn: () => Promise<{ error: any }>;
   signOut: () => Promise<void>;
   updateProfile: (data: any) => Promise<{ error: any }>;
 }
@@ -97,6 +99,48 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const signInWithGoogle = async () => {
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/`
+        }
+      });
+      
+      if (error) {
+        toast.error(error.message);
+      }
+      
+      return { error };
+    } catch (error) {
+      const err = error as Error;
+      toast.error(err.message);
+      return { error: err };
+    }
+  };
+
+  const signInWithLinkedIn = async () => {
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'linkedin_oidc',
+        options: {
+          redirectTo: `${window.location.origin}/`
+        }
+      });
+      
+      if (error) {
+        toast.error(error.message);
+      }
+      
+      return { error };
+    } catch (error) {
+      const err = error as Error;
+      toast.error(err.message);
+      return { error: err };
+    }
+  };
+
   const signOut = async () => {
     try {
       const { error } = await supabase.auth.signOut();
@@ -140,6 +184,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     loading,
     signUp,
     signIn,
+    signInWithGoogle,
+    signInWithLinkedIn,
     signOut,
     updateProfile,
   };
