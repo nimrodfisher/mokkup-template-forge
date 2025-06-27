@@ -2,14 +2,12 @@
 import { useWireframe } from "@/hooks/useWireframe";
 import { Element } from "@/types/wireframe";
 import { HeaderProperties } from "./header-properties/HeaderProperties";
-import { AreaChartProperties } from "./area-chart-properties/AreaChartProperties";
 import { TableProperties } from "./table-properties/TableProperties";
 import { ColumnChartProperties } from "./column-chart-properties/ColumnChartProperties";
 import { PieChartProperties } from "./pie-chart-properties/PieChartProperties";
 import { WaterfallProperties } from "./waterfall-properties/WaterfallProperties";
 import { ComboChartProperties } from "./combo-chart-properties/ComboChartProperties";
 import { BarChartProperties } from "./bar-chart-properties/BarChartProperties";
-import { FunnelChartProperties } from "./funnel-chart-properties/FunnelChartProperties";
 
 interface ElementPropertiesSelectorProps {
   updateElementProperties: (id: string, properties: Partial<Element['properties']>) => void;
@@ -32,14 +30,6 @@ export function ElementPropertiesSelector({ updateElementProperties, onOpenStyle
       return (
         <HeaderProperties 
           element={selectedElement} 
-          updateElementProperties={updateElementProperties}
-          onOpenStyleDialog={onOpenStyleDialog}
-        />
-      );
-    case 'area-chart':
-      return (
-        <AreaChartProperties
-          element={selectedElement}
           updateElementProperties={updateElementProperties}
           onOpenStyleDialog={onOpenStyleDialog}
         />
@@ -87,14 +77,6 @@ export function ElementPropertiesSelector({ updateElementProperties, onOpenStyle
     case 'waterfall':
       return (
         <WaterfallProperties
-          element={selectedElement}
-          updateElementProperties={updateElementProperties}
-          onOpenStyleDialog={onOpenStyleDialog}
-        />
-      );
-    case 'funnel-chart':
-      return (
-        <FunnelChartProperties
           element={selectedElement}
           updateElementProperties={updateElementProperties}
           onOpenStyleDialog={onOpenStyleDialog}

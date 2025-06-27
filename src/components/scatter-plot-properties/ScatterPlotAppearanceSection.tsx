@@ -3,7 +3,6 @@ import React from 'react';
 import { ChevronDown } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
 
 interface ScatterPlotAppearanceSectionProps {
   properties: any;
@@ -42,37 +41,6 @@ export function ScatterPlotAppearanceSection({ properties, handleChange, propert
               onCheckedChange={(checked) => handleChange('showLabels', checked)}
             />
           </div>
-          
-          <div className="flex items-center justify-between">
-            <Label className="text-sm">Show Trend Line</Label>
-            <Switch
-              checked={properties.showTrendLine || false}
-              onCheckedChange={(checked) => handleChange('showTrendLine', checked)}
-            />
-          </div>
-          
-          <div className="flex items-center justify-between">
-            <Label className="text-sm">Show Correlation</Label>
-            <Switch
-              checked={properties.showCorrelation || false}
-              onCheckedChange={(checked) => handleChange('showCorrelation', checked)}
-            />
-          </div>
-          
-          {properties.showCorrelation && (
-            <div>
-              <Label className="text-sm font-medium">Correlation Value</Label>
-              <Input
-                type="number"
-                min="-1"
-                max="1"
-                step="0.01"
-                value={properties.correlationValue || 0.75}
-                onChange={(e) => handleChange('correlationValue', parseFloat(e.target.value))}
-                className="mt-1"
-              />
-            </div>
-          )}
         </div>
       )}
     </>

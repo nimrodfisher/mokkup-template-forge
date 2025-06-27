@@ -86,14 +86,6 @@ export function BarChartAppearanceSection({
                 onCheckedChange={(checked) => handleChange('showGridLines', checked)}
               />
             </div>
-            
-            <div className="flex items-center justify-between">
-              <Label className="text-xs">Show Labels</Label>
-              <Switch
-                checked={properties.showLabels !== false}
-                onCheckedChange={(checked) => handleChange('showLabels', checked)}
-              />
-            </div>
           </div>
         </div>
       )}

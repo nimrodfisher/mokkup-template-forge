@@ -38,17 +38,6 @@ export function BarChartDetailsSection({
               placeholder="Chart title"
             />
           </div>
-          
-          <div>
-            <Label className="text-xs">Height</Label>
-            <Input
-              type="number"
-              value={properties.chartHeight || 300}
-              onChange={(e) => handleChange('chartHeight', parseInt(e.target.value) || 300)}
-              className="mt-1 h-8 text-xs"
-              placeholder="Height in pixels"
-            />
-          </div>
         </div>
       )}
     </div>
