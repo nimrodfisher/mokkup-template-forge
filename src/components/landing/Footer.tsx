@@ -1,28 +1,28 @@
 
 export function Footer() {
   return (
-    <footer className="relative z-10 border-t border-white/10 py-12 px-6">
+    <footer className="relative z-10 border-t border-white/10 py-16 px-6 bg-gray-900/20 backdrop-blur-xl">
       <div className="container mx-auto max-w-6xl">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
-          <div className="space-y-4">
-            <h3 className="text-xl font-bold">Contact</h3>
-            <div className="space-y-2 text-gray-400">
-              <p>Work inquiries: work@qoutflow.com</p>
-              <p>PR and speaking: press@flow.com</p>
-              <p>New business: newbusiness@qoutflow.com</p>
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-12">
+          <div className="space-y-6">
+            <h3 className="text-2xl font-bold">Contact</h3>
+            <div className="space-y-3 text-gray-300">
+              <p className="hover:text-white transition-colors">Work inquiries: work@alignify.com</p>
+              <p className="hover:text-white transition-colors">PR and speaking: press@alignify.com</p>
+              <p className="hover:text-white transition-colors">New business: newbusiness@alignify.com</p>
             </div>
           </div>
           
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">A</span>
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-lg">
+              <span className="text-white font-bold text-xl">A</span>
             </div>
-            <span className="font-bold text-xl">Alignify</span>
+            <span className="font-bold text-3xl">Alignify</span>
           </div>
         </div>
         
-        <div className="mt-8 pt-8 border-t border-white/10 text-center text-gray-500">
-          <p>&copy; 2023 Qoutflow. All rights reserved.</p>
+        <div className="mt-12 pt-8 border-t border-white/10 text-center text-gray-400">
+          <p>&copy; 2024 Alignify. All rights reserved.</p>
         </div>
       </div>
     </footer>
