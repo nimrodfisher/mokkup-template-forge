@@ -17,17 +17,26 @@ export function ImageDownloadDialog({ open, onOpenChange }: ImageDownloadDialogP
   const [exportCount] = useState(1);
   const [isExporting, setIsExporting] = useState(false);
 
-  const captureElement = async (element: HTMLElement, format: string): Promise<string> => {
-    // Use html2canvas to capture the element
+  const captureCanvasOnly = async (format: string): Promise<string> => {
+    // Use html2canvas to capture only the canvas area
     const html2canvas = (await import('html2canvas')).default;
     
-    const canvas = await html2canvas(element, {
-      backgroundColor: '#ffffff',
+    // Find the Canvas component specifically
+    const canvasElement = document.querySelector('.flex-1.overflow-auto.bg-gray-100.h-full.relative') as HTMLElement;
+    
+    if (!canvasElement) {
+      throw new Error('Could not find canvas area to export');
+    }
+
+    const canvas = await html2canvas(canvasElement, {
+      backgroundColor: '#f3f4f6', // Match the canvas bg-gray-100
       scale: 2, // Higher resolution
       useCORS: true,
       allowTaint: true,
       scrollX: 0,
       scrollY: 0,
+      width: canvasElement.offsetWidth,
+      height: canvasElement.offsetHeight,
     });
 
     if (format === 'JPEG') {
@@ -70,39 +79,27 @@ export function ImageDownloadDialog({ open, onOpenChange }: ImageDownloadDialogP
     setIsExporting(true);
     
     try {
-      // Find the main canvas or content area to capture
-      const canvasElement = document.querySelector('.canvas-container') || 
-                           document.querySelector('[data-testid="canvas"]') ||
-                           document.querySelector('.wireframe-canvas') ||
-                           document.querySelector('main') ||
-                           document.body;
-
-      if (!canvasElement || !(canvasElement instanceof HTMLElement)) {
-        toast.error('Could not find content to export');
-        return;
-      }
-
       let dataUrl: string;
       const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
       
       if (selectedFormat === 'PDF') {
         // First capture as PNG, then convert to PDF
-        const pngDataUrl = await captureElement(canvasElement, 'PNG');
+        const pngDataUrl = await captureCanvasOnly('PNG');
         dataUrl = await generatePDF(pngDataUrl);
-        downloadFile(dataUrl, `alignify-export-${timestamp}.pdf`);
+        downloadFile(dataUrl, `alignify-canvas-${timestamp}.pdf`);
       } else {
         // Direct image export
-        dataUrl = await captureElement(canvasElement, selectedFormat);
+        dataUrl = await captureCanvasOnly(selectedFormat);
         const extension = selectedFormat.toLowerCase();
-        downloadFile(dataUrl, `alignify-export-${timestamp}.${extension}`);
+        downloadFile(dataUrl, `alignify-canvas-${timestamp}.${extension}`);
       }
 
-      toast.success(`Successfully exported ${selectedScreen} screen as ${selectedFormat}`);
+      toast.success(`Successfully exported canvas as ${selectedFormat}`);
       onOpenChange(false);
       
     } catch (error) {
       console.error('Export failed:', error);
-      toast.error('Export failed. Please try again.');
+      toast.error('Export failed. Please make sure you are in the editor with an active canvas.');
     } finally {
       setIsExporting(false);
     }
