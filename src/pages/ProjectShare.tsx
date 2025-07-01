@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -93,7 +94,7 @@ export default function ProjectShare() {
       
       const emailToSearch = inviteEmail.trim().toLowerCase();
       
-      // Enhanced user search - try multiple approaches
+      // Search for user in profiles table
       console.log('Searching for user with email:', emailToSearch);
       
       // First try exact match
@@ -103,7 +104,7 @@ export default function ProjectShare() {
         .eq('email', emailToSearch)
         .maybeSingle();
 
-      let userProfile = userProfileExact;
+      let userProfile: { id: string; email: string } | null = userProfileExact;
       let userError = userErrorExact;
 
       // If exact match fails, try case-insensitive search
@@ -116,27 +117,6 @@ export default function ProjectShare() {
         
         userProfile = userProfileIlike;
         userError = userErrorIlike;
-      }
-
-      // If still no user found, check if they exist in auth.users but not in profiles
-      if (!userProfile && !userError) {
-        console.log('User not found in profiles table, checking if they exist in auth.users');
-        
-        try {
-          // Check if user exists in auth.users but not in profiles
-          const { data: authUsers, error: authError } = await supabase.auth.admin.listUsers();
-          
-          if (!authError && authUsers) {
-            const foundUser = authUsers.users.find(u => u.email?.toLowerCase() === emailToSearch);
-            if (foundUser) {
-              toast.error('User exists but their profile is not set up. Please ask them to log in first to complete their profile setup.');
-              return;
-            }
-          }
-        } catch (authCheckError) {
-          console.log('Could not check auth.users table:', authCheckError);
-          // Continue with normal flow
-        }
       }
 
       if (userError) {
