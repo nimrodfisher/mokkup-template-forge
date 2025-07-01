@@ -1,5 +1,6 @@
 
 import { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -18,6 +19,7 @@ export function SaveTemplateDialog({ open, onOpenChange }: SaveTemplateDialogPro
   const [name, setName] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const { saveTemplate, templates, activeTemplateId, elements, screens } = useWireframe();
+  const navigate = useNavigate();
   const previewRef = useRef<HTMLDivElement>(null);
   
   // Get the active screen
@@ -47,6 +49,9 @@ export function SaveTemplateDialog({ open, onOpenChange }: SaveTemplateDialogPro
       await saveTemplate(name);
       toast.success("Template saved successfully!");
       onOpenChange(false);
+      
+      // Navigate to templates section after successful save
+      navigate("/templates");
     } catch (error) {
       console.error("Error saving template:", error);
       toast.error("Failed to save template. Please try again.");
