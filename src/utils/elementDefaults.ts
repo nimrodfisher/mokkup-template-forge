@@ -1,3 +1,4 @@
+
 import { ElementType, Element } from '@/types/wireframe';
 
 export function getDefaultSizeForType(type: ElementType): { width: number; height: number } {
@@ -16,14 +17,12 @@ export function getDefaultSizeForType(type: ElementType): { width: number; heigh
     case 'area-chart':
     case 'combo-chart':
     case 'pie-chart':
-    case 'gauge-chart':
     case 'heatmap':
     case 'quadrant-chart':
     case 'scatter-plot':
     case 'waterfall':
     case 'treemap':
     case 'histogram':
-    case 'funnel-chart':
       return { width: 400, height: 300 };
     case 'simple-table':
       return { width: 500, height: 300 };
@@ -162,22 +161,6 @@ export function getDefaultPropertiesForType(type: ElementType): Element['propert
           { name: 'Category C', value: 300, color: '#FFBB28' },
           { name: 'Category D', value: 200, color: '#FF8042' }
         ]
-      };
-    case 'gauge-chart':
-      return {
-        gaugeStyle: 'default',
-        chartTitle: 'Gauge Chart',
-        showTitle: true,
-        gaugeValue: 75,
-        gaugeMin: 0,
-        gaugeMax: 100,
-        gaugeTarget: 80,
-        gaugeUnits: '%',
-        showGaugeNeedle: true,
-        showGaugeTarget: true,
-        showGaugeLabels: true,
-        gaugePrimaryColor: '#3B82F6',
-        gaugeSecondaryColor: '#E5E7EB'
       };
     case 'heatmap':
       return {
@@ -329,23 +312,6 @@ export function getDefaultPropertiesForType(type: ElementType): Element['propert
         shapeHeight: 100,
         showTitle: false,
         title: 'Shape'
-      };
-    case 'funnel-chart':
-      return {
-        funnelChartTitle: 'Funnel Chart',
-        funnelChartVariant: 'default',
-        showTitle: true,
-        showLabels: true,
-        showValues: true,
-        funnelPrimaryColor: '#8884d8',
-        backgroundColor: '#ffffff',
-        funnelChartData: [
-          { name: 'Awareness', value: 1000, color: '#8884d8' },
-          { name: 'Interest', value: 800, color: '#82ca9d' },
-          { name: 'Consideration', value: 600, color: '#ffc658' },
-          { name: 'Intent', value: 400, color: '#ff7c7c' },
-          { name: 'Purchase', value: 200, color: '#8dd1e1' }
-        ]
       };
     default:
       return {};

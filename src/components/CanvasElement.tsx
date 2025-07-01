@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useWireframe } from "@/hooks/useWireframe";
 import { toast } from "sonner";
@@ -60,9 +61,6 @@ export function CanvasElement({ element, isSelected }: CanvasElementProps) {
       case 'simple-table':
         setActiveDialog('table');
         break;
-      case 'gauge-chart':
-        setActiveDialog('gauge');
-        break;
       case 'heatmap':
         setActiveDialog('heatmap');
         break;
@@ -80,9 +78,6 @@ export function CanvasElement({ element, isSelected }: CanvasElementProps) {
         break;
       case 'histogram':
         setActiveDialog('histogram');
-        break;
-      case 'funnel-chart':
-        setActiveDialog('funnel-chart');
         break;
     }
   };

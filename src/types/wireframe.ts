@@ -1,8 +1,9 @@
+
 export type ElementType = 
   'header' | 'button' | 'filter' | 'kpi' | 'column-chart' | 'bar-chart' | 'line-chart' | 
-  'area-chart' | 'combo-chart' | 'pie-chart' | 'gauge-chart' |
+  'area-chart' | 'combo-chart' | 'pie-chart' |
   'simple-table' | 'hierarchy-table' | 'treemap' | 'heatmap' |
-  'funnel-chart' | 'image' | 'textbox' | 'histogram' | 'gauge' | 'scatter-plot' |
+  'image' | 'textbox' | 'histogram' | 'scatter-plot' |
   'waterfall' | 'shapes' | 'quadrant-chart';
 
 export type FilterVariant = 

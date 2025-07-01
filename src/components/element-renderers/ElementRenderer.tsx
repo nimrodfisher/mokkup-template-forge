@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Element } from "@/types/wireframe";
 import { ButtonRenderer } from "./ButtonRenderer";
@@ -12,7 +13,6 @@ import { BarChartRenderer } from "./BarChartRenderer";
 import { ComboChartRenderer } from "./ComboChartRenderer";
 import { LineChartRenderer } from "./LineChartRenderer";
 import { PieChartRenderer } from "./PieChartRenderer";
-import { GaugeChartRenderer } from "./GaugeChartRenderer";
 import { HeatmapRenderer } from "./HeatmapRenderer";
 import { QuadrantChartRenderer } from "./QuadrantChartRenderer";
 import { ScatterPlotRenderer } from "./ScatterPlotRenderer";
@@ -20,7 +20,6 @@ import { WaterfallRenderer } from "./WaterfallRenderer";
 import { TreemapRenderer } from "./TreemapRenderer";
 import { HistogramRenderer } from "./HistogramRenderer";
 import { DefaultRenderer } from "./DefaultRenderer";
-import { FunnelChartRenderer } from "./FunnelChartRenderer";
 
 interface ElementRendererProps {
   element: Element;
@@ -55,8 +54,6 @@ export function ElementRenderer({ element, isEditable = false }: ElementRenderer
       return <LineChartRenderer properties={properties} />;
     case 'pie-chart':
       return <PieChartRenderer properties={properties} />;
-    case 'gauge-chart':
-      return <GaugeChartRenderer properties={properties} />;
     case 'heatmap':
       return <HeatmapRenderer properties={properties} />;
     case 'quadrant-chart':
@@ -69,8 +66,6 @@ export function ElementRenderer({ element, isEditable = false }: ElementRenderer
       return <TreemapRenderer properties={properties} />;
     case 'histogram':
       return <HistogramRenderer properties={properties} />;
-    case 'funnel-chart':
-      return <FunnelChartRenderer properties={properties} />;
     default:
       return <DefaultRenderer type={type} element={element} isEditable={isEditable} />;
   }
