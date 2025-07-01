@@ -75,6 +75,31 @@ export default function ProjectShare() {
     }
   };
 
+  const findUserByEmail = async (email: string) => {
+    const emailToSearch = email.trim().toLowerCase();
+    
+    // First, try to find user in profiles table
+    const { data: profileUser, error: profileError } = await supabase
+      .from('profiles')
+      .select('id, email')
+      .ilike('email', emailToSearch)
+      .maybeSingle();
+
+    if (profileError) {
+      console.error('Error searching profiles:', profileError);
+      throw profileError;
+    }
+
+    if (profileUser) {
+      return profileUser;
+    }
+
+    // If not found in profiles, create a profile entry for them
+    // This handles cases where users exist in auth but don't have profiles yet
+    console.log('User not found in profiles, they may need to log in first');
+    return null;
+  };
+
   const handleInviteUser = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!id || !inviteEmail.trim()) {
@@ -92,39 +117,7 @@ export default function ProjectShare() {
       setIsInviting(true);
       console.log('Inviting user:', { email: inviteEmail, role: inviteRole, projectId: id });
       
-      const emailToSearch = inviteEmail.trim().toLowerCase();
-      
-      // Search for user in profiles table
-      console.log('Searching for user with email:', emailToSearch);
-      
-      // First try exact match
-      const { data: userProfileExact, error: userErrorExact } = await supabase
-        .from('profiles')
-        .select('id, email')
-        .eq('email', emailToSearch)
-        .maybeSingle();
-
-      let userProfile: { id: string; email: string } | null = userProfileExact;
-      let userError = userErrorExact;
-
-      // If exact match fails, try case-insensitive search
-      if (!userProfile && !userError) {
-        const { data: userProfileIlike, error: userErrorIlike } = await supabase
-          .from('profiles')
-          .select('id, email')
-          .ilike('email', emailToSearch)
-          .maybeSingle();
-        
-        userProfile = userProfileIlike;
-        userError = userErrorIlike;
-      }
-
-      if (userError) {
-        console.error('Error checking user:', userError);
-        throw userError;
-      }
-
-      console.log('User profile search result:', userProfile);
+      const userProfile = await findUserByEmail(inviteEmail);
 
       if (!userProfile) {
         toast.error('User not found. Please make sure they have signed up and logged in at least once to complete their profile setup.');
