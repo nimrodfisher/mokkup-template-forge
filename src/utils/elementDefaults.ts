@@ -79,6 +79,14 @@ export function getDefaultPropertiesForType(type: ElementType): Element['propert
         showApplyButton: false,
         showClearAll: false,
         showFilterCount: false,
+        showSelectAll: false,
+        showSuggestions: false,
+        dateFormat: 'DD/MM/YYYY',
+        showCalendarIcon: true,
+        sliderMin: 0,
+        sliderMax: 100,
+        sliderStep: 1,
+        showSliderValues: true,
       };
     case 'kpi':
       return {

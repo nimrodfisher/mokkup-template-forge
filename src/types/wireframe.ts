@@ -358,6 +358,16 @@ export interface Element {
     showApplyButton?: boolean;
     showClearAll?: boolean;
     showFilterCount?: boolean;
+    
+    // Additional filter variant-specific properties
+    showSelectAll?: boolean;
+    showSuggestions?: boolean;
+    dateFormat?: string;
+    showCalendarIcon?: boolean;
+    sliderMin?: number;
+    sliderMax?: number;
+    sliderStep?: number;
+    showSliderValues?: boolean;
   };
 }
 
