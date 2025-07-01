@@ -93,12 +93,43 @@ export default function ProjectShare() {
       
       const emailToSearch = inviteEmail.trim().toLowerCase();
       
-      // First check if user exists - use case-insensitive search
-      const { data: userProfile, error: userError } = await supabase
+      // Enhanced user search - try multiple approaches
+      console.log('Searching for user with email:', emailToSearch);
+      
+      // First try exact match
+      let { data: userProfile, error: userError } = await supabase
         .from('profiles')
         .select('id, email')
-        .ilike('email', emailToSearch)
+        .eq('email', emailToSearch)
         .maybeSingle();
+
+      // If exact match fails, try case-insensitive search
+      if (!userProfile && !userError) {
+        const { data: userProfileIlike, error: userErrorIlike } = await supabase
+          .from('profiles')
+          .select('id, email')
+          .ilike('email', emailToSearch)
+          .maybeSingle();
+        
+        userProfile = userProfileIlike;
+        userError = userErrorIlike;
+      }
+
+      // If still no user found, search in auth.users (via RPC or direct query)
+      if (!userProfile && !userError) {
+        console.log('User not found in profiles table, checking if they exist in auth.users');
+        
+        // Check if user exists in auth.users but not in profiles
+        const { data: authUsers, error: authError } = await supabase.auth.admin.listUsers();
+        
+        if (!authError && authUsers) {
+          const foundUser = authUsers.users.find(u => u.email?.toLowerCase() === emailToSearch);
+          if (foundUser) {
+            toast.error('User exists but their profile is not set up. Please ask them to log in first to complete their profile setup.');
+            return;
+          }
+        }
+      }
 
       if (userError) {
         console.error('Error checking user:', userError);
@@ -108,7 +139,7 @@ export default function ProjectShare() {
       console.log('User profile search result:', userProfile);
 
       if (!userProfile) {
-        toast.error('User not found. Please make sure they have signed up first.');
+        toast.error('User not found. Please make sure they have signed up and logged in at least once to complete their profile setup.');
         return;
       }
 
@@ -234,7 +265,7 @@ export default function ProjectShare() {
                       disabled={isInviting}
                     />
                     <p className="text-xs text-gray-500">
-                      Note: The user must already have an account to be invited.
+                      Note: The user must already have an account and logged in at least once to complete their profile setup.
                     </p>
                   </div>
                   <div className="space-y-2">
