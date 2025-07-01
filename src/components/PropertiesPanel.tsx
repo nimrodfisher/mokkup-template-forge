@@ -1,3 +1,4 @@
+
 import { Element } from "@/types/wireframe";
 import { useWireframe } from "@/hooks/useWireframe";
 import { useState, useRef } from "react";
@@ -9,7 +10,6 @@ import { ImageProperties } from "./properties/ImageProperties";
 import { DefaultProperties } from "./properties/DefaultProperties";
 import { TextboxProperties } from "./properties/TextboxProperties";
 import { ButtonProperties } from "./button-properties/ButtonProperties";
-import { GaugeProperties } from "./gauge-properties/GaugeProperties";
 import { HeatmapProperties } from "./heatmap-properties/HeatmapProperties";
 import { QuadrantProperties } from "./quadrant-properties/QuadrantProperties";
 import { ScatterPlotProperties } from "./scatter-plot-properties/ScatterPlotProperties";
@@ -21,7 +21,6 @@ import { BarChartProperties } from "./bar-chart-properties/BarChartProperties";
 import { WaterfallProperties } from "./waterfall-properties/WaterfallProperties";
 import { TreemapProperties } from "./treemap-properties/TreemapProperties";
 import { HistogramProperties } from "./histogram-properties/HistogramProperties";
-import { FunnelChartProperties } from "./funnel-chart-properties/FunnelChartProperties";
 
 interface PropertiesPanelProps {
   onOpenStyleDialog?: () => void;
@@ -141,14 +140,6 @@ export function PropertiesPanel({ onOpenStyleDialog, updateElementProperties }: 
             onOpenStyleDialog={onOpenStyleDialog}
           />
         );
-      case 'gauge-chart':
-        return (
-          <GaugeProperties
-            element={selectedElement}
-            updateElementProperties={handleUpdateElementProperties}
-            onOpenStyleDialog={onOpenStyleDialog}
-          />
-        );
       case 'heatmap':
         return (
           <HeatmapProperties
@@ -200,14 +191,6 @@ export function PropertiesPanel({ onOpenStyleDialog, updateElementProperties }: 
       case 'pie-chart':
         return (
           <PieChartProperties
-            element={selectedElement}
-            updateElementProperties={handleUpdateElementProperties}
-            onOpenStyleDialog={onOpenStyleDialog}
-          />
-        );
-      case 'funnel-chart':
-        return (
-          <FunnelChartProperties
             element={selectedElement}
             updateElementProperties={handleUpdateElementProperties}
             onOpenStyleDialog={onOpenStyleDialog}
