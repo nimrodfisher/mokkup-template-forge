@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -12,6 +13,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Badge } from '@/components/ui/badge';
 import { Plus, MoreVertical, Users, Calendar, Loader2, LogOut } from 'lucide-react';
 import { format } from 'date-fns';
+import { CanvasElement } from '@/components/CanvasElement';
 
 export default function Dashboard() {
   const { user, signOut } = useAuth();
@@ -60,6 +62,18 @@ export default function Dashboard() {
     
     // Simplified role checking since we removed the complex query
     return 'Viewer';
+  };
+
+  // Function to get elements for a specific project
+  const getProjectElements = (project: any) => {
+    if (!project.elements || !project.screens) return [];
+    
+    // Get the first screen's ID
+    const firstScreenId = project.screens[0]?.id;
+    if (!firstScreenId) return [];
+    
+    // Return elements for the first screen
+    return project.elements.filter((element: any) => element.screenId === firstScreenId);
   };
 
   return (
@@ -161,70 +175,92 @@ export default function Dashboard() {
           </div>
         ) : (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {projects.map((project) => (
-              <Card key={project.id} className="hover:shadow-md transition-shadow">
-                <CardHeader className="pb-2">
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1 min-w-0">
-                      <CardTitle className="truncate">{project.name}</CardTitle>
-                      <div className="flex items-center gap-2 mt-1">
-                        <Badge variant={getProjectRole(project) === 'Owner' ? 'default' : 'secondary'}>
-                          {getProjectRole(project)}
-                        </Badge>
-                        <div className="flex items-center text-xs text-gray-500">
-                          <Users className="h-3 w-3 mr-1" />
-                          1
+            {projects.map((project) => {
+              const projectElements = getProjectElements(project);
+              return (
+                <Card key={project.id} className="hover:shadow-md transition-shadow">
+                  <CardHeader className="pb-2">
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1 min-w-0">
+                        <CardTitle className="truncate">{project.name}</CardTitle>
+                        <div className="flex items-center gap-2 mt-1">
+                          <Badge variant={getProjectRole(project) === 'Owner' ? 'default' : 'secondary'}>
+                            {getProjectRole(project)}
+                          </Badge>
+                          <div className="flex items-center text-xs text-gray-500">
+                            <Users className="h-3 w-3 mr-1" />
+                            1
+                          </div>
                         </div>
                       </div>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="sm">
+                            <MoreVertical className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem onClick={() => navigate(`/editor/${project.id}`)}>
+                            Open
+                          </DropdownMenuItem>
+                          {project.owner_id === user?.id && (
+                            <>
+                              <DropdownMenuItem onClick={() => navigate(`/project/${project.id}/share`)}>
+                                Share
+                              </DropdownMenuItem>
+                              <DropdownMenuItem 
+                                onClick={() => handleDeleteProject(project.id)}
+                                className="text-red-600"
+                              >
+                                Delete
+                              </DropdownMenuItem>
+                            </>
+                          )}
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </div>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="sm">
-                          <MoreVertical className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={() => navigate(`/editor/${project.id}`)}>
-                          Open
-                        </DropdownMenuItem>
-                        {project.owner_id === user?.id && (
-                          <>
-                            <DropdownMenuItem onClick={() => navigate(`/project/${project.id}/share`)}>
-                              Share
-                            </DropdownMenuItem>
-                            <DropdownMenuItem 
-                              onClick={() => handleDeleteProject(project.id)}
-                              className="text-red-600"
-                            >
-                              Delete
-                            </DropdownMenuItem>
-                          </>
-                        )}
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  {project.description && (
-                    <p className="text-sm text-gray-600 mb-3 line-clamp-2">
-                      {project.description}
-                    </p>
-                  )}
-                  <div className="text-xs text-gray-500 flex items-center gap-1">
-                    <Calendar className="h-3 w-3" />
-                    Updated {format(new Date(project.updated_at), 'MMM d, yyyy')}
-                  </div>
-                </CardContent>
-                <CardFooter>
-                  <Button 
-                    onClick={() => navigate(`/editor/${project.id}`)}
-                    className="w-full"
-                  >
-                    Open Project
-                  </Button>
-                </CardFooter>
-              </Card>
-            ))}
+                  </CardHeader>
+                  <CardContent>
+                    {/* Template Preview Section */}
+                    <div className="aspect-video bg-white rounded-md border overflow-hidden mb-3 relative">
+                      {projectElements.length === 0 ? (
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <span className="text-sm font-medium text-gray-500">Empty project</span>
+                        </div>
+                      ) : (
+                        <div className="relative w-full h-full" style={{ transform: "scale(0.33)", transformOrigin: "top left", width: "300%", height: "300%" }}>
+                          {projectElements.map((element: any) => (
+                            <CanvasElement
+                              key={element.id}
+                              element={element}
+                              isSelected={false}
+                            />
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                    
+                    {project.description && (
+                      <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+                        {project.description}
+                      </p>
+                    )}
+                    <div className="text-xs text-gray-500 flex items-center gap-1">
+                      <Calendar className="h-3 w-3" />
+                      Updated {format(new Date(project.updated_at), 'MMM d, yyyy')}
+                    </div>
+                  </CardContent>
+                  <CardFooter>
+                    <Button 
+                      onClick={() => navigate(`/editor/${project.id}`)}
+                      className="w-full"
+                    >
+                      Open Project
+                    </Button>
+                  </CardFooter>
+                </Card>
+              );
+            })}
           </div>
         )}
       </main>
