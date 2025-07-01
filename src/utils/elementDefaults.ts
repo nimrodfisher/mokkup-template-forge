@@ -1,4 +1,3 @@
-
 import { ElementType, Element } from '@/types/wireframe';
 
 export function getDefaultSizeForType(type: ElementType): { width: number; height: number } {
@@ -62,7 +61,24 @@ export function getDefaultPropertiesForType(type: ElementType): Element['propert
         filterTitle: 'Filter',
         filterVariant: 'dropdown',
         filterValues: ['Option 1', 'Option 2', 'Option 3'],
-        filterAlignment: 'left'
+        filterAlignment: 'left',
+        filterDataSource: 'manual',
+        filterDataColumn: '',
+        filterQuery: '',
+        allowMultiSelect: false,
+        enableSearch: false,
+        searchPlaceholder: 'Search filters...',
+        enableDependentFilters: false,
+        parentFilterId: '',
+        dependencyRule: '',
+        enableCustomLogic: false,
+        customFilterLogic: '',
+        filterPerformance: 'standard',
+        autoRefresh: false,
+        refreshInterval: 30,
+        showApplyButton: false,
+        showClearAll: false,
+        showFilterCount: false,
       };
     case 'kpi':
       return {

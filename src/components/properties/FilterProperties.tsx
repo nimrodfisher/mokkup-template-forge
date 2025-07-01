@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
@@ -10,6 +9,10 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { AlignLeft, AlignCenter, AlignRight } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { toast } from "sonner";
+import { FilterDataSection } from './FilterDataSection';
+import { FilterAdvancedSection } from './FilterAdvancedSection';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { ChevronDown as ChevronDownIcon, Database, Settings2 } from "lucide-react";
 
 interface FilterPropertiesProps {
   element: Element;
@@ -26,6 +29,8 @@ export function FilterProperties({
   const [backgroundColor, setBackgroundColor] = useState(properties.backgroundColor || '#ffffff');
   const [textColor, setTextColor] = useState(properties.textColor || '#000000');
   const [filterValues, setFilterValues] = useState<string[]>(properties.filterValues || ['All', 'Value 1', 'Value 2']);
+  const [dataOpen, setDataOpen] = useState(false);
+  const [advancedOpen, setAdvancedOpen] = useState(false);
   
   const handleFilterValueChange = (index: number, value: string) => {
     const newValues = [...filterValues];
@@ -101,44 +106,46 @@ export function FilterProperties({
               </ToggleGroupItem>
             </ToggleGroup>
           </div>
-          
-          {(properties.filterVariant === 'dropdown' || properties.filterVariant === 'checkbox' || 
-            properties.filterVariant === 'radio') && (
-            <div className="space-y-2">
-              <div className="flex justify-between items-center">
-                <Label>Filter Values</Label>
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  onClick={addFilterValue}
-                >
-                  Add Value
-                </Button>
-              </div>
-              <div className="space-y-2 max-h-40 overflow-y-auto py-1">
-                {filterValues.map((value, index) => (
-                  <div key={index} className="flex items-center gap-2">
-                    <Input 
-                      value={value}
-                      onChange={(e) => handleFilterValueChange(index, e.target.value)}
-                      className="flex-1"
-                    />
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => removeFilterValue(index)}
-                      disabled={filterValues.length <= 1}
-                      className="h-8 w-8"
-                    >
-                      <X className="h-4 w-4" />
-                    </Button>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
         </div>
       </div>
+      
+      <Collapsible open={dataOpen} onOpenChange={setDataOpen}>
+        <CollapsibleTrigger asChild>
+          <Button variant="ghost" className="w-full justify-between p-3 h-auto">
+            <div className="flex items-center gap-2">
+              <Database className="h-4 w-4" />
+              <span className="font-medium">Data Customization</span>
+            </div>
+            <ChevronDownIcon className={`h-4 w-4 transition-transform ${dataOpen ? 'rotate-180' : ''}`} />
+          </Button>
+        </CollapsibleTrigger>
+        <CollapsibleContent className="space-y-2 pt-2">
+          <FilterDataSection 
+            properties={properties}
+            updateElementProperties={updateElementProperties}
+            elementId={element.id}
+          />
+        </CollapsibleContent>
+      </Collapsible>
+      
+      <Collapsible open={advancedOpen} onOpenChange={setAdvancedOpen}>
+        <CollapsibleTrigger asChild>
+          <Button variant="ghost" className="w-full justify-between p-3 h-auto">
+            <div className="flex items-center gap-2">
+              <Settings2 className="h-4 w-4" />
+              <span className="font-medium">Advanced Options</span>
+            </div>
+            <ChevronDownIcon className={`h-4 w-4 transition-transform ${advancedOpen ? 'rotate-180' : ''}`} />
+          </Button>
+        </CollapsibleTrigger>
+        <CollapsibleContent className="space-y-2 pt-2">
+          <FilterAdvancedSection 
+            properties={properties}
+            updateElementProperties={updateElementProperties}
+            elementId={element.id}
+          />
+        </CollapsibleContent>
+      </Collapsible>
       
       <div className="border-t pt-4">
         <div className="space-y-3">

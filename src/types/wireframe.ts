@@ -1,4 +1,3 @@
-
 export type ElementType = 
   'header' | 'button' | 'filter' | 'kpi' | 'column-chart' | 'bar-chart' | 'line-chart' | 
   'area-chart' | 'combo-chart' | 'pie-chart' |
@@ -340,6 +339,25 @@ export interface Element {
     showDropdowns?: boolean;
     showKpis?: boolean;
     showText?: boolean;
+    
+    // Enhanced Filter properties for data customization  
+    filterDataSource?: 'manual' | 'csv' | 'json' | 'database';
+    filterDataColumn?: string;
+    filterQuery?: string;
+    allowMultiSelect?: boolean;
+    enableSearch?: boolean;
+    searchPlaceholder?: string;
+    enableDependentFilters?: boolean;
+    parentFilterId?: string;
+    dependencyRule?: string;
+    enableCustomLogic?: boolean;
+    customFilterLogic?: string;
+    filterPerformance?: 'standard' | 'debounced' | 'lazy' | 'virtual';
+    autoRefresh?: boolean;
+    refreshInterval?: number;
+    showApplyButton?: boolean;
+    showClearAll?: boolean;
+    showFilterCount?: boolean;
   };
 }
 
