@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
@@ -32,6 +33,8 @@ export function FilterProperties({
   const [dataOpen, setDataOpen] = useState(false);
   const [advancedOpen, setAdvancedOpen] = useState(false);
   
+  const currentVariant = properties.filterVariant || 'dropdown';
+  
   const handleFilterValueChange = (index: number, value: string) => {
     const newValues = [...filterValues];
     newValues[index] = value;
@@ -53,6 +56,181 @@ export function FilterProperties({
     const newValues = filterValues.filter((_, i) => i !== index);
     setFilterValues(newValues);
     updateElementProperties(element.id, { filterValues: newValues });
+  };
+  
+  const getVariantSpecificProperties = () => {
+    switch (currentVariant) {
+      case 'dropdown':
+        return (
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <Label htmlFor="multi-select">Allow Multiple Selection</Label>
+              <Switch
+                id="multi-select"
+                checked={properties.allowMultiSelect || false}
+                onCheckedChange={(checked) => updateElementProperties(element.id, { allowMultiSelect: checked })}
+              />
+            </div>
+            <div className="flex items-center justify-between">
+              <Label htmlFor="enable-search">Enable Search in Dropdown</Label>
+              <Switch
+                id="enable-search"
+                checked={properties.enableSearch || false}
+                onCheckedChange={(checked) => updateElementProperties(element.id, { enableSearch: checked })}
+              />
+            </div>
+          </div>
+        );
+        
+      case 'checkbox':
+        return (
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <Label htmlFor="enable-search">Enable Search</Label>
+              <Switch
+                id="enable-search"
+                checked={properties.enableSearch || false}
+                onCheckedChange={(checked) => updateElementProperties(element.id, { enableSearch: checked })}
+              />
+            </div>
+            <div className="flex items-center justify-between">
+              <Label htmlFor="show-select-all">Show Select All Option</Label>
+              <Switch
+                id="show-select-all"
+                checked={properties.showSelectAll || false}
+                onCheckedChange={(checked) => updateElementProperties(element.id, { showSelectAll: checked })}
+              />
+            </div>
+          </div>
+        );
+        
+      case 'radio':
+        return (
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <Label htmlFor="enable-search">Enable Search</Label>
+              <Switch
+                id="enable-search"
+                checked={properties.enableSearch || false}
+                onCheckedChange={(checked) => updateElementProperties(element.id, { enableSearch: checked })}
+              />
+            </div>
+          </div>
+        );
+        
+      case 'search':
+        return (
+          <div className="space-y-3">
+            <div className="space-y-2">
+              <Label>Search Placeholder</Label>
+              <Input 
+                value={properties.searchPlaceholder || 'Search...'}
+                onChange={(e) => updateElementProperties(element.id, { searchPlaceholder: e.target.value })}
+                placeholder="Enter search placeholder text"
+              />
+            </div>
+            <div className="flex items-center justify-between">
+              <Label htmlFor="show-suggestions">Show Search Suggestions</Label>
+              <Switch
+                id="show-suggestions"
+                checked={properties.showSuggestions || false}
+                onCheckedChange={(checked) => updateElementProperties(element.id, { showSuggestions: checked })}
+              />
+            </div>
+          </div>
+        );
+        
+      case 'date':
+        return (
+          <div className="space-y-3">
+            <div className="space-y-2">
+              <Label>Date Format</Label>
+              <Input 
+                value={properties.dateFormat || 'DD/MM/YYYY'}
+                onChange={(e) => updateElementProperties(element.id, { dateFormat: e.target.value })}
+                placeholder="DD/MM/YYYY"
+              />
+            </div>
+            <div className="flex items-center justify-between">
+              <Label htmlFor="show-calendar">Show Calendar Icon</Label>
+              <Switch
+                id="show-calendar"
+                checked={properties.showCalendarIcon !== false}
+                onCheckedChange={(checked) => updateElementProperties(element.id, { showCalendarIcon: checked })}
+              />
+            </div>
+          </div>
+        );
+        
+      case 'daterange':
+        return (
+          <div className="space-y-3">
+            <div className="space-y-2">
+              <Label>Date Format</Label>
+              <Input 
+                value={properties.dateFormat || 'DD/MM/YYYY'}
+                onChange={(e) => updateElementProperties(element.id, { dateFormat: e.target.value })}
+                placeholder="DD/MM/YYYY"
+              />
+            </div>
+            <div className="flex items-center justify-between">
+              <Label htmlFor="show-calendar">Show Calendar Icons</Label>
+              <Switch
+                id="show-calendar"
+                checked={properties.showCalendarIcon !== false}
+                onCheckedChange={(checked) => updateElementProperties(element.id, { showCalendarIcon: checked })}
+              />
+            </div>
+          </div>
+        );
+        
+      case 'slider':
+        return (
+          <div className="space-y-3">
+            <div className="grid grid-cols-2 gap-2">
+              <div className="space-y-2">
+                <Label>Min Value</Label>
+                <Input 
+                  type="number"
+                  value={properties.sliderMin || 0}
+                  onChange={(e) => updateElementProperties(element.id, { sliderMin: parseInt(e.target.value) })}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Max Value</Label>
+                <Input 
+                  type="number"
+                  value={properties.sliderMax || 100}
+                  onChange={(e) => updateElementProperties(element.id, { sliderMax: parseInt(e.target.value) })}
+                />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label>Step Size</Label>
+              <Input 
+                type="number"
+                value={properties.sliderStep || 1}
+                onChange={(e) => updateElementProperties(element.id, { sliderStep: parseInt(e.target.value) })}
+              />
+            </div>
+            <div className="flex items-center justify-between">
+              <Label htmlFor="show-values">Show Values</Label>
+              <Switch
+                id="show-values"
+                checked={properties.showSliderValues !== false}
+                onCheckedChange={(checked) => updateElementProperties(element.id, { showSliderValues: checked })}
+              />
+            </div>
+          </div>
+        );
+        
+      default:
+        return null;
+    }
+  };
+  
+  const shouldShowFilterValues = () => {
+    return ['dropdown', 'checkbox', 'radio'].includes(currentVariant);
   };
   
   return (
@@ -109,24 +287,82 @@ export function FilterProperties({
         </div>
       </div>
       
-      <Collapsible open={dataOpen} onOpenChange={setDataOpen}>
-        <CollapsibleTrigger asChild>
-          <Button variant="ghost" className="w-full justify-between p-3 h-auto">
-            <div className="flex items-center gap-2">
-              <Database className="h-4 w-4" />
-              <span className="font-medium">Data Customization</span>
-            </div>
-            <ChevronDownIcon className={`h-4 w-4 transition-transform ${dataOpen ? 'rotate-180' : ''}`} />
-          </Button>
-        </CollapsibleTrigger>
-        <CollapsibleContent className="space-y-2 pt-2">
-          <FilterDataSection 
-            properties={properties}
-            updateElementProperties={updateElementProperties}
-            elementId={element.id}
-          />
-        </CollapsibleContent>
-      </Collapsible>
+      <div className="flex flex-col space-y-2 border-t pt-4">
+        <Label className="text-sm font-semibold">Filter Style</Label>
+        <div className="mt-2">
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline" size="sm" className="w-full justify-between">
+                {properties.filterVariant === 'dropdown' && 'Dropdown Menu'}
+                {properties.filterVariant === 'checkbox' && 'Checkbox Filter'}
+                {properties.filterVariant === 'radio' && 'Radio Filter'}
+                {properties.filterVariant === 'date' && 'Date Picker'}
+                {properties.filterVariant === 'daterange' && 'Date Range'}
+                {properties.filterVariant === 'slider' && 'Slider Filter'}
+                {properties.filterVariant === 'search' && 'Search Box'}
+                <ChevronDown className="h-4 w-4 opacity-50" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-64 p-0">
+              <div className="p-4 space-y-2">
+                <h4 className="font-medium">Available filter types</h4>
+                <div className="space-y-1">
+                  {[
+                    { id: 'dropdown', name: 'Dropdown Menu' },
+                    { id: 'checkbox', name: 'Checkbox Filter' },
+                    { id: 'radio', name: 'Radio Filter' },
+                    { id: 'date', name: 'Date Picker' },
+                    { id: 'daterange', name: 'Date Range' },
+                    { id: 'slider', name: 'Slider Filter' },
+                    { id: 'search', name: 'Search Box' },
+                  ].map((type) => (
+                    <div 
+                      key={type.id}
+                      onClick={() => updateElementProperties(element.id, { filterVariant: type.id as any })}
+                      className={`p-2 rounded-md cursor-pointer hover:bg-gray-100 ${
+                        properties.filterVariant === type.id ? 'bg-blue-50 text-blue-600 font-medium' : ''
+                      }`}
+                    >
+                      {type.name}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </PopoverContent>
+          </Popover>
+        </div>
+      </div>
+      
+      {/* Variant-specific properties */}
+      {getVariantSpecificProperties() && (
+        <div className="border-t pt-4">
+          <div className="space-y-3">
+            <h4 className="text-sm font-semibold">Template Properties</h4>
+            {getVariantSpecificProperties()}
+          </div>
+        </div>
+      )}
+      
+      {shouldShowFilterValues() && (
+        <Collapsible open={dataOpen} onOpenChange={setDataOpen}>
+          <CollapsibleTrigger asChild>
+            <Button variant="ghost" className="w-full justify-between p-3 h-auto">
+              <div className="flex items-center gap-2">
+                <Database className="h-4 w-4" />
+                <span className="font-medium">Data Customization</span>
+              </div>
+              <ChevronDownIcon className={`h-4 w-4 transition-transform ${dataOpen ? 'rotate-180' : ''}`} />
+            </Button>
+          </CollapsibleTrigger>
+          <CollapsibleContent className="space-y-2 pt-2">
+            <FilterDataSection 
+              properties={properties}
+              updateElementProperties={updateElementProperties}
+              elementId={element.id}
+            />
+          </CollapsibleContent>
+        </Collapsible>
+      )}
       
       <Collapsible open={advancedOpen} onOpenChange={setAdvancedOpen}>
         <CollapsibleTrigger asChild>
@@ -204,53 +440,6 @@ export function FilterProperties({
             </div>
           </div>
         </div>
-      </div>
-      
-      <div className="flex flex-col space-y-2 mt-4 border-t pt-4">
-        <Label className="text-sm font-semibold">Filter Style</Label>
-        <div className="mt-2">
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button variant="outline" size="sm" className="w-full justify-between">
-                {properties.filterVariant === 'dropdown' && 'Dropdown Menu'}
-                {properties.filterVariant === 'checkbox' && 'Checkbox Filter'}
-                {properties.filterVariant === 'radio' && 'Radio Filter'}
-                {properties.filterVariant === 'date' && 'Date Picker'}
-                {properties.filterVariant === 'daterange' && 'Date Range'}
-                {properties.filterVariant === 'slider' && 'Slider Filter'}
-                {properties.filterVariant === 'search' && 'Search Box'}
-                <ChevronDown className="h-4 w-4 opacity-50" />
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-64 p-0">
-              <div className="p-4 space-y-2">
-                <h4 className="font-medium">Available filter types</h4>
-                <div className="space-y-1">
-                  {[
-                    { id: 'dropdown', name: 'Dropdown Menu' },
-                    { id: 'checkbox', name: 'Checkbox Filter' },
-                    { id: 'radio', name: 'Radio Filter' },
-                    { id: 'date', name: 'Date Picker' },
-                    { id: 'daterange', name: 'Date Range' },
-                    { id: 'slider', name: 'Slider Filter' },
-                    { id: 'search', name: 'Search Box' },
-                  ].map((type) => (
-                    <div 
-                      key={type.id}
-                      onClick={() => updateElementProperties(element.id, { filterVariant: type.id as any })}
-                      className={`p-2 rounded-md cursor-pointer hover:bg-gray-100 ${
-                        properties.filterVariant === type.id ? 'bg-blue-50 text-blue-600 font-medium' : ''
-                      }`}
-                    >
-                      {type.name}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </PopoverContent>
-          </Popover>
-        </div>
-        <p className="text-xs text-gray-500 mt-1">Double-click on the filter to change styles</p>
       </div>
     </div>
   );
