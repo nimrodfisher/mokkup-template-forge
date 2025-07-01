@@ -1,3 +1,4 @@
+
 import React, { useState, useRef } from 'react';
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
@@ -169,7 +170,7 @@ export function HeaderProperties({
       case 'double-logo-purple':
         return (
           <div className="space-y-3">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between">  
               <Label htmlFor="show-double-logos">Show Double Logos</Label>
               <Switch
                 id="show-double-logos"
@@ -247,7 +248,7 @@ export function HeaderProperties({
               <Label>Title Alignment</Label>
               <Select 
                 value={properties.titleAlignment || 'left'} 
-                onValueChange={(value) => updateElementProperties(element.id, { titleAlignment: value })}
+                onValueChange={(value) => updateElementProperties(element.id, { titleAlignment: value as 'left' | 'center' | 'right' })}
               >
                 <SelectTrigger>
                   <SelectValue />
@@ -264,7 +265,7 @@ export function HeaderProperties({
               <Label>Title Size</Label>
               <Select 
                 value={properties.titleSize || 'md'} 
-                onValueChange={(value) => updateElementProperties(element.id, { titleSize: value })}
+                onValueChange={(value) => updateElementProperties(element.id, { titleSize: value as 'sm' | 'md' | 'lg' | 'xl' })}
               >
                 <SelectTrigger>
                   <SelectValue />
@@ -282,7 +283,7 @@ export function HeaderProperties({
               <Label>Title Weight</Label>
               <Select 
                 value={properties.titleWeight || 'bold'} 
-                onValueChange={(value) => updateElementProperties(element.id, { titleWeight: value })}
+                onValueChange={(value) => updateElementProperties(element.id, { titleWeight: value as 'normal' | 'medium' | 'semibold' | 'bold' })}
               >
                 <SelectTrigger>
                   <SelectValue />
@@ -305,7 +306,7 @@ export function HeaderProperties({
               <Label>Title Alignment</Label>
               <Select 
                 value={properties.titleAlignment || 'left'} 
-                onValueChange={(value) => updateElementProperties(element.id, { titleAlignment: value })}
+                onValueChange={(value) => updateElementProperties(element.id, { titleAlignment: value as 'left' | 'center' | 'right' })}
               >
                 <SelectTrigger>
                   <SelectValue />
