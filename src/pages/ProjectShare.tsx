@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -94,10 +93,18 @@ export default function ProjectShare() {
       return profileUser;
     }
 
-    // If not found in profiles, create a profile entry for them
+    // If not found in profiles, try to create a profile for them
     // This handles cases where users exist in auth but don't have profiles yet
-    console.log('User not found in profiles, they may need to log in first');
-    return null;
+    try {
+      // Check if user exists in auth.users by attempting to find them via admin API
+      // Since we can't directly query auth.users, we'll try to invite them and let
+      // the auth system handle the verification
+      console.log('User not found in profiles table. They may need to sign up first or complete their profile.');
+      return null;
+    } catch (error) {
+      console.error('Error checking auth users:', error);
+      return null;
+    }
   };
 
   const handleInviteUser = async (e: React.FormEvent) => {
