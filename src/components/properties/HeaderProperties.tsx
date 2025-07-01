@@ -1,13 +1,14 @@
-
 import React, { useState, useRef } from 'react';
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { X, Settings, ChevronDown } from "lucide-react";
+import { X, Settings, ChevronDown, Settings2 } from "lucide-react";
 import { Element } from "@/types/wireframe";
 import { toast } from "sonner";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface HeaderPropertiesProps {
   element: Element;
@@ -27,7 +28,10 @@ export function HeaderProperties({
   const properties = element.properties || {};
   const [backgroundColor, setBackgroundColor] = useState(properties.backgroundColor || '#ffffff');
   const [textColor, setTextColor] = useState(properties.textColor || '#000000');
+  const [advancedOpen, setAdvancedOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  
+  const currentVariant = properties.variant || 'default';
   
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -53,6 +57,269 @@ export function HeaderProperties({
   
   const triggerFileInput = () => {
     fileInputRef.current?.click();
+  };
+
+  const getAdvancedPropertiesForVariant = () => {
+    switch (currentVariant) {
+      case 'with-metrics':
+      case 'title-metrics':
+        return (
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <Label htmlFor="show-metrics">Show Metrics</Label>
+              <Switch
+                id="show-metrics"
+                checked={properties.showMetrics || false}
+                onCheckedChange={(checked) => updateElementProperties(element.id, { showMetrics: checked })}
+              />
+            </div>
+            
+            {properties.showMetrics && (
+              <div className="space-y-3">
+                <Label className="text-sm font-medium">Metrics Configuration</Label>
+                {(properties.metrics || []).map((metric: any, index: number) => (
+                  <div key={index} className="grid grid-cols-2 gap-2">
+                    <Input
+                      placeholder="Metric title"
+                      value={metric.title || ''}
+                      onChange={(e) => {
+                        const newMetrics = [...(properties.metrics || [])];
+                        newMetrics[index] = { ...newMetrics[index], title: e.target.value };
+                        updateElementProperties(element.id, { metrics: newMetrics });
+                      }}
+                    />
+                    <Input
+                      placeholder="Value"
+                      value={metric.value || ''}
+                      onChange={(e) => {
+                        const newMetrics = [...(properties.metrics || [])];
+                        newMetrics[index] = { ...newMetrics[index], value: e.target.value };
+                        updateElementProperties(element.id, { metrics: newMetrics });
+                      }}
+                    />
+                  </div>
+                ))}
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => {
+                    const newMetrics = [...(properties.metrics || []), { title: `Metric ${(properties.metrics?.length || 0) + 1}`, value: '0' }];
+                    updateElementProperties(element.id, { metrics: newMetrics });
+                  }}
+                >
+                  Add Metric
+                </Button>
+              </div>
+            )}
+          </div>
+        );
+
+      case 'navigation-buttons':
+      case 'navigation-top':
+        return (
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <Label htmlFor="show-nav-buttons">Show Navigation Buttons</Label>
+              <Switch
+                id="show-nav-buttons"
+                checked={properties.showNavigationButtons || false}
+                onCheckedChange={(checked) => updateElementProperties(element.id, { showNavigationButtons: checked })}
+              />
+            </div>
+            
+            {properties.showNavigationButtons && (
+              <div className="space-y-3">
+                <Label className="text-sm font-medium">Navigation Buttons</Label>
+                {(properties.navigationButtons || []).map((button: any, index: number) => (
+                  <div key={index} className="flex items-center gap-2">
+                    <Input
+                      placeholder="Button title"
+                      value={button.title || ''}
+                      onChange={(e) => {
+                        const newButtons = [...(properties.navigationButtons || [])];
+                        newButtons[index] = { ...newButtons[index], title: e.target.value };
+                        updateElementProperties(element.id, { navigationButtons: newButtons });
+                      }}
+                    />
+                    <Switch
+                      checked={button.active || false}
+                      onCheckedChange={(checked) => {
+                        const newButtons = [...(properties.navigationButtons || [])];
+                        newButtons[index] = { ...newButtons[index], active: checked };
+                        updateElementProperties(element.id, { navigationButtons: newButtons });
+                      }}
+                    />
+                  </div>
+                ))}
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => {
+                    const newButtons = [...(properties.navigationButtons || []), { title: `Nav ${(properties.navigationButtons?.length || 0) + 1}`, active: false }];
+                    updateElementProperties(element.id, { navigationButtons: newButtons });
+                  }}
+                >
+                  Add Navigation Button
+                </Button>
+              </div>
+            )}
+          </div>
+        );
+
+      case 'double-logo-purple':
+        return (
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <Label htmlFor="show-double-logos">Show Double Logos</Label>
+              <Switch
+                id="show-double-logos"
+                checked={properties.showDoubleLogos || false}
+                onCheckedChange={(checked) => updateElementProperties(element.id, { showDoubleLogos: checked })}
+              />
+            </div>
+            
+            {properties.showDoubleLogos && (
+              <div className="space-y-3">
+                <div className="space-y-2">
+                  <Label>Secondary Logo</Label>
+                  <Button className="w-full" variant="outline" onClick={() => {
+                    // Handle secondary logo upload
+                    const input = document.createElement('input');
+                    input.type = 'file';
+                    input.accept = 'image/*';
+                    input.onchange = (e) => {
+                      const file = (e.target as HTMLInputElement).files?.[0];
+                      if (file) {
+                        const reader = new FileReader();
+                        reader.onload = (event) => {
+                          if (event.target?.result) {
+                            updateElementProperties(element.id, { secondaryLogoUrl: event.target.result.toString() });
+                            toast.success('Secondary logo updated!');
+                          }
+                        };
+                        reader.readAsDataURL(file);
+                      }
+                    };
+                    input.click();
+                  }}>
+                    {properties.secondaryLogoUrl ? 'Change Secondary Logo' : 'Add Secondary Logo'}
+                  </Button>
+                </div>
+              </div>
+            )}
+          </div>
+        );
+
+      case 'centered-navigation-purple':
+        return (
+          <div className="space-y-3">
+            <div className="space-y-2">
+              <Label>Navigation Items</Label>
+              {(properties.navigationItems || []).map((item: string, index: number) => (
+                <Input
+                  key={index}
+                  placeholder={`Navigation ${index + 1}`}
+                  value={item}
+                  onChange={(e) => {
+                    const newItems = [...(properties.navigationItems || [])];
+                    newItems[index] = e.target.value;
+                    updateElementProperties(element.id, { navigationItems: newItems });
+                  }}
+                />
+              ))}
+            </div>
+          </div>
+        );
+
+      case 'minimal-title':
+        return (
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <Label htmlFor="show-icon">Show Icon</Label>
+              <Switch
+                id="show-icon"
+                checked={properties.showIcon || false}
+                onCheckedChange={(checked) => updateElementProperties(element.id, { showIcon: checked })}
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <Label>Title Alignment</Label>
+              <Select 
+                value={properties.titleAlignment || 'left'} 
+                onValueChange={(value) => updateElementProperties(element.id, { titleAlignment: value })}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="left">Left</SelectItem>
+                  <SelectItem value="center">Center</SelectItem>
+                  <SelectItem value="right">Right</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <div className="space-y-2">
+              <Label>Title Size</Label>
+              <Select 
+                value={properties.titleSize || 'md'} 
+                onValueChange={(value) => updateElementProperties(element.id, { titleSize: value })}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="sm">Small</SelectItem>
+                  <SelectItem value="md">Medium</SelectItem>
+                  <SelectItem value="lg">Large</SelectItem>
+                  <SelectItem value="xl">Extra Large</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <div className="space-y-2">
+              <Label>Title Weight</Label>
+              <Select 
+                value={properties.titleWeight || 'bold'} 
+                onValueChange={(value) => updateElementProperties(element.id, { titleWeight: value })}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="normal">Normal</SelectItem>
+                  <SelectItem value="medium">Medium</SelectItem>
+                  <SelectItem value="semibold">Semibold</SelectItem>
+                  <SelectItem value="bold">Bold</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        );
+
+      default:
+        return (
+          <div className="space-y-3">
+            <div className="space-y-2">
+              <Label>Title Alignment</Label>
+              <Select 
+                value={properties.titleAlignment || 'left'} 
+                onValueChange={(value) => updateElementProperties(element.id, { titleAlignment: value })}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="left">Left</SelectItem>
+                  <SelectItem value="center">Center</SelectItem>
+                  <SelectItem value="right">Right</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        );
+    }
   };
     
   return (
@@ -159,6 +426,22 @@ export function HeaderProperties({
           )}
         </div>
       </div>
+
+      {/* Advanced Options Section */}
+      <Collapsible open={advancedOpen} onOpenChange={setAdvancedOpen}>
+        <CollapsibleTrigger asChild>
+          <Button variant="ghost" className="w-full justify-between p-3 h-auto border-t pt-4">
+            <div className="flex items-center gap-2">
+              <Settings2 className="h-4 w-4" />
+              <span className="font-medium">Advanced Options</span>
+            </div>
+            <ChevronDown className={`h-4 w-4 transition-transform ${advancedOpen ? 'rotate-180' : ''}`} />
+          </Button>
+        </CollapsibleTrigger>
+        <CollapsibleContent className="space-y-3 pt-2">
+          {getAdvancedPropertiesForVariant()}
+        </CollapsibleContent>
+      </Collapsible>
       
       <div className="border-t pt-4">
         <div className="space-y-3">
@@ -220,7 +503,7 @@ export function HeaderProperties({
           </div>
           
           {!['centered-navigation-purple', 'navigation-top', 'dark-navigation', 'minimal'].includes(properties.variant || '') && (
-            <div className="flex justify-between items-center">
+            <div className="flex items-center justify-between">
               <Label htmlFor="nav-toggle">Navigation Buttons</Label>
               <Switch 
                 id="nav-toggle" 
