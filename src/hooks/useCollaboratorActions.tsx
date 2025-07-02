@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import type { User } from '@supabase/supabase-js';
 
 export function useCollaboratorActions() {
   const { user } = useAuth();
@@ -50,15 +51,17 @@ export function useCollaboratorActions() {
 
       // Also check auth.users table for recently created accounts
       console.log('Checking auth.users table...');
-      const { data: authUsers, error: authError } = await supabase.auth.admin.listUsers();
+      const { data: authUsersResponse, error: authError } = await supabase.auth.admin.listUsers();
       
       if (authError) {
         console.error('Error checking auth users:', authError);
-      } else if (authUsers?.users) {
-        // Properly type the found user
-        const foundUser = authUsers.users.find(u => u.email?.toLowerCase() === emailToSearch);
+      } else if (authUsersResponse?.users) {
+        // Find user with matching email
+        const foundUser = authUsersResponse.users.find((authUser: User) => 
+          authUser.email && authUser.email.toLowerCase() === emailToSearch
+        );
         
-        if (foundUser?.email) {
+        if (foundUser && foundUser.email) {
           console.log('Found user in auth.users but not in profiles, creating profile...');
           
           // Create profile for this user
