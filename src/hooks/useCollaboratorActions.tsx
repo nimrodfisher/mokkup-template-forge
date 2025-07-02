@@ -13,14 +13,14 @@ export function useCollaboratorActions() {
     try {
       console.log('Searching for user with email:', emailToSearch);
       
-      // Search in profiles table with exact match
+      // First try exact case-sensitive match
       const { data: profileUser, error: profileError } = await supabase
         .from('profiles')
         .select('id, email, first_name, last_name')
         .eq('email', emailToSearch)
         .maybeSingle();
 
-      if (profileError) {
+      if (profileError && profileError.code !== 'PGRST116') {
         console.error('Error searching profiles:', profileError);
         throw profileError;
       }
@@ -37,7 +37,7 @@ export function useCollaboratorActions() {
         .ilike('email', emailToSearch)
         .maybeSingle();
 
-      if (insensitiveError) {
+      if (insensitiveError && insensitiveError.code !== 'PGRST116') {
         console.error('Error in case-insensitive search:', insensitiveError);
         throw insensitiveError;
       }
@@ -47,7 +47,40 @@ export function useCollaboratorActions() {
         return profileUserInsensitive;
       }
 
-      console.log('User not found in profiles table');
+      // Also check auth.users table for recently created accounts
+      console.log('Checking auth.users table...');
+      const { data: authUsers, error: authError } = await supabase.auth.admin.listUsers();
+      
+      if (authError) {
+        console.error('Error checking auth users:', authError);
+      } else {
+        const authUser = authUsers.users.find(u => u.email?.toLowerCase() === emailToSearch);
+        if (authUser) {
+          console.log('Found user in auth.users but not in profiles, creating profile...');
+          
+          // Create profile for this user
+          const { data: newProfile, error: createError } = await supabase
+            .from('profiles')
+            .insert({
+              id: authUser.id,
+              email: authUser.email || emailToSearch,
+              first_name: authUser.user_metadata?.first_name || authUser.user_metadata?.given_name || null,
+              last_name: authUser.user_metadata?.last_name || authUser.user_metadata?.family_name || null,
+              company_name: authUser.user_metadata?.company_name || null
+            })
+            .select('id, email, first_name, last_name')
+            .single();
+
+          if (createError) {
+            console.error('Error creating profile:', createError);
+          } else {
+            console.log('Created profile for auth user:', newProfile);
+            return newProfile;
+          }
+        }
+      }
+
+      console.log('User not found in any table');
       return null;
     } catch (error) {
       console.error('Error in findUserByEmail:', error);
@@ -107,8 +140,8 @@ export function useCollaboratorActions() {
 
       if (!userProfile) {
         toast.error(
-          'User not found. The person must have an account and be logged in at least once to complete their profile setup.',
-          { duration: 6000 }
+          'User not found. Please make sure the person has created an account and logged in at least once.',
+          { duration: 8000 }
         );
         return false;
       }
@@ -123,7 +156,7 @@ export function useCollaboratorActions() {
         .eq('user_id', userProfile.id)
         .maybeSingle();
 
-      if (existingError) {
+      if (existingError && existingError.code !== 'PGRST116') {
         console.error('Error checking existing collaborator:', existingError);
         toast.error('Error checking existing collaborations');
         return false;

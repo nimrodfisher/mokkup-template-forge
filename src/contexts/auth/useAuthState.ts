@@ -17,33 +17,52 @@ export function useAuthState() {
         setUser(session?.user ?? null);
         setLoading(false);
         
-        // SECURITY FIX: Use setTimeout(0) to prevent infinite recursion/deadlock
+        // Handle profile creation for new users
         if (event === 'SIGNED_IN' && session?.user) {
           setTimeout(async () => {
             try {
-              // Check if profile exists, if not create it
-              const { data: profile } = await supabase
+              console.log('Checking/creating profile for user:', session.user.id);
+              
+              // Check if profile exists
+              const { data: existingProfile, error: checkError } = await supabase
                 .from('profiles')
                 .select('*')
                 .eq('id', session.user.id)
-                .single();
+                .maybeSingle();
+
+              if (checkError && checkError.code !== 'PGRST116') {
+                console.error('Error checking profile:', checkError);
+                return;
+              }
+
+              // If profile doesn't exist, create it
+              if (!existingProfile) {
+                console.log('Creating new profile for user:', session.user.id);
                 
-              if (!profile) {
-                await supabase
+                const { error: insertError } = await supabase
                   .from('profiles')
                   .insert({
                     id: session.user.id,
-                    email: session.user.email,
-                    first_name: session.user.user_metadata?.first_name || session.user.user_metadata?.given_name,
-                    last_name: session.user.user_metadata?.last_name || session.user.user_metadata?.family_name,
-                    company_name: session.user.user_metadata?.company_name,
-                    avatar_url: session.user.user_metadata?.avatar_url
+                    email: session.user.email || '',
+                    first_name: session.user.user_metadata?.first_name || 
+                               session.user.user_metadata?.given_name || null,
+                    last_name: session.user.user_metadata?.last_name || 
+                              session.user.user_metadata?.family_name || null,
+                    company_name: session.user.user_metadata?.company_name || null
                   });
+
+                if (insertError) {
+                  console.error('Error creating profile:', insertError);
+                } else {
+                  console.log('Profile created successfully');
+                }
+              } else {
+                console.log('Profile already exists:', existingProfile);
               }
             } catch (error) {
-              console.error('Error handling profile creation:', error);
+              console.error('Error in profile creation process:', error);
             }
-          }, 0);
+          }, 100);
         }
       }
     );
