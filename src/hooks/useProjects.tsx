@@ -24,6 +24,7 @@ export interface Project {
 export function useProjects() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isCreatingProject, setIsCreatingProject] = useState(false);
   const { user } = useAuth();
 
   const fetchProjects = async () => {
@@ -67,12 +68,17 @@ export function useProjects() {
   };
 
   const createProject = async (name: string, description?: string) => {
-    if (!user) {
-      toast.error('User not authenticated');
-      throw new Error('User not authenticated');
+    if (!user || isCreatingProject) {
+      if (isCreatingProject) {
+        console.log('Project creation already in progress, skipping...');
+      } else {
+        toast.error('User not authenticated');
+      }
+      return;
     }
 
     try {
+      setIsCreatingProject(true);
       console.log('Creating project with user:', user.id);
       
       const newProject = {
@@ -106,6 +112,8 @@ export function useProjects() {
       console.error('Error creating project:', error);
       toast.error('Failed to create project. Please try again.');
       throw error;
+    } finally {
+      setIsCreatingProject(false);
     }
   };
 

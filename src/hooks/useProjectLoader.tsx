@@ -14,6 +14,7 @@ export function useProjectLoader(projectId: string | undefined) {
   const [project, setProject] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [hasPermission, setHasPermission] = useState(false);
+  const [isCreatingProject, setIsCreatingProject] = useState(false);
   
   const { loadProjectFromDatabase } = useWireframe();
 
@@ -79,9 +80,10 @@ export function useProjectLoader(projectId: string | undefined) {
   };
 
   const createNewProject = async () => {
-    if (!user) return;
+    if (!user || isCreatingProject) return;
 
     try {
+      setIsCreatingProject(true);
       setLoading(true);
       
       const newProject = {
@@ -112,14 +114,15 @@ export function useProjectLoader(projectId: string | undefined) {
       navigate('/dashboard');
     } finally {
       setLoading(false);
+      setIsCreatingProject(false);
     }
   };
 
   useEffect(() => {
     if (projectId) {
       loadProject();
-    } else {
-      // No project ID, create a new project
+    } else if (!isCreatingProject) {
+      // No project ID, create a new project only if not already creating one
       createNewProject();
     }
   }, [projectId, user]);
