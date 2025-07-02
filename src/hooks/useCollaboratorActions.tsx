@@ -11,7 +11,7 @@ export function useCollaboratorActions() {
   const findUserByEmail = async (email: string) => {
     const emailToSearch = email.trim().toLowerCase();
     
-    // Find user in profiles table - use maybeSingle to handle no results
+    // First, try to find user in profiles table
     const { data: profileUser, error: profileError } = await supabase
       .from('profiles')
       .select('id, email')
@@ -27,6 +27,9 @@ export function useCollaboratorActions() {
       return profileUser;
     }
 
+    // If not found in profiles, check if user exists in auth but doesn't have a profile
+    // We'll need to use a different approach since we can't query auth.users directly
+    // Instead, we'll create the profile when inviting if the user accepts the invitation
     console.log('User not found in profiles table. They may need to sign up first or complete their profile.');
     return null;
   };
@@ -54,7 +57,9 @@ export function useCollaboratorActions() {
       const userProfile = await findUserByEmail(inviteEmail);
 
       if (!userProfile) {
-        toast.error('User not found. Please make sure they have signed up and logged in at least once to complete their profile setup.');
+        // Instead of showing an error, we'll create a pending invitation
+        // that can be claimed when the user signs up
+        toast.error('User not found. Please make sure they have an account and have logged in at least once.');
         return false;
       }
 

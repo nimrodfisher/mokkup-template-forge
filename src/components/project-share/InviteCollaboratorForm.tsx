@@ -5,7 +5,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Mail, Loader2 } from 'lucide-react';
+import { Mail, Loader2, Info } from 'lucide-react';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 interface InviteCollaboratorFormProps {
   onInvite: (email: string, role: 'viewer' | 'editor' | 'admin') => Promise<boolean>;
@@ -31,6 +32,14 @@ export function InviteCollaboratorForm({ onInvite, isInviting }: InviteCollabora
         <CardTitle>Invite Collaborator</CardTitle>
       </CardHeader>
       <CardContent>
+        <Alert className="mb-4">
+          <Info className="h-4 w-4" />
+          <AlertDescription>
+            <strong>Important:</strong> The person you're inviting must already have an account on this platform and have logged in at least once. 
+            If they haven't signed up yet, please ask them to create an account first at the login page.
+          </AlertDescription>
+        </Alert>
+        
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid md:grid-cols-3 gap-4">
             <div className="md:col-span-2 space-y-2">
@@ -44,9 +53,6 @@ export function InviteCollaboratorForm({ onInvite, isInviting }: InviteCollabora
                 required
                 disabled={isInviting}
               />
-              <p className="text-xs text-gray-500">
-                Note: The user must already have an account and logged in at least once to complete their profile setup.
-              </p>
             </div>
             <div className="space-y-2">
               <Label htmlFor="role">Role</Label>
