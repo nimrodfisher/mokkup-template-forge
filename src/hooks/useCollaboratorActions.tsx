@@ -53,9 +53,9 @@ export function useCollaboratorActions() {
       
       if (authError) {
         console.error('Error checking auth users:', authError);
-      } else {
-        const authUser = authUsers.users.find(u => u.email?.toLowerCase() === emailToSearch);
-        if (authUser) {
+      } else if (authUsers && authUsers.users) {
+        const authUser = authUsers.users.find(u => u.email && u.email.toLowerCase() === emailToSearch);
+        if (authUser && authUser.email) {
           console.log('Found user in auth.users but not in profiles, creating profile...');
           
           // Create profile for this user
@@ -63,7 +63,7 @@ export function useCollaboratorActions() {
             .from('profiles')
             .insert({
               id: authUser.id,
-              email: authUser.email || emailToSearch,
+              email: authUser.email,
               first_name: authUser.user_metadata?.first_name || authUser.user_metadata?.given_name || null,
               last_name: authUser.user_metadata?.last_name || authUser.user_metadata?.family_name || null,
               company_name: authUser.user_metadata?.company_name || null
