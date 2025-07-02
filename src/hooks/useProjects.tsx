@@ -37,12 +37,18 @@ export function useProjects() {
     try {
       setLoading(true);
       
+      // Fetch projects that user owns OR is a collaborator on
       const { data, error } = await supabase
         .from('projects')
         .select(`
           *,
-          profiles:owner_id (first_name, last_name, email)
+          profiles:owner_id (first_name, last_name, email),
+          project_collaborators!inner (
+            user_id,
+            role
+          )
         `)
+        .or(`owner_id.eq.${user.id},project_collaborators.user_id.eq.${user.id}`)
         .order('updated_at', { ascending: false });
 
       if (error) {
@@ -50,8 +56,29 @@ export function useProjects() {
         throw error;
       }
 
+      // Also fetch projects user owns directly (without collaborator requirement)
+      const { data: ownedProjects, error: ownedError } = await supabase
+        .from('projects')
+        .select(`
+          *,
+          profiles:owner_id (first_name, last_name, email)
+        `)
+        .eq('owner_id', user.id)
+        .order('updated_at', { ascending: false });
+
+      if (ownedError) {
+        console.error('Error fetching owned projects:', ownedError);
+        throw ownedError;
+      }
+
+      // Combine and deduplicate projects
+      const allProjects = [...(ownedProjects || []), ...(data || [])];
+      const uniqueProjects = allProjects.filter((project, index, self) => 
+        index === self.findIndex(p => p.id === project.id)
+      );
+
       // Transform the data to match our interface
-      const transformedProjects = (data || []).map(project => ({
+      const transformedProjects = uniqueProjects.map(project => ({
         ...project,
         screens: Array.isArray(project.screens) ? project.screens : [],
         elements: Array.isArray(project.elements) ? project.elements : []
@@ -87,7 +114,7 @@ export function useProjects() {
         owner_id: user.id,
         screens: [{ id: crypto.randomUUID(), name: 'Screen1', isActive: true }],
         elements: [],
-        is_public: false
+        is_public: false // Make projects private by default
       };
 
       console.log('Project data to insert:', newProject);

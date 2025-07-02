@@ -47,12 +47,14 @@ export function useProjectLoader(projectId: string | undefined) {
         return;
       }
 
-      // Check permissions
+      // Check permissions - only owner and collaborators can access
       const isOwner = data.owner_id === user.id;
       const collaboration = data.project_collaborators?.find(
         (collab: any) => collab.user_id === user.id
       );
-      const hasAccess = isOwner || collaboration || data.is_public;
+      
+      // Remove public access - only owner and collaborators can access
+      const hasAccess = isOwner || collaboration;
 
       if (!hasAccess) {
         toast.error('You do not have permission to access this project');
@@ -91,6 +93,7 @@ export function useProjectLoader(projectId: string | undefined) {
         owner_id: user.id,
         screens: [{ id: crypto.randomUUID(), name: 'Screen1', isActive: true }],
         elements: [],
+        is_public: false // Make new projects private by default
       };
 
       const { data, error } = await supabase
