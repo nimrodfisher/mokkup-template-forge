@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Mail, Loader2, Info, AlertCircle } from 'lucide-react';
+import { Mail, Loader2, Info, AlertCircle, UserPlus } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
 interface InviteCollaboratorFormProps {
@@ -37,17 +37,18 @@ export function InviteCollaboratorForm({ onInvite, isInviting }: InviteCollabora
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!inviteEmail.trim()) {
+    const cleanEmail = inviteEmail.trim();
+    if (!cleanEmail) {
       setEmailError('Email address is required');
       return;
     }
     
-    if (!validateEmail(inviteEmail)) {
+    if (!validateEmail(cleanEmail)) {
       setEmailError('Please enter a valid email address');
       return;
     }
 
-    const success = await onInvite(inviteEmail, inviteRole);
+    const success = await onInvite(cleanEmail, inviteRole);
     if (success) {
       setInviteEmail('');
       setInviteRole('viewer');
@@ -58,14 +59,21 @@ export function InviteCollaboratorForm({ onInvite, isInviting }: InviteCollabora
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Invite Collaborator</CardTitle>
+        <CardTitle className="flex items-center gap-2">
+          <UserPlus className="h-5 w-5" />
+          Invite Collaborator
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <Alert className="mb-4">
           <Info className="h-4 w-4" />
           <AlertDescription>
-            <strong>Important:</strong> The person you're inviting must already have an account on this platform and have logged in at least once. 
-            If they haven't signed up yet, please ask them to create an account first.
+            <strong>Important:</strong> The person you're inviting must first:
+            <ul className="list-disc list-inside mt-2 space-y-1">
+              <li>Create an account by signing up on this platform</li>
+              <li>Log in at least once to complete their profile setup</li>
+            </ul>
+            <p className="mt-2">Only then can you successfully invite them using their email address.</p>
           </AlertDescription>
         </Alert>
         
@@ -107,7 +115,7 @@ export function InviteCollaboratorForm({ onInvite, isInviting }: InviteCollabora
           <Button type="submit" disabled={isInviting || !inviteEmail.trim() || !!emailError}>
             {isInviting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             <Mail className="mr-2 h-4 w-4" />
-            Send Invitation
+            {isInviting ? 'Sending Invitation...' : 'Send Invitation'}
           </Button>
         </form>
       </CardContent>

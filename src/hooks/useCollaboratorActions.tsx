@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
@@ -12,11 +11,13 @@ export function useCollaboratorActions() {
     const emailToSearch = email.trim().toLowerCase();
     
     try {
-      // First, try to find user in profiles table
+      console.log('Searching for user with email:', emailToSearch);
+      
+      // Search in profiles table with exact match
       const { data: profileUser, error: profileError } = await supabase
         .from('profiles')
-        .select('id, email')
-        .ilike('email', emailToSearch)
+        .select('id, email, first_name, last_name')
+        .eq('email', emailToSearch)
         .maybeSingle();
 
       if (profileError) {
@@ -29,8 +30,24 @@ export function useCollaboratorActions() {
         return profileUser;
       }
 
-      // If not found, try to create a profile for this user if they exist in auth
-      console.log('User not found in profiles table, they may need to sign up or complete profile setup');
+      // If not found with exact match, try case-insensitive search
+      const { data: profileUserInsensitive, error: insensitiveError } = await supabase
+        .from('profiles')
+        .select('id, email, first_name, last_name')
+        .ilike('email', emailToSearch)
+        .maybeSingle();
+
+      if (insensitiveError) {
+        console.error('Error in case-insensitive search:', insensitiveError);
+        throw insensitiveError;
+      }
+
+      if (profileUserInsensitive) {
+        console.log('Found user with case-insensitive search:', profileUserInsensitive);
+        return profileUserInsensitive;
+      }
+
+      console.log('User not found in profiles table');
       return null;
     } catch (error) {
       console.error('Error in findUserByEmail:', error);
@@ -48,20 +65,21 @@ export function useCollaboratorActions() {
       return false;
     }
 
-    if (!projectId || !inviteEmail.trim()) {
+    const cleanEmail = inviteEmail.trim().toLowerCase();
+    if (!projectId || !cleanEmail) {
       toast.error('Please enter a valid email address');
       return false;
     }
 
     // Prevent inviting yourself
-    if (inviteEmail.trim().toLowerCase() === user?.email?.toLowerCase()) {
+    if (cleanEmail === user?.email?.toLowerCase()) {
       toast.error('You cannot invite yourself to the project');
       return false;
     }
 
     try {
       setIsInviting(true);
-      console.log('Starting invitation process:', { email: inviteEmail, role: inviteRole, projectId });
+      console.log('Starting invitation process:', { email: cleanEmail, role: inviteRole, projectId });
       
       // First verify the project exists and user owns it
       const { data: project, error: projectError } = await supabase
@@ -82,12 +100,20 @@ export function useCollaboratorActions() {
         return false;
       }
 
-      const userProfile = await findUserByEmail(inviteEmail);
+      console.log('Project verified:', project);
+
+      // Look for the user
+      const userProfile = await findUserByEmail(cleanEmail);
 
       if (!userProfile) {
-        toast.error('User not found. The person must have an account and be logged in at least once to complete their profile setup.');
+        toast.error(
+          'User not found. The person must have an account and be logged in at least once to complete their profile setup.',
+          { duration: 6000 }
+        );
         return false;
       }
+
+      console.log('User found, checking for existing collaboration...');
 
       // Check if user is already a collaborator
       const { data: existingCollab, error: existingError } = await supabase
@@ -104,9 +130,11 @@ export function useCollaboratorActions() {
       }
 
       if (existingCollab) {
-        toast.error(`User is already a ${existingCollab.role} on this project`);
+        toast.error(`${cleanEmail} is already a ${existingCollab.role} on this project`);
         return false;
       }
+
+      console.log('Adding collaborator...');
 
       // Add collaborator
       const { error: insertError } = await supabase
@@ -130,7 +158,11 @@ export function useCollaboratorActions() {
         return false;
       }
 
-      toast.success(`Successfully invited ${inviteEmail} as ${inviteRole}`);
+      const displayName = userProfile.first_name && userProfile.last_name 
+        ? `${userProfile.first_name} ${userProfile.last_name}`
+        : cleanEmail;
+
+      toast.success(`Successfully invited ${displayName} as ${inviteRole}`);
       return true;
     } catch (error: any) {
       console.error('Error inviting user:', error);
