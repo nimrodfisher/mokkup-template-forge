@@ -11,27 +11,31 @@ export function useCollaboratorActions() {
   const findUserByEmail = async (email: string) => {
     const emailToSearch = email.trim().toLowerCase();
     
-    // First, try to find user in profiles table
-    const { data: profileUser, error: profileError } = await supabase
-      .from('profiles')
-      .select('id, email')
-      .ilike('email', emailToSearch)
-      .maybeSingle();
+    try {
+      // First, try to find user in profiles table
+      const { data: profileUser, error: profileError } = await supabase
+        .from('profiles')
+        .select('id, email')
+        .ilike('email', emailToSearch)
+        .maybeSingle();
 
-    if (profileError) {
-      console.error('Error searching profiles:', profileError);
-      throw profileError;
+      if (profileError) {
+        console.error('Error searching profiles:', profileError);
+        throw profileError;
+      }
+
+      if (profileUser) {
+        console.log('Found user in profiles:', profileUser);
+        return profileUser;
+      }
+
+      // If not found, try to create a profile for this user if they exist in auth
+      console.log('User not found in profiles table, they may need to sign up or complete profile setup');
+      return null;
+    } catch (error) {
+      console.error('Error in findUserByEmail:', error);
+      throw error;
     }
-
-    if (profileUser) {
-      return profileUser;
-    }
-
-    // If not found in profiles, check if user exists in auth but doesn't have a profile
-    // We'll need to use a different approach since we can't query auth.users directly
-    // Instead, we'll create the profile when inviting if the user accepts the invitation
-    console.log('User not found in profiles table. They may need to sign up first or complete their profile.');
-    return null;
   };
 
   const inviteUser = async (
@@ -39,6 +43,11 @@ export function useCollaboratorActions() {
     inviteEmail: string, 
     inviteRole: 'viewer' | 'editor' | 'admin'
   ) => {
+    if (!user) {
+      toast.error('You must be logged in to invite collaborators');
+      return false;
+    }
+
     if (!projectId || !inviteEmail.trim()) {
       toast.error('Please enter a valid email address');
       return false;
@@ -52,27 +61,50 @@ export function useCollaboratorActions() {
 
     try {
       setIsInviting(true);
-      console.log('Inviting user:', { email: inviteEmail, role: inviteRole, projectId });
+      console.log('Starting invitation process:', { email: inviteEmail, role: inviteRole, projectId });
       
+      // First verify the project exists and user owns it
+      const { data: project, error: projectError } = await supabase
+        .from('projects')
+        .select('id, owner_id, name')
+        .eq('id', projectId)
+        .eq('owner_id', user.id)
+        .maybeSingle();
+
+      if (projectError) {
+        console.error('Project verification error:', projectError);
+        toast.error('Error verifying project ownership');
+        return false;
+      }
+
+      if (!project) {
+        toast.error('Project not found or you do not have permission to invite collaborators');
+        return false;
+      }
+
       const userProfile = await findUserByEmail(inviteEmail);
 
       if (!userProfile) {
-        // Instead of showing an error, we'll create a pending invitation
-        // that can be claimed when the user signs up
-        toast.error('User not found. Please make sure they have an account and have logged in at least once.');
+        toast.error('User not found. The person must have an account and be logged in at least once to complete their profile setup.');
         return false;
       }
 
       // Check if user is already a collaborator
-      const { data: existingCollab } = await supabase
+      const { data: existingCollab, error: existingError } = await supabase
         .from('project_collaborators')
-        .select('id')
+        .select('id, role')
         .eq('project_id', projectId)
         .eq('user_id', userProfile.id)
         .maybeSingle();
 
+      if (existingError) {
+        console.error('Error checking existing collaborator:', existingError);
+        toast.error('Error checking existing collaborations');
+        return false;
+      }
+
       if (existingCollab) {
-        toast.error('User is already a collaborator on this project');
+        toast.error(`User is already a ${existingCollab.role} on this project`);
         return false;
       }
 
@@ -83,12 +115,19 @@ export function useCollaboratorActions() {
           project_id: projectId,
           user_id: userProfile.id,
           role: inviteRole,
-          invited_by: user?.id,
+          invited_by: user.id,
         });
 
       if (insertError) {
         console.error('Insert error:', insertError);
-        throw insertError;
+        
+        // Handle specific error cases
+        if (insertError.code === '23505') {
+          toast.error('User is already a collaborator on this project');
+        } else {
+          toast.error('Failed to add collaborator. Please try again.');
+        }
+        return false;
       }
 
       toast.success(`Successfully invited ${inviteEmail} as ${inviteRole}`);
