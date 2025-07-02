@@ -14,7 +14,6 @@ export function useProjectLoader(projectId: string | undefined) {
   const [project, setProject] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [hasPermission, setHasPermission] = useState(false);
-  const [isCreatingProject, setIsCreatingProject] = useState(false);
   
   const { loadProjectFromDatabase } = useWireframe();
 
@@ -47,14 +46,12 @@ export function useProjectLoader(projectId: string | undefined) {
         return;
       }
 
-      // Check permissions - only owner and collaborators can access
+      // Check permissions
       const isOwner = data.owner_id === user.id;
       const collaboration = data.project_collaborators?.find(
         (collab: any) => collab.user_id === user.id
       );
-      
-      // Remove public access - only owner and collaborators can access
-      const hasAccess = isOwner || collaboration;
+      const hasAccess = isOwner || collaboration || data.is_public;
 
       if (!hasAccess) {
         toast.error('You do not have permission to access this project');
@@ -82,10 +79,9 @@ export function useProjectLoader(projectId: string | undefined) {
   };
 
   const createNewProject = async () => {
-    if (!user || isCreatingProject) return;
+    if (!user) return;
 
     try {
-      setIsCreatingProject(true);
       setLoading(true);
       
       const newProject = {
@@ -93,7 +89,6 @@ export function useProjectLoader(projectId: string | undefined) {
         owner_id: user.id,
         screens: [{ id: crypto.randomUUID(), name: 'Screen1', isActive: true }],
         elements: [],
-        is_public: false // Make new projects private by default
       };
 
       const { data, error } = await supabase
@@ -117,15 +112,14 @@ export function useProjectLoader(projectId: string | undefined) {
       navigate('/dashboard');
     } finally {
       setLoading(false);
-      setIsCreatingProject(false);
     }
   };
 
   useEffect(() => {
     if (projectId) {
       loadProject();
-    } else if (!isCreatingProject) {
-      // No project ID, create a new project only if not already creating one
+    } else {
+      // No project ID, create a new project
       createNewProject();
     }
   }, [projectId, user]);

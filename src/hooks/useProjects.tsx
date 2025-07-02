@@ -24,7 +24,6 @@ export interface Project {
 export function useProjects() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
-  const [isCreatingProject, setIsCreatingProject] = useState(false);
   const { user } = useAuth();
 
   const fetchProjects = async () => {
@@ -37,18 +36,12 @@ export function useProjects() {
     try {
       setLoading(true);
       
-      // Fetch projects that user owns OR is a collaborator on
       const { data, error } = await supabase
         .from('projects')
         .select(`
           *,
-          profiles:owner_id (first_name, last_name, email),
-          project_collaborators!inner (
-            user_id,
-            role
-          )
+          profiles:owner_id (first_name, last_name, email)
         `)
-        .or(`owner_id.eq.${user.id},project_collaborators.user_id.eq.${user.id}`)
         .order('updated_at', { ascending: false });
 
       if (error) {
@@ -56,29 +49,8 @@ export function useProjects() {
         throw error;
       }
 
-      // Also fetch projects user owns directly (without collaborator requirement)
-      const { data: ownedProjects, error: ownedError } = await supabase
-        .from('projects')
-        .select(`
-          *,
-          profiles:owner_id (first_name, last_name, email)
-        `)
-        .eq('owner_id', user.id)
-        .order('updated_at', { ascending: false });
-
-      if (ownedError) {
-        console.error('Error fetching owned projects:', ownedError);
-        throw ownedError;
-      }
-
-      // Combine and deduplicate projects
-      const allProjects = [...(ownedProjects || []), ...(data || [])];
-      const uniqueProjects = allProjects.filter((project, index, self) => 
-        index === self.findIndex(p => p.id === project.id)
-      );
-
       // Transform the data to match our interface
-      const transformedProjects = uniqueProjects.map(project => ({
+      const transformedProjects = (data || []).map(project => ({
         ...project,
         screens: Array.isArray(project.screens) ? project.screens : [],
         elements: Array.isArray(project.elements) ? project.elements : []
@@ -95,17 +67,12 @@ export function useProjects() {
   };
 
   const createProject = async (name: string, description?: string) => {
-    if (!user || isCreatingProject) {
-      if (isCreatingProject) {
-        console.log('Project creation already in progress, skipping...');
-      } else {
-        toast.error('User not authenticated');
-      }
-      return;
+    if (!user) {
+      toast.error('User not authenticated');
+      throw new Error('User not authenticated');
     }
 
     try {
-      setIsCreatingProject(true);
       console.log('Creating project with user:', user.id);
       
       const newProject = {
@@ -114,7 +81,7 @@ export function useProjects() {
         owner_id: user.id,
         screens: [{ id: crypto.randomUUID(), name: 'Screen1', isActive: true }],
         elements: [],
-        is_public: false // Make projects private by default
+        is_public: false
       };
 
       console.log('Project data to insert:', newProject);
@@ -139,8 +106,6 @@ export function useProjects() {
       console.error('Error creating project:', error);
       toast.error('Failed to create project. Please try again.');
       throw error;
-    } finally {
-      setIsCreatingProject(false);
     }
   };
 
