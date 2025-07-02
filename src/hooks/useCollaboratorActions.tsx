@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
@@ -53,20 +54,22 @@ export function useCollaboratorActions() {
       
       if (authError) {
         console.error('Error checking auth users:', authError);
-      } else if (authUsers && authUsers.users) {
-        const authUser = authUsers.users.find(u => u.email && u.email.toLowerCase() === emailToSearch);
-        if (authUser && authUser.email) {
+      } else if (authUsers?.users) {
+        // Properly type the found user
+        const foundUser = authUsers.users.find(u => u.email?.toLowerCase() === emailToSearch);
+        
+        if (foundUser?.email) {
           console.log('Found user in auth.users but not in profiles, creating profile...');
           
           // Create profile for this user
           const { data: newProfile, error: createError } = await supabase
             .from('profiles')
             .insert({
-              id: authUser.id,
-              email: authUser.email,
-              first_name: authUser.user_metadata?.first_name || authUser.user_metadata?.given_name || null,
-              last_name: authUser.user_metadata?.last_name || authUser.user_metadata?.family_name || null,
-              company_name: authUser.user_metadata?.company_name || null
+              id: foundUser.id,
+              email: foundUser.email,
+              first_name: foundUser.user_metadata?.first_name || foundUser.user_metadata?.given_name || null,
+              last_name: foundUser.user_metadata?.last_name || foundUser.user_metadata?.family_name || null,
+              company_name: foundUser.user_metadata?.company_name || null
             })
             .select('id, email, first_name, last_name')
             .single();
