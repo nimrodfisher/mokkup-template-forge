@@ -1,24 +1,37 @@
-
-import { Link } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
 import { LogOut } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
+import { ProfileManager } from '@/components/profile/ProfileManager';
 
 export function DashboardHeader() {
-  const { user, signOut } = useAuth();
+  const { signOut } = useAuth();
+
+  const handleSignOut = async () => {
+    await signOut();
+  };
 
   return (
-    <header className="bg-white border-b">
-      <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-        <Link to="/" className="font-bold text-xl text-blue-600">Alignify</Link>
-        <div className="flex items-center gap-4">
-          <span className="text-sm text-gray-600">
-            Welcome, {user?.user_metadata?.first_name || user?.email}
-          </span>
-          <Button variant="ghost" size="sm" onClick={signOut}>
-            <LogOut className="h-4 w-4 mr-2" />
-            Sign Out
-          </Button>
+    <header className="bg-white border-b border-gray-200">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-16">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center shadow-lg">
+              <span className="text-white font-bold text-sm">A</span>
+            </div>
+            <h1 className="text-xl font-semibold text-gray-900">Alignify</h1>
+          </div>
+          
+          <div className="flex items-center gap-4">
+            <ProfileManager />
+            <Button
+              variant="outline"
+              onClick={handleSignOut}
+              className="flex items-center gap-2"
+            >
+              <LogOut className="w-4 h-4" />
+              Sign Out
+            </Button>
+          </div>
         </div>
       </div>
     </header>
