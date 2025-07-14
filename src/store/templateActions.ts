@@ -1,21 +1,10 @@
 
-import { Template } from '@/types/wireframe';
 import { StateCreator } from 'zustand';
 import { v4 as uuidv4 } from 'uuid';
 import { WireframeState } from '@/types/wireframeState';
-import { supabase } from '@/integrations/supabase/client';
+import { TemplateSlice } from '@/types/template';
+import { TemplateService } from '@/services/templateService';
 import { toast } from 'sonner';
-
-export interface TemplateSlice {
-  templates: Template[];
-  activeTemplateId: string | null;
-  
-  saveTemplate: (name: string) => Promise<void>;
-  loadTemplate: (id: string) => Promise<void>;
-  createNewTemplate: () => void;
-  deleteTemplate: (id: string) => Promise<void>;
-  fetchTemplates: () => Promise<void>;
-}
 
 export const createTemplateSlice: StateCreator<
   WireframeState,
@@ -28,70 +17,29 @@ export const createTemplateSlice: StateCreator<
   
   saveTemplate: async (name) => {
     const { elements, activeTemplateId, templates, screens } = get();
-    const now = Date.now();
     
     try {
+      const savedTemplate = await TemplateService.saveTemplate({
+        id: activeTemplateId || undefined,
+        name,
+        screens,
+        elements,
+      });
+      
       if (activeTemplateId) {
         // Update existing template
-        const template = {
-          id: activeTemplateId,
-          name,
-          screens,
-          elements,
-          updatedAt: now,
-        };
-        
-        // Update in Supabase
-        const { error } = await supabase
-          .from('templates')
-          .update({ 
-            name,
-            screens: JSON.stringify(screens),
-            elements: JSON.stringify(elements),
-            updated_at: new Date(now).toISOString()
-          })
-          .eq('id', activeTemplateId);
-          
-        if (error) throw error;
-        
-        // Update local state
         set({
           templates: templates.map(t => 
             t.id === activeTemplateId 
-              ? { ...t, name, screens, elements, updatedAt: now }
+              ? { ...t, name, screens, elements, updatedAt: savedTemplate.updatedAt }
               : t
           ),
         });
       } else {
-        // Create new template
-        const newId = uuidv4();
-        const newTemplate = {
-          id: newId,
-          name,
-          screens,
-          elements,
-          createdAt: now,
-          updatedAt: now,
-        };
-        
-        // Insert into Supabase
-        const { error } = await supabase
-          .from('templates')
-          .insert({ 
-            id: newId,
-            name,
-            screens: JSON.stringify(screens),
-            elements: JSON.stringify(elements),
-            created_at: new Date(now).toISOString(),
-            updated_at: new Date(now).toISOString()
-          });
-          
-        if (error) throw error;
-        
-        // Update local state
+        // Add new template
         set(state => ({
-          templates: [...state.templates, newTemplate],
-          activeTemplateId: newId,
+          templates: [...state.templates, savedTemplate],
+          activeTemplateId: savedTemplate.id,
         }));
       }
     } catch (error) {
@@ -115,28 +63,10 @@ export const createTemplateSlice: StateCreator<
         return;
       }
       
-      // If not found locally, try to fetch from Supabase
-      const { data, error } = await supabase
-        .from('templates')
-        .select('*')
-        .eq('id', id)
-        .single();
-        
-      if (error) throw error;
+      // If not found locally, fetch from Supabase
+      const template = await TemplateService.loadTemplate(id);
       
-      if (data) {
-        const parsedScreens = JSON.parse(data.screens as string);
-        const parsedElements = JSON.parse(data.elements as string);
-        
-        const template = {
-          id: data.id,
-          name: data.name,
-          screens: parsedScreens,
-          elements: parsedElements,
-          createdAt: new Date(data.created_at).getTime(),
-          updatedAt: new Date(data.updated_at).getTime(),
-        };
-        
+      if (template) {
         set({
           screens: template.screens,
           elements: template.elements,
@@ -168,13 +98,7 @@ export const createTemplateSlice: StateCreator<
   
   deleteTemplate: async (id) => {
     try {
-      // Delete from Supabase
-      const { error } = await supabase
-        .from('templates')
-        .delete()
-        .eq('id', id);
-        
-      if (error) throw error;
+      await TemplateService.deleteTemplate(id);
       
       // Update local state
       set(state => ({
@@ -195,25 +119,8 @@ export const createTemplateSlice: StateCreator<
   
   fetchTemplates: async () => {
     try {
-      const { data, error } = await supabase
-        .from('templates')
-        .select('*')
-        .order('updated_at', { ascending: false });
-        
-      if (error) throw error;
-      
-      if (data) {
-        const templates = data.map(item => ({
-          id: item.id,
-          name: item.name,
-          screens: JSON.parse(item.screens as string),
-          elements: JSON.parse(item.elements as string),
-          createdAt: new Date(item.created_at).getTime(),
-          updatedAt: new Date(item.updated_at).getTime(),
-        }));
-        
-        set({ templates });
-      }
+      const templates = await TemplateService.fetchTemplates();
+      set({ templates });
     } catch (error) {
       console.error('Error fetching templates:', error);
       toast.error('Failed to fetch templates. Please try again.');
