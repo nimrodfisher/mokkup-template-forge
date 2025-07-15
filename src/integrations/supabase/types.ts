@@ -348,7 +348,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      check_project_collaborator: {
+        Args: { project_id: string; required_role?: string }
+        Returns: boolean
+      }
     }
     Enums: {
       user_role:
