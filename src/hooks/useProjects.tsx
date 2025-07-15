@@ -36,7 +36,6 @@ export function useProjects() {
     try {
       setLoading(true);
       
-      // Fetch projects (both owned and shared projects will be accessible due to RLS policies)
       const { data, error } = await supabase
         .from('projects')
         .select(`

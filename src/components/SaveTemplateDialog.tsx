@@ -43,11 +43,6 @@ export function SaveTemplateDialog({ open, onOpenChange }: SaveTemplateDialogPro
       return;
     }
     
-    // Prevent multiple saves if already saving
-    if (isSaving) {
-      return;
-    }
-    
     setIsSaving(true);
     
     try {
