@@ -87,9 +87,24 @@ export function useProjectLoader(projectId: string | undefined) {
 
       setProject(projectData);
       
-      // Load project data into wireframe store
+      // Load project data into wireframe store directly from fetched data
       if (projectData.screens && projectData.elements) {
-        await loadProjectFromDatabase(projectId);
+        const screens = Array.isArray(projectData.screens) 
+          ? projectData.screens as any[]
+          : [{ id: crypto.randomUUID(), name: 'Screen1', isActive: true }];
+        const elements = Array.isArray(projectData.elements) 
+          ? projectData.elements as any[]
+          : [];
+        
+        // Set the wireframe state directly instead of making another DB call
+        const { setCurrentProject } = useWireframe.getState();
+        useWireframe.setState({
+          screens,
+          elements,
+          currentProjectId: projectId,
+          selectedElementId: null,
+        });
+        setCurrentProject(projectId);
       }
     } catch (error) {
       console.error('Error loading project:', error);
