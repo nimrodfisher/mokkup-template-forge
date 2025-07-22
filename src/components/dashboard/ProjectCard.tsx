@@ -1,10 +1,9 @@
 
 import { useNavigate } from 'react-router-dom';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Badge } from '@/components/ui/badge';
-import { MoreVertical, Users, Calendar } from 'lucide-react';
+import { MoreVertical, Copy, Share2 } from 'lucide-react';
 import { format } from 'date-fns';
 import { CanvasElement } from '@/components/CanvasElement';
 import { useAuth } from '@/contexts/AuthContext';
@@ -26,11 +25,6 @@ export function ProjectCard({ project }: ProjectCardProps) {
     }
   };
 
-  const getProjectRole = (project: Project) => {
-    if (project.owner_id === user?.id) return 'Owner';
-    return 'Viewer';
-  };
-
   const getProjectElements = (project: Project) => {
     if (!project.elements || !project.screens) return [];
     
@@ -43,53 +37,16 @@ export function ProjectCard({ project }: ProjectCardProps) {
   const projectElements = getProjectElements(project);
 
   return (
-    <Card className="hover:shadow-md transition-shadow">
-      <CardHeader className="pb-2">
-        <div className="flex items-start justify-between">
-          <div className="flex-1 min-w-0">
-            <CardTitle className="truncate">{project.name}</CardTitle>
-            <div className="flex items-center gap-2 mt-1">
-              <Badge variant={getProjectRole(project) === 'Owner' ? 'default' : 'secondary'}>
-                {getProjectRole(project)}
-              </Badge>
-              <div className="flex items-center text-xs text-gray-500">
-                <Users className="h-3 w-3 mr-1" />
-                1
-              </div>
-            </div>
-          </div>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="sm">
-                <MoreVertical className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => navigate(`/editor/${project.id}`)}>
-                Open
-              </DropdownMenuItem>
-              {project.owner_id === user?.id && (
-                <>
-                  <DropdownMenuItem onClick={() => navigate(`/project/${project.id}/share`)}>
-                    Share
-                  </DropdownMenuItem>
-                  <DropdownMenuItem 
-                    onClick={() => handleDeleteProject(project.id)}
-                    className="text-red-600"
-                  >
-                    Delete
-                  </DropdownMenuItem>
-                </>
-              )}
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      </CardHeader>
-      <CardContent>
-        <div className="aspect-video bg-white rounded-md border overflow-hidden mb-3 relative">
+    <Card 
+      className="group cursor-pointer hover:shadow-lg transition-all duration-200 overflow-hidden"
+      onClick={() => navigate(`/editor/${project.id}`)}
+    >
+      <CardContent className="p-0">
+        {/* Project Thumbnail */}
+        <div className="aspect-[4/3] bg-gradient-to-br from-gray-50 to-gray-100 relative overflow-hidden">
           {projectElements.length === 0 ? (
             <div className="absolute inset-0 flex items-center justify-center">
-              <span className="text-sm font-medium text-gray-500">Empty project</span>
+              <span className="text-sm font-medium text-muted-foreground">Empty project</span>
             </div>
           ) : (
             <div className="relative w-full h-full" style={{ transform: "scale(0.33)", transformOrigin: "top left", width: "300%", height: "300%" }}>
@@ -102,26 +59,77 @@ export function ProjectCard({ project }: ProjectCardProps) {
               ))}
             </div>
           )}
+          
+          {/* Action buttons overlay */}
+          <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+            <Button 
+              size="sm" 
+              variant="secondary"
+              className="h-7 w-7 p-0"
+              onClick={(e) => {
+                e.stopPropagation();
+                // Handle copy/duplicate
+              }}
+            >
+              <Copy className="h-3 w-3" />
+            </Button>
+            <Button 
+              size="sm" 
+              variant="secondary"
+              className="h-7 w-7 p-0"
+              onClick={(e) => {
+                e.stopPropagation();
+                navigate(`/project/${project.id}/share`);
+              }}
+            >
+              <Share2 className="h-3 w-3" />
+            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button 
+                  size="sm" 
+                  variant="secondary"
+                  className="h-7 w-7 p-0"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <MoreVertical className="h-3 w-3" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => navigate(`/editor/${project.id}`)}>
+                  Open
+                </DropdownMenuItem>
+                {project.owner_id === user?.id && (
+                  <>
+                    <DropdownMenuItem onClick={() => navigate(`/project/${project.id}/share`)}>
+                      Share
+                    </DropdownMenuItem>
+                    <DropdownMenuItem 
+                      onClick={() => handleDeleteProject(project.id)}
+                      className="text-destructive"
+                    >
+                      Delete
+                    </DropdownMenuItem>
+                  </>
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
         
-        {project.description && (
-          <p className="text-sm text-gray-600 mb-3 line-clamp-2">
-            {project.description}
-          </p>
-        )}
-        <div className="text-xs text-gray-500 flex items-center gap-1">
-          <Calendar className="h-3 w-3" />
-          Updated {format(new Date(project.updated_at), 'MMM d, yyyy')}
+        {/* Project Info */}
+        <div className="p-4">
+          <h3 className="font-medium text-sm mb-1 truncate">{project.name}</h3>
+          <div className="flex items-center justify-between text-xs text-muted-foreground">
+            <span>
+              {project.owner_id === user?.id ? 'Owner' : 'Shared'}
+            </span>
+            <span>
+              {format(new Date(project.updated_at), 'MMM d')} ago
+            </span>
+          </div>
         </div>
       </CardContent>
-      <CardFooter>
-        <Button 
-          onClick={() => navigate(`/editor/${project.id}`)}
-          className="w-full"
-        >
-          Open Project
-        </Button>
-      </CardFooter>
     </Card>
   );
 }
