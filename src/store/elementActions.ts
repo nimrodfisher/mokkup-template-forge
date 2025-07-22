@@ -13,7 +13,6 @@ export interface ElementSlice {
   addElement: (type: ElementType, position: { x: number; y: number }) => void;
   updateElement: (id: string, updates: Partial<Element>) => void;
   removeElement: (id: string) => void;
-  duplicateElement: (id: string) => void;
   selectElement: (id: string | null) => void;
   toggleProperties: () => void;
   updateElementProperties: (id: string, properties: Partial<Element['properties']>) => void;
@@ -61,28 +60,6 @@ export const createElementSlice: StateCreator<
       elements: state.elements.filter(el => el.id !== id),
       selectedElementId: state.selectedElementId === id ? null : state.selectedElementId,
     }));
-  },
-  
-  duplicateElement: (id) => {
-    set(state => {
-      const elementToDuplicate = state.elements.find(el => el.id === id);
-      if (!elementToDuplicate) return state;
-      
-      const duplicatedElement: Element = {
-        ...elementToDuplicate,
-        id: uuidv4(),
-        position: {
-          x: elementToDuplicate.position.x + 20,
-          y: elementToDuplicate.position.y + 20
-        }
-      };
-      
-      return {
-        elements: [...state.elements, duplicatedElement],
-        selectedElementId: duplicatedElement.id,
-        showProperties: true
-      };
-    });
   },
   
   selectElement: (id) => {

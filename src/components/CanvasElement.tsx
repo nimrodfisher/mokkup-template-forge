@@ -14,7 +14,7 @@ interface CanvasElementProps {
 
 export function CanvasElement({ element, isSelected }: CanvasElementProps) {
   const [activeDialog, setActiveDialog] = useState<string | null>(null);
-  const { removeElement, duplicateElement } = useWireframe();
+  const { removeElement } = useWireframe();
   
   const handleDoubleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -86,16 +86,10 @@ export function CanvasElement({ element, isSelected }: CanvasElementProps) {
     setActiveDialog(null);
   };
   
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (!isSelected) return;
-    
-    if (e.key === 'Delete') {
+  const handleDelete = (e: React.KeyboardEvent) => {
+    if (isSelected && e.key === 'Delete') {
       removeElement(element.id);
       toast.success(`${element.type} removed`);
-    } else if ((e.ctrlKey || e.metaKey) && e.key === 'd') {
-      e.preventDefault();
-      duplicateElement(element.id);
-      toast.success(`${element.type} duplicated`);
     }
   };
   
@@ -106,7 +100,7 @@ export function CanvasElement({ element, isSelected }: CanvasElementProps) {
         isSelected={isSelected} 
         onDoubleClick={handleDoubleClick}
       >
-        <div className="h-full w-full" onKeyDown={handleKeyDown}>
+        <div className="h-full w-full" onKeyDown={handleDelete}>
           <ElementRenderer element={element} isEditable={isSelected && element.type === 'simple-table'} />
         </div>
       </ElementInteraction>

@@ -7,6 +7,7 @@ import { Sidebar } from "@/components/sidebar";
 import { ScreenTabs } from "@/components/ScreenTabs";
 import { Canvas } from "@/components/Canvas";
 import { PropertiesPanel } from "@/components/PropertiesPanel";
+import { SaveTemplateDialog } from "@/components/SaveTemplateDialog";
 import { StyleDialogController } from "@/components/StyleDialogController";
 import { useWireframe } from "@/hooks/useWireframe";
 
@@ -41,6 +42,7 @@ export function EditorLayout({ hasPermission, updateElementProperties }: EditorL
           </div>
         </div>
 
+        <SaveTemplateDialog open={false} onOpenChange={() => {}} />
         <StyleDialogController element={null} dialogType={null} onClose={() => {}} />
         
         {!hasPermission && (
