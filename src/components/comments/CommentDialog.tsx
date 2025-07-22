@@ -1,12 +1,12 @@
-import { useState } from "react";
-import { MessageCircle, Send } from "lucide-react";
+import { useState, useEffect } from "react";
+import { MessageCircle, Send, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { useOptimizedComments } from "@/hooks/useOptimizedComments";
+import { useComments } from "@/hooks/useComments";
 import { useCollaborators } from "@/hooks/useCollaborators";
 import { formatDistanceToNow } from "date-fns";
 
@@ -23,7 +23,7 @@ export function CommentDialog({ elementId, projectId, elementType }: CommentDial
   const [mentionQuery, setMentionQuery] = useState("");
   const [cursorPosition, setCursorPosition] = useState(0);
   
-  const { comments, addComment, loading } = useOptimizedComments(projectId, elementId);
+  const { comments, addComment, loading } = useComments(projectId, elementId);
   const { collaborators } = useCollaborators(projectId);
 
   const handleSubmit = async (e: React.FormEvent) => {

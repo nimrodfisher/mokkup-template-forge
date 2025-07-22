@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProjects } from "@/hooks/useProjects";
@@ -15,60 +15,60 @@ export function useProjectLoader(projectId: string | undefined) {
   const [loading, setLoading] = useState(true);
   const [hasPermission, setHasPermission] = useState(false);
   
-  const wireframeStore = useWireframe();
+  const { loadProjectFromDatabase } = useWireframe();
 
-  const loadProject = useCallback(async () => {
+  const loadProject = async () => {
     if (!projectId || !user) return;
 
     try {
       setLoading(true);
       
-      // Single optimized query to get project and collaboration data
-      const [projectResult, collabResult] = await Promise.all([
-        supabase
-          .from('projects')
-          .select('id, name, description, owner_id, screens, elements, is_public')
-          .eq('id', projectId)
-          .maybeSingle(),
-        supabase
-          .from('project_collaborators')
-          .select('role')
-          .eq('project_id', projectId)
-          .eq('user_id', user.id)
-          .maybeSingle()
-      ]);
+      // Fetch project with collaborator info
+      const { data, error } = await supabase
+        .from('projects')
+        .select(`
+          *,
+          project_collaborators (
+            role,
+            user_id
+          )
+        `)
+        .eq('id', projectId)
+        .single();
 
-      if (projectResult.error) throw projectResult.error;
-      if (!projectResult.data) {
-        toast.error('Project not found');
-        navigate('/dashboard');
+      if (error) {
+        if (error.code === 'PGRST116') {
+          toast.error('Project not found');
+          navigate('/dashboard');
+        } else {
+          throw error;
+        }
         return;
       }
 
-      const projectData = projectResult.data;
-      const isOwner = projectData.owner_id === user.id;
-      const collaboration = collabResult.data;
-      
-      // Quick permission check
-      const hasAccess = isOwner || collaboration || projectData.is_public;
+      // Check permissions
+      const isOwner = data.owner_id === user.id;
+      const collaboration = data.project_collaborators?.find(
+        (collab: any) => collab.user_id === user.id
+      );
+      const hasAccess = isOwner || collaboration || data.is_public;
+
       if (!hasAccess) {
         toast.error('You do not have permission to access this project');
         navigate('/dashboard');
         return;
       }
 
-      const canEdit = isOwner || (collaboration?.role && ['editor', 'admin'].includes(collaboration.role));
-      
-      // Set state efficiently
-      setProject(projectData);
+      // Check if user can edit
+      const canEdit = isOwner || (collaboration && ['editor', 'admin'].includes(collaboration.role));
       setHasPermission(canEdit);
+
+      setProject(data);
       
-      // Load wireframe data with fallbacks
-      const screens = Array.isArray(projectData.screens) ? projectData.screens : 
-        [{ id: crypto.randomUUID(), name: 'Screen1', isActive: true }];
-      const elements = Array.isArray(projectData.elements) ? projectData.elements : [];
-      
-      wireframeStore.loadProjectFromData(projectId, screens, elements);
+      // Load project data into wireframe store
+      if (data.screens && data.elements) {
+        await loadProjectFromDatabase(projectId);
+      }
     } catch (error) {
       console.error('Error loading project:', error);
       toast.error('Failed to load project');
@@ -76,33 +76,35 @@ export function useProjectLoader(projectId: string | undefined) {
     } finally {
       setLoading(false);
     }
-  }, [projectId, user, navigate, wireframeStore]);
+  };
 
-  const createNewProject = useCallback(async () => {
+  const createNewProject = async () => {
     if (!user) return;
 
     try {
       setLoading(true);
-      const defaultScreen = { id: crypto.randomUUID(), name: 'Screen1', isActive: true };
       
+      const newProject = {
+        name: 'Untitled Project',
+        owner_id: user.id,
+        screens: [{ id: crypto.randomUUID(), name: 'Screen1', isActive: true }],
+        elements: [],
+      };
+
       const { data, error } = await supabase
         .from('projects')
-        .insert({
-          name: 'Untitled Project',
-          owner_id: user.id,
-          screens: [defaultScreen],
-          elements: [],
-        })
-        .select('id, name, description, owner_id, screens, elements, is_public')
+        .insert(newProject)
+        .select()
         .single();
 
       if (error) throw error;
 
       setProject(data);
       setHasPermission(true);
-      wireframeStore.loadProjectFromData(data.id, [defaultScreen], []);
       
+      // Update URL without triggering navigation
       window.history.replaceState(null, '', `/editor/${data.id}`);
+      
       toast.success('New project created!');
     } catch (error) {
       console.error('Error creating project:', error);
@@ -111,15 +113,16 @@ export function useProjectLoader(projectId: string | undefined) {
     } finally {
       setLoading(false);
     }
-  }, [user, navigate, wireframeStore]);
+  };
 
   useEffect(() => {
     if (projectId) {
       loadProject();
     } else {
+      // No project ID, create a new project
       createNewProject();
     }
-  }, [projectId, loadProject, createNewProject]);
+  }, [projectId, user]);
 
   return {
     project,

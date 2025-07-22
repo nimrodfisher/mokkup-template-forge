@@ -15,58 +15,57 @@ export function useCollaborators(projectId: string) {
   const [loading, setLoading] = useState(false);
 
   const fetchCollaborators = async () => {
-    if (!projectId) return;
-    
     setLoading(true);
     try {
-      // Single optimized query to get both owner and collaborators
-      const [projectData, collaboratorData] = await Promise.all([
-        supabase
-          .from('projects')
-          .select(`
-            owner_id,
-            profiles!projects_owner_id_fkey (
-              id,
-              first_name,
-              last_name,
-              email
-            )
-          `)
-          .eq('id', projectId)
-          .single(),
-        
-        supabase
-          .from('project_collaborators')
-          .select(`
-            role,
-            profiles!project_collaborators_user_id_fkey (
-              id,
-              first_name,
-              last_name,
-              email
-            )
-          `)
-          .eq('project_id', projectId)
-      ]);
+      // Get project owner
+      const { data: projectData, error: projectError } = await supabase
+        .from('projects')
+        .select(`
+          owner_id,
+          profiles!projects_owner_id_fkey (
+            id,
+            first_name,
+            last_name,
+            email
+          )
+        `)
+        .eq('id', projectId)
+        .single();
 
-      if (projectData.error) throw projectData.error;
-      if (collaboratorData.error) throw collaboratorData.error;
+      if (projectError) throw projectError;
+
+      // Get collaborators
+      const { data: collaboratorData, error: collaboratorError } = await supabase
+        .from('project_collaborators')
+        .select(`
+          role,
+          user_id,
+          profiles!project_collaborators_user_id_fkey (
+            id,
+            first_name,
+            last_name,
+            email
+          )
+        `)
+        .eq('project_id', projectId);
+
+      if (collaboratorError) throw collaboratorError;
 
       const allCollaborators: Collaborator[] = [];
 
       // Add project owner
-      if (projectData.data.profiles) {
+      if (projectData.profiles) {
         allCollaborators.push({
-          id: projectData.data.profiles.id,
-          first_name: projectData.data.profiles.first_name,
-          last_name: projectData.data.profiles.last_name,
-          email: projectData.data.profiles.email,
+          id: projectData.profiles.id,
+          first_name: projectData.profiles.first_name,
+          last_name: projectData.profiles.last_name,
+          email: projectData.profiles.email,
           role: 'owner'
         });
       }
 
       // Add collaborators
-      collaboratorData.data?.forEach(c => {
+      collaboratorData?.forEach(c => {
         if (c.profiles) {
           allCollaborators.push({
             id: c.profiles.id,

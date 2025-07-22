@@ -18,7 +18,6 @@ interface ProjectWireframeState extends WireframeState {
   currentProjectId: string | null;
   setCurrentProject: (projectId: string | null) => void;
   loadProjectFromDatabase: (projectId: string) => Promise<void>;
-  loadProjectFromData: (projectId: string, screens: any[], elements: any[]) => void;
   saveProjectToDatabase: (projectId: string) => Promise<void>;
 }
 
@@ -42,47 +41,43 @@ export const useWireframe = create<ProjectWireframeState>()(
         try {
           const { data, error } = await supabase
             .from('projects')
-            .select('screens, elements')
+            .select('*')
             .eq('id', projectId)
-            .maybeSingle();
+            .single();
             
           if (error) throw error;
-          if (!data) return;
           
-          const screens: Screen[] = Array.isArray(data.screens) ? (data.screens as unknown) as Screen[] : 
-            [{ id: crypto.randomUUID(), name: 'Screen1', isActive: true }];
-          const elements: Element[] = Array.isArray(data.elements) ? (data.elements as unknown) as Element[] : [];
-          
-          set({
-            screens,
-            elements,
-            currentProjectId: projectId,
-            selectedElementId: null,
-          });
+          if (data) {
+            // Type cast with proper validation using unknown first
+            const screens: Screen[] = Array.isArray(data.screens) 
+              ? (data.screens as unknown) as Screen[]
+              : [{ id: crypto.randomUUID(), name: 'Screen1', isActive: true }];
+            const elements: Element[] = Array.isArray(data.elements) 
+              ? (data.elements as unknown) as Element[]
+              : [];
+            
+            set({
+              screens,
+              elements,
+              currentProjectId: projectId,
+              selectedElementId: null,
+            });
+          }
         } catch (error) {
           console.error('Error loading project:', error);
           throw error;
         }
       },
       
-      loadProjectFromData: (projectId: string, screens: any[], elements: any[]) => {
-        set({
-          screens: screens as Screen[],
-          elements: elements as Element[],
-          currentProjectId: projectId,
-          selectedElementId: null,
-        });
-      },
-      
       saveProjectToDatabase: async (projectId: string) => {
         try {
-          const { screens, elements } = get();
+          const state = get();
           
           const { error } = await supabase
             .from('projects')
             .update({
-              screens: screens as any,
-              elements: elements as any,
+              screens: state.screens as any,
+              elements: state.elements as any,
               updated_at: new Date().toISOString()
             })
             .eq('id', projectId);
