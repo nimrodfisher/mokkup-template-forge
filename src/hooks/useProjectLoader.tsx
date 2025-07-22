@@ -77,9 +77,9 @@ export function useProjectLoader(projectId: string | undefined) {
 
       if (!hasAccess) {
         if (!user) {
-          // If no user and not public, redirect to auth
+          // If no user and not public, redirect to auth with return URL
           toast.error('Please sign in to access this project');
-          navigate('/auth');
+          navigate('/auth', { state: { from: { pathname: `/editor/${projectId}` } } });
           return;
         } else {
           // User is authenticated but doesn't have access
