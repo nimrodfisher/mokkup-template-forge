@@ -87,12 +87,7 @@ const TemplateGallery = () => {
       </header>
       
       <main className="flex-1 container mx-auto px-4 py-8">
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-3xl font-bold">Template Gallery</h1>
-            <p className="text-gray-600 mt-2">Saved wireframe templates that you can reuse for new projects</p>
-          </div>
-        </div>
+        <h1 className="text-2xl font-bold mb-6">Your Project Templates</h1>
         
         {loading ? (
           <div className="flex justify-center items-center py-12">
