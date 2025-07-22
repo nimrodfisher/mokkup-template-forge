@@ -30,7 +30,8 @@ export function useComments(projectId: string, elementId: string) {
           mentions,
           created_at,
           updated_at,
-          profiles (
+          user_id,
+          profiles!comments_user_id_fkey (
             first_name,
             last_name
           )

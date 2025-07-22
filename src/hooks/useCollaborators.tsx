@@ -39,7 +39,8 @@ export function useCollaborators(projectId: string) {
         .from('project_collaborators')
         .select(`
           role,
-          profiles (
+          user_id,
+          profiles!project_collaborators_user_id_fkey (
             id,
             first_name,
             last_name,
@@ -55,7 +56,10 @@ export function useCollaborators(projectId: string) {
       // Add project owner
       if (projectData.profiles) {
         allCollaborators.push({
-          ...projectData.profiles,
+          id: projectData.profiles.id,
+          first_name: projectData.profiles.first_name,
+          last_name: projectData.profiles.last_name,
+          email: projectData.profiles.email,
           role: 'owner'
         });
       }
@@ -64,7 +68,10 @@ export function useCollaborators(projectId: string) {
       collaboratorData?.forEach(c => {
         if (c.profiles) {
           allCollaborators.push({
-            ...c.profiles,
+            id: c.profiles.id,
+            first_name: c.profiles.first_name,
+            last_name: c.profiles.last_name,
+            email: c.profiles.email,
             role: c.role
           });
         }
