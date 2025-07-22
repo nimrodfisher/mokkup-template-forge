@@ -6,7 +6,7 @@ import Index from './pages/Index';
 import Auth from './pages/Auth';
 import Dashboard from './pages/Dashboard';
 import Editor from './pages/Editor';
-import TemplateGallery from './pages/TemplateGallery';
+
 import ProjectShare from './pages/ProjectShare';
 import NotFound from './pages/NotFound';
 import ProfileSetup from "@/pages/ProfileSetup";
@@ -34,7 +34,7 @@ function App() {
               <Editor />
             </AuthGuard>
           } />
-          <Route path="/templates" element={<TemplateGallery />} />
+          
           <Route path="/project/:id/share" element={
             <AuthGuard>
               <ProjectShare />

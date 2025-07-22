@@ -19,7 +19,7 @@ export default function Dashboard() {
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-3xl font-bold">Your Projects</h1>
-            <p className="text-gray-600 mt-2">Create and manage your wireframe projects</p>
+            <p className="text-gray-600 mt-2">Create, edit, and manage your wireframe projects</p>
           </div>
           
           <CreateProjectDialog 
