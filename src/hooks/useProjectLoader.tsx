@@ -88,17 +88,17 @@ export function useProjectLoader(projectId: string | undefined) {
       setProject(projectData);
       
       // Load project data into wireframe store directly from fetched data
-      if (projectData.screens && projectData.elements) {
-        const screens = Array.isArray(projectData.screens) 
-          ? projectData.screens as any[]
-          : [{ id: crypto.randomUUID(), name: 'Screen1', isActive: true }];
-        const elements = Array.isArray(projectData.elements) 
-          ? projectData.elements as any[]
-          : [];
-        
-        // Use the new loadProjectFromData method to avoid RLS issues
-        wireframeStore.loadProjectFromData(projectId, screens, elements);
-      }
+      const screens = Array.isArray(projectData.screens) 
+        ? projectData.screens as any[]
+        : [{ id: crypto.randomUUID(), name: 'Screen1', isActive: true }];
+      const elements = Array.isArray(projectData.elements) 
+        ? projectData.elements as any[]
+        : [];
+      
+      console.log('Loading project data:', { projectId, screens, elements });
+      
+      // Use the new loadProjectFromData method to avoid RLS issues
+      wireframeStore.loadProjectFromData(projectId, screens, elements);
     } catch (error) {
       console.error('Error loading project:', error);
       toast.error('Failed to load project');
