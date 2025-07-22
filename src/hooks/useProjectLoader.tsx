@@ -18,7 +18,7 @@ export function useProjectLoader(projectId: string | undefined) {
   const { loadProjectFromDatabase } = useWireframe();
 
   const loadProject = async () => {
-    if (!projectId || !user) return;
+    if (!projectId) return;
 
     try {
       setLoading(true);
@@ -47,16 +47,16 @@ export function useProjectLoader(projectId: string | undefined) {
 
       if (!projectData) {
         toast.error('Project not found');
-        navigate('/dashboard');
+        navigate(user ? '/dashboard' : '/');
         return;
       }
 
-      // Check if user is the owner
-      const isOwner = projectData.owner_id === user.id;
+      // Check if user is the owner (only if user is authenticated)
+      const isOwner = user && projectData.owner_id === user.id;
 
-      // If not owner, check for collaboration
+      // If user is authenticated and not owner, check for collaboration
       let collaboration = null;
-      if (!isOwner) {
+      if (user && !isOwner) {
         const { data: collabData, error: collabError } = await supabase
           .from('project_collaborators')
           .select('role, user_id')
@@ -72,18 +72,26 @@ export function useProjectLoader(projectId: string | undefined) {
         collaboration = collabData;
       }
 
-      // Check permissions
-      const hasAccess = isOwner || collaboration || projectData.is_public;
+      // Check permissions - allow access if public, owner, or collaborator
+      const hasAccess = projectData.is_public || isOwner || collaboration;
 
       if (!hasAccess) {
-        toast.error('You do not have permission to access this project');
-        navigate('/dashboard');
-        return;
+        if (!user) {
+          // If no user and not public, redirect to auth
+          toast.error('Please sign in to access this project');
+          navigate('/auth');
+          return;
+        } else {
+          // User is authenticated but doesn't have access
+          toast.error('You do not have permission to access this project');
+          navigate('/dashboard');
+          return;
+        }
       }
 
-      // Check if user can edit
-      const canEdit = isOwner || (collaboration && ['editor', 'admin'].includes(collaboration.role));
-      setHasPermission(canEdit);
+      // Check if user can edit (only authenticated users can edit)
+      const canEdit = user && (isOwner || (collaboration && ['editor', 'admin'].includes(collaboration.role)));
+      setHasPermission(!!canEdit);
 
       setProject(projectData);
       
@@ -107,7 +115,7 @@ export function useProjectLoader(projectId: string | undefined) {
     } catch (error) {
       console.error('Error loading project:', error);
       toast.error('Failed to load project');
-      navigate('/dashboard');
+      navigate(user ? '/dashboard' : '/');
     } finally {
       setLoading(false);
     }
