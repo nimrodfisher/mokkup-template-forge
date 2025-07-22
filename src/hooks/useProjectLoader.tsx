@@ -15,7 +15,7 @@ export function useProjectLoader(projectId: string | undefined) {
   const [loading, setLoading] = useState(true);
   const [hasPermission, setHasPermission] = useState(false);
   
-  const { loadProjectFromDatabase } = useWireframe();
+  const wireframeStore = useWireframe();
 
   const loadProject = async () => {
     if (!projectId || !user) return;
@@ -96,15 +96,8 @@ export function useProjectLoader(projectId: string | undefined) {
           ? projectData.elements as any[]
           : [];
         
-        // Set the wireframe state directly instead of making another DB call
-        const { setCurrentProject } = useWireframe.getState();
-        useWireframe.setState({
-          screens,
-          elements,
-          currentProjectId: projectId,
-          selectedElementId: null,
-        });
-        setCurrentProject(projectId);
+        // Use the new loadProjectFromData method to avoid RLS issues
+        wireframeStore.loadProjectFromData(projectId, screens, elements);
       }
     } catch (error) {
       console.error('Error loading project:', error);

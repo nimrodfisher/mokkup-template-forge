@@ -18,6 +18,7 @@ interface ProjectWireframeState extends WireframeState {
   currentProjectId: string | null;
   setCurrentProject: (projectId: string | null) => void;
   loadProjectFromDatabase: (projectId: string) => Promise<void>;
+  loadProjectFromData: (projectId: string, screens: any[], elements: any[]) => void;
   saveProjectToDatabase: (projectId: string) => Promise<void>;
 }
 
@@ -67,6 +68,15 @@ export const useWireframe = create<ProjectWireframeState>()(
           console.error('Error loading project:', error);
           throw error;
         }
+      },
+      
+      loadProjectFromData: (projectId: string, screens: any[], elements: any[]) => {
+        set({
+          screens: screens as Screen[],
+          elements: elements as Element[],
+          currentProjectId: projectId,
+          selectedElementId: null,
+        });
       },
       
       saveProjectToDatabase: async (projectId: string) => {
