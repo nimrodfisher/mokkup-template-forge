@@ -15,7 +15,7 @@ export function useProjectLoader(projectId: string | undefined) {
   const [loading, setLoading] = useState(true);
   const [hasPermission, setHasPermission] = useState(false);
   
-  const { loadProjectFromDatabase } = useWireframe();
+  const { setCurrentProject, loadProjectData } = useWireframe();
 
   const loadProject = async () => {
     if (!projectId || !user) return;
@@ -23,7 +23,7 @@ export function useProjectLoader(projectId: string | undefined) {
     try {
       setLoading(true);
       
-      // Fetch project with collaborator info
+      // Single optimized query with all needed data
       const { data, error } = await supabase
         .from('projects')
         .select(`
@@ -65,10 +65,10 @@ export function useProjectLoader(projectId: string | undefined) {
 
       setProject(data);
       
-      // Load project data into wireframe store
-      if (data.screens && data.elements) {
-        await loadProjectFromDatabase(projectId);
-      }
+      // Load project data directly into wireframe store without additional DB call
+      const screens = Array.isArray(data.screens) ? data.screens : [];
+      const elements = Array.isArray(data.elements) ? data.elements : [];
+      loadProjectData(projectId, screens, elements);
     } catch (error) {
       console.error('Error loading project:', error);
       toast.error('Failed to load project');
@@ -116,13 +116,13 @@ export function useProjectLoader(projectId: string | undefined) {
   };
 
   useEffect(() => {
-    if (projectId) {
+    if (projectId && user) {
       loadProject();
-    } else {
+    } else if (!projectId && user) {
       // No project ID, create a new project
       createNewProject();
     }
-  }, [projectId, user]);
+  }, [projectId, user?.id]); // Only re-run when projectId or user.id changes
 
   return {
     project,

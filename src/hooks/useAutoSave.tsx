@@ -1,5 +1,5 @@
 
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef, useCallback, useMemo } from "react";
 import { useWireframe } from "@/hooks/useWireframe";
 
 export function useAutoSave(
@@ -11,11 +11,13 @@ export function useAutoSave(
   const lastSaveRef = useRef<string>('');
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
+  // Memoize the state hash to prevent unnecessary recalculations
+  const currentStateHash = useMemo(() => 
+    JSON.stringify({ screens, elements }), [screens, elements]
+  );
+
   const saveProject = useCallback(async () => {
     if (!project || !hasPermission) return;
-
-    // Create a hash of the current state
-    const currentStateHash = JSON.stringify({ screens, elements });
     
     // Only save if the state has actually changed
     if (currentStateHash === lastSaveRef.current) {
@@ -23,7 +25,6 @@ export function useAutoSave(
     }
 
     try {
-      console.log('Auto-saving project...');
       await updateProject(project.id, {
         screens,
         elements,
@@ -31,14 +32,13 @@ export function useAutoSave(
       
       // Update the last saved state
       lastSaveRef.current = currentStateHash;
-      console.log('Auto-save completed');
     } catch (error) {
       console.error('Auto-save failed:', error);
     }
-  }, [project, hasPermission, screens, elements, updateProject]);
+  }, [project?.id, hasPermission, screens, elements, currentStateHash, updateProject]);
 
   useEffect(() => {
-    if (!project || !hasPermission) return;
+    if (!project?.id || !hasPermission || currentStateHash === lastSaveRef.current) return;
 
     // Clear any existing timeout
     if (timeoutRef.current) {
@@ -56,7 +56,7 @@ export function useAutoSave(
         clearTimeout(timeoutRef.current);
       }
     };
-  }, [project?.id, screens, elements, hasPermission, saveProject]);
+  }, [project?.id, currentStateHash, hasPermission, saveProject]);
 
   // Save on unmount if there are unsaved changes
   useEffect(() => {

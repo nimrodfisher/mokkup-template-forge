@@ -18,6 +18,7 @@ interface ProjectWireframeState extends WireframeState {
   currentProjectId: string | null;
   setCurrentProject: (projectId: string | null) => void;
   loadProjectFromDatabase: (projectId: string) => Promise<void>;
+  loadProjectData: (projectId: string, screens: any[], elements: any[]) => void;
   saveProjectToDatabase: (projectId: string) => Promise<void>;
 }
 
@@ -48,7 +49,6 @@ export const useWireframe = create<ProjectWireframeState>()(
           if (error) throw error;
           
           if (data) {
-            // Type cast with proper validation using unknown first
             const screens: Screen[] = Array.isArray(data.screens) 
               ? (data.screens as unknown) as Screen[]
               : [{ id: crypto.randomUUID(), name: 'Screen1', isActive: true }];
@@ -67,6 +67,23 @@ export const useWireframe = create<ProjectWireframeState>()(
           console.error('Error loading project:', error);
           throw error;
         }
+      },
+
+      // New optimized method that doesn't require additional DB call
+      loadProjectData: (projectId: string, screens: any[], elements: any[]) => {
+        const validScreens: Screen[] = Array.isArray(screens) 
+          ? (screens as unknown) as Screen[]
+          : [{ id: crypto.randomUUID(), name: 'Screen1', isActive: true }];
+        const validElements: Element[] = Array.isArray(elements) 
+          ? (elements as unknown) as Element[]
+          : [];
+        
+        set({
+          screens: validScreens,
+          elements: validElements,
+          currentProjectId: projectId,
+          selectedElementId: null,
+        });
       },
       
       saveProjectToDatabase: async (projectId: string) => {
