@@ -42,28 +42,23 @@ export const useWireframe = create<ProjectWireframeState>()(
         try {
           const { data, error } = await supabase
             .from('projects')
-            .select('*')
+            .select('screens, elements')
             .eq('id', projectId)
             .maybeSingle();
             
           if (error) throw error;
+          if (!data) return;
           
-          if (data) {
-            // Type cast with proper validation using unknown first
-            const screens: Screen[] = Array.isArray(data.screens) 
-              ? (data.screens as unknown) as Screen[]
-              : [{ id: crypto.randomUUID(), name: 'Screen1', isActive: true }];
-            const elements: Element[] = Array.isArray(data.elements) 
-              ? (data.elements as unknown) as Element[]
-              : [];
-            
-            set({
-              screens,
-              elements,
-              currentProjectId: projectId,
-              selectedElementId: null,
-            });
-          }
+          const screens: Screen[] = Array.isArray(data.screens) ? (data.screens as unknown) as Screen[] : 
+            [{ id: crypto.randomUUID(), name: 'Screen1', isActive: true }];
+          const elements: Element[] = Array.isArray(data.elements) ? (data.elements as unknown) as Element[] : [];
+          
+          set({
+            screens,
+            elements,
+            currentProjectId: projectId,
+            selectedElementId: null,
+          });
         } catch (error) {
           console.error('Error loading project:', error);
           throw error;
@@ -81,13 +76,13 @@ export const useWireframe = create<ProjectWireframeState>()(
       
       saveProjectToDatabase: async (projectId: string) => {
         try {
-          const state = get();
+          const { screens, elements } = get();
           
           const { error } = await supabase
             .from('projects')
             .update({
-              screens: state.screens as any,
-              elements: state.elements as any,
+              screens: screens as any,
+              elements: elements as any,
               updated_at: new Date().toISOString()
             })
             .eq('id', projectId);

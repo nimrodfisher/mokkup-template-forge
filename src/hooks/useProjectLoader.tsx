@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProjects } from "@/hooks/useProjects";
@@ -17,87 +17,57 @@ export function useProjectLoader(projectId: string | undefined) {
   
   const wireframeStore = useWireframe();
 
-  const loadProject = async () => {
+  const loadProject = useCallback(async () => {
     if (!projectId || !user) return;
 
     try {
       setLoading(true);
       
-      // First, fetch the project data
-      const { data: projectData, error: projectError } = await supabase
-        .from('projects')
-        .select(`
-          id,
-          name,
-          description,
-          owner_id,
-          screens,
-          elements,
-          is_public,
-          created_at,
-          updated_at
-        `)
-        .eq('id', projectId)
-        .maybeSingle();
+      // Single optimized query to get project and collaboration data
+      const [projectResult, collabResult] = await Promise.all([
+        supabase
+          .from('projects')
+          .select('id, name, description, owner_id, screens, elements, is_public')
+          .eq('id', projectId)
+          .maybeSingle(),
+        supabase
+          .from('project_collaborators')
+          .select('role')
+          .eq('project_id', projectId)
+          .eq('user_id', user.id)
+          .maybeSingle()
+      ]);
 
-      if (projectError) {
-        console.error('Error loading project:', projectError);
-        throw projectError;
-      }
-
-      if (!projectData) {
+      if (projectResult.error) throw projectResult.error;
+      if (!projectResult.data) {
         toast.error('Project not found');
         navigate('/dashboard');
         return;
       }
 
-      // Check if user is the owner
+      const projectData = projectResult.data;
       const isOwner = projectData.owner_id === user.id;
-
-      // If not owner, check for collaboration
-      let collaboration = null;
-      if (!isOwner) {
-        const { data: collabData, error: collabError } = await supabase
-          .from('project_collaborators')
-          .select('role, user_id')
-          .eq('project_id', projectId)
-          .eq('user_id', user.id)
-          .maybeSingle();
-
-        if (collabError && collabError.code !== 'PGRST116') {
-          console.error('Error checking collaboration:', collabError);
-          throw collabError;
-        }
-
-        collaboration = collabData;
-      }
-
-      // Check permissions
+      const collaboration = collabResult.data;
+      
+      // Quick permission check
       const hasAccess = isOwner || collaboration || projectData.is_public;
-
       if (!hasAccess) {
         toast.error('You do not have permission to access this project');
         navigate('/dashboard');
         return;
       }
 
-      // Check if user can edit
-      const canEdit = isOwner || (collaboration && ['editor', 'admin'].includes(collaboration.role));
-      setHasPermission(canEdit);
-
+      const canEdit = isOwner || (collaboration?.role && ['editor', 'admin'].includes(collaboration.role));
+      
+      // Set state efficiently
       setProject(projectData);
+      setHasPermission(canEdit);
       
-      // Load project data into wireframe store directly from fetched data
-      const screens = Array.isArray(projectData.screens) 
-        ? projectData.screens as any[]
-        : [{ id: crypto.randomUUID(), name: 'Screen1', isActive: true }];
-      const elements = Array.isArray(projectData.elements) 
-        ? projectData.elements as any[]
-        : [];
+      // Load wireframe data with fallbacks
+      const screens = Array.isArray(projectData.screens) ? projectData.screens : 
+        [{ id: crypto.randomUUID(), name: 'Screen1', isActive: true }];
+      const elements = Array.isArray(projectData.elements) ? projectData.elements : [];
       
-      console.log('Loading project data:', { projectId, screens, elements });
-      
-      // Use the new loadProjectFromData method to avoid RLS issues
       wireframeStore.loadProjectFromData(projectId, screens, elements);
     } catch (error) {
       console.error('Error loading project:', error);
@@ -106,35 +76,33 @@ export function useProjectLoader(projectId: string | undefined) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [projectId, user, navigate, wireframeStore]);
 
-  const createNewProject = async () => {
+  const createNewProject = useCallback(async () => {
     if (!user) return;
 
     try {
       setLoading(true);
+      const defaultScreen = { id: crypto.randomUUID(), name: 'Screen1', isActive: true };
       
-      const newProject = {
-        name: 'Untitled Project',
-        owner_id: user.id,
-        screens: [{ id: crypto.randomUUID(), name: 'Screen1', isActive: true }],
-        elements: [],
-      };
-
       const { data, error } = await supabase
         .from('projects')
-        .insert(newProject)
-        .select()
+        .insert({
+          name: 'Untitled Project',
+          owner_id: user.id,
+          screens: [defaultScreen],
+          elements: [],
+        })
+        .select('id, name, description, owner_id, screens, elements, is_public')
         .single();
 
       if (error) throw error;
 
       setProject(data);
       setHasPermission(true);
+      wireframeStore.loadProjectFromData(data.id, [defaultScreen], []);
       
-      // Update URL without triggering navigation
       window.history.replaceState(null, '', `/editor/${data.id}`);
-      
       toast.success('New project created!');
     } catch (error) {
       console.error('Error creating project:', error);
@@ -143,16 +111,15 @@ export function useProjectLoader(projectId: string | undefined) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user, navigate, wireframeStore]);
 
   useEffect(() => {
     if (projectId) {
       loadProject();
     } else {
-      // No project ID, create a new project
       createNewProject();
     }
-  }, [projectId, user]);
+  }, [projectId, loadProject, createNewProject]);
 
   return {
     project,
