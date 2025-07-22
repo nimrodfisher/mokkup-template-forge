@@ -1,10 +1,12 @@
 
 import { useState } from "react";
+import { useParams } from "react-router-dom";
 import { useWireframe } from "@/hooks/useWireframe";
 import { toast } from "sonner";
 import { ElementRenderer } from "./element-renderers/ElementRenderer";
 import { ElementInteraction } from "./ElementInteraction";
 import { StyleDialogController } from "./StyleDialogController";
+import { CommentDialog } from "./comments/CommentDialog";
 import { Element } from "@/types/wireframe";
 
 interface CanvasElementProps {
@@ -14,7 +16,8 @@ interface CanvasElementProps {
 
 export function CanvasElement({ element, isSelected }: CanvasElementProps) {
   const [activeDialog, setActiveDialog] = useState<string | null>(null);
-  const { removeElement } = useWireframe();
+  const { removeElement, duplicateElement } = useWireframe();
+  const { projectId } = useParams();
   
   const handleDoubleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -86,10 +89,16 @@ export function CanvasElement({ element, isSelected }: CanvasElementProps) {
     setActiveDialog(null);
   };
   
-  const handleDelete = (e: React.KeyboardEvent) => {
-    if (isSelected && e.key === 'Delete') {
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (!isSelected) return;
+    
+    if (e.key === 'Delete') {
       removeElement(element.id);
       toast.success(`${element.type} removed`);
+    } else if ((e.ctrlKey || e.metaKey) && e.key === 'd') {
+      e.preventDefault();
+      duplicateElement(element.id);
+      toast.success(`${element.type} duplicated`);
     }
   };
   
@@ -100,10 +109,21 @@ export function CanvasElement({ element, isSelected }: CanvasElementProps) {
         isSelected={isSelected} 
         onDoubleClick={handleDoubleClick}
       >
-        <div className="h-full w-full" onKeyDown={handleDelete}>
+        <div className="h-full w-full" onKeyDown={handleKeyDown}>
           <ElementRenderer element={element} isEditable={isSelected && element.type === 'simple-table'} />
         </div>
       </ElementInteraction>
+      
+      {/* Comment Dialog positioned near selected element */}
+      {isSelected && projectId && (
+        <div className="absolute top-0 right-0 transform translate-x-full z-20 ml-2">
+          <CommentDialog 
+            elementId={element.id}
+            projectId={projectId}
+            elementType={element.type}
+          />
+        </div>
+      )}
       
       <StyleDialogController 
         element={element}

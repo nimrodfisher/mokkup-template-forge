@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
@@ -24,19 +24,11 @@ export interface Project {
 export function useProjects() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
-  const [lastFetchUserId, setLastFetchUserId] = useState<string | null>(null);
   const { user } = useAuth();
 
-  const fetchProjects = useCallback(async () => {
+  const fetchProjects = async () => {
     if (!user) {
       setProjects([]);
-      setLoading(false);
-      setLastFetchUserId(null);
-      return;
-    }
-
-    // Prevent duplicate fetches for the same user
-    if (lastFetchUserId === user.id) {
       setLoading(false);
       return;
     }
@@ -65,7 +57,6 @@ export function useProjects() {
       }));
 
       setProjects(transformedProjects);
-      setLastFetchUserId(user.id);
     } catch (error) {
       console.error('Error fetching projects:', error);
       toast.error('Failed to fetch projects');
@@ -73,7 +64,7 @@ export function useProjects() {
     } finally {
       setLoading(false);
     }
-  }, [user?.id, lastFetchUserId]);
+  };
 
   const createProject = async (name: string, description?: string) => {
     if (!user) {
@@ -118,7 +109,7 @@ export function useProjects() {
     }
   };
 
-  const updateProject = useCallback(async (id: string, updates: Partial<Project>) => {
+  const updateProject = async (id: string, updates: Partial<Project>) => {
     try {
       const { error } = await supabase
         .from('projects')
@@ -127,17 +118,16 @@ export function useProjects() {
 
       if (error) throw error;
 
-      // Update local state instead of refetching
-      setProjects(prev => prev.map(p => p.id === id ? { ...p, ...updates } : p));
+      await fetchProjects();
       toast.success('Project updated successfully!');
     } catch (error) {
       console.error('Error updating project:', error);
       toast.error('Failed to update project');
       throw error;
     }
-  }, []);
+  };
 
-  const deleteProject = useCallback(async (id: string) => {
+  const deleteProject = async (id: string) => {
     try {
       const { error } = await supabase
         .from('projects')
@@ -146,15 +136,14 @@ export function useProjects() {
 
       if (error) throw error;
 
-      // Update local state instead of refetching
-      setProjects(prev => prev.filter(p => p.id !== id));
+      await fetchProjects();
       toast.success('Project deleted successfully!');
     } catch (error) {
       console.error('Error deleting project:', error);
       toast.error('Failed to delete project');
       throw error;
     }
-  }, []);
+  };
 
   const shareProject = async (projectId: string, userEmail: string, role: 'viewer' | 'editor' | 'admin') => {
     try {
@@ -191,12 +180,12 @@ export function useProjects() {
   };
 
   useEffect(() => {
-    if (user && lastFetchUserId !== user.id) {
+    if (user) {
       fetchProjects();
     }
-  }, [user, fetchProjects, lastFetchUserId]);
+  }, [user]);
 
-  const memoizedReturn = useMemo(() => ({
+  return {
     projects,
     loading,
     fetchProjects,
@@ -204,7 +193,5 @@ export function useProjects() {
     updateProject,
     deleteProject,
     shareProject,
-  }), [projects, loading, fetchProjects, createProject, updateProject, deleteProject, shareProject]);
-
-  return memoizedReturn;
+  };
 }

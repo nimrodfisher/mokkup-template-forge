@@ -23,35 +23,57 @@ export function useProjectLoader(projectId: string | undefined) {
     try {
       setLoading(true);
       
-      // Fetch project with collaborator info
-      const { data, error } = await supabase
+      // First, fetch the project data
+      const { data: projectData, error: projectError } = await supabase
         .from('projects')
         .select(`
-          *,
-          project_collaborators (
-            role,
-            user_id
-          )
+          id,
+          name,
+          description,
+          owner_id,
+          screens,
+          elements,
+          is_public,
+          created_at,
+          updated_at
         `)
         .eq('id', projectId)
-        .single();
+        .maybeSingle();
 
-      if (error) {
-        if (error.code === 'PGRST116') {
-          toast.error('Project not found');
-          navigate('/dashboard');
-        } else {
-          throw error;
-        }
+      if (projectError) {
+        console.error('Error loading project:', projectError);
+        throw projectError;
+      }
+
+      if (!projectData) {
+        toast.error('Project not found');
+        navigate('/dashboard');
         return;
       }
 
+      // Check if user is the owner
+      const isOwner = projectData.owner_id === user.id;
+
+      // If not owner, check for collaboration
+      let collaboration = null;
+      if (!isOwner) {
+        const { data: collabData, error: collabError } = await supabase
+          .from('project_collaborators')
+          .select('role, user_id')
+          .eq('project_id', projectId)
+          .eq('user_id', user.id)
+          .maybeSingle();
+
+        if (collabError && collabError.code !== 'PGRST116') {
+          console.error('Error checking collaboration:', collabError);
+          throw collabError;
+        }
+
+        collaboration = collabData;
+      }
+
       // Check permissions
-      const isOwner = data.owner_id === user.id;
-      const collaboration = data.project_collaborators?.find(
-        (collab: any) => collab.user_id === user.id
-      );
-      const hasAccess = isOwner || collaboration || data.is_public;
+      const hasAccess = isOwner || collaboration || projectData.is_public;
 
       if (!hasAccess) {
         toast.error('You do not have permission to access this project');
@@ -63,11 +85,26 @@ export function useProjectLoader(projectId: string | undefined) {
       const canEdit = isOwner || (collaboration && ['editor', 'admin'].includes(collaboration.role));
       setHasPermission(canEdit);
 
-      setProject(data);
+      setProject(projectData);
       
-      // Load project data into wireframe store
-      if (data.screens && data.elements) {
-        await loadProjectFromDatabase(projectId);
+      // Load project data into wireframe store directly from fetched data
+      if (projectData.screens && projectData.elements) {
+        const screens = Array.isArray(projectData.screens) 
+          ? projectData.screens as any[]
+          : [{ id: crypto.randomUUID(), name: 'Screen1', isActive: true }];
+        const elements = Array.isArray(projectData.elements) 
+          ? projectData.elements as any[]
+          : [];
+        
+        // Set the wireframe state directly instead of making another DB call
+        const { setCurrentProject } = useWireframe.getState();
+        useWireframe.setState({
+          screens,
+          elements,
+          currentProjectId: projectId,
+          selectedElementId: null,
+        });
+        setCurrentProject(projectId);
       }
     } catch (error) {
       console.error('Error loading project:', error);

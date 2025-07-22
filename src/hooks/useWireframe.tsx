@@ -43,7 +43,7 @@ export const useWireframe = create<ProjectWireframeState>()(
             .from('projects')
             .select('*')
             .eq('id', projectId)
-            .single();
+            .maybeSingle();
             
           if (error) throw error;
           
