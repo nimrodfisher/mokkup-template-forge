@@ -99,7 +99,15 @@ export function useProjects() {
       }
 
       console.log('Project created successfully:', data);
-      await fetchProjects();
+      
+      // Instead of refetching all projects, just add the new one to the state
+      const transformedProject = {
+        ...data,
+        screens: Array.isArray(data.screens) ? data.screens : [],
+        elements: Array.isArray(data.elements) ? data.elements : []
+      };
+      
+      setProjects(prev => [transformedProject, ...prev]);
       toast.success('Project created successfully!');
       return data;
     } catch (error) {
