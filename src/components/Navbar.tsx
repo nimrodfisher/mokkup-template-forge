@@ -31,7 +31,7 @@ export function Navbar({ onSave }: NavbarProps) {
       <div className="flex items-center gap-4">
         <Link to="/" className="font-bold text-lg text-white">Alignify</Link>
         <div className="h-6 w-px bg-white/30" />
-        <Link to="/dashboard" className="text-sm text-white/80 hover:text-white">Dashboard</Link>
+        <Link to="/templates" className="text-sm text-white/80 hover:text-white">Templates</Link>
         {!user && (
           <Link to="/auth" className="text-sm text-white/80 hover:text-white">Login</Link>
         )}
@@ -52,14 +52,14 @@ export function Navbar({ onSave }: NavbarProps) {
           onClick={handleSave}
           className="border-white/30 text-black hover:bg-white/20 hover:text-black bg-white"
         >
-          Save as Template
+          Save
         </Button>
         
         <Button 
           onClick={() => createNewTemplate()}
           className="bg-white hover:bg-white/90 text-black border-none"
         >
-          New Project
+          New Template
         </Button>
       </div>
       

@@ -1,7 +1,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -50,8 +50,8 @@ export function SaveTemplateDialog({ open, onOpenChange }: SaveTemplateDialogPro
       toast.success("Template saved successfully!");
       onOpenChange(false);
       
-      // Stay in editor after saving template
-      // Templates are now a secondary feature, not a separate page
+      // Navigate to templates section after successful save
+      navigate("/templates");
     } catch (error) {
       console.error("Error saving template:", error);
       toast.error("Failed to save template. Please try again.");
@@ -64,10 +64,7 @@ export function SaveTemplateDialog({ open, onOpenChange }: SaveTemplateDialogPro
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Save as Reusable Template</DialogTitle>
-          <DialogDescription>
-            Save your current work as a reusable template that you can use in future projects.
-          </DialogDescription>
+          <DialogTitle>Save Template</DialogTitle>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="grid grid-cols-4 items-center gap-4">
