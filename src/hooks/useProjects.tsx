@@ -107,7 +107,11 @@ export function useProjects() {
         elements: Array.isArray(data.elements) ? data.elements : []
       };
       
-      setProjects(prev => [transformedProject, ...prev]);
+      setProjects(prev => {
+        // Check if project already exists to prevent duplicates
+        const exists = prev.some(p => p.id === transformedProject.id);
+        return exists ? prev : [transformedProject, ...prev];
+      });
       toast.success('Project created successfully!');
       return data;
     } catch (error) {
