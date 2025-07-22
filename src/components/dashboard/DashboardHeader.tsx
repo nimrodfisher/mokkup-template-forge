@@ -1,7 +1,8 @@
-import { LogOut } from 'lucide-react';
+import { LogOut, Layout } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import { ProfileManager } from '@/components/profile/ProfileManager';
+import { Link } from 'react-router-dom';
 
 export function DashboardHeader() {
   const { signOut } = useAuth();
@@ -22,6 +23,12 @@ export function DashboardHeader() {
           </div>
           
           <div className="flex items-center gap-4">
+            <Link to="/templates">
+              <Button variant="ghost" className="flex items-center gap-2">
+                <Layout className="w-4 h-4" />
+                Templates
+              </Button>
+            </Link>
             <ProfileManager />
             <Button
               variant="outline"
