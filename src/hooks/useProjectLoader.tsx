@@ -23,12 +23,20 @@ export function useProjectLoader(projectId: string | undefined) {
     try {
       setLoading(true);
       
-      // Fetch project with collaborator info
+      // Fetch project with minimal collaborator info for permission check only
       const { data, error } = await supabase
         .from('projects')
         .select(`
-          *,
-          project_collaborators (
+          id,
+          name,
+          description,
+          owner_id,
+          screens,
+          elements,
+          is_public,
+          created_at,
+          updated_at,
+          project_collaborators!inner (
             role,
             user_id
           )

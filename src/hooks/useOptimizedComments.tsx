@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
@@ -8,19 +8,27 @@ interface Comment {
   content: string;
   mentions: string[] | null;
   created_at: string;
-  updated_at: string;
   profiles: {
     first_name: string | null;
     last_name: string | null;
   } | null;
 }
 
-export function useComments(projectId: string, elementId: string) {
+interface UseOptimizedCommentsReturn {
+  comments: Comment[];
+  addComment: (content: string, mentions?: string[]) => Promise<void>;
+  loading: boolean;
+  refetch: () => Promise<void>;
+}
+
+export function useOptimizedComments(projectId: string, elementId: string): UseOptimizedCommentsReturn {
   const [comments, setComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState(false);
   const { user } = useAuth();
 
-  const fetchComments = async () => {
+  const fetchComments = useCallback(async () => {
+    if (!projectId || !elementId) return;
+    
     try {
       const { data, error } = await supabase
         .from('comments')
@@ -29,8 +37,6 @@ export function useComments(projectId: string, elementId: string) {
           content,
           mentions,
           created_at,
-          updated_at,
-          user_id,
           profiles!comments_user_id_fkey (
             first_name,
             last_name
@@ -46,10 +52,10 @@ export function useComments(projectId: string, elementId: string) {
       console.error('Error fetching comments:', error);
       toast.error('Failed to load comments');
     }
-  };
+  }, [projectId, elementId]);
 
-  const addComment = async (content: string, mentions: string[] = []) => {
-    if (!user) return;
+  const addComment = useCallback(async (content: string, mentions: string[] = []) => {
+    if (!user || !content.trim()) return;
     
     setLoading(true);
     try {
@@ -59,13 +65,13 @@ export function useComments(projectId: string, elementId: string) {
           project_id: projectId,
           element_id: elementId,
           user_id: user.id,
-          content,
+          content: content.trim(),
           mentions: mentions.length > 0 ? mentions : null
         });
 
       if (error) throw error;
 
-      // Create notifications for mentioned users
+      // Optimized notifications - batch insert
       if (mentions.length > 0) {
         const notifications = mentions.map(mentionedUserId => ({
           user_id: mentionedUserId,
@@ -74,45 +80,44 @@ export function useComments(projectId: string, elementId: string) {
           message: `${user.user_metadata?.first_name || 'Someone'} mentioned you in a comment`
         }));
 
-        await supabase
-          .from('notifications')
-          .insert(notifications);
+        await supabase.from('notifications').insert(notifications);
       }
 
-      toast.success('Comment added successfully');
-      fetchComments();
+      toast.success('Comment added');
     } catch (error) {
       console.error('Error adding comment:', error);
       toast.error('Failed to add comment');
     } finally {
       setLoading(false);
     }
-  };
+  }, [user, projectId, elementId]);
+
+  // Memoized channel name to prevent unnecessary re-subscriptions
+  const channelName = useMemo(() => `comments-${projectId}-${elementId}`, [projectId, elementId]);
 
   useEffect(() => {
-    fetchComments();
+    if (projectId && elementId) {
+      fetchComments();
 
-    // Set up real-time subscription
-    const channel = supabase
-      .channel('comments-changes')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'comments',
-          filter: `project_id=eq.${projectId}`
-        },
-        () => {
-          fetchComments();
-        }
-      )
-      .subscribe();
+      const channel = supabase
+        .channel(channelName)
+        .on(
+          'postgres_changes',
+          {
+            event: 'INSERT',
+            schema: 'public',
+            table: 'comments',
+            filter: `project_id=eq.${projectId},element_id=eq.${elementId}`
+          },
+          () => fetchComments()
+        )
+        .subscribe();
 
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [projectId, elementId]);
+      return () => {
+        supabase.removeChannel(channel);
+      };
+    }
+  }, [projectId, elementId, channelName, fetchComments]);
 
   return {
     comments,

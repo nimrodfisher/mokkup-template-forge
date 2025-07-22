@@ -33,6 +33,11 @@ function App() {
               <Editor />
             </AuthGuard>
           } />
+          <Route path="/editor" element={
+            <AuthGuard>
+              <Editor />
+            </AuthGuard>
+          } />
           <Route path="/templates" element={<TemplateGallery />} />
           <Route path="/project/:id/share" element={
             <AuthGuard>
