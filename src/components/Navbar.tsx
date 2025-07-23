@@ -10,9 +10,11 @@ import { Share } from "lucide-react";
 
 interface NavbarProps {
   onSave?: () => void;
+  projectId?: string;
+  canShare?: boolean;
 }
 
-export function Navbar({ onSave }: NavbarProps) {
+export function Navbar({ onSave, projectId, canShare }: NavbarProps) {
   const [saveDialogOpen, setSaveDialogOpen] = useState(false);
   const [exportDialogOpen, setExportDialogOpen] = useState(false);
   const { activeTemplateId, createNewTemplate } = useWireframe();
@@ -42,9 +44,10 @@ export function Navbar({ onSave }: NavbarProps) {
           variant="outline" 
           onClick={() => setExportDialogOpen(true)}
           className="border-white/30 text-black hover:bg-white/20 hover:text-black bg-white"
+          disabled={!projectId}
         >
           <Share className="w-4 h-4 mr-2" />
-          Export
+          {projectId ? "Share" : "Export"}
         </Button>
         
         <Button 
@@ -71,7 +74,7 @@ export function Navbar({ onSave }: NavbarProps) {
       <ExportDialog 
         open={exportDialogOpen} 
         onOpenChange={setExportDialogOpen}
-        projectId={activeTemplateId || undefined}
+        projectId={projectId || activeTemplateId || undefined}
       />
     </div>
   );

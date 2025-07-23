@@ -35,11 +35,12 @@ function App() {
             </AuthGuard>
           } />
           
-          <Route path="/project/:id/share" element={
+          <Route path="/projects/:id/share" element={
             <AuthGuard>
               <ProjectShare />
             </AuthGuard>
           } />
+          <Route path="/shared/:id" element={<Editor />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

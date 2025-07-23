@@ -1,13 +1,15 @@
 
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Copy, X, Plus } from "lucide-react";
+import { Copy, X, Plus, ExternalLink } from "lucide-react";
 import { toast } from "sonner";
+import { useCollaboratorActions } from "@/hooks/useCollaboratorActions";
 
 interface ShareProjectDialogProps {
   open: boolean;
@@ -16,26 +18,58 @@ interface ShareProjectDialogProps {
 }
 
 export function ShareProjectDialog({ open, onOpenChange, projectId }: ShareProjectDialogProps) {
-  const [restrictAccess, setRestrictAccess] = useState(false);
+  const navigate = useNavigate();
   const [inviteEmail, setInviteEmail] = useState("");
-  const [inviteRole, setInviteRole] = useState("Can Comment");
+  const [inviteRole, setInviteRole] = useState("viewer");
+  const [isInviting, setIsInviting] = useState(false);
   
-  const projectLink = `https://app.alignify.ai/shared/${projectId || 'ea1782d-ed9e-4152-aa04'}`;
+  const { inviteUser } = useCollaboratorActions();
+  
+  const projectLink = `${window.location.origin}/shared/${projectId}`;
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(projectLink);
     toast.success("Project link copied to clipboard");
   };
 
-  const handleAddMember = () => {
+  const handleQuickInvite = async () => {
     if (!inviteEmail.trim()) {
       toast.error("Please enter an email address");
       return;
     }
     
-    // Here you would typically call your API to invite the member
-    toast.success(`Invitation sent to ${inviteEmail}`);
-    setInviteEmail("");
+    if (!projectId) {
+      toast.error("No project selected");
+      return;
+    }
+
+    setIsInviting(true);
+    try {
+      const roleMapping: Record<string, 'viewer' | 'editor' | 'admin'> = {
+        "Can View": "viewer",
+        "Can Comment": "viewer", 
+        "Can Edit": "editor"
+      };
+      
+      const mappedRole = roleMapping[inviteRole] || "viewer";
+      const success = await inviteUser(projectId, inviteEmail, mappedRole);
+      
+      if (success) {
+        toast.success(`Invitation sent to ${inviteEmail}`);
+        setInviteEmail("");
+      }
+    } catch (error) {
+      toast.error("Failed to send invitation");
+    } finally {
+      setIsInviting(false);
+    }
+  };
+
+  const handleAdvancedShare = () => {
+    if (projectId) {
+      onOpenChange(false);
+      navigate(`/projects/${projectId}/share`);
+    }
   };
 
   return (
@@ -71,20 +105,13 @@ export function ShareProjectDialog({ open, onOpenChange, projectId }: ShareProje
                 Copy
               </Button>
             </div>
-            <div className="flex items-center gap-2 mt-2">
-              <Switch 
-                checked={restrictAccess} 
-                onCheckedChange={setRestrictAccess}
-              />
-              <Label className="text-sm">Restrict access to authorized users only</Label>
-            </div>
           </div>
           
           <div className="space-y-3">
             <Label className="text-base font-medium">Manage Access</Label>
             <div className="flex gap-2">
               <Input 
-                placeholder="Email separated by commas"
+                placeholder="Enter email address"
                 value={inviteEmail}
                 onChange={(e) => setInviteEmail(e.target.value)}
                 className="flex-1"
@@ -95,15 +122,23 @@ export function ShareProjectDialog({ open, onOpenChange, projectId }: ShareProje
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="Can View">Can View</SelectItem>
-                  <SelectItem value="Can Comment">Can Comment</SelectItem>
                   <SelectItem value="Can Edit">Can Edit</SelectItem>
                 </SelectContent>
               </Select>
-              <Button onClick={handleAddMember}>
+              <Button onClick={handleQuickInvite} disabled={isInviting}>
                 <Plus className="h-4 w-4 mr-2" />
-                Add
+                {isInviting ? "Adding..." : "Add"}
               </Button>
             </div>
+            
+            <Button 
+              variant="outline" 
+              className="w-full"
+              onClick={handleAdvancedShare}
+            >
+              <ExternalLink className="h-4 w-4 mr-2" />
+              Advanced Sharing Options
+            </Button>
             
             <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
               <div className="w-8 h-8 bg-pink-500 text-white rounded-full flex items-center justify-center text-sm font-medium">

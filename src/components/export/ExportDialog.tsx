@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Users, Download, Code, X } from "lucide-react";
 import { ImageDownloadDialog } from "./ImageDownloadDialog";
 import { EmbedProjectDialog } from "./EmbedProjectDialog";
+import { ShareProjectDialog } from "./ShareProjectDialog";
 
 interface ExportDialogProps {
   open: boolean;
@@ -17,17 +18,21 @@ export function ExportDialog({ open, onOpenChange, projectId }: ExportDialogProp
   const navigate = useNavigate();
   const [imageDialogOpen, setImageDialogOpen] = useState(false);
   const [embedDialogOpen, setEmbedDialogOpen] = useState(false);
+  const [shareDialogOpen, setShareDialogOpen] = useState(false);
 
-  const handleFeatureClick = (feature: 'share' | 'image' | 'embed') => {
+  const handleFeatureClick = (feature: 'share' | 'quickShare' | 'image' | 'embed') => {
     onOpenChange(false);
     
     switch (feature) {
       case 'share':
         if (projectId) {
-          navigate(`/project/${projectId}/share`);
+          navigate(`/projects/${projectId}/share`);
         } else {
           console.error('No project ID available for sharing');
         }
+        break;
+      case 'quickShare':
+        setShareDialogOpen(true);
         break;
       case 'image':
         setImageDialogOpen(true);
@@ -57,13 +62,13 @@ export function ExportDialog({ open, onOpenChange, projectId }: ExportDialogProp
             <Button
               variant="outline"
               className="w-full justify-start h-12"
-              onClick={() => handleFeatureClick('share')}
+              onClick={() => handleFeatureClick('quickShare')}
               disabled={!projectId}
             >
               <Users className="mr-3 h-5 w-5" />
               <div className="text-left">
-                <div className="font-medium">Invite members</div>
-                <div className="text-sm text-gray-500">Share project with team</div>
+                <div className="font-medium">Quick Share</div>
+                <div className="text-sm text-gray-500">Get link or invite via email</div>
               </div>
             </Button>
             
@@ -108,6 +113,12 @@ export function ExportDialog({ open, onOpenChange, projectId }: ExportDialogProp
       <EmbedProjectDialog 
         open={embedDialogOpen} 
         onOpenChange={setEmbedDialogOpen}
+        projectId={projectId}
+      />
+      
+      <ShareProjectDialog 
+        open={shareDialogOpen} 
+        onOpenChange={setShareDialogOpen}
         projectId={projectId}
       />
     </>
