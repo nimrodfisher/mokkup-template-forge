@@ -58,9 +58,10 @@ export function Navbar({ onSave }: NavbarProps) {
         
         <Button 
           onClick={() => navigate('/dashboard')}
-          className="bg-white hover:bg-white/90 text-black border-none"
+          variant="outline"
+          className="border-white/30 text-black hover:bg-white/20 hover:text-black bg-white"
         >
-          New Project
+          Back to Dashboard
         </Button>
       </div>
       
