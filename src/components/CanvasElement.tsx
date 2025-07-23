@@ -6,6 +6,7 @@ import { ElementRenderer } from './element-renderers/ElementRenderer';
 import { ElementInteraction } from './ElementInteraction';
 import { CommentBadge } from './comments/CommentBadge';
 import { CommentDialog } from './comments/CommentDialog';
+import { StyleDialogController } from './StyleDialogController';
 import { useParams } from 'react-router-dom';
 import type { Element } from '@/types/wireframe';
 
@@ -18,6 +19,7 @@ interface CanvasElementProps {
 export function CanvasElement({ element, onSelect, isSelected }: CanvasElementProps) {
   const { id: projectId } = useParams();
   const [commentDialogOpen, setCommentDialogOpen] = useState(false);
+  const [styleDialogOpen, setStyleDialogOpen] = useState<string | null>(null);
   const { getCommentCount } = useProjectComments(projectId || '');
   const commentCount = getCommentCount(element.id);
   const { removeElement } = useWireframe();
@@ -33,6 +35,20 @@ export function CanvasElement({ element, onSelect, isSelected }: CanvasElementPr
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     onSelect(element.id);
+  };
+
+  const handleDoubleClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    // Map element types to dialog types for the StyleDialogController
+    const dialogTypeMap: { [key: string]: string } = {
+      'simple-table': 'table',
+      'quadrant-chart': 'quadrant',
+      'scatter-plot': 'scatter-plot',
+      // Most element types match their dialog type directly
+    };
+    
+    const dialogType = dialogTypeMap[element.type] || element.type;
+    setStyleDialogOpen(dialogType);
   };
 
   return (
@@ -56,7 +72,7 @@ export function CanvasElement({ element, onSelect, isSelected }: CanvasElementPr
           <ElementInteraction 
             element={element}
             isSelected={isSelected}
-            onDoubleClick={() => {}}
+            onDoubleClick={handleDoubleClick}
           >
             <div className="w-full h-full" />
           </ElementInteraction>
@@ -76,6 +92,13 @@ export function CanvasElement({ element, onSelect, isSelected }: CanvasElementPr
             elementType={element.type}
           />
         )}
+        
+        {/* Style Dialog Controller */}
+        <StyleDialogController
+          element={element}
+          dialogType={styleDialogOpen}
+          onClose={() => setStyleDialogOpen(null)}
+        />
       </div>
     </div>
   );
