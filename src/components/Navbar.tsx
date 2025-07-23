@@ -1,5 +1,5 @@
 
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useWireframe } from "@/hooks/useWireframe";
 import { useAuth } from "@/contexts/AuthContext";
@@ -15,9 +15,8 @@ interface NavbarProps {
 export function Navbar({ onSave }: NavbarProps) {
   const [saveDialogOpen, setSaveDialogOpen] = useState(false);
   const [exportDialogOpen, setExportDialogOpen] = useState(false);
-  const { activeTemplateId } = useWireframe();
+  const { activeTemplateId, createNewTemplate } = useWireframe();
   const { user } = useAuth();
-  const navigate = useNavigate();
   
   const handleSave = () => {
     if (onSave) {
@@ -57,11 +56,10 @@ export function Navbar({ onSave }: NavbarProps) {
         </Button>
         
         <Button 
-          onClick={() => navigate('/dashboard')}
-          variant="outline"
-          className="border-white/30 text-black hover:bg-white/20 hover:text-black bg-white"
+          onClick={() => createNewTemplate()}
+          className="bg-white hover:bg-white/90 text-black border-none"
         >
-          Back to Dashboard
+          New Project
         </Button>
       </div>
       

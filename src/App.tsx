@@ -29,6 +29,11 @@ function App() {
             </AuthGuard>
           } />
           <Route path="/editor/:id" element={<Editor />} />
+          <Route path="/editor" element={
+            <AuthGuard>
+              <Editor />
+            </AuthGuard>
+          } />
           
           <Route path="/project/:id/share" element={
             <AuthGuard>
