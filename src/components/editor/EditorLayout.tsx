@@ -37,7 +37,7 @@ export function EditorLayout({ hasPermission, canShare, projectId, userRole, upd
             {!isPreviewMode && <ScreenTabs />}
             <div className="flex-1 flex overflow-hidden">
               <div className="flex-1 overflow-hidden">
-                <Canvas />
+                <Canvas isPreviewMode={isPreviewMode} />
               </div>
               {!isPreviewMode && showProperties && (
                 <div className="w-80 border-l bg-white overflow-y-auto">
