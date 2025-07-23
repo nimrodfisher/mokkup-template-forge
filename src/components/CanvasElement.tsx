@@ -91,6 +91,8 @@ export function CanvasElement({ element, onSelect, isSelected }: CanvasElementPr
             elementId={element.id}
             projectId={projectId}
             elementType={element.type}
+            open={commentDialogOpen}
+            onOpenChange={setCommentDialogOpen}
           />
         )}
         

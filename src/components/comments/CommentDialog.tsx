@@ -14,14 +14,20 @@ interface CommentDialogProps {
   elementId: string;
   projectId: string;
   elementType: string;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
-export function CommentDialog({ elementId, projectId, elementType }: CommentDialogProps) {
-  const [open, setOpen] = useState(false);
+export function CommentDialog({ elementId, projectId, elementType, open: externalOpen, onOpenChange }: CommentDialogProps) {
+  const [internalOpen, setInternalOpen] = useState(false);
   const [content, setContent] = useState("");
   const [showMentions, setShowMentions] = useState(false);
   const [mentionQuery, setMentionQuery] = useState("");
   const [cursorPosition, setCursorPosition] = useState(0);
+  
+  // Use external state if provided, otherwise use internal state
+  const open = externalOpen !== undefined ? externalOpen : internalOpen;
+  const setOpen = onOpenChange || setInternalOpen;
   
   const { comments, addComment, loading } = useOptimizedComments(projectId, elementId);
   const { collaborators } = useCollaborators(projectId);
@@ -41,6 +47,8 @@ export function CommentDialog({ elementId, projectId, elementType }: CommentDial
 
     await addComment(content, mentions);
     setContent("");
+    // Close the dialog after successful submission
+    setOpen(false);
   };
 
   const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
