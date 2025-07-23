@@ -1,15 +1,25 @@
 
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useWireframe } from "@/hooks/useWireframe";
 import { useProjectLoader } from "@/hooks/useProjectLoader";
 import { useAutoSave } from "@/hooks/useAutoSave";
 import { useSilentProjectUpdate } from "@/hooks/useSilentProjectUpdate";
 import { EditorLayout } from "@/components/editor/EditorLayout";
 import { EditorLoading } from "@/components/editor/EditorLoading";
+import { useEffect } from "react";
 
 export default function Editor() {
   const { projectId } = useParams();
+  const navigate = useNavigate();
   const { updateElementProperties } = useWireframe();
+  
+  // If no projectId is provided, redirect to dashboard to create a proper project
+  useEffect(() => {
+    if (!projectId) {
+      navigate('/dashboard');
+      return;
+    }
+  }, [projectId, navigate]);
   
   const { project, loading, hasPermission, updateProject } = useProjectLoader(projectId);
   const { updateProjectSilently } = useSilentProjectUpdate();
