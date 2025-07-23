@@ -4,10 +4,9 @@ import { useDrop } from "react-dnd";
 import { useWireframe } from "@/hooks/useWireframe";
 import { ElementType } from "@/types/wireframe";
 import { CanvasElement } from "./CanvasElement";
-import { PreviewElement } from "./PreviewElement";
 import { toast } from "sonner";
 
-export function Canvas({ isPreviewMode = false }: { isPreviewMode?: boolean }) {
+export function Canvas() {
   const canvasRef = useRef<HTMLDivElement>(null);
   const { elements, addElement, selectedElementId, selectElement, screens } = useWireframe();
   
@@ -19,12 +18,10 @@ export function Canvas({ isPreviewMode = false }: { isPreviewMode?: boolean }) {
     activeScreen && element.screenId === activeScreen.id
   );
   
-  // Single drop zone for the canvas (disabled in preview mode)
+  // Single drop zone for the canvas
   const [{ isOver }, drop] = useDrop(() => ({
-    accept: isPreviewMode ? [] : 'COMPONENT',
+    accept: 'COMPONENT',
     drop: (item: { type: ElementType }, monitor) => {
-      if (isPreviewMode) return;
-      
       const canvasRect = canvasRef.current?.getBoundingClientRect();
       if (canvasRect && activeScreen) {
         const clientOffset = monitor.getClientOffset();
@@ -52,22 +49,20 @@ export function Canvas({ isPreviewMode = false }: { isPreviewMode?: boolean }) {
     collect: (monitor) => ({
       isOver: !!monitor.isOver(),
     }),
-  }), [activeScreen, addElement, isPreviewMode]);
+  }), [activeScreen, addElement]);
   
   return (
     <div 
       ref={node => {
-        if (!isPreviewMode) {
-          drop(node);
-        }
+        drop(node);
         if (canvasRef) {
           canvasRef.current = node as HTMLDivElement;
         }
       }}
-      className={`flex-1 overflow-auto bg-gray-100 h-full relative ${!isPreviewMode && isOver ? 'bg-gray-200' : ''}`}
-      onClick={isPreviewMode ? undefined : () => selectElement(null)}
+      className={`flex-1 overflow-auto bg-gray-100 h-full relative ${isOver ? 'bg-gray-200' : ''}`}
+      onClick={() => selectElement(null)}
     >
-      {(!activeElements || activeElements.length === 0) && !isPreviewMode && (
+      {(!activeElements || activeElements.length === 0) && (
         <div className="absolute inset-0 flex flex-col items-center justify-center text-gray-500">
           <div className="w-24 h-24 mb-4">
             <svg viewBox="0 0 24 24" fill="none" className="text-gray-300" xmlns="http://www.w3.org/2000/svg">
@@ -83,19 +78,12 @@ export function Canvas({ isPreviewMode = false }: { isPreviewMode?: boolean }) {
       )}
       
       {activeElements && activeElements.map((element) => (
-        isPreviewMode ? (
-          <PreviewElement
-            key={element.id}
-            element={element}
-          />
-        ) : (
-          <CanvasElement
-            key={element.id}
-            element={element}
-            onSelect={selectElement}
-            isSelected={selectedElementId === element.id}
-          />
-        )
+        <CanvasElement
+          key={element.id}
+          element={element}
+          onSelect={selectElement}
+          isSelected={selectedElementId === element.id}
+        />
       ))}
     </div>
   );
