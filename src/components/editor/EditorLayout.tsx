@@ -1,5 +1,5 @@
 
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { Navbar } from "@/components/Navbar";
@@ -10,6 +10,8 @@ import { PropertiesPanel } from "@/components/PropertiesPanel";
 import { StyleDialogController } from "@/components/StyleDialogController";
 import { useWireframe } from "@/hooks/useWireframe";
 import { UserRole } from "@/hooks/useProjectPermissions";
+import { Button } from "@/components/ui/button";
+import { Eye, X } from "lucide-react";
 
 interface EditorLayoutProps {
   hasPermission: boolean;
@@ -21,23 +23,48 @@ interface EditorLayoutProps {
 
 export function EditorLayout({ hasPermission, canShare, projectId, userRole, updateElementProperties }: EditorLayoutProps) {
   const { showProperties } = useWireframe();
+  const [isPreviewMode, setIsPreviewMode] = useState(false);
 
   return (
     <DndProvider backend={HTML5Backend}>
       <div className="h-screen flex flex-col bg-gray-50">
-        <Navbar projectId={projectId} canShare={canShare} />
+        {!isPreviewMode && <Navbar projectId={projectId} canShare={canShare} />}
         
         <div className="flex-1 flex overflow-hidden relative">
-          <Sidebar />
+          {!isPreviewMode && <Sidebar />}
           
           <div className="flex-1 flex flex-col">
-            <ScreenTabs />
+            {!isPreviewMode && <ScreenTabs />}
             <div className="flex-1 flex overflow-hidden">
               <div className="flex-1 overflow-hidden">
-                <Canvas />
+                <Canvas isPreviewMode={isPreviewMode} />
               </div>
+              {!isPreviewMode && false && (
+                <div className="w-80 border-l bg-white overflow-y-auto">
+                  <PropertiesPanel updateElementProperties={updateElementProperties} />
+                </div>
+              )}
             </div>
           </div>
+          
+          {/* Preview Button */}
+          <Button
+            onClick={() => setIsPreviewMode(!isPreviewMode)}
+            className="fixed top-4 right-4 z-50 bg-primary hover:bg-primary/90 text-white"
+            size="sm"
+          >
+            {isPreviewMode ? (
+              <>
+                <X className="w-4 h-4 mr-2" />
+                Exit Preview
+              </>
+            ) : (
+              <>
+                <Eye className="w-4 h-4 mr-2" />
+                Preview
+              </>
+            )}
+          </Button>
         </div>
 
         <StyleDialogController element={null} dialogType={null} onClose={() => {}} />
