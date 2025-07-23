@@ -97,6 +97,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
                 <CanvasElement
                   key={element.id}
                   element={element}
+                  onSelect={() => {}}
                   isSelected={false}
                 />
               ))}

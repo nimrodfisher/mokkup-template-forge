@@ -90,11 +90,12 @@ export function SaveTemplateDialog({ open, onOpenChange }: SaveTemplateDialogPro
               <div ref={previewRef} className="relative w-full h-full border border-gray-200 overflow-hidden" style={{ transform: "scale(0.4)", transformOrigin: "top left", width: "250%", height: "250%" }}>
                 {activeScreenElements.length > 0 ? (
                   activeScreenElements.map(element => (
-                    <CanvasElement
-                      key={element.id}
-                      element={element}
-                      isSelected={false}
-                    />
+                  <CanvasElement
+                    key={element.id}
+                    element={element}
+                    onSelect={() => {}}
+                    isSelected={false}
+                  />
                   ))
                 ) : (
                   <div className="absolute inset-0 flex items-center justify-center bg-gray-50">

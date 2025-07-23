@@ -81,6 +81,7 @@ export function Canvas() {
         <CanvasElement
           key={element.id}
           element={element}
+          onSelect={selectElement}
           isSelected={selectedElementId === element.id}
         />
       ))}
