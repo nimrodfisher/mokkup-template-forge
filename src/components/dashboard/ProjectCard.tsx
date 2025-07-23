@@ -6,7 +6,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Badge } from '@/components/ui/badge';
 import { MoreVertical, Users, Calendar } from 'lucide-react';
 import { format } from 'date-fns';
-import { CanvasElement } from '@/components/CanvasElement';
+import { PreviewElement } from '@/components/PreviewElement';
 import { useAuth } from '@/contexts/AuthContext';
 import { useProjects } from '@/hooks/useProjects';
 import { Project } from '@/hooks/useProjects';
@@ -94,11 +94,9 @@ export function ProjectCard({ project }: ProjectCardProps) {
           ) : (
             <div className="relative w-full h-full" style={{ transform: "scale(0.33)", transformOrigin: "top left", width: "300%", height: "300%" }}>
               {projectElements.map((element: any) => (
-                <CanvasElement
+                <PreviewElement
                   key={element.id}
                   element={element}
-                  onSelect={() => {}}
-                  isSelected={false}
                 />
               ))}
             </div>

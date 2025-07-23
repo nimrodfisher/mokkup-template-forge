@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { useWireframe } from "@/hooks/useWireframe";
 import { toast } from "sonner";
-import { CanvasElement } from "@/components/CanvasElement";
+import { PreviewElement } from "@/components/PreviewElement";
 import { Loader2 } from "lucide-react";
 
 interface SaveTemplateDialogProps {
@@ -90,11 +90,9 @@ export function SaveTemplateDialog({ open, onOpenChange }: SaveTemplateDialogPro
               <div ref={previewRef} className="relative w-full h-full border border-gray-200 overflow-hidden" style={{ transform: "scale(0.4)", transformOrigin: "top left", width: "250%", height: "250%" }}>
                 {activeScreenElements.length > 0 ? (
                   activeScreenElements.map(element => (
-                  <CanvasElement
+                  <PreviewElement
                     key={element.id}
                     element={element}
-                    onSelect={() => {}}
-                    isSelected={false}
                   />
                   ))
                 ) : (
