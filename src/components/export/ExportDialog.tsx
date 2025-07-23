@@ -26,7 +26,7 @@ export function ExportDialog({ open, onOpenChange, projectId }: ExportDialogProp
     switch (feature) {
       case 'share':
         if (projectId) {
-          navigate(`/projects/${projectId}/share`);
+          navigate(`/project/${projectId}/share`);
         } else {
           console.error('No project ID available for sharing');
         }

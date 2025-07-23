@@ -68,7 +68,7 @@ export function ShareProjectDialog({ open, onOpenChange, projectId }: ShareProje
   const handleAdvancedShare = () => {
     if (projectId) {
       onOpenChange(false);
-      navigate(`/projects/${projectId}/share`);
+      navigate(`/project/${projectId}/share`);
     }
   };
 

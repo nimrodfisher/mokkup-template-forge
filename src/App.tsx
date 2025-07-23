@@ -35,7 +35,7 @@ function App() {
             </AuthGuard>
           } />
           
-          <Route path="/projects/:id/share" element={
+          <Route path="/project/:id/share" element={
             <AuthGuard>
               <ProjectShare />
             </AuthGuard>
