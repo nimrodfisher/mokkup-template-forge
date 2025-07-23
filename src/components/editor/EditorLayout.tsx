@@ -39,7 +39,7 @@ export function EditorLayout({ hasPermission, canShare, projectId, userRole, upd
               <div className="flex-1 overflow-hidden">
                 <Canvas isPreviewMode={isPreviewMode} />
               </div>
-              {!isPreviewMode && showProperties && (
+              {!isPreviewMode && false && (
                 <div className="w-80 border-l bg-white overflow-y-auto">
                   <PropertiesPanel updateElementProperties={updateElementProperties} />
                 </div>
