@@ -18,7 +18,7 @@ export function PreviewElement({ element }: PreviewElementProps) {
         zIndex: 1,
       }}
     >
-      <ElementRenderer element={element} />
+      <ElementRenderer element={element} isEditable={false} />
     </div>
   );
 }

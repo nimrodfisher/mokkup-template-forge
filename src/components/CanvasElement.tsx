@@ -51,7 +51,7 @@ export function CanvasElement({ element, onSelect, isSelected }: CanvasElementPr
       onClick={handleClick}
     >
       <div className="relative w-full h-full group">
-        <ElementRenderer element={element} />
+        <ElementRenderer element={element} isEditable={true} />
         {isSelected && (
           <ElementInteraction 
             element={element}
