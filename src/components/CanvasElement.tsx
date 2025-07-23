@@ -65,6 +65,7 @@ export function CanvasElement({ element, onSelect, isSelected }: CanvasElementPr
         zIndex: 1,
       }}
       onClick={handleClick}
+      onDoubleClick={handleDoubleClick}
     >
       <div className="relative w-full h-full group">
         <ElementRenderer element={element} isEditable={true} />
