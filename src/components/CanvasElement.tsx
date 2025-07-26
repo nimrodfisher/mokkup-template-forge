@@ -14,10 +14,9 @@ interface CanvasElementProps {
   element: Element;
   onSelect: (id: string) => void;
   isSelected: boolean;
-  zIndex?: number;
 }
 
-export function CanvasElement({ element, onSelect, isSelected, zIndex = 1 }: CanvasElementProps) {
+export function CanvasElement({ element, onSelect, isSelected }: CanvasElementProps) {
   const { id: projectId } = useParams();
   const [commentDialogOpen, setCommentDialogOpen] = useState(false);
   const [styleDialogOpen, setStyleDialogOpen] = useState<string | null>(null);
@@ -63,7 +62,7 @@ export function CanvasElement({ element, onSelect, isSelected, zIndex = 1 }: Can
         top: element.position.y,
         width: element.size.width,
         height: element.size.height,
-        zIndex: isSelected ? 1000 : zIndex, // Selected elements should be on top
+        zIndex: 1,
       }}
       onClick={handleClick}
       onDoubleClick={handleDoubleClick}

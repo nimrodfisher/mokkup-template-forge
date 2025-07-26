@@ -16,7 +16,6 @@ export function Canvas({ isPreviewMode = false }: { isPreviewMode?: boolean }) {
   
   // Filter elements to only show those from the active screen
   const activeElements = elements.filter(element => 
-    element && element.id && element.type && 
     activeScreen && element.screenId === activeScreen.id
   );
   
@@ -83,7 +82,7 @@ export function Canvas({ isPreviewMode = false }: { isPreviewMode?: boolean }) {
         </div>
       )}
       
-      {activeElements && activeElements.map((element, index) => (
+      {activeElements && activeElements.map((element) => (
         isPreviewMode ? (
           <PreviewElement
             key={element.id}
@@ -95,7 +94,6 @@ export function Canvas({ isPreviewMode = false }: { isPreviewMode?: boolean }) {
             element={element}
             onSelect={selectElement}
             isSelected={selectedElementId === element.id}
-            zIndex={index + 10}
           />
         )
       ))}
