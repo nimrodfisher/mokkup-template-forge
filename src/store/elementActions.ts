@@ -86,6 +86,7 @@ export const createElementSlice: StateCreator<
   },
   
   selectElement: (id) => {
+    console.log('selectElement called with id:', id);
     set({ 
       selectedElementId: id,
       showProperties: id !== null 

@@ -34,6 +34,7 @@ export function CanvasElement({ element, onSelect, isSelected }: CanvasElementPr
 
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
+    console.log('CanvasElement clicked:', { elementId: element.id, elementType: element.type });
     onSelect(element.id);
   };
 

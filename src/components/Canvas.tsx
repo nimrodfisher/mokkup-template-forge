@@ -15,9 +15,19 @@ export function Canvas({ isPreviewMode = false }: { isPreviewMode?: boolean }) {
   const activeScreen = screens.find(screen => screen.isActive);
   
   // Filter elements to only show those from the active screen
-  const activeElements = elements.filter(element => 
-    activeScreen && element.screenId === activeScreen.id
-  ).filter(element => element && element.id); // Remove any null/undefined elements
+  const activeElements = elements.filter(element => {
+    const isValidElement = element && element.id && element.type;
+    const belongsToActiveScreen = activeScreen && element.screenId === activeScreen.id;
+    console.log('Element filtering:', { 
+      elementId: element?.id, 
+      elementType: element?.type,
+      screenId: element?.screenId,
+      activeScreenId: activeScreen?.id,
+      isValid: isValidElement,
+      belongsToScreen: belongsToActiveScreen 
+    });
+    return isValidElement && belongsToActiveScreen;
+  });
   
   // Single drop zone for the canvas (disabled in preview mode)
   const [{ isOver }, drop] = useDrop(() => ({
