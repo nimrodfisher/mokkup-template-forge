@@ -14,9 +14,10 @@ interface CanvasElementProps {
   element: Element;
   onSelect: (id: string) => void;
   isSelected: boolean;
+  zIndex?: number;
 }
 
-export function CanvasElement({ element, onSelect, isSelected }: CanvasElementProps) {
+export function CanvasElement({ element, onSelect, isSelected, zIndex = 1 }: CanvasElementProps) {
   const { id: projectId } = useParams();
   const [commentDialogOpen, setCommentDialogOpen] = useState(false);
   const [styleDialogOpen, setStyleDialogOpen] = useState<string | null>(null);
@@ -34,7 +35,6 @@ export function CanvasElement({ element, onSelect, isSelected }: CanvasElementPr
 
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    console.log('CanvasElement clicked:', { elementId: element.id, elementType: element.type });
     onSelect(element.id);
   };
 
@@ -63,7 +63,7 @@ export function CanvasElement({ element, onSelect, isSelected }: CanvasElementPr
         top: element.position.y,
         width: element.size.width,
         height: element.size.height,
-        zIndex: 1,
+        zIndex: isSelected ? 1000 : zIndex, // Selected elements should be on top
       }}
       onClick={handleClick}
       onDoubleClick={handleDoubleClick}

@@ -15,19 +15,10 @@ export function Canvas({ isPreviewMode = false }: { isPreviewMode?: boolean }) {
   const activeScreen = screens.find(screen => screen.isActive);
   
   // Filter elements to only show those from the active screen
-  const activeElements = elements.filter(element => {
-    const isValidElement = element && element.id && element.type;
-    const belongsToActiveScreen = activeScreen && element.screenId === activeScreen.id;
-    console.log('Element filtering:', { 
-      elementId: element?.id, 
-      elementType: element?.type,
-      screenId: element?.screenId,
-      activeScreenId: activeScreen?.id,
-      isValid: isValidElement,
-      belongsToScreen: belongsToActiveScreen 
-    });
-    return isValidElement && belongsToActiveScreen;
-  });
+  const activeElements = elements.filter(element => 
+    element && element.id && element.type && 
+    activeScreen && element.screenId === activeScreen.id
+  );
   
   // Single drop zone for the canvas (disabled in preview mode)
   const [{ isOver }, drop] = useDrop(() => ({
@@ -92,7 +83,7 @@ export function Canvas({ isPreviewMode = false }: { isPreviewMode?: boolean }) {
         </div>
       )}
       
-      {activeElements && activeElements.map((element) => (
+      {activeElements && activeElements.map((element, index) => (
         isPreviewMode ? (
           <PreviewElement
             key={element.id}
@@ -104,6 +95,7 @@ export function Canvas({ isPreviewMode = false }: { isPreviewMode?: boolean }) {
             element={element}
             onSelect={selectElement}
             isSelected={selectedElementId === element.id}
+            zIndex={index + 10}
           />
         )
       ))}
