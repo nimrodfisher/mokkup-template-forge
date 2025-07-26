@@ -47,7 +47,7 @@ export function EditorLayout({ hasPermission, canShare, projectId, userRole, upd
                 <Button
                   variant="outline"
                   size="sm"
-                  className="fixed top-16 left-2 z-40 md:hidden"
+                  className="fixed top-16 left-2 z-40 bg-white shadow-md"
                 >
                   <Menu className="w-4 h-4" />
                 </Button>
@@ -79,7 +79,7 @@ export function EditorLayout({ hasPermission, canShare, projectId, userRole, upd
                     <Button
                       variant="outline"
                       size="sm"
-                      className="fixed bottom-16 right-2 z-40 md:hidden"
+                      className="fixed bottom-4 right-2 z-40 bg-white shadow-md"
                     >
                       <Layers className="w-4 h-4" />
                     </Button>
@@ -97,7 +97,7 @@ export function EditorLayout({ hasPermission, canShare, projectId, userRole, upd
             <Button
               onClick={() => setIsPreviewMode(!isPreviewMode)}
               className={`fixed z-50 bg-primary hover:bg-primary/90 text-white ${
-                isMobile ? 'top-16 right-2' : 'top-4 right-4'
+                isMobile ? 'top-16 right-16' : 'top-4 right-4'
               }`}
               size="sm"
             >
