@@ -1,9 +1,7 @@
 
 import { ReactNode, useState } from "react";
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
-import { TouchBackend } from 'react-dnd-touch-backend';
-import { MultiBackend } from 'react-dnd-multi-backend';
+import { DndProvider } from 'react-dnd-multi-backend';
+import { HTML5toTouch } from 'rdndmb-html5-to-touch';
 import { Navbar } from "@/components/Navbar";
 import { Sidebar } from "@/components/sidebar";
 import { ScreenTabs } from "@/components/ScreenTabs";
@@ -33,41 +31,8 @@ export function EditorLayout({ hasPermission, canShare, projectId, userRole, upd
   const isViewOnly = userRole === 'viewer';
   const isMobile = useIsMobile();
 
-  // Configure multi-backend for better mobile support
-  const backendOptions = {
-    backends: [
-      {
-        id: 'html5',
-        backend: HTML5Backend,
-        transition: {
-          type: 'pointerType',
-          mode: 'exclusive',
-          options: {
-            pointerTypes: ['mouse'],
-          },
-        },
-      },
-      {
-        id: 'touch',
-        backend: TouchBackend,
-        options: {
-          enableMouseEvents: true,
-          delay: 200,
-          delayTouchStart: 200,
-        },
-        transition: {
-          type: 'pointerType',
-          mode: 'exclusive',
-          options: {
-            pointerTypes: ['touch', 'pen'],
-          },
-        },
-      },
-    ],
-  };
-
   return (
-    <DndProvider backend={MultiBackend} options={backendOptions}>
+    <DndProvider options={HTML5toTouch}>
       <div className="h-screen flex flex-col bg-gray-50">
         {!isPreviewMode && <Navbar projectId={projectId} canShare={canShare} />}
         
