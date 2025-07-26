@@ -11,7 +11,9 @@ import { StyleDialogController } from "@/components/StyleDialogController";
 import { useWireframe } from "@/hooks/useWireframe";
 import { UserRole } from "@/hooks/useProjectPermissions";
 import { Button } from "@/components/ui/button";
-import { Eye, X } from "lucide-react";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { Eye, X, Menu, Layers } from "lucide-react";
 
 interface EditorLayoutProps {
   hasPermission: boolean;
@@ -24,7 +26,10 @@ interface EditorLayoutProps {
 export function EditorLayout({ hasPermission, canShare, projectId, userRole, updateElementProperties }: EditorLayoutProps) {
   const { showProperties } = useWireframe();
   const [isPreviewMode, setIsPreviewMode] = useState(userRole === 'viewer');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isPropertiesOpen, setIsPropertiesOpen] = useState(false);
   const isViewOnly = userRole === 'viewer';
+  const isMobile = useIsMobile();
 
   return (
     <DndProvider backend={HTML5Backend}>
@@ -32,7 +37,26 @@ export function EditorLayout({ hasPermission, canShare, projectId, userRole, upd
         {!isPreviewMode && <Navbar projectId={projectId} canShare={canShare} />}
         
         <div className="flex-1 flex overflow-hidden relative">
-          {!isPreviewMode && <Sidebar />}
+          {/* Desktop Sidebar */}
+          {!isPreviewMode && !isMobile && <Sidebar />}
+          
+          {/* Mobile Sidebar Sheet */}
+          {!isPreviewMode && isMobile && (
+            <Sheet open={isSidebarOpen} onOpenChange={setIsSidebarOpen}>
+              <SheetTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="fixed top-16 left-2 z-40 md:hidden"
+                >
+                  <Menu className="w-4 h-4" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="left" className="p-0 w-64">
+                <Sidebar />
+              </SheetContent>
+            </Sheet>
+          )}
           
           <div className="flex-1 flex flex-col">
             {!isPreviewMode && <ScreenTabs />}
@@ -40,10 +64,30 @@ export function EditorLayout({ hasPermission, canShare, projectId, userRole, upd
               <div className="flex-1 overflow-hidden">
                 <Canvas isPreviewMode={isPreviewMode} />
               </div>
-              {showProperties && !isPreviewMode && (
+              
+              {/* Desktop Properties Panel */}
+              {showProperties && !isPreviewMode && !isMobile && (
                 <div className="w-80 border-l bg-white overflow-y-auto">
                   <PropertiesPanel updateElementProperties={updateElementProperties} />
                 </div>
+              )}
+              
+              {/* Mobile Properties Panel Sheet */}
+              {showProperties && !isPreviewMode && isMobile && (
+                <Sheet open={isPropertiesOpen} onOpenChange={setIsPropertiesOpen}>
+                  <SheetTrigger asChild>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="fixed bottom-16 right-2 z-40 md:hidden"
+                    >
+                      <Layers className="w-4 h-4" />
+                    </Button>
+                  </SheetTrigger>
+                  <SheetContent side="right" className="p-0 w-80">
+                    <PropertiesPanel updateElementProperties={updateElementProperties} />
+                  </SheetContent>
+                </Sheet>
               )}
             </div>
           </div>
@@ -52,7 +96,9 @@ export function EditorLayout({ hasPermission, canShare, projectId, userRole, upd
           {isViewOnly && (
             <Button
               onClick={() => setIsPreviewMode(!isPreviewMode)}
-              className="fixed top-4 right-4 z-50 bg-primary hover:bg-primary/90 text-white"
+              className={`fixed z-50 bg-primary hover:bg-primary/90 text-white ${
+                isMobile ? 'top-16 right-2' : 'top-4 right-4'
+              }`}
               size="sm"
             >
               {isPreviewMode ? (
@@ -73,7 +119,9 @@ export function EditorLayout({ hasPermission, canShare, projectId, userRole, upd
         <StyleDialogController element={null} dialogType={null} onClose={() => {}} />
         
         {!hasPermission && (
-          <div className="fixed bottom-4 right-4 bg-yellow-100 border border-yellow-400 rounded-lg p-3">
+          <div className={`fixed bg-yellow-100 border border-yellow-400 rounded-lg p-3 ${
+            isMobile ? 'bottom-2 left-2 right-2 text-center' : 'bottom-4 right-4'
+          }`}>
             <p className="text-sm text-yellow-800">
               You have {userRole === 'viewer' ? 'view-only' : userRole} access to this project
             </p>
