@@ -30,6 +30,7 @@ export function ElementInteraction({
   const handleMouseDownOnElement = (e: React.MouseEvent) => {
     if (isSelected) {
       e.stopPropagation();
+      e.preventDefault();
       setIsDragging(true);
       
       const startX = e.clientX;
@@ -43,8 +44,8 @@ export function ElementInteraction({
         
         updateElement(element.id, {
           position: {
-            x: startElementX + dx,
-            y: startElementY + dy,
+            x: Math.max(0, startElementX + dx),
+            y: Math.max(0, startElementY + dy),
           }
         });
       };
@@ -53,15 +54,51 @@ export function ElementInteraction({
         setIsDragging(false);
         document.removeEventListener('mousemove', handleMouseMove);
         document.removeEventListener('mouseup', handleMouseUp);
+        document.removeEventListener('touchmove', handleTouchMove);
+        document.removeEventListener('touchend', handleMouseUp);
+      };
+
+      const handleTouchMove = (moveEvent: TouchEvent) => {
+        if (moveEvent.touches.length > 0) {
+          const touch = moveEvent.touches[0];
+          const dx = touch.clientX - startX;
+          const dy = touch.clientY - startY;
+          
+          updateElement(element.id, {
+            position: {
+              x: Math.max(0, startElementX + dx),
+              y: Math.max(0, startElementY + dy),
+            }
+          });
+        }
       };
       
       document.addEventListener('mousemove', handleMouseMove);
       document.addEventListener('mouseup', handleMouseUp);
+      document.addEventListener('touchmove', handleTouchMove, { passive: false });
+      document.addEventListener('touchend', handleMouseUp);
+    }
+  };
+
+  // Handle touch events
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (isSelected && e.touches.length === 1) {
+      e.stopPropagation();
+      e.preventDefault();
+      const touch = e.touches[0];
+      const mouseEvent = {
+        clientX: touch.clientX,
+        clientY: touch.clientY,
+        stopPropagation: e.stopPropagation.bind(e),
+        preventDefault: e.preventDefault.bind(e),
+      };
+      handleMouseDownOnElement(mouseEvent as any);
     }
   };
   
   const handleResizeMouseDown = (e: React.MouseEvent) => {
     e.stopPropagation();
+    e.preventDefault();
     setIsResizing(true);
     
     const startX = e.clientX;
@@ -83,15 +120,53 @@ export function ElementInteraction({
         }
       });
     };
+
+    const handleTouchMove = (moveEvent: TouchEvent) => {
+      if (moveEvent.touches.length > 0) {
+        const touch = moveEvent.touches[0];
+        const dx = touch.clientX - startX;
+        const dy = touch.clientY - startY;
+        
+        const newWidth = Math.max(50, startWidth + dx);
+        const newHeight = Math.max(30, startHeight + dy);
+        
+        updateElement(element.id, {
+          size: {
+            width: newWidth,
+            height: newHeight,
+          }
+        });
+      }
+    };
     
     const handleMouseUp = () => {
       setIsResizing(false);
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
+      document.removeEventListener('touchmove', handleTouchMove);
+      document.removeEventListener('touchend', handleMouseUp);
     };
     
     document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseup', handleMouseUp);
+    document.addEventListener('touchmove', handleTouchMove, { passive: false });
+    document.addEventListener('touchend', handleMouseUp);
+  };
+
+  // Handle touch resize
+  const handleResizeTouchStart = (e: React.TouchEvent) => {
+    if (e.touches.length === 1) {
+      e.stopPropagation();
+      e.preventDefault();
+      const touch = e.touches[0];
+      const mouseEvent = {
+        clientX: touch.clientX,
+        clientY: touch.clientY,
+        stopPropagation: e.stopPropagation.bind(e),
+        preventDefault: e.preventDefault.bind(e),
+      };
+      handleResizeMouseDown(mouseEvent as any);
+    }
   };
 
   const handleDeleteElement = (e: React.MouseEvent) => {
@@ -120,6 +195,7 @@ export function ElementInteraction({
       onClick={handleMouseDown}
       onDoubleClick={onDoubleClick}
       onMouseDown={handleMouseDownOnElement}
+      onTouchStart={handleTouchStart}
       onKeyDown={handleDelete}
       tabIndex={0}
     >
@@ -129,18 +205,19 @@ export function ElementInteraction({
         <>
           {/* Resize handle */}
           <div
-            className="absolute bottom-0 right-0 w-4 h-4 bg-blue-500 cursor-nwse-resize"
+            className="absolute bottom-0 right-0 w-6 h-6 md:w-4 md:h-4 bg-blue-500 cursor-nwse-resize touch-none"
             onMouseDown={handleResizeMouseDown}
+            onTouchStart={handleResizeTouchStart}
           />
           
           {/* Delete button */}
           <Button
             variant="ghost"
             size="sm"
-            className="absolute -top-8 -right-8 h-6 w-6 p-0 bg-red-500 hover:bg-red-600 text-white rounded-full"
+            className="absolute -top-8 -right-8 h-7 w-7 md:h-6 md:w-6 p-0 bg-red-500 hover:bg-red-600 text-white rounded-full touch-none"
             onClick={handleDeleteElement}
           >
-            <Trash2 className="h-3 w-3" />
+            <Trash2 className="h-3 w-3 md:h-3 md:w-3" />
           </Button>
         </>
       )}

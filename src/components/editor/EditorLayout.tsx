@@ -2,6 +2,8 @@
 import { ReactNode, useState } from "react";
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import { TouchBackend } from 'react-dnd-touch-backend';
+import { MultiBackend } from 'react-dnd-multi-backend';
 import { Navbar } from "@/components/Navbar";
 import { Sidebar } from "@/components/sidebar";
 import { ScreenTabs } from "@/components/ScreenTabs";
@@ -31,8 +33,41 @@ export function EditorLayout({ hasPermission, canShare, projectId, userRole, upd
   const isViewOnly = userRole === 'viewer';
   const isMobile = useIsMobile();
 
+  // Configure multi-backend for better mobile support
+  const backendOptions = {
+    backends: [
+      {
+        id: 'html5',
+        backend: HTML5Backend,
+        transition: {
+          type: 'pointerType',
+          mode: 'exclusive',
+          options: {
+            pointerTypes: ['mouse'],
+          },
+        },
+      },
+      {
+        id: 'touch',
+        backend: TouchBackend,
+        options: {
+          enableMouseEvents: true,
+          delay: 200,
+          delayTouchStart: 200,
+        },
+        transition: {
+          type: 'pointerType',
+          mode: 'exclusive',
+          options: {
+            pointerTypes: ['touch', 'pen'],
+          },
+        },
+      },
+    ],
+  };
+
   return (
-    <DndProvider backend={HTML5Backend}>
+    <DndProvider backend={MultiBackend} options={backendOptions}>
       <div className="h-screen flex flex-col bg-gray-50">
         {!isPreviewMode && <Navbar projectId={projectId} canShare={canShare} />}
         
@@ -47,12 +82,12 @@ export function EditorLayout({ hasPermission, canShare, projectId, userRole, upd
                 <Button
                   variant="outline"
                   size="sm"
-                  className="fixed top-16 left-2 z-40 bg-white shadow-md"
+                  className="fixed top-4 left-2 z-50 bg-white shadow-lg border"
                 >
                   <Menu className="w-4 h-4" />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="left" className="p-0 w-64">
+              <SheetContent side="left" className="p-0 w-72 max-w-[85vw]">
                 <Sidebar />
               </SheetContent>
             </Sheet>
@@ -79,12 +114,12 @@ export function EditorLayout({ hasPermission, canShare, projectId, userRole, upd
                     <Button
                       variant="outline"
                       size="sm"
-                      className="fixed bottom-4 right-2 z-40 bg-white shadow-md"
+                      className="fixed bottom-20 right-2 z-50 bg-white shadow-lg border"
                     >
                       <Layers className="w-4 h-4" />
                     </Button>
                   </SheetTrigger>
-                  <SheetContent side="right" className="p-0 w-80">
+                  <SheetContent side="right" className="p-0 w-80 max-w-[90vw]">
                     <PropertiesPanel updateElementProperties={updateElementProperties} />
                   </SheetContent>
                 </Sheet>
@@ -97,7 +132,7 @@ export function EditorLayout({ hasPermission, canShare, projectId, userRole, upd
             <Button
               onClick={() => setIsPreviewMode(!isPreviewMode)}
               className={`fixed z-50 bg-primary hover:bg-primary/90 text-white ${
-                isMobile ? 'top-16 right-16' : 'top-4 right-4'
+                isMobile ? 'top-4 right-2' : 'top-4 right-4'
               }`}
               size="sm"
             >
@@ -119,10 +154,10 @@ export function EditorLayout({ hasPermission, canShare, projectId, userRole, upd
         <StyleDialogController element={null} dialogType={null} onClose={() => {}} />
         
         {!hasPermission && (
-          <div className={`fixed bg-yellow-100 border border-yellow-400 rounded-lg p-3 ${
-            isMobile ? 'bottom-2 left-2 right-2 text-center' : 'bottom-4 right-4'
+          <div className={`fixed bg-yellow-100 border border-yellow-400 rounded-lg p-2 ${
+            isMobile ? 'bottom-2 left-2 right-2 text-center text-xs' : 'bottom-4 right-4 p-3'
           }`}>
-            <p className="text-sm text-yellow-800">
+            <p className={`text-yellow-800 ${isMobile ? 'text-xs' : 'text-sm'}`}>
               You have {userRole === 'viewer' ? 'view-only' : userRole} access to this project
             </p>
           </div>
