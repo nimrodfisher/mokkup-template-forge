@@ -6,9 +6,12 @@ import { useWireframe } from "@/hooks/useWireframe";
 export function LayersTab() {
   const { elements, selectedElementId, selectElement, removeElement } = useWireframe();
   
+  // Filter out any null/undefined elements
+  const validElements = elements.filter(element => element && element.id && element.type);
+  
   return (
     <div className="space-y-1">
-      {elements.map((element) => (
+      {validElements.map((element) => (
         <div
           key={element.id}
           className={cn(
@@ -34,7 +37,7 @@ export function LayersTab() {
         </div>
       ))}
       
-      {elements.length === 0 && (
+      {validElements.length === 0 && (
         <div className="text-gray-500 text-sm p-2 text-center">
           No elements on canvas
         </div>
