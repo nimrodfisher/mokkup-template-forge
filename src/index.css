@@ -99,3 +99,29 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Suppress drag preview artifacts */
+.dnd-drag-layer {
+  display: none !important;
+}
+
+.dnd-preview {
+  display: none !important;
+}
+
+/* Hide default drag ghost images */
+img[draggable] {
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+  user-drag: none;
+}
+
+/* Ensure no visual artifacts during drag operations */
+*[draggable] {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
