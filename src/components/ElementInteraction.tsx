@@ -108,16 +108,9 @@ export function ElementInteraction({
   
   return (
     <div
-      className={`absolute cursor-move ${isSelected ? 'ring-2 ring-blue-500' : ''}`}
+      className={`relative w-full h-full cursor-move ${isSelected ? 'ring-2 ring-blue-500' : ''}`}
       style={{
-        left: element.position.x,
-        top: element.position.y,
-        width: element.size.width,
-        height: element.size.height,
-        backgroundColor: 'white',
-        border: '1px solid #e5e7eb',
         boxShadow: isSelected ? '0 0 0 2px rgba(59, 130, 246, 0.3)' : 'none',
-        zIndex: isSelected ? 10 : 1,
       }}
       onClick={handleMouseDown}
       onDoubleClick={onDoubleClick}
@@ -131,7 +124,7 @@ export function ElementInteraction({
         <>
           {/* Resize handle */}
           <div
-            className="absolute bottom-0 right-0 w-6 h-6 md:w-4 md:h-4 bg-blue-500 cursor-nwse-resize"
+            className="absolute bottom-0 right-0 w-6 h-6 md:w-4 md:h-4 bg-blue-500 cursor-nwse-resize z-10"
             onMouseDown={handleResizeMouseDown}
           />
           
@@ -139,7 +132,7 @@ export function ElementInteraction({
           <Button
             variant="ghost"
             size="sm"
-            className="absolute -top-8 -right-8 h-7 w-7 md:h-6 md:w-6 p-0 bg-red-500 hover:bg-red-600 text-white rounded-full"
+            className="absolute -top-8 -right-8 h-7 w-7 md:h-6 md:w-6 p-0 bg-red-500 hover:bg-red-600 text-white rounded-full z-10"
             onClick={handleDeleteElement}
           >
             <Trash2 className="h-3 w-3 md:h-3 md:w-3" />
