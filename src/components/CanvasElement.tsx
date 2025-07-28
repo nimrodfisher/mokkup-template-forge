@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDrag } from 'react-dnd';
+import { getEmptyImage } from 'react-dnd-html5-backend';
 import { useWireframe } from '@/hooks/useWireframe';
 import { useProjectComments } from '@/hooks/useProjectComments';
 import { ElementRenderer } from './element-renderers/ElementRenderer';
@@ -24,13 +25,18 @@ export function CanvasElement({ element, onSelect, isSelected }: CanvasElementPr
   const commentCount = getCommentCount(element.id);
   const { removeElement } = useWireframe();
 
-  const [{ isDragging }, drag] = useDrag({
+  const [{ isDragging }, drag, preview] = useDrag({
     type: 'element',
     item: { id: element.id, type: element.type },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
   });
+
+  // Hide the default drag preview to prevent blank frame
+  useEffect(() => {
+    preview(getEmptyImage(), { captureDraggingState: true });
+  }, [preview]);
 
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
