@@ -64,7 +64,7 @@ export function Canvas({ isPreviewMode = false }: { isPreviewMode?: boolean }) {
           canvasRef.current = node as HTMLDivElement;
         }
       }}
-      className={`flex-1 overflow-auto bg-gray-100 h-full relative ${!isPreviewMode && isOver ? 'bg-gray-200' : ''}`}
+      className="flex-1 overflow-auto bg-gray-100 h-full relative"
       onClick={isPreviewMode ? undefined : () => selectElement(null)}
     >
       {(!activeElements || activeElements.length === 0) && !isPreviewMode && (
