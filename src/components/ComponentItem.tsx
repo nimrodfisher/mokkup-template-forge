@@ -1,5 +1,7 @@
 import { ElementType } from "@/hooks/useWireframe";
 import { useDrag } from "react-dnd";
+import { useEffect } from "react";
+import { getEmptyImage } from "react-dnd-html5-backend";
 
 interface ComponentItemProps {
   label: string;
@@ -7,13 +9,18 @@ interface ComponentItemProps {
 }
 
 export function ComponentItem({ label, type }: ComponentItemProps) {
-  const [{ isDragging }, drag] = useDrag(() => ({
+  const [{ isDragging }, drag, preview] = useDrag(() => ({
     type: 'COMPONENT',
     item: { type },
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging(),
     }),
   }), [type]);
+
+  // Hide the default drag preview to prevent blank frame
+  useEffect(() => {
+    preview(getEmptyImage(), { captureDraggingState: true });
+  }, [preview]);
 
   return (
     <div
