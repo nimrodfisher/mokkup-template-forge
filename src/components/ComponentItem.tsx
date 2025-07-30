@@ -15,11 +15,18 @@ export function ComponentItem({ label, type }: ComponentItemProps) {
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging(),
     }),
+    options: {
+      dropEffect: 'copy',
+    },
   }), [type]);
 
-  // Hide the default drag preview to prevent blank frame
+  // Completely hide the drag preview
   useEffect(() => {
-    preview(getEmptyImage(), { captureDraggingState: true });
+    preview(getEmptyImage(), { 
+      captureDraggingState: true,
+      anchorX: 0,
+      anchorY: 0 
+    });
   }, [preview]);
 
   return (

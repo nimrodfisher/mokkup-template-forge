@@ -31,11 +31,18 @@ export function CanvasElement({ element, onSelect, isSelected }: CanvasElementPr
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
+    options: {
+      dropEffect: 'move',
+    },
   });
 
-  // Hide the default drag preview to prevent blank frame
+  // Completely hide the drag preview
   useEffect(() => {
-    preview(getEmptyImage(), { captureDraggingState: true });
+    preview(getEmptyImage(), { 
+      captureDraggingState: true,
+      anchorX: 0,
+      anchorY: 0 
+    });
   }, [preview]);
 
   const handleClick = (e: React.MouseEvent) => {
