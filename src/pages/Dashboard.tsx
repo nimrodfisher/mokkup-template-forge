@@ -2,7 +2,6 @@
 import { useState } from 'react';
 import { useProjects } from '@/hooks/useProjects';
 import { Loader2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { DashboardHeader } from '@/components/dashboard/DashboardHeader';
 import { CreateProjectDialog } from '@/components/dashboard/CreateProjectDialog';
 import { EmptyProjectsState } from '@/components/dashboard/EmptyProjectsState';
@@ -23,18 +22,11 @@ export default function Dashboard() {
             <p className="text-gray-600 mt-2">Create, edit, and manage your wireframe projects</p>
           </div>
           
-          <Button 
-            onClick={() => setIsCreateDialogOpen(true)}
-            className="flex items-center gap-2"
-          >
-            + New Project
-          </Button>
+          <CreateProjectDialog 
+            isOpen={isCreateDialogOpen} 
+            onOpenChange={setIsCreateDialogOpen} 
+          />
         </div>
-
-        <CreateProjectDialog 
-          isOpen={isCreateDialogOpen} 
-          onOpenChange={setIsCreateDialogOpen} 
-        />
 
         {loading ? (
           <div className="flex justify-center items-center py-12">
