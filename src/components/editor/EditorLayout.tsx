@@ -92,26 +92,6 @@ export function EditorLayout({ hasPermission, canShare, projectId, userRole, upd
             </div>
           </div>
           
-          {/* Preview Button - available for all users */}
-          <Button
-            onClick={() => setIsPreviewMode(!isPreviewMode)}
-            className={`fixed z-50 bg-primary hover:bg-primary/90 text-white ${
-              isMobile ? 'top-4 right-2' : 'top-4 right-4'
-            }`}
-            size="sm"
-          >
-            {isPreviewMode ? (
-              <>
-                <X className="w-4 h-4 mr-2" />
-                Exit Preview
-              </>
-            ) : (
-              <>
-                <Eye className="w-4 h-4 mr-2" />
-                Preview
-              </>
-            )}
-          </Button>
         </div>
 
         <StyleDialogController element={null} dialogType={null} onClose={() => {}} />
