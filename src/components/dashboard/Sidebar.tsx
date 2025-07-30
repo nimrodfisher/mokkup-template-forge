@@ -21,10 +21,9 @@ interface SidebarItem {
 
 const sidebarItems: SidebarItem[] = [
   { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, path: '/dashboard' },
-  { id: 'projects', label: 'My Projects', icon: FolderOpen, path: '/dashboard' },
-  { id: 'templates', label: 'Templates', icon: FileText, path: '/templates' },
-  { id: 'resources', label: 'Resources', icon: BookOpen, path: '/resources' },
-  { id: 'drafts', label: 'Drafts', icon: FileImage, path: '/drafts' },
+  { id: 'projects', label: 'My Projects', icon: FolderOpen, path: '/dashboard?view=projects' },
+  { id: 'templates', label: 'Templates', icon: FileText, path: '/dashboard?view=templates' },
+  { id: 'drafts', label: 'Drafts', icon: FileImage, path: '/dashboard?view=drafts' },
 ];
 
 export function Sidebar() {

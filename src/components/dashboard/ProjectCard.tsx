@@ -1,7 +1,7 @@
 
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Heart, MessageCircle } from 'lucide-react';
+import { Heart, MessageCircle, Eye } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Project } from '@/hooks/useProjects';
@@ -14,6 +14,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
   const [liked, setLiked] = useState(false);
   const [likes, setLikes] = useState(Math.floor(Math.random() * 20) + 1);
   const [comments] = useState(Math.floor(Math.random() * 15) + 1);
+  const [views] = useState(Math.floor(Math.random() * 50) + 10);
   const navigate = useNavigate();
 
   const handleLike = (e: React.MouseEvent) => {
@@ -81,30 +82,28 @@ export function ProjectCard({ project }: ProjectCardProps) {
               <MessageCircle className="w-4 h-4" />
               <span>{comments}</span>
             </div>
+
+            {/* Views */}
+            <div className="flex items-center space-x-1 text-sm text-gray-600">
+              <Eye className="w-4 h-4" />
+              <span>{views}</span>
+            </div>
           </div>
         </div>
 
-        {/* Creator and Price Row */}
-        <div className="flex items-center justify-between">
-          {/* Creator */}
-          <div className="flex items-center space-x-2">
-            <Avatar className="w-6 h-6">
-              <AvatarFallback className="bg-gray-100 text-gray-600 text-xs">
-                {project.profiles?.first_name?.charAt(0) || project.profiles?.email?.charAt(0) || 'U'}
-              </AvatarFallback>
-            </Avatar>
-            <span className="text-sm text-gray-600">
-              {project.profiles?.first_name && project.profiles?.last_name 
-                ? `${project.profiles.first_name} ${project.profiles.last_name}`
-                : project.profiles?.email?.split('@')[0] || 'Unknown User'
-              }
-            </span>
-          </div>
-
-          {/* Price */}
-          <div className="text-sm font-medium text-gray-900">
-            {price}
-          </div>
+        {/* Creator Row */}
+        <div className="flex items-center space-x-2">
+          <Avatar className="w-6 h-6">
+            <AvatarFallback className="bg-gray-100 text-gray-600 text-xs">
+              {project.profiles?.first_name?.charAt(0) || project.profiles?.email?.charAt(0) || 'U'}
+            </AvatarFallback>
+          </Avatar>
+          <span className="text-sm text-gray-600">
+            {project.profiles?.first_name && project.profiles?.last_name 
+              ? `${project.profiles.first_name} ${project.profiles.last_name}`
+              : project.profiles?.email?.split('@')[0] || 'Unknown User'
+            }
+          </span>
         </div>
       </div>
     </Card>
