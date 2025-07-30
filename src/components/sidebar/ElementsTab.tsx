@@ -4,7 +4,8 @@ import { SidebarCategoryFilter } from "./SidebarCategoryFilter";
 import { ComponentGrid } from "./ComponentGrid";
 
 export function ElementsTab() {
-  const [categoryFilter, setCategoryFilter] = useState<'all' | 'charts' | 'tables' | 'basic' | 'tools'>('all');
+  const [categoryFilter, setCategoryFilter] = useState<'all' | 'charts' | 'tables' | 'basic'>('all');
+  const [searchQuery, setSearchQuery] = useState('');
   
   const components: { type: ElementType; label: string; category: 'basic' | 'charts' | 'tables' | 'other' | 'tools' }[] = [
     // Basic elements
@@ -35,10 +36,12 @@ export function ElementsTab() {
     { type: 'heatmap', label: 'Heatmap', category: 'other' },
   ];
   
-  // Filter components based on category
-  const filteredComponents = components.filter(component => 
-    categoryFilter === 'all' || component.category === categoryFilter
-  );
+  // Filter components based on category and search query
+  const filteredComponents = components.filter(component => {
+    const matchesCategory = categoryFilter === 'all' || component.category === categoryFilter;
+    const matchesSearch = component.label.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
 
   return (
     <div>
@@ -47,6 +50,8 @@ export function ElementsTab() {
           <input
             className="w-full px-3 py-2 border rounded-md text-sm"
             placeholder="Find any element"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
       </div>

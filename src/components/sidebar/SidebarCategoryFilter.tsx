@@ -3,7 +3,7 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
-type CategoryType = 'all' | 'basic' | 'charts' | 'tables' | 'tools';
+type CategoryType = 'all' | 'basic' | 'charts' | 'tables';
 
 interface SidebarCategoryFilterProps {
   categoryFilter: CategoryType;
@@ -59,17 +59,6 @@ export function SidebarCategoryFilter({
         onClick={() => setCategoryFilter('tables')}
       >
         Tables
-      </Button>
-      <Button
-        variant="outline"
-        size="sm"
-        className={cn(
-          "text-xs h-8",
-          categoryFilter === 'tools' ? "bg-blue-50 border-blue-200 hover:bg-blue-100" : ""
-        )}
-        onClick={() => setCategoryFilter('tools')}
-      >
-        Tools
       </Button>
     </div>
   );
