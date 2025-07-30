@@ -81,15 +81,16 @@ export function CanvasElement({ element, onSelect, isSelected }: CanvasElementPr
       onDoubleClick={handleDoubleClick}
     >
       <div className="relative w-full h-full group">
-        <ElementRenderer element={element} isEditable={true} />
-        {isSelected && (
+        {isSelected ? (
           <ElementInteraction 
             element={element}
             isSelected={isSelected}
             onDoubleClick={handleDoubleClick}
           >
-            <div className="w-full h-full" />
+            <ElementRenderer element={element} isEditable={true} />
           </ElementInteraction>
+        ) : (
+          <ElementRenderer element={element} isEditable={true} />
         )}
         
         {/* Comment Badge */}
