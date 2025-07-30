@@ -50,8 +50,8 @@ export function SaveTemplateDialog({ open, onOpenChange }: SaveTemplateDialogPro
       toast.success("Template saved successfully!");
       onOpenChange(false);
       
-      // Stay in editor after saving template
-      // Templates are now a secondary feature, not a separate page
+      // Navigate to dashboard after saving template
+      navigate('/dashboard');
     } catch (error) {
       console.error("Error saving template:", error);
       toast.error("Failed to save template. Please try again.");
