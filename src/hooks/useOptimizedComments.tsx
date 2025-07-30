@@ -58,8 +58,23 @@ export function useOptimizedComments(projectId: string, elementId: string): UseO
     if (!user || !content.trim()) return;
     
     setLoading(true);
+    
+    // Optimistic update - add comment immediately
+    const tempComment: Comment = {
+      id: `temp-${Date.now()}`,
+      content: content.trim(),
+      mentions: mentions.length > 0 ? mentions : null,
+      created_at: new Date().toISOString(),
+      profiles: {
+        first_name: user.user_metadata?.first_name || null,
+        last_name: user.user_metadata?.last_name || null,
+      }
+    };
+    
+    setComments(prev => [...prev, tempComment]);
+    
     try {
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from('comments')
         .insert({
           project_id: projectId,
@@ -67,9 +82,25 @@ export function useOptimizedComments(projectId: string, elementId: string): UseO
           user_id: user.id,
           content: content.trim(),
           mentions: mentions.length > 0 ? mentions : null
-        });
+        })
+        .select(`
+          id,
+          content,
+          mentions,
+          created_at,
+          profiles!comments_user_id_fkey (
+            first_name,
+            last_name
+          )
+        `)
+        .single();
 
       if (error) throw error;
+
+      // Replace temp comment with real one
+      setComments(prev => prev.map(comment => 
+        comment.id === tempComment.id ? data : comment
+      ));
 
       // Optimized notifications - batch insert
       if (mentions.length > 0) {
@@ -86,6 +117,8 @@ export function useOptimizedComments(projectId: string, elementId: string): UseO
       toast.success('Comment added');
     } catch (error) {
       console.error('Error adding comment:', error);
+      // Remove temp comment on error
+      setComments(prev => prev.filter(comment => comment.id !== tempComment.id));
       toast.error('Failed to add comment');
     } finally {
       setLoading(false);
@@ -109,7 +142,39 @@ export function useOptimizedComments(projectId: string, elementId: string): UseO
             table: 'comments',
             filter: `project_id=eq.${projectId},element_id=eq.${elementId}`
           },
-          () => fetchComments()
+          async (payload) => {
+            // Fetch the new comment with profile data
+            const { data, error } = await supabase
+              .from('comments')
+              .select(`
+                id,
+                content,
+                mentions,
+                created_at,
+                profiles!comments_user_id_fkey (
+                  first_name,
+                  last_name
+                )
+              `)
+              .eq('id', payload.new.id)
+              .single();
+
+            if (!error && data) {
+              setComments(prev => {
+                // Check if comment already exists (from optimistic update or duplicate)
+                const exists = prev.some(comment => comment.id === data.id);
+                if (exists) {
+                  // Replace temp comment or skip if already exists
+                  return prev.map(comment => 
+                    comment.id.startsWith('temp-') && comment.content === data.content
+                      ? data 
+                      : comment
+                  );
+                }
+                return [...prev, data];
+              });
+            }
+          }
         )
         .subscribe();
 
