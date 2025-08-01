@@ -1,7 +1,8 @@
 
 import React from 'react';
 import { Button } from "../ui/button";
-import { Plus, Minus } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
+import { Plus, Minus, RowsIcon, Columns3 } from "lucide-react";
 import { Element } from "@/types/wireframe";
 import { useWireframe } from "@/hooks/useWireframe";
 
@@ -93,29 +94,45 @@ export function TableManipulationControls({
     if (!isEditable || !showControls) return null;
     
     return (
-      <div className="flex absolute -top-8 left-0 right-0 justify-around">
-        {localHeaders.map((_, index) => (
-          <div key={index} className="flex space-x-1">
-            <Button 
-              variant="outline" 
-              size="icon" 
-              className="h-6 w-6 bg-white"
-              onClick={() => handleAddColumn(index)}
-            >
-              <Plus className="h-3 w-3" />
-            </Button>
-            <Button 
-              variant="outline" 
-              size="icon" 
-              className="h-6 w-6 bg-white"
-              onClick={() => handleDeleteColumn(index)}
-              disabled={localHeaders.length <= 1}
-            >
-              <Minus className="h-3 w-3" />
-            </Button>
-          </div>
-        ))}
-      </div>
+      <TooltipProvider>
+        <div className="flex absolute -top-10 left-0 right-0 justify-around">
+          {localHeaders.map((_, index) => (
+            <div key={index} className="flex space-x-1">
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button 
+                    variant="outline" 
+                    size="icon" 
+                    className="h-8 w-8 bg-green-50 border-green-200 hover:bg-green-100"
+                    onClick={() => handleAddColumn(index)}
+                  >
+                    <Columns3 className="h-4 w-4 text-green-600" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Add Column</p>
+                </TooltipContent>
+              </Tooltip>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button 
+                    variant="outline" 
+                    size="icon" 
+                    className="h-8 w-8 bg-red-50 border-red-200 hover:bg-red-100"
+                    onClick={() => handleDeleteColumn(index)}
+                    disabled={localHeaders.length <= 1}
+                  >
+                    <Minus className="h-4 w-4 text-red-600" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Delete Column</p>
+                </TooltipContent>
+              </Tooltip>
+            </div>
+          ))}
+        </div>
+      </TooltipProvider>
     );
   };
 
@@ -124,25 +141,41 @@ export function TableManipulationControls({
     if (!isEditable || !showControls) return null;
     
     return (
-      <div className="flex flex-col space-y-1">
-        <Button 
-          variant="outline" 
-          size="icon" 
-          className="h-6 w-6"
-          onClick={() => handleAddRow(rowIndex)}
-        >
-          <Plus className="h-3 w-3" />
-        </Button>
-        <Button 
-          variant="outline" 
-          size="icon" 
-          className="h-6 w-6"
-          onClick={() => handleDeleteRow(rowIndex)}
-          disabled={localData.length <= 1}
-        >
-          <Minus className="h-3 w-3" />
-        </Button>
-      </div>
+      <TooltipProvider>
+        <div className="flex flex-col space-y-1">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button 
+                variant="outline" 
+                size="icon" 
+                className="h-8 w-8 bg-green-50 border-green-200 hover:bg-green-100"
+                onClick={() => handleAddRow(rowIndex)}
+              >
+                <RowsIcon className="h-4 w-4 text-green-600" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Add Row</p>
+            </TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button 
+                variant="outline" 
+                size="icon" 
+                className="h-8 w-8 bg-red-50 border-red-200 hover:bg-red-100"
+                onClick={() => handleDeleteRow(rowIndex)}
+                disabled={localData.length <= 1}
+              >
+                <Minus className="h-4 w-4 text-red-600" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Delete Row</p>
+            </TooltipContent>
+          </Tooltip>
+        </div>
+      </TooltipProvider>
     );
   };
 

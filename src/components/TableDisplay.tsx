@@ -70,7 +70,7 @@ export function TableDisplay({ element, isEditable = false }: TableDisplayProps)
   }, [tableData, tableHeaders]);
 
   return (
-    <div className="w-full h-full p-2 overflow-auto relative"
+    <div className="w-full h-full p-2 overflow-auto relative bg-white"
          onMouseEnter={() => isEditable && setShowControls(true)}
          onMouseLeave={() => setShowControls(false)}>
       {tableTitle && (
