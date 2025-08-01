@@ -37,31 +37,6 @@ export function HeatmapAppearanceSection({
         </div>
         
         <div>
-          <Label className="text-sm">Orientation</Label>
-          <Select
-            value={properties.heatmapOrientation || 'horizontal'}
-            onValueChange={(value) => handleChange('heatmapOrientation', value)}
-          >
-            <SelectTrigger className="mt-1">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="horizontal">Horizontal</SelectItem>
-              <SelectItem value="vertical">Vertical</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-        
-        <div className="flex items-center justify-between">
-          <Label htmlFor="showLegends" className="text-sm">Legends</Label>
-          <Switch
-            id="showLegends"
-            checked={properties.showLegends ?? false}
-            onCheckedChange={(checked) => handleChange('showLegends', checked)}
-          />
-        </div>
-        
-        <div>
           <Label className="text-sm">Grid Size</Label>
           <div className="flex gap-2 mt-1">
             <Input
