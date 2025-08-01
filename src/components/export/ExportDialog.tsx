@@ -3,9 +3,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Users, Download, Code, X } from "lucide-react";
+import { Users, Download, X } from "lucide-react";
 import { ImageDownloadDialog } from "./ImageDownloadDialog";
-import { EmbedProjectDialog } from "./EmbedProjectDialog";
 import { ShareProjectDialog } from "./ShareProjectDialog";
 
 interface ExportDialogProps {
@@ -17,10 +16,9 @@ interface ExportDialogProps {
 export function ExportDialog({ open, onOpenChange, projectId }: ExportDialogProps) {
   const navigate = useNavigate();
   const [imageDialogOpen, setImageDialogOpen] = useState(false);
-  const [embedDialogOpen, setEmbedDialogOpen] = useState(false);
   const [shareDialogOpen, setShareDialogOpen] = useState(false);
 
-  const handleFeatureClick = (feature: 'share' | 'quickShare' | 'image' | 'embed') => {
+  const handleFeatureClick = (feature: 'share' | 'quickShare' | 'image') => {
     onOpenChange(false);
     
     switch (feature) {
@@ -36,9 +34,6 @@ export function ExportDialog({ open, onOpenChange, projectId }: ExportDialogProp
         break;
       case 'image':
         setImageDialogOpen(true);
-        break;
-      case 'embed':
-        setEmbedDialogOpen(true);
         break;
     }
   };
@@ -83,18 +78,6 @@ export function ExportDialog({ open, onOpenChange, projectId }: ExportDialogProp
                 <div className="text-sm text-gray-500">Export as PNG, JPEG or PDF</div>
               </div>
             </Button>
-            
-            <Button
-              variant="outline"
-              className="w-full justify-start h-12"
-              onClick={() => handleFeatureClick('embed')}
-            >
-              <Code className="mr-3 h-5 w-5" />
-              <div className="text-left">
-                <div className="font-medium">Embed Project</div>
-                <div className="text-sm text-gray-500">Get embed code</div>
-              </div>
-            </Button>
           </div>
           
           {!projectId && (
@@ -110,13 +93,7 @@ export function ExportDialog({ open, onOpenChange, projectId }: ExportDialogProp
         onOpenChange={setImageDialogOpen}
       />
       
-      <EmbedProjectDialog 
-        open={embedDialogOpen} 
-        onOpenChange={setEmbedDialogOpen}
-        projectId={projectId}
-      />
-      
-      <ShareProjectDialog 
+      <ShareProjectDialog
         open={shareDialogOpen} 
         onOpenChange={setShareDialogOpen}
         projectId={projectId}
