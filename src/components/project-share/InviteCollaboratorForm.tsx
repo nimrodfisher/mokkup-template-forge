@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Mail, Loader2, Info, AlertCircle, UserPlus } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { supabase } from '@/integrations/supabase/client';
 
 interface InviteCollaboratorFormProps {
   onInvite: (email: string, role: 'viewer' | 'editor' | 'admin') => Promise<boolean>;
@@ -17,11 +18,51 @@ export function InviteCollaboratorForm({ onInvite, isInviting }: InviteCollabora
   const [inviteEmail, setInviteEmail] = useState('');
   const [inviteRole, setInviteRole] = useState<'viewer' | 'editor' | 'admin'>('viewer');
   const [emailError, setEmailError] = useState('');
+  const [showSetupMessage, setShowSetupMessage] = useState(true);
+  const [checkingUser, setCheckingUser] = useState(false);
 
   const validateEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
+
+  const checkUserProfile = async (email: string) => {
+    if (!validateEmail(email)) return;
+    
+    setCheckingUser(true);
+    try {
+      // Check if user exists and has complete profile
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('first_name, last_name, email')
+        .eq('email', email.toLowerCase())
+        .maybeSingle();
+
+      // If user exists and has complete profile (first_name and last_name), hide the message
+      if (profile && profile.first_name && profile.last_name) {
+        setShowSetupMessage(false);
+      } else {
+        setShowSetupMessage(true);
+      }
+    } catch (error) {
+      console.error('Error checking user profile:', error);
+      setShowSetupMessage(true);
+    } finally {
+      setCheckingUser(false);
+    }
+  };
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      if (inviteEmail.trim()) {
+        checkUserProfile(inviteEmail.trim());
+      } else {
+        setShowSetupMessage(true);
+      }
+    }, 500);
+
+    return () => clearTimeout(timeoutId);
+  }, [inviteEmail]);
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const email = e.target.value;
@@ -65,17 +106,19 @@ export function InviteCollaboratorForm({ onInvite, isInviting }: InviteCollabora
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <Alert className="mb-4">
-          <Info className="h-4 w-4" />
-          <AlertDescription>
-            <strong>Important:</strong> The person you're inviting must first:
-            <ul className="list-disc list-inside mt-2 space-y-1">
-              <li>Create an account by signing up on this platform</li>
-              <li>Log in at least once to complete their profile setup</li>
-            </ul>
-            <p className="mt-2">Only then can you successfully invite them using their email address.</p>
-          </AlertDescription>
-        </Alert>
+        {showSetupMessage && (
+          <Alert className="mb-4">
+            <Info className="h-4 w-4" />
+            <AlertDescription>
+              <strong>Important:</strong> The person you're inviting must first:
+              <ul className="list-disc list-inside mt-2 space-y-1">
+                <li>Create an account by signing up on this platform</li>
+                <li>Log in at least once to complete their profile setup</li>
+              </ul>
+              <p className="mt-2">Only then can you successfully invite them using their email address.</p>
+            </AlertDescription>
+          </Alert>
+        )}
         
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid md:grid-cols-3 gap-4">
