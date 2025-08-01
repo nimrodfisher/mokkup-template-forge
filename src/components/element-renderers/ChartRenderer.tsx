@@ -199,7 +199,7 @@ export function ChartRenderer({ properties = {}, type }: ChartRendererProps) {
       
       {showTitle && <div className="text-sm font-medium mb-2">{chartTitle}</div>}
       
-      {showLegend && chartVariant !== 'default' && (
+      {showLegend && (
         <div className="flex items-center mb-2 text-xs">
           <div className="flex items-center mr-3">
             <span className="mr-1" style={{ color: barColor }}>●</span> Series 1

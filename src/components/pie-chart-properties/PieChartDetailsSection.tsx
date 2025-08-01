@@ -108,15 +108,13 @@ export function PieChartDetailsSection({ properties, handleChange, detailsOpen, 
             />
           </div>
           
-          {pieChartVariant === 'with-legend' && (
-            <div className="flex items-center justify-between">
-              <Label className="text-sm font-medium">Show Legend</Label>
-              <Switch
-                checked={properties.showPieLegend !== false}
-                onCheckedChange={(checked) => handleChange('showPieLegend', checked)}
-              />
-            </div>
-          )}
+          <div className="flex items-center justify-between">
+            <Label className="text-sm font-medium">Show Legend</Label>
+            <Switch
+              checked={properties.showPieLegend !== false}
+              onCheckedChange={(checked) => handleChange('showPieLegend', checked)}
+            />
+          </div>
           
           <div className="flex items-center justify-between">
             <Label className="text-sm font-medium">Show Labels</Label>

@@ -106,7 +106,7 @@ export function PieChartRenderer({ properties }: PieChartRendererProps) {
               ))}
             </Pie>
             
-            {showLegend && variant === 'with-legend' && (
+            {showLegend && (
               <Legend 
                 verticalAlign="bottom" 
                 height={36}

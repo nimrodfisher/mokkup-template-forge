@@ -67,15 +67,13 @@ export function ColumnChartDetailsSection({ properties, handleChange, detailsOpe
             />
           </div>
           
-          {showLegendOption && (
-            <div className="flex items-center justify-between">
-              <Label className="text-sm font-medium">Show Legend</Label>
-              <Switch
-                checked={properties.showLegend !== false}
-                onCheckedChange={(checked) => handleChange('showLegend', checked)}
-              />
-            </div>
-          )}
+          <div className="flex items-center justify-between">
+            <Label className="text-sm font-medium">Show Legend</Label>
+            <Switch
+              checked={properties.showLegend !== false}
+              onCheckedChange={(checked) => handleChange('showLegend', checked)}
+            />
+          </div>
           
           <div className="flex items-center justify-between">
             <Label className="text-sm font-medium">Show Grid Lines</Label>
