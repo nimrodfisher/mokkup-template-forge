@@ -27,7 +27,7 @@ export function HistogramRenderer({ properties }: HistogramRendererProps) {
     showKpis = false,
     histogramButtons = [],
     histogramKpis = [],
-    backgroundColor = 'transparent',
+    backgroundColor = '#ffffff',
     textAlignment = 'center',
     showGridLines = true,
     showLegend = false,

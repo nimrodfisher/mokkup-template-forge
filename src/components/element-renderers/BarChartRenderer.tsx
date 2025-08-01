@@ -17,6 +17,7 @@ export function BarChartRenderer({ properties = {} }: BarChartRendererProps) {
   const secondaryBarColor = properties.secondaryBarColor || '#818CF8';
   const tertiaryBarColor = properties.tertiaryBarColor || '#C7D2FE';
   const chartVariant = properties.chartVariant || 'bar';
+  const backgroundColor = properties.backgroundColor || '#ffffff';
   const showKpis = properties.showKpis || false;
   const showButtons = properties.showButtons || false;
   const chartButtons = properties.chartButtons || [];
@@ -76,7 +77,7 @@ export function BarChartRenderer({ properties = {} }: BarChartRendererProps) {
   const kpisToShow = chartKpis.length > 0 ? chartKpis : defaultKpis;
 
   return (
-    <div className="w-full h-full p-3 flex flex-col">
+    <div className="w-full h-full p-3 flex flex-col" style={{ backgroundColor }}>
       {/* Header section with title and optional buttons */}
       <div className="flex justify-between items-center mb-2">
         <div className="text-sm font-medium">{chartTitle}</div>

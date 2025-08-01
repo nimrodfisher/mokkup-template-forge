@@ -18,7 +18,7 @@ export function TreemapRenderer({ properties }: TreemapRendererProps) {
     showKpis = false,
     treemapButtons = [],
     treemapKpis = [],
-    backgroundColor = 'transparent',
+    backgroundColor = '#ffffff',
     textAlignment = 'center'
   } = properties;
 

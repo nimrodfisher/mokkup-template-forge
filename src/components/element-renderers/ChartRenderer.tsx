@@ -12,6 +12,7 @@ export function ChartRenderer({ properties = {}, type }: ChartRendererProps) {
   const secondaryBarColor = properties.secondaryBarColor || '#818CF8';
   const tertiaryBarColor = properties.tertiaryBarColor || '#C7D2FE';
   const chartTitle = properties.chartTitle || 'Chart Title';
+  const backgroundColor = properties.backgroundColor || '#ffffff';
   const showLegend = properties.showLegend !== false;
   const showTitle = properties.showTitle !== false;
   const chartData = properties.chartData || [
@@ -163,7 +164,7 @@ export function ChartRenderer({ properties = {}, type }: ChartRendererProps) {
   };
   
   return (
-    <div className="w-full h-full p-3 overflow-auto">
+    <div className="w-full h-full p-3 overflow-auto" style={{ backgroundColor }}>
       {/* Add-ons at the top */}
       {(properties.showButtons !== false && chartButtons.length > 0) && (
         <div className="flex justify-between items-center mb-2">
