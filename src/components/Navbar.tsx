@@ -73,9 +73,6 @@ export function Navbar({ onSave, projectId, canShare }: NavbarProps) {
               <DropdownMenuItem onClick={handleSave}>
                 Save as Template
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => createNewTemplate()}>
-                New Project
-              </DropdownMenuItem>
               {!user && (
                 <DropdownMenuItem asChild>
                   <Link to="/auth">Login</Link>
@@ -106,12 +103,6 @@ export function Navbar({ onSave, projectId, canShare }: NavbarProps) {
               Save as Template
             </Button>
             
-            <Button 
-              onClick={() => createNewTemplate()}
-              className="bg-white hover:bg-white/90 text-black border-none"
-            >
-              New Project
-            </Button>
           </>
         )}
       </div>
