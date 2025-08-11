@@ -21,8 +21,17 @@ export function ProjectCard({ project }: ProjectCardProps) {
   const navigate = useNavigate();
 
   const handleDeleteProject = async (id: string) => {
+    console.log('Delete button clicked for project:', id);
     if (confirm('Are you sure you want to delete this project?')) {
-      await deleteProject(id);
+      console.log('User confirmed deletion');
+      try {
+        await deleteProject(id);
+        console.log('Delete project completed successfully');
+      } catch (error) {
+        console.error('Delete project failed:', error);
+      }
+    } else {
+      console.log('User cancelled deletion');
     }
   };
 

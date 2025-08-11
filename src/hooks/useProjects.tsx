@@ -141,16 +141,29 @@ export function useProjects() {
 
   const deleteProject = async (id: string) => {
     try {
+      console.log('Starting project deletion for ID:', id);
+      console.log('Current projects count:', projects.length);
+      
       const { error } = await supabase
         .from('projects')
         .delete()
         .eq('id', id);
 
-      if (error) throw error;
+      if (error) {
+        console.error('Database deletion error:', error);
+        throw error;
+      }
 
-      // Update local state immediately for instant UI feedback
-      setProjects(prev => prev.filter(project => project.id !== id));
+      console.log('Database deletion successful, updating local state');
       
+      // Update local state immediately for instant UI feedback
+      setProjects(prev => {
+        const filtered = prev.filter(project => project.id !== id);
+        console.log('Projects after deletion:', filtered.length, 'was:', prev.length);
+        return filtered;
+      });
+      
+      console.log('Local state updated successfully');
       toast.success('Project deleted successfully!');
     } catch (error) {
       console.error('Error deleting project:', error);
