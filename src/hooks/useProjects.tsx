@@ -148,7 +148,9 @@ export function useProjects() {
 
       if (error) throw error;
 
-      await fetchProjects();
+      // Update local state immediately for instant UI feedback
+      setProjects(prev => prev.filter(project => project.id !== id));
+      
       toast.success('Project deleted successfully!');
     } catch (error) {
       console.error('Error deleting project:', error);
