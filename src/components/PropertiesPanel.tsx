@@ -68,9 +68,7 @@ export function PropertiesPanel({ onOpenStyleDialog, updateElementProperties }: 
           <HeaderProperties
             element={selectedElement}
             updateElementProperties={handleUpdateElementProperties}
-            toggleProperties={toggleProperties}
             onOpenStyleDialog={onOpenStyleDialog}
-            updateLogoImage={updateLogoImage}
           />
         );
       case 'filter':
