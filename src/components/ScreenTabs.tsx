@@ -118,41 +118,46 @@ export function ScreenTabs() {
                     autoFocus
                   />
                 ) : (
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <button
-                        className={`px-4 py-2 text-sm font-medium rounded-t-md mr-1 min-w-[100px] ${
-                          screen.isActive 
-                            ? "bg-white border-b-2 border-blue-600 text-blue-600"
-                            : "text-gray-500 hover:bg-gray-100"
-                        }`}
-                        onClick={() => switchScreen(screen.id)}
-                        onContextMenu={(e) => {
-                          e.preventDefault();
-                        }}
-                      >
-                        {screen.name}
-                      </button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="start" className="w-40">
-                      <DropdownMenuItem
-                        onClick={() => handleRename(screen.id, screen.name)}
-                        className="text-sm"
-                      >
-                        <Edit2 className="w-3 h-3 mr-2" />
-                        Rename
-                      </DropdownMenuItem>
-                      {screens.length > 1 && (
-                        <DropdownMenuItem
-                          onClick={() => deleteScreen(screen.id)}
-                          className="text-sm text-red-600 hover:bg-red-50"
+                  <div className="relative group">
+                    <button
+                      className={`px-4 py-2 text-sm font-medium rounded-t-md mr-1 min-w-[100px] ${
+                        screen.isActive 
+                          ? "bg-white border-b-2 border-blue-600 text-blue-600"
+                          : "text-gray-500 hover:bg-gray-100"
+                      }`}
+                      onClick={() => switchScreen(screen.id)}
+                    >
+                      {screen.name}
+                    </button>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <button
+                          className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 p-1 hover:bg-gray-200 rounded"
+                          onClick={(e) => e.stopPropagation()}
                         >
-                          <X className="w-3 h-3 mr-2" />
-                          Delete
+                          <MoreHorizontal className="w-3 h-3" />
+                        </button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="start" className="w-40">
+                        <DropdownMenuItem
+                          onClick={() => handleRename(screen.id, screen.name)}
+                          className="text-sm"
+                        >
+                          <Edit2 className="w-3 h-3 mr-2" />
+                          Rename
                         </DropdownMenuItem>
-                      )}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                        {screens.length > 1 && (
+                          <DropdownMenuItem
+                            onClick={() => deleteScreen(screen.id)}
+                            className="text-sm text-red-600 hover:bg-red-50"
+                          >
+                            <X className="w-3 h-3 mr-2" />
+                            Delete
+                        </DropdownMenuItem>
+                        )}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
                 )}
               </div>
             ))}
