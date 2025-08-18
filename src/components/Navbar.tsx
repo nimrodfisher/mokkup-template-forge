@@ -7,7 +7,7 @@ import { useState } from "react";
 import { SaveTemplateDialog } from "./SaveTemplateDialog";
 import { ExportDialog } from "./export/ExportDialog";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { Share, Menu, MoreHorizontal } from "lucide-react";
+import { Share, Menu, MoreHorizontal, Eye } from "lucide-react";
 import { 
   DropdownMenu,
   DropdownMenuContent,
@@ -19,9 +19,10 @@ interface NavbarProps {
   onSave?: () => void;
   projectId?: string;
   canShare?: boolean;
+  onTogglePreview?: () => void;
 }
 
-export function Navbar({ onSave, projectId, canShare }: NavbarProps) {
+export function Navbar({ onSave, projectId, canShare, onTogglePreview }: NavbarProps) {
   const [saveDialogOpen, setSaveDialogOpen] = useState(false);
   const [exportDialogOpen, setExportDialogOpen] = useState(false);
   const { activeTemplateId, createNewTemplate } = useWireframe();
@@ -66,6 +67,12 @@ export function Navbar({ onSave, projectId, canShare }: NavbarProps) {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
+              {onTogglePreview && (
+                <DropdownMenuItem onClick={onTogglePreview}>
+                  <Eye className="w-4 h-4 mr-2" />
+                  Preview
+                </DropdownMenuItem>
+              )}
               <DropdownMenuItem onClick={() => setExportDialogOpen(true)}>
                 <Share className="w-4 h-4 mr-2" />
                 {projectId ? "Share" : "Export"}
@@ -85,6 +92,17 @@ export function Navbar({ onSave, projectId, canShare }: NavbarProps) {
           </DropdownMenu>
         ) : (
           <>
+            {onTogglePreview && (
+              <Button 
+                variant="outline" 
+                onClick={onTogglePreview}
+                className="border-white/30 text-black hover:bg-white/20 hover:text-black bg-white"
+              >
+                <Eye className="w-4 h-4 mr-2" />
+                Preview
+              </Button>
+            )}
+            
             <Button 
               variant="outline" 
               onClick={() => setExportDialogOpen(true)}

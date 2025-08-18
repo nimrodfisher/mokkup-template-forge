@@ -34,7 +34,7 @@ export function EditorLayout({ hasPermission, canShare, projectId, userRole, upd
   return (
     <DndProvider options={HTML5toTouch}>
       <div className="h-screen flex flex-col bg-gray-50">
-        {!isPreviewMode && <Navbar projectId={projectId} canShare={canShare} />}
+        {!isPreviewMode && <Navbar projectId={projectId} canShare={canShare} onTogglePreview={() => setIsPreviewMode(true)} />}
         
         <div className="flex-1 flex overflow-hidden relative">
           {/* Desktop Sidebar */}
@@ -61,8 +61,19 @@ export function EditorLayout({ hasPermission, canShare, projectId, userRole, upd
           <div className="flex-1 flex flex-col">
             {!isPreviewMode && <ScreenTabs />}
             <div className="flex-1 flex overflow-hidden">
-              <div className="flex-1 overflow-hidden">
+              <div className="flex-1 overflow-hidden relative">
                 <Canvas isPreviewMode={isPreviewMode} />
+                {isPreviewMode && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="absolute top-4 right-4 z-50 bg-white shadow-lg border"
+                    onClick={() => setIsPreviewMode(false)}
+                  >
+                    <X className="w-4 h-4 mr-1" />
+                    Exit Preview
+                  </Button>
+                )}
               </div>
               
               {/* Desktop Properties Panel */}
